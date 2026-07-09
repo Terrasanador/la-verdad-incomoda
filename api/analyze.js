@@ -49,8 +49,8 @@ Responde SOLO en JSON válido con estas claves:
 
     if (!respuesta.ok) {
       return res.status(500).json({
-        error: "Error del motor OpenAI",
-        detalle: data
+        error: data?.error?.message || "Error desconocido de OpenAI",
+detalle: data
       });
     }
 
