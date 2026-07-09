@@ -41,11 +41,10 @@ Responde SOLO en JSON válido con estas claves:
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        input: prompt
-      })
-    });
-
+  model: "gpt-4o-mini",
+  input: prompt
+})
+})
     const data = await respuesta.json();
 
     if (!respuesta.ok) {
