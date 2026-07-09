@@ -1,64 +1,154 @@
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="La Verdad Incómoda analiza noticias, publicaciones y enlaces mediante evidencia pública.">
-      <title>La Verdad Incómoda | Verifica antes de creer</title>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="La Verdad Incómoda analiza noticias, publicaciones y enlaces mediante evidencia pública.">
+  <title>La Verdad Incómoda | Verifica antes de creer</title>
 
-      <style>
-        * {
-          box-sizing: border-box;
-          margin: 0;
-          padding: 0;
-        }
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-          font-family: Arial, Helvetica, sans-serif;
-          background: radial-gradient(circle at 50% 0%, #2a1010 0%, #0d0d0d 35%, #050506 75%);
-          color: white;
-          min-height: 100vh;
-        }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #2a1010 0%, #0d0d0d 35%, #050506 75%);
+      color: white;
+      min-height: 100vh;
+    }
 
-        header {
-          width: 100%;
-          padding: 22px 20px;
-          border-bottom: 1px solid #2a2a2f;
-          background: rgba(5, 5, 6, 0.88);
-        }
+    header {
+      width: 100%;
+      padding: 22px 20px;
+      border-bottom: 1px solid #2a2a2f;
+      background: rgba(5, 5, 6, 0.88);
+    }
 
-        .nav {
-          max-width: 1000px;
-          margin: auto;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 15px;
-        }
+    .nav {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
 
-        .logo {
-          font-size: 21px;
-          font-weight: 900;
-          letter-spacing: -0.7px;
-        }
+    .logo {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.7px;
+    }
 
-        .logo span {
-          color: #ff3b30;
-        }
+    .logo span {
+      color: #ff3b30;
+    }
 
-        .status {
-          font-size: 12px;
-          color: #9f9fa8;
-          border: 1px solid #303036;
-          padding: 7px 10px;
-          border-radius: 20px;
-        }
+    .status {
+      font-size: 12px;
+      color: #9f9fa8;
+      border: 1px solid #303036;
+      padding: 7px 10px;
+      border-radius: 20px;
+    }
 
-        main {
-          max-width: 850px;
-          margin: auto;
-          padding: 70px 18px 50px;
-          text-align: center;
+    main {
+      max-width: 850px;
+      margin: auto;
+      padding: 70px 18px 50px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      color: #ff756d;
+      border: 1px solid #5b2926;
+      background: rgba(255, 59, 48, 0.08);
+      border-radius: 30px;
+      padding: 8px 14px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 9vw, 78px);
+      line-height: 0.98;
+      letter-spacing: -3px;
+      margin-bottom: 22px;
+    }
+
+    h1 span {
+      color: #ff3b30;
+    }
+
+    .subtitle {
+      max-width: 680px;
+      margin: 0 auto 38px;
+      color: #b5b5bb;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+
+    .panel {
+      max-width: 650px;
+      margin: auto;
+      background: #141416;
+      border: 1px solid #39393f;
+      border-radius: 38px;
+      padding: 30px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      background: #09090a;
+      color: white;
+      border: 1px solid #44444b;
+      border-radius: 28px;
+      padding: 20px;
+      font-size: 16px;
+      line-height: 1.45;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #ff3b30;
+    }
+
+    .platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 18px 0 28px;
+    }
+
+    .platforms span {
+      color: #85858d;
+      border: 1px solid #3a3a40;
+      border-radius: 25px;
+      padding: 9px 15px;
+      font-size: 13px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 28px;
+      background: #ff3b30;
+      color: white;
+      padding          text-align: center;
         }
 
         .badge {
