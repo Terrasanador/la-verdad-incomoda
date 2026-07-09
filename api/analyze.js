@@ -17,11 +17,27 @@ export default async function handler(req, res) {
     }
 
     const prompt = `
-Analiza la credibilidad del siguiente contenido:
+Actúa como un verificador profesional de hechos.
 
-${input}
+Analiza la siguiente afirmación:
 
-Responde SOLO en JSON válido con estas claves:
+"${input}"
+
+Tu tarea es determinar si la afirmación es verdadera, falsa, engañosa, parcialmente verdadera o no verificable.
+
+REGLAS OBLIGATORIAS:
+
+1. Usa tu conocimiento disponible para evaluar los hechos.
+2. No respondas "pendiente de verificación" si la afirmación puede comprobarse con conocimiento factual ampliamente establecido.
+3. Si la afirmación es claramente falsa, indícalo directamente.
+4. Si es verdadera, indícalo directamente.
+5. Distingue entre hechos, opiniones, sátira y contenido engañoso.
+6. No inventes fuentes ni enlaces.
+7. Si no tienes evidencia suficiente, indícalo claramente.
+8. El nivel_de_confianza debe ser un número entero entre 0 y 100.
+
+Responde SOLO en JSON válido, sin texto antes ni después, exactamente con esta estructura:
+
 {
   "resultado": "",
   "tipo": "",
