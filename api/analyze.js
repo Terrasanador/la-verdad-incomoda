@@ -6,9 +6,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { contenido } = req.body;
+const input = req.body?.text || req.body?.contenido || "";    
 
-    if (!contenido || contenido.trim().length < 10) {
+if (!input || input.trim().length < 5) {
       return res.status(400).json({
         error: "Escribe una afirmación, noticia o enlace válido."
       });
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
       ok: true,
       estado: "recibido",
       mensaje: "El motor de La Verdad Incómoda recibió correctamente el contenido.",
-      contenido
+      input
     });
 
   } catch (error) {
