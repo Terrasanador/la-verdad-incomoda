@@ -26,4 +26,4 @@ if (!input || input.trim().length < 5) {
       error: "No fue posible procesar la solicitud."
     });
   }
-}
+} 
