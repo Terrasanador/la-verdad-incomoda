@@ -70,7 +70,10 @@ detalle: data
       });
     }
 
-    const texto = data.output_text || "";
+const texto =
+  data.output_text ||
+  data.output?.[0]?.content?.[0]?.text ||
+  "";
 
     let json;
     try {
