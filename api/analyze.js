@@ -1,8 +1,6 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Método no permitido"
-    });
+    return res.status(405).json({ error: "Método no permitido" });
   }
 
   try {
@@ -14,45 +12,76 @@ export default async function handler(req, res) {
 
     if (!input || input.trim().length < 5) {
       return res.status(400).json({
-        error: "Escribe una afirmación o pega un enlace para analizar."
+        error: "Escribe una afirmación, noticia o enlace válido."
       });
     }
 
-    const texto = input.trim();
-    const esEnlace = /^https?:\/\//i.test(texto);
+    const prompt = `
+Analiza la credibilidad del siguiente contenido.
 
-    let plataforma = "Texto directo";
+Contenido:
+${input}
 
-    if (texto.includes("threads.net") || texto.includes("threads.com")) {
-      plataforma = "Threads";
-    } else if (texto.includes("facebook.com")) {
-      plataforma = "Facebook";
-    } else if (texto.includes("x.com") || texto.includes("twitter.com")) {
-      plataforma = "X / Twitter";
-    } else if (texto.includes("tiktok.com")) {
-      plataforma = "TikTok";
-    } else if (texto.includes("youtube.com") || texto.includes("youtu.be")) {
-      plataforma = "YouTube";
+Responde SOLO en JSON válido con:
+{
+ "resultado": "",
+ "tipo": "",
+ "plataforma": "",
+ "credibilidad": "",
+ "nivel_de_confianza": 0,
+ "contraste_de_fuentes": "",
+ "conclusion": "",
+ "advertencia": ""
+}
+`;
+
+    const respuesta = await fetch("https://api.openai.com/v1/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        input: prompt
+      })
+    });
+
+    const data = await respuesta.json();
+
+    if (!respuesta.ok) {
+      return res.status(500).json({
+        error: "Error del motor OpenAI",
+        detalle: data
+      });
+    }
+
+    const texto =
+      data.output_text ||
+      data.output?.[0]?.content?.[0]?.text ||
+      "";
+
+    let json;
+    try {
+      json = JSON.parse(texto);
+    } catch {
+      json = {
+        resultado: "ANÁLISIS GENERADO",
+        contenido_analizado: input,
+        respuesta: texto
+      };
     }
 
     return res.status(200).json({
       ok: true,
-      resultado: "ANÁLISIS PRELIMINAR",
-      tipo: esEnlace ? "Publicación enlazada" : "Afirmación escrita",
-      plataforma: plataforma,
-      contenido_analizado: texto,
-      credibilidad: "PENDIENTE DE VERIFICACIÓN",
-      nivel_de_confianza: 0,
-      contraste_de_fuentes:
-        "La publicación fue recibida correctamente. Falta contrastarla con fuentes públicas independientes.",
-      conclusion:
-        "No hay evidencia suficiente todavía para clasificar este contenido como verdadero o falso.",
-      advertencia:
-        "No compartas el contenido como verdadero hasta completar la verificación de fuentes."
+      contenido_analizado: input,
+      ...json
     });
+
   } catch (error) {
     return res.status(500).json({
-      error: "No fue posible procesar la solicitud."
+      error: "No fue posible procesar la solicitud.",
+      detalle: error.message
     });
   }
-      }
+}
