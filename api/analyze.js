@@ -17,21 +17,20 @@ export default async function handler(req, res) {
     }
 
     const prompt = `
-Analiza la credibilidad del siguiente contenido.
+Analiza la credibilidad del siguiente contenido:
 
-Contenido:
 ${input}
 
-Responde SOLO en JSON válido con:
+Responde SOLO en JSON válido con estas claves:
 {
- "resultado": "",
- "tipo": "",
- "plataforma": "",
- "credibilidad": "",
- "nivel_de_confianza": 0,
- "contraste_de_fuentes": "",
- "conclusion": "",
- "advertencia": ""
+  "resultado": "",
+  "tipo": "",
+  "plataforma": "",
+  "credibilidad": "",
+  "nivel_de_confianza": 0,
+  "contraste_de_fuentes": "",
+  "conclusion": "",
+  "advertencia": ""
 }
 `;
 
@@ -56,10 +55,7 @@ Responde SOLO en JSON válido con:
       });
     }
 
-    const texto =
-      data.output_text ||
-      data.output?.[0]?.content?.[0]?.text ||
-      "";
+    const texto = data.output_text || "";
 
     let json;
     try {
@@ -77,7 +73,6 @@ Responde SOLO en JSON válido con:
       contenido_analizado: input,
       ...json
     });
-
   } catch (error) {
     return res.status(500).json({
       error: "No fue posible procesar la solicitud.",
