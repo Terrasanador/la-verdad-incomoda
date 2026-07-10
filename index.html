@@ -1,162 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="La Verdad Incómoda analiza texto, enlaces, imágenes, audio y video con investigación web y fuentes públicas.">
-  <title>La Verdad Incómoda | Verifica antes de creer</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 50% 0%,#2a1010 0%,#0d0d0d 35%,#050506 75%);color:#fff;min-height:100vh}header{padding:22px 20px;border-bottom:1px solid #2a2a2f;background:rgba(5,5,6,.9)}.nav{max-width:1000px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:15px}.logo{font-size:21px;font-weight:900;letter-spacing:-.7px}.logo span,.accent{color:#ff3b30}.status{font-size:12px;color:#aaa;border:1px solid #303036;padding:7px 10px;border-radius:20px}main{max-width:900px;margin:auto;padding:65px 18px 50px;text-align:center}.badge{display:inline-block;color:#ff756d;border:1px solid #5b2926;background:rgba(255,59,48,.08);border-radius:30px;padding:8px 14px;font-size:12px;font-weight:bold;margin-bottom:24px}h1{font-size:clamp(42px,9vw,78px);line-height:.98;letter-spacing:-3px;margin-bottom:22px}.subtitle{max-width:720px;margin:0 auto 34px;color:#b5b5bb;font-size:18px;line-height:1.55}.panel{max-width:700px;margin:auto;background:#141416;border:1px solid #39393f;border-radius:32px;padding:28px;text-align:left}label{display:block;font-size:21px;font-weight:800;margin-bottom:14px}textarea{width:100%;min-height:160px;resize:vertical;background:#09090a;color:#fff;border:1px solid #44444b;border-radius:22px;padding:18px;font-size:16px;line-height:1.45;outline:none}textarea:focus{border-color:#ff3b30}.input-tools{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.file-button,.clear-button{display:flex;align-items:center;justify-content:center;min-height:48px;border:1px solid #414148;border-radius:18px;background:#0d0d0f;color:#fff;font-weight:800;cursor:pointer;text-align:center;padding:10px}.clear-button{color:#bbb}.file-button input{display:none}.file-info{display:none;margin:12px 0;padding:13px;border-radius:16px;background:#0b0b0d;border:1px solid #333;color:#d4d4d8;font-size:14px;line-height:1.45}.file-info.active{display:block}.platforms{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 24px}.platforms span{color:#8f8f97;border:1px solid #36363c;border-radius:20px;padding:8px 12px;font-size:12px}button.primary{width:100%;border:0;border-radius:22px;background:#ff3b30;color:#fff;padding:18px;font-size:19px;font-weight:900;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.progress{display:none;margin-top:14px;color:#aaa;font-size:14px;text-align:center}.progress.active{display:block}.result{display:none;margin-top:28px;padding:24px;background:#09090a;border:1px solid #3a3a40;border-radius:26px}.result h2{color:#ff756d;margin-bottom:16px;font-size:clamp(27px,7vw,42px);line-height:1.12}.verdict-card{display:grid;gap:14px}.confidence{display:inline-block;width:fit-content;background:rgba(255,59,48,.13);border:1px solid #5b2926;border-radius:999px;padding:9px 14px;font-weight:900}.result-block{border:1px solid #2d2d33;background:#101012;border-radius:19px;padding:16px}.result-block strong{display:block;margin-bottom:8px;font-size:15px}.result-block span{color:#d2d2d7;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.sources{display:grid;gap:9px}.sources a{display:block;color:#9ecbff;text-decoration:none;overflow-wrap:anywhere}.access-warning{border-color:#77422d;background:#1a100d}.features{margin:50px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;text-align:left}.feature{background:#0d0d0f;border:1px solid #29292e;border-radius:22px;padding:22px}.feature strong{display:block;margin-bottom:10px}.feature p,.warning{color:#919198;font-size:14px;line-height:1.5}.warning{max-width:700px;margin:30px auto 0}footer{text-align:center;color:#777780;font-size:13px;padding:35px 20px}@media(max-width:650px){main{padding-top:45px}.panel{padding:20px;border-radius:26px}.features{grid-template-columns:1fr}.input-tools{grid-template-columns:1fr}h1{letter-spacing:-2px}.status{display:none}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>La Verdad Incómoda</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#2a1010 0,#0d0d0d 35%,#050506 75%);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh}header{padding:22px 20px;border-bottom:1px solid #2a2a2f;background:rgba(5,5,6,.88)}.nav{max-width:900px;margin:auto;font-weight:900}.nav span{color:#ff3b30}main{max-width:850px;margin:auto;padding:60px 18px;text-align:center}.badge{display:inline-block;color:#ff756d;border:1px solid #5b2926;background:rgba(255,59,48,.08);border-radius:30px;padding:8px 14px;font-size:12px;font-weight:700}h1{font-size:clamp(42px,9vw,78px);line-height:.98;margin:24px 0 18px}h1 span{color:#ff3b30}.subtitle{max-width:680px;margin:0 auto 34px;color:#b5b5bb;line-height:1.55}.panel,.result{max-width:650px;margin:auto;background:#141416;border:1px solid #39393f;border-radius:32px;padding:28px;text-align:left}.panel label{display:block;font-weight:800;margin-bottom:12px}textarea{width:100%;min-height:170px;background:#080809;color:#fff;border:1px solid #33343a;border-radius:18px;padding:18px;font-size:16px;resize:vertical}button{width:100%;margin-top:18px;border:0;border-radius:22px;background:#ff3b30;color:white;padding:19px;font-size:18px;font-weight:900}button:disabled{opacity:.6}.result{display:none;margin-top:30px}.result h2{color:#ff756d;font-size:clamp(30px,7vw,52px);margin:0 0 18px;line-height:1.1}.confidence{display:inline-block;border:1px solid #71302d;background:#351313;border-radius:30px;padding:11px 18px;font-weight:800;margin-bottom:18px}.card{background:#101012;border:1px solid #303038;border-radius:22px;padding:20px;margin:14px 0}.card h3{margin:0 0 10px}.card p{margin:0;color:#d2d2d7;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.sources a{display:block;color:#ff8a82;margin:12px 0;text-decoration:none}.notice{border-color:#6d5527;background:#211b0d}.actions{padding-left:20px;color:#ddd;line-height:1.6}.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin:50px 0}.feature{text-align:left;background:#101012;border:1px solid #303038;border-radius:26px;padding:28px}.feature p{color:#999;line-height:1.55}footer{padding:35px;text-align:center;color:#777}
+</style>
 </head>
 <body>
-<header><div class="nav"><div class="logo">LA VERDAD <span>INCÓMODA</span></div><div class="status">Investigación web + análisis multimedia</div></div></header>
+<header><div class="nav">LA VERDAD <span>INCÓMODA</span></div></header>
 <main>
-  <div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA</div>
-  <h1>No creas.<br><span class="accent">Comprueba.</span></h1>
-  <p class="subtitle">Pega texto o un enlace público. También puedes subir una imagen, audio o video. El sistema intentará leer el contenido, transcribir lo hablado, revisar imágenes e investigar las afirmaciones en fuentes públicas.</p>
-
-  <section class="panel">
-    <label for="newsInput">¿Qué quieres verificar?</label>
-    <textarea id="newsInput" placeholder="Pega una afirmación, noticia o enlace de Facebook, TikTok, YouTube, Instagram, X, Threads o cualquier sitio web..."></textarea>
-
-    <div class="input-tools">
-      <label class="file-button" for="fileInput">📎 SUBIR ARCHIVO
-        <input id="fileInput" type="file" accept="image/*,audio/*,video/*,.txt,.pdf">
-      </label>
-      <button class="clear-button" id="clearButton" type="button">LIMPIAR</button>
-    </div>
-    <div class="file-info" id="fileInfo"></div>
-
-    <div class="platforms"><span>Texto</span><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Imagen</span><span>Audio</span><span>Video</span></div>
-    <button class="primary" id="analyzeButton" type="button">ANALIZAR CREDIBILIDAD</button>
-    <div class="progress" id="progress">Preparando el análisis…</div>
-
-    <div class="result" id="result">
-      <h2 id="resultTitle">Analizando…</h2>
-      <div id="resultText"></div>
-    </div>
-  </section>
-
-  <section class="features">
-    <div class="feature"><strong>Lee el contenido</strong><p>Extrae texto y metadatos accesibles de páginas y publicaciones públicas.</p></div>
-    <div class="feature"><strong>Procesa archivos</strong><p>Analiza imágenes, transcribe audio y extrae fotogramas y audio de video.</p></div>
-    <div class="feature"><strong>Investiga y cita</strong><p>Contrasta afirmaciones mediante búsqueda web y muestra las fuentes utilizadas.</p></div>
-  </section>
-  <p class="warning">Algunas redes sociales bloquean el acceso automatizado o exigen inicio de sesión. En esos casos, el sistema no inventará un veredicto: te pedirá subir el archivo, una captura o el texto.</p>
-</main>
-<footer>© 2026 La Verdad Incómoda · Verifica antes de creer</footer>
+<div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA</div>
+<h1>No creas.<br><span>Comprueba.</span></h1>
+<p class="subtitle">Pega una afirmación, noticia o enlace público. El sistema intentará leer el contenido, investigará las afirmaciones y mostrará las fuentes utilizadas.</p>
+<section class="panel">
+<label for="newsInput">¿Qué quieres verificar?</label>
+<textarea id="newsInput" placeholder="Pega texto o un enlace público de Facebook, TikTok, YouTube, X, Instagram o una página web..."></textarea>
+<button id="analyzeButton">ANALIZAR CREDIBILIDAD</button>
+</section>
+<section class="result" id="result"></section>
+<section class="features"><div class="feature"><strong>Lee el contenido</strong><p>Extrae texto y metadatos de páginas públicas accesibles.</p></div><div class="feature"><strong>Investiga y contrasta</strong><p>Busca evidencia externa y muestra fuentes reales.</p></div><div class="feature"><strong>No inventa veredictos</strong><p>Si una red bloquea el acceso, lo informa sin acusar ni asignar 0 %.</p></div></section>
+</main><footer>© 2026 La Verdad Incómoda · Verifica antes de creer</footer>
 <script>
-  const MAX_REQUEST_BYTES = 3_700_000;
-  const input = document.getElementById('newsInput');
-  const fileInput = document.getElementById('fileInput');
-  const fileInfo = document.getElementById('fileInfo');
-  const button = document.getElementById('analyzeButton');
-  const clearButton = document.getElementById('clearButton');
-  const progress = document.getElementById('progress');
-  const result = document.getElementById('result');
-  const resultTitle = document.getElementById('resultTitle');
-  const resultText = document.getElementById('resultText');
-  let selectedFile = null;
-
-  const escapeHTML = (value) => String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
-  const formatBytes = (bytes) => bytes < 1024*1024 ? `${(bytes/1024).toFixed(0)} KB` : `${(bytes/1024/1024).toFixed(1)} MB`;
-  const setProgress = (text) => { progress.textContent = text; progress.classList.add('active'); };
-
-  fileInput.addEventListener('change', () => {
-    selectedFile = fileInput.files?.[0] || null;
-    if (!selectedFile) { fileInfo.classList.remove('active'); return; }
-    fileInfo.textContent = `${selectedFile.name} · ${selectedFile.type || 'archivo'} · ${formatBytes(selectedFile.size)}`;
-    fileInfo.classList.add('active');
-  });
-
-  clearButton.addEventListener('click', () => {
-    input.value = ''; fileInput.value = ''; selectedFile = null;
-    fileInfo.classList.remove('active'); result.style.display = 'none';
-  });
-
-  function fileToDataUrl(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = reject; reader.readAsDataURL(file);
-    });
-  }
-
-  async function imageToCompressedDataUrl(file) {
-    const source = await createImageBitmap(file);
-    const max = 1280; const scale = Math.min(1, max / Math.max(source.width, source.height));
-    const canvas = document.createElement('canvas'); canvas.width = Math.round(source.width*scale); canvas.height = Math.round(source.height*scale);
-    canvas.getContext('2d').drawImage(source,0,0,canvas.width,canvas.height); source.close();
-    return canvas.toDataURL('image/jpeg',.76);
-  }
-
-  function seekVideo(video, time) {
-    return new Promise((resolve, reject) => {
-      const done = () => { video.removeEventListener('seeked',done); resolve(); };
-      video.addEventListener('seeked',done,{once:true}); video.addEventListener('error',reject,{once:true}); video.currentTime = Math.min(Math.max(time,0), Math.max(0,video.duration-.05));
-    });
-  }
-
-  async function extractVideoFrames(file) {
-    const url = URL.createObjectURL(file); const video = document.createElement('video'); video.muted = true; video.preload = 'metadata'; video.src = url;
-    await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=reject;});
-    const duration = Number.isFinite(video.duration) ? video.duration : 1;
-    const times = [...new Set([.08,.33,.62,.9].map(p=>Math.max(.01,duration*p)))]; const frames=[];
-    for (let i=0;i<times.length;i++) {
-      setProgress(`Extrayendo fotograma ${i+1} de ${times.length}…`); await seekVideo(video,times[i]);
-      const scale=Math.min(1,960/video.videoWidth); const canvas=document.createElement('canvas'); canvas.width=Math.max(1,Math.round(video.videoWidth*scale)); canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
-      canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height); frames.push(canvas.toDataURL('image/jpeg',.62));
-    }
-    URL.revokeObjectURL(url); return frames;
-  }
-
-  function encodeWav(samples, sampleRate) {
-    const buffer = new ArrayBuffer(44 + samples.length*2); const view = new DataView(buffer);
-    const write=(o,s)=>[...s].forEach((c,i)=>view.setUint8(o+i,c.charCodeAt(0)));
-    write(0,'RIFF'); view.setUint32(4,36+samples.length*2,true); write(8,'WAVE'); write(12,'fmt '); view.setUint32(16,16,true); view.setUint16(20,1,true); view.setUint16(22,1,true); view.setUint32(24,sampleRate,true); view.setUint32(28,sampleRate*2,true); view.setUint16(32,2,true); view.setUint16(34,16,true); write(36,'data'); view.setUint32(40,samples.length*2,true);
-    for(let i=0;i<samples.length;i++){const s=Math.max(-1,Math.min(1,samples[i]));view.setInt16(44+i*2,s<0?s*0x8000:s*0x7fff,true);} return new Blob([view],{type:'audio/wav'});
-  }
-
-  async function extractVideoAudio(file) {
-    try {
-      setProgress('Extrayendo y comprimiendo el audio del video…');
-      const ctx = new (window.AudioContext || window.webkitAudioContext)(); const decoded = await ctx.decodeAudioData(await file.arrayBuffer());
-      const targetRate=16000; const seconds=Math.min(decoded.duration,45); const length=Math.floor(seconds*targetRate); const mono=new Float32Array(length);
-      for(let i=0;i<length;i++){const src=Math.floor(i*decoded.sampleRate/targetRate);let sum=0;for(let c=0;c<decoded.numberOfChannels;c++)sum+=decoded.getChannelData(c)[src]||0;mono[i]=sum/decoded.numberOfChannels;}
-      await ctx.close(); return await fileToDataUrl(encodeWav(mono,targetRate));
-    } catch (e) { console.warn('No se pudo extraer audio del video:',e); return ''; }
-  }
-
-  async function preparePayload() {
-    const text=input.value.trim(); const payload={text,kind:'text',images:[]};
-    if (!selectedFile) return payload;
-    payload.filename=selectedFile.name;
-    if (selectedFile.type.startsWith('image/')) { setProgress('Comprimiendo y leyendo la imagen…'); payload.kind='image'; payload.images=[await imageToCompressedDataUrl(selectedFile)]; }
-    else if (selectedFile.type.startsWith('audio/')) { if(selectedFile.size>2_700_000) throw new Error('El audio supera el límite práctico de 2.7 MB. Recórtalo o comprímelo.'); setProgress('Preparando el audio para transcripción…'); payload.kind='audio'; payload.audio=await fileToDataUrl(selectedFile); }
-    else if (selectedFile.type.startsWith('video/')) { payload.kind='video'; payload.images=await extractVideoFrames(selectedFile); payload.audio=await extractVideoAudio(selectedFile); payload.text=[text,`Archivo de video: ${selectedFile.name}. Se enviaron fotogramas y ${payload.audio?'audio de los primeros 45 segundos':'no fue posible extraer el audio en este navegador'}.`].filter(Boolean).join('\n'); }
-    else if (selectedFile.type==='text/plain') { payload.kind='text-file'; payload.text=[text,(await selectedFile.text()).slice(0,18000)].filter(Boolean).join('\n'); }
-    else { throw new Error('Este tipo de archivo todavía no puede procesarse directamente. Para PDF, copia el texto o sube capturas de las páginas relevantes.'); }
-    const bytes=new Blob([JSON.stringify(payload)]).size; if(bytes>MAX_REQUEST_BYTES) throw new Error(`El material preparado pesa ${formatBytes(bytes)} y excede el límite. Usa un archivo más corto o comprimido.`); return payload;
-  }
-
-  function render(data) {
-    const sources=Array.isArray(data.fuentes)?data.fuentes:[];
-    const sourceHtml=sources.length?sources.map(s=>`<a href="${escapeHTML(s.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(s.titulo||s.url)}</a>`).join(''):'<span>No se obtuvieron fuentes accesibles.</span>';
-    const transcript=data.transcripcion?`<div class="result-block"><strong>Transcripción</strong><span>${escapeHTML(data.transcripcion)}</span></div>`:'';
-    const access=data.acceso_contenido===false?`<div class="result-block access-warning"><strong>Acceso al contenido</strong><span>${escapeHTML(data.detalle_acceso||'La plataforma bloqueó el acceso. Sube el archivo para analizarlo.')}</span></div>`:'';
-    resultTitle.textContent=`VEREDICTO: ${String(data.resultado||'no verificable').toUpperCase()}`;
-    resultText.innerHTML=`<div class="verdict-card"><div class="confidence">Confianza: ${escapeHTML(data.nivel_de_confianza??0)}%</div>${access}<div class="result-block"><strong>Contenido analizado</strong><span>${escapeHTML(data.contenido_analizado||'N/D')}</span></div><div class="result-block"><strong>Tipo y plataforma</strong><span>${escapeHTML(data.tipo||'N/D')} · ${escapeHTML(data.plataforma||'N/D')}</span></div><div class="result-block"><strong>Credibilidad</strong><span>${escapeHTML(data.credibilidad||'N/D')}</span></div><div class="result-block"><strong>Contraste de fuentes</strong><span>${escapeHTML(data.contraste_de_fuentes||'N/D')}</span></div><div class="result-block"><strong>Conclusión</strong><span>${escapeHTML(data.conclusion||'N/D')}</span></div><div class="result-block"><strong>Advertencia</strong><span>${escapeHTML(data.advertencia||'N/D')}</span></div>${transcript}<div class="result-block"><strong>Fuentes consultadas</strong><div class="sources">${sourceHtml}</div></div></div>`;
-  }
-
-  button.addEventListener('click', async () => {
-    if(!input.value.trim()&&!selectedFile){alert('Pega texto, un enlace o selecciona un archivo.');return;}
-    button.disabled=true; button.textContent='ANALIZANDO…'; result.style.display='block'; resultTitle.textContent='Analizando contenido…'; resultText.textContent=''; setProgress('Preparando el material…');
-    try {
-      const payload=await preparePayload(); setProgress('Investigando afirmaciones y contrastando fuentes…');
-      const response=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); const raw=await response.text(); let data; try{data=JSON.parse(raw)}catch{throw new Error('El servidor respondió en un formato inválido.');}
-      if(!response.ok)throw new Error(data.detalle||data.error||'No se pudo completar el análisis.'); render(data);
-    } catch(e) { resultTitle.textContent='No se pudo completar el análisis'; resultText.textContent=e.message||String(e); }
-    finally { button.disabled=false; button.textContent='ANALIZAR CREDIBILIDAD'; progress.classList.remove('active'); result.scrollIntoView({behavior:'smooth',block:'start'}); }
-  });
+const $ = (id) => document.getElementById(id);
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function card(title, value, cls=''){if(!value)return '';return `<div class="card ${cls}"><h3>${esc(title)}</h3><p>${esc(value)}</p></div>`}
+function render(data, original){
+ const box=$('result');box.style.display='block';
+ if(data.estado==='sin_acceso' || data.analizado===false){
+   const steps=(data.instrucciones||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+   box.innerHTML=`<h2>NO SE PUDO ACCEDER AL CONTENIDO</h2>${card('Enlace',data.contenido_analizado||original)}${card('Motivo',data.mensaje,'notice')}${card('Resultado',data.conclusion)}${steps?`<div class="card"><h3>Para continuar</h3><ul class="actions">${steps}</ul></div>`:''}`;
+   return;
+ }
+ const verdict=(data.veredicto||'no verificable').toUpperCase();
+ const sources=Array.isArray(data.fuentes)?data.fuentes:[];
+ const sourceHtml=sources.length?`<div class="card sources"><h3>Fuentes consultadas</h3>${sources.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener"><strong>${esc(s.titulo||s.url)}</strong><br><small>${esc(s.aporte||'')}</small></a>`).join('')}</div>`:'';
+ box.innerHTML=`<h2>VEREDICTO: ${esc(verdict)}</h2><div class="confidence">Confianza: ${Number.isFinite(Number(data.confianza))?Math.max(0,Math.min(100,Number(data.confianza))):0}%</div>${card('Contenido analizado',data.contenido_analizado||original)}${card('Tipo y plataforma',data.tipo_plataforma)}${card('Credibilidad',data.credibilidad)}${card('Contraste de fuentes',data.contraste_fuentes)}${card('Conclusión',data.conclusion)}${card('Advertencia',data.advertencia)}${sourceHtml}`;
+}
+$('analyzeButton').addEventListener('click',async()=>{
+ const text=$('newsInput').value.trim();if(!text){alert('Pega texto o un enlace.');return}
+ const btn=$('analyzeButton');const box=$('result');btn.disabled=true;btn.textContent='ANALIZANDO...';box.style.display='block';box.innerHTML='<h2>INVESTIGANDO...</h2><div class="card"><p>Buscando evidencia y revisando el contenido accesible.</p></div>';
+ try{
+   const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+   const raw=await r.text();let data;try{data=JSON.parse(raw)}catch{throw new Error(raw||`Error HTTP ${r.status}`)}
+   if(!r.ok)throw new Error(data.detalle||data.error||`Error HTTP ${r.status}`);
+   render(data,text);
+ }catch(e){box.innerHTML=`<h2>NO SE PUDO COMPLETAR EL ANÁLISIS</h2>${card('Error',e.message||'Error desconocido','notice')}`}
+ finally{btn.disabled=false;btn.textContent='ANALIZAR CREDIBILIDAD'}
+});
 </script>
-</body>
-</html>
+</body></html>
