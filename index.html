@@ -1,53 +1,1198 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>La Verdad Incómoda</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#2a1010 0,#0d0d0d 35%,#050506 75%);color:#fff;font-family:Arial,Helvetica,sans-serif;min-height:100vh}header{padding:22px 20px;border-bottom:1px solid #2a2a2f;background:rgba(5,5,6,.88)}.nav{max-width:900px;margin:auto;font-weight:900}.nav span{color:#ff3b30}main{max-width:850px;margin:auto;padding:60px 18px;text-align:center}.badge{display:inline-block;color:#ff756d;border:1px solid #5b2926;background:rgba(255,59,48,.08);border-radius:30px;padding:8px 14px;font-size:12px;font-weight:700}h1{font-size:clamp(42px,9vw,78px);line-height:.98;margin:24px 0 18px}h1 span{color:#ff3b30}.subtitle{max-width:680px;margin:0 auto 34px;color:#b5b5bb;line-height:1.55}.panel,.result{max-width:650px;margin:auto;background:#141416;border:1px solid #39393f;border-radius:32px;padding:28px;text-align:left}.panel label{display:block;font-weight:800;margin-bottom:12px}textarea{width:100%;min-height:170px;background:#080809;color:#fff;border:1px solid #33343a;border-radius:18px;padding:18px;font-size:16px;resize:vertical}button{width:100%;margin-top:18px;border:0;border-radius:22px;background:#ff3b30;color:white;padding:19px;font-size:18px;font-weight:900}button:disabled{opacity:.6}.result{display:none;margin-top:30px}.result h2{color:#ff756d;font-size:clamp(30px,7vw,52px);margin:0 0 18px;line-height:1.1}.confidence{display:inline-block;border:1px solid #71302d;background:#351313;border-radius:30px;padding:11px 18px;font-weight:800;margin-bottom:18px}.card{background:#101012;border:1px solid #303038;border-radius:22px;padding:20px;margin:14px 0}.card h3{margin:0 0 10px}.card p{margin:0;color:#d2d2d7;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.sources a{display:block;color:#ff8a82;margin:12px 0;text-decoration:none}.notice{border-color:#6d5527;background:#211b0d}.actions{padding-left:20px;color:#ddd;line-height:1.6}.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin:50px 0}.feature{text-align:left;background:#101012;border:1px solid #303038;border-radius:26px;padding:28px}.feature p{color:#999;line-height:1.55}footer{padding:35px;text-align:center;color:#777}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="La Verdad Incómoda: inteligencia artificial y evidencia digital para analizar preguntas, textos, enlaces y archivos."
+  />
+  <title>La Verdad Incómoda | Inteligencia Artificial + Evidencia Digital</title>
+
+  <style>
+    :root {
+      --bg: #050506;
+      --panel: #111114;
+      --panel-2: #17171b;
+      --border: #35353d;
+      --text: #ffffff;
+      --muted: #b8b8c2;
+      --muted-2: #85858f;
+      --red: #ff3b30;
+      --red-dark: #7a2424;
+      --green: #42d392;
+      --yellow: #f4c95d;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 0%, #301010 0%, #0c0c0e 35%, var(--bg) 72%);
+    }
+
+    button,
+    textarea,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(5, 5, 6, 0.88);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.6px;
+    }
+
+    .brand span {
+      color: var(--red);
+    }
+
+    .status {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: #c9c9d0;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    main {
+      width: min(1050px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 64px 0 80px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 16px;
+      border: 1px solid #713030;
+      border-radius: 999px;
+      color: #ff8580;
+      background: rgba(255, 59, 48, 0.08);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.45px;
+    }
+
+    h1 {
+      font-size: clamp(46px, 10vw, 88px);
+      line-height: 0.95;
+      letter-spacing: -4px;
+      margin-bottom: 24px;
+    }
+
+    h1 span {
+      color: var(--red);
+    }
+
+    .subtitle {
+      max-width: 800px;
+      margin: 0 auto;
+      color: var(--muted);
+      font-size: clamp(18px, 3vw, 23px);
+      line-height: 1.55;
+    }
+
+    .how {
+      margin: 38px auto;
+    }
+
+    .section-title {
+      margin-bottom: 18px;
+      text-align: center;
+      font-size: clamp(28px, 5vw, 42px);
+      letter-spacing: -1.4px;
+    }
+
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .how-card {
+      min-height: 170px;
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(18, 18, 21, 0.92);
+      text-align: left;
+    }
+
+    .how-icon {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+
+    .how-card h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .how-card p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .workspace {
+      margin-top: 32px;
+      padding: clamp(22px, 5vw, 36px);
+      border: 1px solid var(--border);
+      border-radius: 36px;
+      background: rgba(15, 15, 18, 0.96);
+      box-shadow: var(--shadow);
+    }
+
+    .workspace h2 {
+      margin-bottom: 8px;
+      font-size: clamp(25px, 4vw, 34px);
+    }
+
+    .workspace-intro {
+      margin-bottom: 20px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 190px;
+      resize: vertical;
+      padding: 20px;
+      border: 1px solid #45454f;
+      border-radius: 24px;
+      outline: none;
+      color: white;
+      background: #070708;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    textarea:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.12);
+    }
+
+    .platforms {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 15px 0 20px;
+    }
+
+    .platforms span {
+      padding: 7px 11px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted-2);
+      font-size: 12px;
+    }
+
+    .drop-zone {
+      margin: 18px 0;
+      padding: 28px 18px;
+      border: 1px dashed #5b5b66;
+      border-radius: 24px;
+      text-align: center;
+      background: #0c0c0f;
+      transition: 0.2s ease;
+    }
+
+    .drop-zone.dragging {
+      border-color: var(--red);
+      background: rgba(255, 59, 48, 0.08);
+    }
+
+    .drop-zone h3 {
+      margin-bottom: 7px;
+      font-size: 20px;
+    }
+
+    .drop-zone p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .file-button {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 12px 18px;
+      border: 1px solid #555560;
+      border-radius: 999px;
+      color: white;
+      background: #1b1b20;
+      font-weight: 800;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .selected-file {
+      display: none;
+      margin-top: 15px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: #151519;
+      text-align: left;
+    }
+
+    .selected-file.visible {
+      display: block;
+    }
+
+    .selected-file strong {
+      display: block;
+      overflow-wrap: anywhere;
+    }
+
+    .selected-file small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+    }
+
+    .file-actions {
+      margin-top: 10px;
+    }
+
+    .secondary-button {
+      padding: 9px 13px;
+      border: 1px solid #45454f;
+      border-radius: 12px;
+      color: white;
+      background: #202026;
+    }
+
+    .mode-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .mode {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      color: white;
+      background: #17171b;
+      text-align: left;
+    }
+
+    .mode.active {
+      border-color: var(--red);
+      background: rgba(255, 59, 48, 0.09);
+    }
+
+    .mode strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .mode small {
+      color: var(--muted);
+    }
+
+    .analyze-button {
+      width: 100%;
+      min-height: 78px;
+      padding: 18px;
+      border: 0;
+      border-radius: 26px;
+      color: white;
+      background: var(--red);
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .analyze-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    .progress {
+      display: none;
+      margin-top: 22px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #0d0d10;
+    }
+
+    .progress.visible {
+      display: block;
+    }
+
+    .progress-label {
+      margin-bottom: 10px;
+      color: var(--muted);
+    }
+
+    .progress-track {
+      overflow: hidden;
+      height: 10px;
+      border-radius: 999px;
+      background: #24242a;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--red);
+      transition: width 0.35s ease;
+    }
+
+    .result {
+      display: none;
+      margin-top: 34px;
+      padding: clamp(22px, 5vw, 36px);
+      border: 1px solid var(--border);
+      border-radius: 36px;
+      background: rgba(12, 12, 14, 0.97);
+      box-shadow: var(--shadow);
+    }
+
+    .result.visible {
+      display: block;
+    }
+
+    .verdict {
+      margin-bottom: 16px;
+      font-size: clamp(34px, 7vw, 62px);
+      line-height: 1;
+      letter-spacing: -2px;
+      color: #ff7370;
+      overflow-wrap: anywhere;
+    }
+
+    .confidence {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 11px 15px;
+      border: 1px solid #743432;
+      border-radius: 999px;
+      background: rgba(255, 59, 48, 0.1);
+      font-weight: 800;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .result-card {
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: var(--panel);
+    }
+
+    .result-card.full {
+      grid-column: 1 / -1;
+    }
+
+    .result-card h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .result-card p,
+    .result-card li {
+      color: #d4d4da;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+    }
+
+    .result-card ul {
+      padding-left: 20px;
+    }
+
+    .source-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .source {
+      display: block;
+      padding: 13px;
+      border: 1px solid #3c3c44;
+      border-radius: 14px;
+      color: white;
+      background: #19191e;
+      text-decoration: none;
+    }
+
+    .source strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .source small {
+      color: var(--muted);
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .result-actions button {
+      flex: 1 1 150px;
+      padding: 13px 15px;
+      border: 1px solid #484850;
+      border-radius: 15px;
+      color: white;
+      background: #1c1c21;
+      font-weight: 800;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .feature {
+      padding: 23px;
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      background: rgba(15, 15, 18, 0.92);
+    }
+
+    .feature h3 {
+      margin-bottom: 9px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .disclaimer {
+      max-width: 850px;
+      margin: 34px auto 0;
+      color: var(--muted-2);
+      text-align: center;
+      line-height: 1.65;
+    }
+
+    footer {
+      padding: 30px 18px 44px;
+      color: #74747e;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 800px) {
+      .how-grid,
+      .features {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .result-card.full {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 580px) {
+      main {
+        padding-top: 44px;
+      }
+
+      .nav {
+        min-height: 64px;
+      }
+
+      .brand {
+        font-size: 17px;
+      }
+
+      .status {
+        display: none;
+      }
+
+      h1 {
+        letter-spacing: -2.5px;
+      }
+
+      .how-grid,
+      .features,
+      .mode-row {
+        grid-template-columns: 1fr;
+      }
+
+      .workspace,
+      .result {
+        border-radius: 28px;
+      }
+    }
+
+    @media print {
+      .site-header,
+      .hero,
+      .how,
+      .workspace,
+      .features,
+      .disclaimer,
+      footer,
+      .result-actions {
+        display: none !important;
+      }
+
+      body {
+        color: #000;
+        background: #fff;
+      }
+
+      main {
+        width: 100%;
+        padding: 0;
+      }
+
+      .result {
+        display: block !important;
+        color: #000;
+        border: none;
+        box-shadow: none;
+        background: #fff;
+      }
+
+      .result-card,
+      .source {
+        color: #000;
+        border-color: #bbb;
+        background: #fff;
+      }
+
+      .result-card p,
+      .result-card li,
+      .source small {
+        color: #222;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<header><div class="nav">LA VERDAD <span>INCÓMODA</span></div></header>
-<main>
-<div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA</div>
-<h1>No creas.<br><span>Comprueba.</span></h1>
-<p class="subtitle">Pega una afirmación, noticia o enlace público. El sistema intentará leer el contenido, investigará las afirmaciones y mostrará las fuentes utilizadas.</p>
-<section class="panel">
-<label for="newsInput">¿Qué quieres verificar?</label>
-<textarea id="newsInput" placeholder="Pega texto o un enlace público de Facebook, TikTok, YouTube, X, Instagram o una página web..."></textarea>
-<button id="analyzeButton">ANALIZAR CREDIBILIDAD</button>
-</section>
-<section class="result" id="result"></section>
-<section class="features"><div class="feature"><strong>Lee el contenido</strong><p>Extrae texto y metadatos de páginas públicas accesibles.</p></div><div class="feature"><strong>Investiga y contrasta</strong><p>Busca evidencia externa y muestra fuentes reales.</p></div><div class="feature"><strong>No inventa veredictos</strong><p>Si una red bloquea el acceso, lo informa sin acusar ni asignar 0 %.</p></div></section>
-</main><footer>© 2026 La Verdad Incómoda · Verifica antes de creer</footer>
-<script>
-const $ = (id) => document.getElementById(id);
-const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-function card(title, value, cls=''){if(!value)return '';return `<div class="card ${cls}"><h3>${esc(title)}</h3><p>${esc(value)}</p></div>`}
-function render(data, original){
- const box=$('result');box.style.display='block';
- if(data.estado==='sin_acceso' || data.analizado===false){
-   const steps=(data.instrucciones||[]).map(x=>`<li>${esc(x)}</li>`).join('');
-   box.innerHTML=`<h2>NO SE PUDO ACCEDER AL CONTENIDO</h2>${card('Enlace',data.contenido_analizado||original)}${card('Motivo',data.mensaje,'notice')}${card('Resultado',data.conclusion)}${steps?`<div class="card"><h3>Para continuar</h3><ul class="actions">${steps}</ul></div>`:''}`;
-   return;
- }
- const verdict=(data.veredicto||'no verificable').toUpperCase();
- const sources=Array.isArray(data.fuentes)?data.fuentes:[];
- const sourceHtml=sources.length?`<div class="card sources"><h3>Fuentes consultadas</h3>${sources.map(s=>`<a href="${esc(s.url)}" target="_blank" rel="noopener"><strong>${esc(s.titulo||s.url)}</strong><br><small>${esc(s.aporte||'')}</small></a>`).join('')}</div>`:'';
- box.innerHTML=`<h2>VEREDICTO: ${esc(verdict)}</h2><div class="confidence">Confianza: ${Number.isFinite(Number(data.confianza))?Math.max(0,Math.min(100,Number(data.confianza))):0}%</div>${card('Contenido analizado',data.contenido_analizado||original)}${card('Tipo y plataforma',data.tipo_plataforma)}${card('Credibilidad',data.credibilidad)}${card('Contraste de fuentes',data.contraste_fuentes)}${card('Conclusión',data.conclusion)}${card('Advertencia',data.advertencia)}${sourceHtml}`;
-}
-$('analyzeButton').addEventListener('click',async()=>{
- const text=$('newsInput').value.trim();if(!text){alert('Pega texto o un enlace.');return}
- const btn=$('analyzeButton');const box=$('result');btn.disabled=true;btn.textContent='ANALIZANDO...';box.style.display='block';box.innerHTML='<h2>INVESTIGANDO...</h2><div class="card"><p>Buscando evidencia y revisando el contenido accesible.</p></div>';
- try{
-   const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
-   const raw=await r.text();let data;try{data=JSON.parse(raw)}catch{throw new Error(raw||`Error HTTP ${r.status}`)}
-   if(!r.ok)throw new Error(data.detalle||data.error||`Error HTTP ${r.status}`);
-   render(data,text);
- }catch(e){box.innerHTML=`<h2>NO SE PUDO COMPLETAR EL ANÁLISIS</h2>${card('Error',e.message||'Error desconocido','notice')}`}
- finally{btn.disabled=false;btn.textContent='ANALIZAR CREDIBILIDAD'}
-});
-</script>
-</body></html>
+  <header class="site-header">
+    <div class="nav">
+      <div class="brand">LA VERDAD <span>INCÓMODA</span></div>
+      <div class="status">Verificación con evidencia pública</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA DIGITAL</div>
+      <h1>No creas.<br /><span>Comprueba.</span></h1>
+      <p class="subtitle">
+        Haz una pregunta, pega un texto o enlace público, o sube una imagen,
+        audio, video o documento. La plataforma identifica afirmaciones,
+        busca evidencia pública y explica con transparencia qué pudo comprobar.
+      </p>
+    </section>
+
+    <section class="how">
+      <h2 class="section-title">¿Cómo funciona?</h2>
+
+      <div class="how-grid">
+        <article class="how-card">
+          <span class="how-icon">💬</span>
+          <h3>Haz una pregunta</h3>
+          <p>Pregunta si una afirmación, noticia, dato, discurso o rumor es verdadero.</p>
+        </article>
+
+        <article class="how-card">
+          <span class="how-icon">📝</span>
+          <h3>Pega texto</h3>
+          <p>Analiza publicaciones, cadenas de WhatsApp, declaraciones y noticias.</p>
+        </article>
+
+        <article class="how-card">
+          <span class="how-icon">🌐</span>
+          <h3>Pega un enlace</h3>
+          <p>Usa páginas y contenido público de YouTube, Facebook, TikTok, X, Instagram o Threads.</p>
+        </article>
+
+        <article class="how-card">
+          <span class="how-icon">📷</span>
+          <h3>Sube una imagen</h3>
+          <p>Revisa fotografías, capturas, memes, infografías y documentos escaneados.</p>
+        </article>
+
+        <article class="how-card">
+          <span class="how-icon">🎧</span>
+          <h3>Sube audio o video</h3>
+          <p>Permite transcribir lo que se escucha y analizar la información visual disponible.</p>
+        </article>
+
+        <article class="how-card">
+          <span class="how-icon">📄</span>
+          <h3>Sube documentos</h3>
+          <p>Admite PDF, Word, Excel, PowerPoint y archivos de texto, según la capacidad del servidor.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <h2>¿Qué quieres verificar?</h2>
+      <p class="workspace-intro">
+        Escribe una pregunta, pega información o añade un archivo. Puedes combinar texto y archivo para explicar qué deseas comprobar.
+      </p>
+
+      <textarea
+        id="newsInput"
+        placeholder="Ejemplo: ¿Es cierto que...? También puedes pegar una noticia, declaración o enlace público."
+      ></textarea>
+
+      <div class="platforms" aria-label="Plataformas compatibles">
+        <span>Facebook</span>
+        <span>TikTok</span>
+        <span>YouTube</span>
+        <span>Instagram</span>
+        <span>X</span>
+        <span>Threads</span>
+        <span>Páginas web</span>
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <h3>Arrastra un archivo aquí</h3>
+        <p>Imagen, audio, video, PDF, Word, Excel, PowerPoint o TXT.</p>
+
+        <label class="file-button" for="fileInput">Seleccionar archivo</label>
+        <input
+          id="fileInput"
+          type="file"
+          accept="image/*,audio/*,video/*,.pdf,.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+        />
+
+        <div class="selected-file" id="selectedFile">
+          <strong id="fileName"></strong>
+          <small id="fileDetails"></small>
+          <div class="file-actions">
+            <button class="secondary-button" id="removeFile" type="button">Quitar archivo</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="mode-row">
+        <button class="mode active" type="button" data-mode="rapido">
+          <strong>⚡ Análisis rápido</strong>
+          <small>Primera evaluación con fuentes públicas.</small>
+        </button>
+
+        <button class="mode" type="button" data-mode="profundo">
+          <strong>🔎 Investigación profunda</strong>
+          <small>Solicita mayor contraste y contexto.</small>
+        </button>
+      </div>
+
+      <button class="analyze-button" id="analyzeButton" type="button">
+        ANALIZAR CREDIBILIDAD
+      </button>
+
+      <div class="progress" id="progress">
+        <div class="progress-label" id="progressLabel">Preparando el análisis…</div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="result" id="result" aria-live="polite"></section>
+
+    <section class="features">
+      <article class="feature">
+        <h3>Lee el contenido</h3>
+        <p>Extrae el texto y los metadatos que estén disponibles en páginas y publicaciones públicas.</p>
+      </article>
+
+      <article class="feature">
+        <h3>Procesa archivos</h3>
+        <p>Envía imágenes, audio, video y documentos al motor cuando el servidor tenga habilitado su procesamiento.</p>
+      </article>
+
+      <article class="feature">
+        <h3>Investiga y cita</h3>
+        <p>Contrasta afirmaciones con fuentes públicas e identifica las limitaciones del análisis.</p>
+      </article>
+    </section>
+
+    <p class="disclaimer">
+      La Verdad Incómoda no sustituye el juicio crítico, el trabajo periodístico
+      ni un peritaje profesional. Su propósito es ayudar a contrastar información
+      mediante inteligencia artificial, evidencia digital y fuentes públicas verificables.
+      Cuando una plataforma impida acceder al contenido, no deberá emitirse un veredicto sin evidencia.
+    </p>
+  </main>
+
+  <footer>© 2026 La Verdad Incómoda · Verifica antes de creer</footer>
+
+  <script>
+    const newsInput = document.getElementById("newsInput");
+    const fileInput = document.getElementById("fileInput");
+    const dropZone = document.getElementById("dropZone");
+    const selectedFileBox = document.getElementById("selectedFile");
+    const fileName = document.getElementById("fileName");
+    const fileDetails = document.getElementById("fileDetails");
+    const removeFileButton = document.getElementById("removeFile");
+    const analyzeButton = document.getElementById("analyzeButton");
+    const progress = document.getElementById("progress");
+    const progressLabel = document.getElementById("progressLabel");
+    const progressBar = document.getElementById("progressBar");
+    const result = document.getElementById("result");
+    const modeButtons = [...document.querySelectorAll(".mode")];
+
+    let selectedFile = null;
+    let selectedMode = "rapido";
+    let progressTimer = null;
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function safeUrl(value) {
+      try {
+        const url = new URL(value);
+        if (url.protocol === "http:" || url.protocol === "https:") return url.href;
+      } catch {}
+      return "";
+    }
+
+    function formatBytes(bytes) {
+      if (!Number.isFinite(bytes) || bytes <= 0) return "Tamaño desconocido";
+      const units = ["B", "KB", "MB", "GB"];
+      const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+      return `${(bytes / Math.pow(1024, index)).toFixed(index ? 1 : 0)} ${units[index]}`;
+    }
+
+    function updateSelectedFile(file) {
+      selectedFile = file || null;
+
+      if (!selectedFile) {
+        fileInput.value = "";
+        selectedFileBox.classList.remove("visible");
+        fileName.textContent = "";
+        fileDetails.textContent = "";
+        return;
+      }
+
+      fileName.textContent = selectedFile.name;
+      fileDetails.textContent = `${selectedFile.type || "Tipo desconocido"} · ${formatBytes(selectedFile.size)}`;
+      selectedFileBox.classList.add("visible");
+    }
+
+    async function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const value = String(reader.result || "");
+          const comma = value.indexOf(",");
+          resolve(comma >= 0 ? value.slice(comma + 1) : value);
+        };
+
+        reader.onerror = () => reject(new Error("No se pudo leer el archivo."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function setProgress(visible, label = "Preparando el análisis…", percentage = 0) {
+      progress.classList.toggle("visible", visible);
+      progressLabel.textContent = label;
+      progressBar.style.width = `${Math.max(0, Math.min(100, percentage))}%`;
+    }
+
+    function beginProgress() {
+      const stages = [
+        ["Recibiendo información…", 12],
+        ["Clasificando el contenido…", 25],
+        ["Extrayendo información disponible…", 40],
+        ["Buscando evidencia pública…", 58],
+        ["Contrastando fuentes…", 73],
+        ["Preparando el informe…", 88]
+      ];
+
+      let index = 0;
+      setProgress(true, stages[0][0], stages[0][1]);
+
+      progressTimer = setInterval(() => {
+        index = Math.min(index + 1, stages.length - 1);
+        setProgress(true, stages[index][0], stages[index][1]);
+      }, 1100);
+    }
+
+    function finishProgress() {
+      clearInterval(progressTimer);
+      progressTimer = null;
+      setProgress(true, "Análisis terminado.", 100);
+      setTimeout(() => setProgress(false), 700);
+    }
+
+    function stopProgressWithError() {
+      clearInterval(progressTimer);
+      progressTimer = null;
+      setProgress(true, "No fue posible completar el análisis.", 100);
+    }
+
+    function normaliseSources(data) {
+      const raw = data?.fuentes || data?.sources || [];
+      if (!Array.isArray(raw)) return [];
+
+      return raw
+        .map((source) => {
+          if (typeof source === "string") {
+            return { titulo: source, url: "", aporte: "" };
+          }
+
+          return {
+            titulo: source?.titulo || source?.title || source?.name || source?.url || "Fuente",
+            url: safeUrl(source?.url || source?.link || ""),
+            aporte: source?.aporte || source?.description || source?.snippet || ""
+          };
+        })
+        .filter((source) => source.titulo || source.url);
+    }
+
+    function renderBlocked(data) {
+      const steps = Array.isArray(data?.instrucciones)
+        ? `<ul>${data.instrucciones.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`
+        : "";
+
+      result.innerHTML = `
+        <h2 class="verdict">SIN ACCESO AL CONTENIDO</h2>
+        <div class="result-grid">
+          <article class="result-card full">
+            <h3>Qué ocurrió</h3>
+            <p>${escapeHtml(data?.mensaje || "La plataforma impidió acceder automáticamente al contenido.")}</p>
+          </article>
+
+          <article class="result-card full">
+            <h3>Conclusión</h3>
+            <p>${escapeHtml(data?.conclusion || "No se emitió ningún veredicto porque no se obtuvo la evidencia necesaria.")}</p>
+          </article>
+
+          ${steps ? `
+            <article class="result-card full">
+              <h3>Para continuar</h3>
+              ${steps}
+            </article>
+          ` : ""}
+        </div>
+
+        ${renderActions()}
+      `;
+
+      result.classList.add("visible");
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function renderActions() {
+      return `
+        <div class="result-actions">
+          <button type="button" onclick="copyReport()">Copiar informe</button>
+          <button type="button" onclick="shareReport()">Compartir</button>
+          <button type="button" onclick="window.print()">Guardar como PDF</button>
+        </div>
+      `;
+    }
+
+    function renderResult(data) {
+      if (data?.estado === "sin_acceso" || data?.analizado === false) {
+        renderBlocked(data);
+        return;
+      }
+
+      const verdict = String(data?.veredicto || data?.resultado || "Evidencia insuficiente")
+        .replaceAll("_", " ")
+        .toUpperCase();
+
+      const confidenceRaw = Number(data?.confianza ?? data?.nivel_de_confianza);
+      const confidence = Number.isFinite(confidenceRaw)
+        ? Math.max(0, Math.min(100, confidenceRaw))
+        : null;
+
+      const sources = normaliseSources(data);
+
+      const sourceHtml = sources.length
+        ? `<div class="source-list">${sources.map((source) => {
+            const body = `
+              <strong>${escapeHtml(source.titulo)}</strong>
+              ${source.aporte ? `<small>${escapeHtml(source.aporte)}</small>` : ""}
+            `;
+
+            return source.url
+              ? `<a class="source" href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${body}</a>`
+              : `<div class="source">${body}</div>`;
+          }).join("")}</div>`
+        : `<p>No se proporcionaron fuentes visibles. El resultado debe considerarse incompleto hasta contar con referencias verificables.</p>`;
+
+      result.innerHTML = `
+        <h2 class="verdict">VEREDICTO: ${escapeHtml(verdict)}</h2>
+        ${confidence !== null ? `<div class="confidence">Confianza: ${confidence}%</div>` : ""}
+
+        <div class="result-grid">
+          <article class="result-card">
+            <h3>Contenido analizado</h3>
+            <p>${escapeHtml(data?.contenido_analizado || newsInput.value || selectedFile?.name || "No especificado")}</p>
+          </article>
+
+          <article class="result-card">
+            <h3>Tipo y plataforma</h3>
+            <p>${escapeHtml(data?.tipo_plataforma || data?.plataforma || data?.tipo || "No especificado")}</p>
+          </article>
+
+          <article class="result-card">
+            <h3>Credibilidad</h3>
+            <p>${escapeHtml(data?.credibilidad || "No especificada")}</p>
+          </article>
+
+          <article class="result-card">
+            <h3>Contraste de fuentes</h3>
+            <p>${escapeHtml(data?.contraste_fuentes || "No se proporcionó un contraste detallado.")}</p>
+          </article>
+
+          <article class="result-card full">
+            <h3>Conclusión</h3>
+            <p>${escapeHtml(data?.conclusion || "No se proporcionó una conclusión.")}</p>
+          </article>
+
+          ${data?.advertencia ? `
+            <article class="result-card full">
+              <h3>Advertencia</h3>
+              <p>${escapeHtml(data.advertencia)}</p>
+            </article>
+          ` : ""}
+
+          <article class="result-card full">
+            <h3>Fuentes consultadas</h3>
+            ${sourceHtml}
+          </article>
+        </div>
+
+        ${renderActions()}
+      `;
+
+      result.classList.add("visible");
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function renderError(message) {
+      result.innerHTML = `
+        <h2 class="verdict">NO SE PUDO COMPLETAR EL ANÁLISIS</h2>
+        <div class="result-grid">
+          <article class="result-card full">
+            <h3>Detalle</h3>
+            <p>${escapeHtml(message || "Ocurrió un error desconocido.")}</p>
+          </article>
+        </div>
+      `;
+
+      result.classList.add("visible");
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function analyze() {
+      const text = newsInput.value.trim();
+
+      if (!text && !selectedFile) {
+        alert("Escribe una pregunta, pega texto o selecciona un archivo.");
+        return;
+      }
+
+      analyzeButton.disabled = true;
+      result.classList.remove("visible");
+      result.innerHTML = "";
+      beginProgress();
+
+      try {
+        const payload = {
+          text,
+          mode: selectedMode
+        };
+
+        if (selectedFile) {
+          payload.file = {
+            name: selectedFile.name,
+            type: selectedFile.type || "application/octet-stream",
+            size: selectedFile.size,
+            data: await fileToBase64(selectedFile)
+          };
+        }
+
+        const response = await fetch("/api/analyze", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const rawText = await response.text();
+        let data;
+
+        try {
+          data = rawText ? JSON.parse(rawText) : {};
+        } catch {
+          throw new Error(rawText || `El servidor respondió con HTTP ${response.status}.`);
+        }
+
+        if (!response.ok) {
+          const detail = data?.detalle || data?.error || data?.message || `Error HTTP ${response.status}`;
+          throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+        }
+
+        finishProgress();
+        renderResult(data);
+      } catch (error) {
+        stopProgressWithError();
+        renderError(error?.message || "Error desconocido.");
+      } finally {
+        analyzeButton.disabled = false;
+      }
+    }
+
+    function reportText() {
+      const text = result.innerText.trim();
+      return text || "La Verdad Incómoda";
+    }
+
+    async function copyReport() {
+      try {
+        await navigator.clipboard.writeText(reportText());
+        alert("Informe copiado.");
+      } catch {
+        alert("No fue posible copiar automáticamente. Mantén presionado el texto para copiarlo.");
+      }
+    }
+
+    async function shareReport() {
+      const shareData = {
+        title: "La Verdad Incómoda",
+        text: reportText(),
+        url: window.location.href
+      };
+
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else {
+          await navigator.clipboard.writeText(`${shareData.text}\n${shareData.url}`);
+          alert("El informe y el enlace fueron copiados.");
+        }
+      } catch (error) {
+        if (error?.name !== "AbortError") {
+          alert("No fue posible compartir el informe.");
+        }
+      }
+    }
+
+    fileInput.addEventListener("change", () => {
+      updateSelectedFile(fileInput.files?.[0] || null);
+    });
+
+    removeFileButton.addEventListener("click", () => {
+      updateSelectedFile(null);
+    });
+
+    ["dragenter", "dragover"].forEach((eventName) => {
+      dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.add("dragging");
+      });
+    });
+
+    ["dragleave", "drop"].forEach((eventName) => {
+      dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.remove("dragging");
+      });
+    });
+
+    dropZone.addEventListener("drop", (event) => {
+      const file = event.dataTransfer?.files?.[0];
+      if (file) updateSelectedFile(file);
+    });
+
+    modeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        selectedMode = button.dataset.mode || "rapido";
+        modeButtons.forEach((item) => item.classList.toggle("active", item === button));
+      });
+    });
+
+    analyzeButton.addEventListener("click", analyze);
+
+    window.copyReport = copyReport;
+    window.shareReport = shareReport;
+  </script>
+</body>
+</html>
+
