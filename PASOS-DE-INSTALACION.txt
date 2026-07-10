@@ -1,0 +1,25 @@
+LA VERDAD INCÓMODA — INSTALACIÓN
+
+1. Descomprime este ZIP.
+2. En GitHub, sustituye el contenido del repositorio por estos archivos:
+   - index.html
+   - api/analyze.js
+   - package.json
+   - vercel.json
+   - README.md
+3. Conserva en Vercel la variable OPENAI_API_KEY.
+4. En Vercel verifica que el proyecto esté conectado a la rama main.
+5. Haz un nuevo despliegue (Redeploy) si Vercel no lo inicia automáticamente.
+6. Prueba en este orden:
+   a) texto;
+   b) enlace de noticia;
+   c) imagen;
+   d) audio corto;
+   e) video corto;
+   f) enlace público de red social.
+
+IMPORTANTE
+- El sistema intenta leer automáticamente enlaces públicos y usa investigación web.
+- Facebook, Instagram, TikTok y otras plataformas pueden bloquear el acceso automatizado, exigir inicio de sesión o no entregar el video/audio. En esos casos la página pedirá subir el archivo y NO inventará un veredicto.
+- Para video se analizan cuatro fotogramas y, cuando el navegador lo permite, el audio de los primeros 45 segundos.
+- Para archivos grandes, comprime o recorta el material antes de subirlo.
