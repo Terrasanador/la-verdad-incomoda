@@ -1,9 +1,23 @@
-# La Verdad Incómoda v3
+# La Verdad Incómoda 2.0
 
-Corrección principal:
+Motor de investigación y evaluación de credibilidad con IA y evidencia digital.
 
-- Si Facebook, Instagram o TikTok bloquean el contenido, el sistema no emite veredicto, no muestra confianza 0 % y no inventa fuentes.
-- Para texto y páginas públicas accesibles, usa búsqueda web y exige fuentes.
-- Los errores del servidor se muestran como texto legible, no como `[object Object]`.
+## Funciones
 
-Variable necesaria en Vercel: `OPENAI_API_KEY`.
+- Preguntas, texto y enlaces públicos.
+- Búsqueda web y contraste de fuentes.
+- Evaluación positiva, negativa, mixta o insuficiente.
+- Análisis de imágenes.
+- Transcripción y análisis de audio.
+- Análisis de TXT, PDF y documentos compatibles.
+- Video: el servidor recibe el archivo, pero esta versión todavía no extrae audio ni fotogramas; solicita audio, capturas o transcripción en lugar de inventar un resultado.
+
+## Variables de Vercel
+
+- `OPENAI_API_KEY` obligatoria.
+- `OPENAI_MODEL` opcional; predeterminado: `gpt-4.1-mini`.
+- `OPENAI_TRANSCRIBE_MODEL` opcional; predeterminado: `gpt-4o-mini-transcribe`.
+
+## Límite de archivos
+
+La interfaz limita los archivos a 3.5 MB para mantenerse debajo del límite de solicitud del despliegue.
