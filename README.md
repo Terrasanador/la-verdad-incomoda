@@ -1,4 +1,4 @@
-# La Verdad Incómoda 2.0
+# La Verdad Incómoda 2.1
 
 Motor de investigación y evaluación de credibilidad con IA y evidencia digital.
 
@@ -21,3 +21,9 @@ Motor de investigación y evaluación de credibilidad con IA y evidencia digital
 ## Límite de archivos
 
 La interfaz limita los archivos a 3.5 MB para mantenerse debajo del límite de solicitud del despliegue.
+
+
+## Cambio 2.1
+
+- Encabezado y explicación reducidos para que el cuadro de consulta aparezca casi de inmediato en teléfonos.
+- Se mantiene la evaluación positiva, negativa o mixta basada en evidencia digital pública.
