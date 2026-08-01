@@ -118,6 +118,15 @@ const texto = tieneTexto
       "NO VERIFICABLE",
       "",
       "PORCENTAJES:",
+      "REGLAS PARA CONFIANZA:",
+"La confianza no debe usar valores fijos ni repetirse automáticamente.",
+"Usa 95 a 100 cuando existan varias fuentes independientes, evidencia primaria clara, coincidencia entre fuentes y ninguna limitación material.",
+"Usa 85 a 94 cuando la evidencia sea fuerte, pero exista alguna limitación menor.",
+"Usa 70 a 84 cuando la evidencia sea razonable pero incompleta.",
+"Usa 40 a 69 cuando existan contradicciones, pocas fuentes o acceso parcial.",
+"Usa 0 a 39 cuando no haya evidencia suficiente o el contenido no pueda consultarse.",
+"No reduzcas la confianza únicamente porque la conclusión sea FALSA.",
+"No aumentes la confianza únicamente porque muchas páginas repitan la misma información.",
       '"credibilidad" es la probabilidad estimada de que la afirmación sea cierta.',
       '"confianza" es la solidez del análisis.',
       "Ejemplo falso claro: credibilidad 5, confianza 95.",
@@ -197,31 +206,38 @@ const texto = tieneTexto
       "Comprueba que el resumen sea texto, que credibilidad y confianza no estén invertidas, que las evidencias estén llenas cuando existan, que las encuestas incluyan metodología o limitaciones, que reputación no se confunda con popularidad, que no haya acusaciones generales sin evidencia y que todas las URLs sean auténticas."
     ].join("\n");
 
-    const contenidoUsuario = [
-  {
-    type: "input_text",
-    text: tieneTexto
-      ? `Modo de investigación: ${modo}.\n\nConsulta:\n${texto}`
-      : `Modo de investigación: ${modo}.\n\nAnaliza el archivo adjunto.`
-  }
-];
+    const contenidoUsuario = [];
 
-    if (
-      archivo &&
-      typeof archivo === "object" &&
-      typeof archivo.data === "string" &&
-      typeof archivo.type === "string" &&
-      archivo.type.startsWith("image/")
-    ) {
-      contenidoUsuario.push({
-        type: "input_image",
-        image_url: `data:${archivo.type};base64,${archivo.data}`
-      });
-    } else if (archivo && archivo.name) {
-      contenidoUsuario[0].text +=
-        `\n\nEl usuario adjuntó "${archivo.name}", pero este formato no pudo ` +
-        "enviarse directamente. Declara la limitación y no simules haberlo analizado.";
-    }
+if (tieneTexto) {
+  contenidoUsuario.push({
+    type: "input_text",
+    text: `Modo de investigación: ${modo}.
+
+Consulta:
+${texto}`
+  });
+}
+
+if (
+  archivo &&
+  typeof archivo === "object" &&
+  typeof archivo.data === "string" &&
+  typeof archivo.type === "string" &&
+  archivo.type.startsWith("image/")
+) {
+  contenidoUsuario.push({
+    type: "input_image",
+    image_url: `data:${archivo.type};base64,${archivo.data}`
+  });
+
+  contenidoUsuario.push({
+    type: "input_text",
+    text: "Lee completamente el texto visible de la imagen mediante OCR. Extrae todas las afirmaciones, interprétalas y después realiza la investigación web. No pidas al usuario que escriba el texto de la imagen."
+  });
+}
+
+    
+        
 
 
     const esquemaResultado = {
