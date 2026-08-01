@@ -39,7 +39,9 @@ if (!tieneTexto && !tieneArchivo) {
   });
 }
 
-    const texto = consulta.trim();
+const texto = tieneTexto
+  ? consulta.trim()
+  : "Analiza el archivo adjunto.";
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
 
     const instrucciones = [
@@ -194,10 +196,14 @@ if (!tieneTexto && !tieneArchivo) {
       "Comprueba que el resumen sea texto, que credibilidad y confianza no estén invertidas, que las evidencias estén llenas cuando existan, que las encuestas incluyan metodología o limitaciones, que reputación no se confunda con popularidad, que no haya acusaciones generales sin evidencia y que todas las URLs sean auténticas."
     ].join("\n");
 
-    const contenidoUsuario = [{
-      type: "input_text",
-      text: `Modo de investigación: ${modo}.\n\nConsulta:\n${texto}`
-    }];
+    const contenidoUsuario = [
+  {
+    type: "input_text",
+    text: tieneTexto
+      ? `Modo de investigación: ${modo}.\n\nConsulta:\n${texto}`
+      : `Modo de investigación: ${modo}.\n\nAnaliza el archivo adjunto.`
+  }
+];
 
     if (
       archivo &&
