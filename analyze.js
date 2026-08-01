@@ -404,7 +404,7 @@ if (
         }],
         tool_choice: "auto",
         include: ["web_search_call.action.sources"],
-        max_output_tokens: modo === "profundo" ? 2000 : 1200
+        max_output_tokens: modo === "profundo" ? 8000 : 5000
       })
     });
 
