@@ -16,6 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
+    const body = req.body || {};
     const consulta =
   body.consulta ||
   body.pregunta ||
