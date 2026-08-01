@@ -43,13 +43,5 @@
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "analyze.js": {
-      "maxDuration": 300
-    },
-    "health.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
