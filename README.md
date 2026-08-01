@@ -7,3 +7,4 @@ Vercel publica:
 - `health.js` como `/api/health`
 
 Configura `OPENAI_API_KEY` en Vercel.
+Actualización de configuración.
