@@ -16,27 +16,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    const body = req.body || {};
     const consulta =
-      body.consulta ||
-      body.pregunta ||
-      body.question ||
-      body.query ||
-      body.text ||
-      body.input ||
-      body.content ||
-      body.url ||
-      "";
+  body.consulta ||
+  body.pregunta ||
+  body.question ||
+  body.query ||
+  body.text ||
+  body.input ||
+  body.content ||
+  body.url ||
+  "";
 
-    if (typeof consulta !== "string" || !consulta.trim()) {
-      return res.status(400).json({
-        error: "Escribe una pregunta, afirmación o enlace para analizar."
-      });
-    }
+const tieneTexto =
+  typeof consulta === "string" && consulta.trim().length > 0;
+
+const archivo = body.file || null;
+const tieneArchivo = !!archivo;
+
+if (!tieneTexto && !tieneArchivo) {
+  return res.status(400).json({
+    error: "Escribe una pregunta, pega un enlace o adjunta un archivo."
+  });
+}
 
     const texto = consulta.trim();
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
-    const archivo = body.file || null;
 
     const instrucciones = [
       'Eres el motor de investigación y verificación de hechos de "La Verdad Incómoda".',
