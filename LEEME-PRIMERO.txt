@@ -1,0 +1,4 @@
+EDICIÓN ANDROID SIN CARPETAS
+
+Sube todos los archivos directamente a la raíz.
+No subas el ZIP: sube los archivos que contiene.

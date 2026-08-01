@@ -1,0 +1,12 @@
+INSTALACIÓN DESDE ANDROID
+
+1. Descomprime este ZIP en Descargas.
+2. Abre el repositorio vacío en GitHub.
+3. Toca “uploading an existing file”.
+4. Selecciona TODOS los archivos descomprimidos.
+5. Toca Commit changes.
+6. Importa el repositorio en Vercel.
+7. Configura OPENAI_API_KEY.
+8. Prueba /api/health.
+
+Todos los archivos deben verse en la primera pantalla del repositorio.
