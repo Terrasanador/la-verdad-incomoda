@@ -1,3 +1,6 @@
+// La Verdad Incómoda — analyze.js v2.0
+// Revisión integral: imágenes, acceso restringido, confianza y coherencia del veredicto.
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -152,10 +155,10 @@ const texto = tieneTexto
       "",
       "",
 "COHERENCIA DEL VEREDICTO:",
-"Si la clasificación técnica es VERDADERO o MAYORMENTE VERDADERO, el veredicto_final debe ser CIERTA.",
-"Si la clasificación técnica es FALSO, ENGAÑOSO, FUERA DE CONTEXTO, CONTENIDO MANIPULADO o CADENA DE DESINFORMACIÓN, el veredicto_final debe ser FALSA cuando el núcleo de la afirmación resulte materialmente incorrecto.",
-"Si la clasificación técnica es PARCIALMENTE VERDADERO, determina si el núcleo principal queda materialmente respaldado o contradicho y usa CIERTA o FALSA en consecuencia, explicando con precisión las partes verdaderas, falsas o no demostradas.",
-"Usa NO VERIFICABLE solo cuando no sea posible identificar o comprobar responsablemente la afirmación principal.",
+"Si la clasificación técnica es PARCIALMENTE VERDADERO, el veredicto_final no puede ser CIERTA ni FALSA de forma categórica.",
+"Si la clasificación técnica es VERDADERO, el veredicto_final debe ser CIERTA.",
+"Si la clasificación técnica es FALSO, el veredicto_final debe ser FALSA.",
+"Si existen partes verdaderas y partes falsas, usa PARCIALMENTE VERDADERO como clasificación y explica cuáles son.",
 "No conviertas una generalización sobre un medio, gobierno, periodista o institución en un hecho probado sin evidencia suficiente.",
 "FORMATO:",
       "Devuelve únicamente JSON válido, sin Markdown ni texto adicional.",
@@ -246,7 +249,7 @@ if (
 
   contenidoUsuario.push({
     type: "input_text",
-    text: "Lee todo el texto visible de la imagen. Identifica la afirmación principal, nombres, fechas, cifras, titulares y cualquier URL visible. Usa esa información para realizar la búsqueda web y contrastar fuentes. No pidas al usuario que vuelva a escribir texto que sea legible en la imagen. Si algo no se puede leer, indica exactamente qué parte quedó ilegible."
+    text: "Examina la imagen directamente. Lee todo el texto visible, identifica titulares, nombres, fechas, cifras, logotipos y afirmaciones comprobables. Usa esos datos para realizar la búsqueda web. No pidas al usuario que vuelva a escribir información legible en la imagen. Si una parte no se distingue, declara exactamente qué fragmento no pudo leerse."
   });
 }
 
@@ -653,6 +656,10 @@ if (
       typeof archivo.type === "string" &&
       archivo.type.startsWith("image/");
 
+    const consultaEsEnlace =
+      tieneTexto &&
+      /^https?:\/\//i.test(texto.trim());
+
     const hayContenidoUtil =
       Boolean(resultado.afirmacion_principal?.trim()) ||
       Boolean(resultado.respuesta_directa?.trim()) ||
@@ -662,9 +669,13 @@ if (
       resultado.evidencia_en_contra.length > 0;
 
     const accesoRealmenteBloqueado =
+      consultaEsEnlace &&
       !esImagen &&
       !hayContenidoUtil &&
-      (resultado.estado === "sin_acceso" || pareceSinAcceso(textoDiagnostico));
+      (
+        resultado.estado === "sin_acceso" ||
+        pareceSinAcceso(textoDiagnostico)
+      );
 
     if (accesoRealmenteBloqueado) {
       resultado.estado = "sin_acceso";
@@ -674,22 +685,22 @@ if (
       resultado.confianza = Math.min(resultado.confianza || 40, 40);
 
       resultado.explicacion_veredicto_final =
-        "No se conoce con certeza el contenido del enlace, por lo que no es responsable declararlo cierto ni falso.";
+        "La plataforma restringió el acceso y no fue posible recuperar suficiente contenido verificable para evaluar la afirmación.";
 
       resultado.respuesta_directa =
-        "No fue posible recuperar suficiente contenido verificable del enlace.";
+        "No fue posible acceder automáticamente a esta publicación. Comparte una captura legible, el texto completo o un enlace público alternativo para realizar la verificación.";
 
       resultado.resumen =
-        "El enlace no pudo consultarse y la búsqueda pública no recuperó una copia suficiente.";
+        "La investigación intentó consultar la publicación y buscar referencias públicas, pero no recuperó contenido suficiente. El resultado correcto es NO VERIFICABLE.";
 
       resultado.conclusion =
-        "Sin conocer la afirmación concreta no se puede confirmar ni desmentir su veracidad.";
+        "Sin conocer la afirmación concreta no se puede confirmar ni desmentir responsablemente su veracidad.";
 
       resultado.evidencia_a_favor = [];
       resultado.evidencia_en_contra = [];
       resultado.indicadores_desinformacion = [];
       resultado.mensaje =
-        "La plataforma impidió acceder al contenido del enlace.";
+        "La plataforma limitó el acceso al contenido. Comparte una captura legible, el texto completo o un enlace alternativo para continuar.";
     } else {
       resultado.estado = "analizado";
     }
@@ -766,24 +777,42 @@ if (
     resultado.fuentes = fuentesFinales;
     resultado.busqueda_web_realizada = fuentesFinales.length > 0;
 
-    const tiposPrimarios = /oficial|primaria|académica|científica|documento|registro/i;
     const fuentesPrimarias = fuentesFinales.filter(fuente =>
-      tiposPrimarios.test(String(fuente.tipo || ""))
+      /oficial|primaria|acad[eé]mica|cient[ií]fica|documento|registro/i
+        .test(`${fuente.tipo} ${fuente.titulo}`)
     ).length;
-    const penalizacionLimitaciones = Math.min(24, resultado.limitaciones.length * 4);
-    let confianzaCalculada = 42 + Math.min(40, fuentesFinales.length * 8);
-    confianzaCalculada += Math.min(12, fuentesPrimarias * 4);
-    confianzaCalculada -= penalizacionLimitaciones;
 
-    if (resultado.estado === "sin_acceso") {
-      confianzaCalculada = Math.min(confianzaCalculada, 40);
-    } else if (fuentesFinales.length === 0) {
-      confianzaCalculada = Math.min(confianzaCalculada, 55);
-    }
+    const cantidadLimitaciones = resultado.limitaciones.length;
+    const evidenciaMixta =
+      resultado.evidencia_a_favor.length > 0 &&
+      resultado.evidencia_en_contra.length > 0;
 
-    resultado.confianza = limitarPorcentaje(
-      Math.min(98, Math.max(resultado.confianza || 0, confianzaCalculada))
-    );
+    const calibrarConfianza = () => {
+      if (resultado.estado === "sin_acceso") return Math.min(resultado.confianza || 40, 40);
+
+      let valor = 45;
+
+      if (fuentesFinales.length >= 1) valor += 12;
+      if (fuentesFinales.length >= 2) valor += 8;
+      if (fuentesFinales.length >= 4) valor += 8;
+      if (fuentesFinales.length >= 6) valor += 5;
+
+      valor += Math.min(15, fuentesPrimarias * 5);
+      valor -= Math.min(25, cantidadLimitaciones * 5);
+      if (evidenciaMixta) valor -= 5;
+
+      if (
+        fuentesFinales.length >= 5 &&
+        fuentesPrimarias >= 2 &&
+        cantidadLimitaciones === 0
+      ) {
+        valor = Math.max(valor, 95);
+      }
+
+      return limitarPorcentaje(Math.max(20, Math.min(98, valor)));
+    };
+
+    resultado.confianza = calibrarConfianza();
 
     let contraste = String(resultado.contraste_fuentes || "").trim();
 
@@ -806,6 +835,13 @@ if (
 
     if (resultado.veredicto === "VERDADERO" && resultado.credibilidad < 50) {
       resultado.credibilidad = 100 - resultado.credibilidad;
+    }
+
+    if (resultado.veredicto === "PARCIALMENTE VERDADERO") {
+      resultado.veredicto_final = "NO VERIFICABLE";
+      resultado.explicacion_veredicto_final =
+        resultado.explicacion_veredicto_final ||
+        "La afirmación mezcla elementos confirmados con partes falsas, imprecisas o no demostradas; por eso no corresponde declararla completamente cierta o falsa.";
     }
 
     return res.status(200).json(resultado);

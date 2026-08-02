@@ -1,7 +1,24 @@
-CORRECCIÓN FINAL
+LA VERDAD INCÓMODA — analyze.js v2.0
 
-1. Reemplaza en GitHub los archivos actuales analyze.js e index.html por estos dos archivos.
-2. Confirma los cambios en la rama main.
-3. Espera a que Vercel cree un nuevo deployment y aparezca como Ready.
-4. Prueba primero con una imagen con texto, sin escribir nada.
-5. El popup solo debe aparecer para enlaces realmente inaccesibles y sin contenido útil recuperado.
+1. Descomprime el ZIP.
+2. En GitHub abre el archivo actual analyze.js.
+3. Reemplázalo completamente por analyze.js incluido en este paquete.
+4. Haz Commit directly to main.
+5. Espera que Vercel cree un deployment nuevo y marque Ready.
+6. Prueba:
+   - imagen con texto, sin escribir consulta;
+   - enlace público;
+   - enlace bloqueado o privado;
+   - afirmación verdadera y falsa.
+
+CAMBIOS PRINCIPALES
+- Envía imágenes con detail: high.
+- Lee el texto visible y lo usa para la búsqueda web.
+- Una imagen con información útil no activa sin_acceso.
+- El aviso para aportar contenido se reserva para enlaces realmente bloqueados y sin información recuperable.
+- Mensajes más claros para 429, contenido privado o restringido.
+- Confianza calculada según fuentes reales, fuentes primarias y limitaciones.
+- Evita presentar una clasificación parcial como completamente cierta o falsa.
+
+IMPORTANTE
+No incluyas OPENAI_API_KEY en GitHub.
