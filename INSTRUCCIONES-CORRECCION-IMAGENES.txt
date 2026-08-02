@@ -1,0 +1,11 @@
+CORRECCIÓN DE LA VENTANA ¿CÓMO FUNCIONA?
+
+1. Reemplaza index.html por el incluido en este ZIP.
+2. Sube el contenido a GitHub.
+3. Haz commit en main.
+4. Espera a que Vercel marque Ready.
+
+CAMBIOS:
+- Las imágenes del ejemplo están incrustadas dentro de index.html.
+- La leyenda se movió al header.
+- La leyenda duplicada se retiró del final de la ventana.
