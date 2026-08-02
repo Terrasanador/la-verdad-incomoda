@@ -632,7 +632,9 @@
       technicalVerdict === "INFORMACIÓN INSUFICIENTE" ||
       technicalVerdict === "INFORMACION INSUFICIENTE";
 
-    return explicitlyBlocked && noVerifiable && !hasUsefulResult(data);
+    // Aunque el backend incluya textos explicativos, el contenido original
+    // sigue sin haberse analizado. Por eso debe abrirse la captura manual.
+    return explicitlyBlocked && noVerifiable;
   }
 
   function openContentModal(data = {}) {
@@ -766,10 +768,9 @@
   }
 
   function render(data) {
-    if (
-      (data.estado === "sin_acceso" || data.analizado === false) &&
-      !hasUsefulResult(data)
-    ) {
+    // Un fallo técnico nunca debe mostrarse como análisis con porcentajes 0%.
+    // Renderizamos el estado bloqueado y solicitamos el contenido manual.
+    if (data.estado === "sin_acceso" || data.analizado === false) {
       renderBlocked(data);
       return;
     }
