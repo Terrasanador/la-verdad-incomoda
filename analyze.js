@@ -152,10 +152,10 @@ const texto = tieneTexto
       "",
       "",
 "COHERENCIA DEL VEREDICTO:",
-"Si la clasificación técnica es PARCIALMENTE VERDADERO, el veredicto_final no puede ser CIERTA ni FALSA de forma categórica.",
-"Si la clasificación técnica es VERDADERO, el veredicto_final debe ser CIERTA.",
-"Si la clasificación técnica es FALSO, el veredicto_final debe ser FALSA.",
-"Si existen partes verdaderas y partes falsas, usa PARCIALMENTE VERDADERO como clasificación y explica cuáles son.",
+"Si la clasificación técnica es VERDADERO o MAYORMENTE VERDADERO, el veredicto_final debe ser CIERTA.",
+"Si la clasificación técnica es FALSO, ENGAÑOSO, FUERA DE CONTEXTO, CONTENIDO MANIPULADO o CADENA DE DESINFORMACIÓN, el veredicto_final debe ser FALSA cuando el núcleo de la afirmación resulte materialmente incorrecto.",
+"Si la clasificación técnica es PARCIALMENTE VERDADERO, determina si el núcleo principal queda materialmente respaldado o contradicho y usa CIERTA o FALSA en consecuencia, explicando con precisión las partes verdaderas, falsas o no demostradas.",
+"Usa NO VERIFICABLE solo cuando no sea posible identificar o comprobar responsablemente la afirmación principal.",
 "No conviertas una generalización sobre un medio, gobierno, periodista o institución en un hecho probado sin evidencia suficiente.",
 "FORMATO:",
       "Devuelve únicamente JSON válido, sin Markdown ni texto adicional.",
@@ -240,12 +240,13 @@ if (
 ) {
   contenidoUsuario.push({
     type: "input_image",
-    image_url: `data:${archivo.type};base64,${archivo.data}`
+    image_url: `data:${archivo.type};base64,${archivo.data}`,
+    detail: "high"
   });
 
   contenidoUsuario.push({
     type: "input_text",
-    text: "Lee completamente el texto visible de la imagen mediante OCR. Extrae todas las afirmaciones, interprétalas y después realiza la investigación web. No pidas al usuario que escriba el texto de la imagen."
+    text: "Lee todo el texto visible de la imagen. Identifica la afirmación principal, nombres, fechas, cifras, titulares y cualquier URL visible. Usa esa información para realizar la búsqueda web y contrastar fuentes. No pidas al usuario que vuelva a escribir texto que sea legible en la imagen. Si algo no se puede leer, indica exactamente qué parte quedó ilegible."
   });
 }
 
@@ -647,11 +648,25 @@ if (
       ...resultado.limitaciones
     ].join(" ");
 
-    if (
-      resultado.estado === "sin_acceso" ||
-      (resultado.veredicto === "INFORMACIÓN INSUFICIENTE" &&
-        pareceSinAcceso(textoDiagnostico))
-    ) {
+    const esImagen =
+      archivo &&
+      typeof archivo.type === "string" &&
+      archivo.type.startsWith("image/");
+
+    const hayContenidoUtil =
+      Boolean(resultado.afirmacion_principal?.trim()) ||
+      Boolean(resultado.respuesta_directa?.trim()) ||
+      Boolean(resultado.resumen?.trim()) ||
+      resultado.hechos_comprobados.length > 0 ||
+      resultado.evidencia_a_favor.length > 0 ||
+      resultado.evidencia_en_contra.length > 0;
+
+    const accesoRealmenteBloqueado =
+      !esImagen &&
+      !hayContenidoUtil &&
+      (resultado.estado === "sin_acceso" || pareceSinAcceso(textoDiagnostico));
+
+    if (accesoRealmenteBloqueado) {
       resultado.estado = "sin_acceso";
       resultado.veredicto = "NO VERIFICABLE";
       resultado.veredicto_final = "NO VERIFICABLE";
@@ -659,13 +674,13 @@ if (
       resultado.confianza = Math.min(resultado.confianza || 40, 40);
 
       resultado.explicacion_veredicto_final =
-        "No se conoce con certeza el contenido o la afirmación del enlace, por lo que no es responsable declararlo cierto ni falso.";
+        "No se conoce con certeza el contenido del enlace, por lo que no es responsable declararlo cierto ni falso.";
 
       resultado.respuesta_directa =
-        "No fue posible acceder al contenido. Comparte el texto, una captura completa o un enlace público alternativo para verificar la afirmación.";
+        "No fue posible recuperar suficiente contenido verificable del enlace.";
 
       resultado.resumen =
-        "El contenido no pudo consultarse y la búsqueda pública no recuperó una copia suficiente. El resultado correcto es NO VERIFICABLE.";
+        "El enlace no pudo consultarse y la búsqueda pública no recuperó una copia suficiente.";
 
       resultado.conclusion =
         "Sin conocer la afirmación concreta no se puede confirmar ni desmentir su veracidad.";
@@ -675,6 +690,8 @@ if (
       resultado.indicadores_desinformacion = [];
       resultado.mensaje =
         "La plataforma impidió acceder al contenido del enlace.";
+    } else {
+      resultado.estado = "analizado";
     }
 
     const fuentesBusqueda = [];
@@ -748,6 +765,25 @@ if (
 
     resultado.fuentes = fuentesFinales;
     resultado.busqueda_web_realizada = fuentesFinales.length > 0;
+
+    const tiposPrimarios = /oficial|primaria|académica|científica|documento|registro/i;
+    const fuentesPrimarias = fuentesFinales.filter(fuente =>
+      tiposPrimarios.test(String(fuente.tipo || ""))
+    ).length;
+    const penalizacionLimitaciones = Math.min(24, resultado.limitaciones.length * 4);
+    let confianzaCalculada = 42 + Math.min(40, fuentesFinales.length * 8);
+    confianzaCalculada += Math.min(12, fuentesPrimarias * 4);
+    confianzaCalculada -= penalizacionLimitaciones;
+
+    if (resultado.estado === "sin_acceso") {
+      confianzaCalculada = Math.min(confianzaCalculada, 40);
+    } else if (fuentesFinales.length === 0) {
+      confianzaCalculada = Math.min(confianzaCalculada, 55);
+    }
+
+    resultado.confianza = limitarPorcentaje(
+      Math.min(98, Math.max(resultado.confianza || 0, confianzaCalculada))
+    );
 
     let contraste = String(resultado.contraste_fuentes || "").trim();
 

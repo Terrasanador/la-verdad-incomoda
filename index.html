@@ -601,6 +601,19 @@
     `;
   }
 
+  function hasUsefulResult(data) {
+    return Boolean(
+      data?.afirmacion_principal ||
+      data?.respuesta_directa ||
+      data?.resumen ||
+      data?.conclusion ||
+      (Array.isArray(data?.hechos_comprobados) && data.hechos_comprobados.length) ||
+      (Array.isArray(data?.evidencia_a_favor) && data.evidencia_a_favor.length) ||
+      (Array.isArray(data?.evidencia_en_contra) && data.evidencia_en_contra.length) ||
+      (Array.isArray(data?.fuentes) && data.fuentes.length)
+    );
+  }
+
   function isNoVerifiableResult(data) {
     const finalVerdict = String(data?.veredicto_final || "")
       .trim()
@@ -610,19 +623,16 @@
       .trim()
       .toUpperCase();
 
-    const displayedVerdict = String(normalizeFinalVerdict(data) || "")
-      .trim()
-      .toUpperCase();
+    const explicitlyBlocked =
+      data?.estado === "sin_acceso" || data?.analizado === false;
 
-    return (
-      data?.estado === "sin_acceso" ||
-      data?.analizado === false ||
+    const noVerifiable =
       finalVerdict === "NO VERIFICABLE" ||
-      displayedVerdict === "NO VERIFICABLE" ||
       technicalVerdict === "NO VERIFICABLE" ||
       technicalVerdict === "INFORMACIÓN INSUFICIENTE" ||
-      technicalVerdict === "INFORMACION INSUFICIENTE"
-    );
+      technicalVerdict === "INFORMACION INSUFICIENTE";
+
+    return explicitlyBlocked && noVerifiable && !hasUsefulResult(data);
   }
 
   function openContentModal(data = {}) {
@@ -672,7 +682,16 @@
   }
 
   function maybeRequestContent(data) {
-    if (!lastResultWasSupplemented && isNoVerifiableResult(data)) {
+    const isImage =
+      selectedFile &&
+      typeof selectedFile.type === "string" &&
+      selectedFile.type.startsWith("image/");
+
+    if (
+      !lastResultWasSupplemented &&
+      !isImage &&
+      isNoVerifiableResult(data)
+    ) {
       addManualContentButton(data);
       setTimeout(() => openContentModal(data), 500);
     }
@@ -748,8 +767,8 @@
 
   function render(data) {
     if (
-      data.estado === "sin_acceso" ||
-      data.analizado === false
+      (data.estado === "sin_acceso" || data.analizado === false) &&
+      !hasUsefulResult(data)
     ) {
       renderBlocked(data);
       return;
