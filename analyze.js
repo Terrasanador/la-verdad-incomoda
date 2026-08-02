@@ -1,5 +1,5 @@
-// La Verdad Incómoda — analyze.js v2.0
-// Revisión integral: imágenes, acceso restringido, confianza y coherencia del veredicto.
+// La Verdad Incómoda — analyze.js v2.1
+// Corrección HTTP 429: separa el estado técnico del veredicto y evita mostrar 0%.
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -133,27 +133,10 @@ const texto = tieneTexto
 "Usa 85 a 94 cuando la evidencia sea fuerte, pero exista alguna limitación menor.",
 "Usa 70 a 84 cuando la evidencia sea razonable pero incompleta.",
 "Usa 40 a 69 cuando existan contradicciones, pocas fuentes o acceso parcial.",
-"Usa 0 a 39 cuando no haya evidencia suficiente o el contenido no pueda consultarse.",
+"Usa 0 a 39 solo cuando sí se analizó la afirmación y la solidez del análisis sea muy baja.",
+"Cuando el contenido no pueda consultarse, credibilidad y confianza deben ser null, no 0 ni 50.",
 "No reduzcas la confianza únicamente porque la conclusión sea FALSA.",
 "No aumentes la confianza únicamente porque muchas páginas repitan la misma información.",
-      "AUTODESCRIPCIÓN VS CALIDAD DEL SERVICIO:",
-"Primero identifica cuál es la afirmación exacta que se está verificando.",
-"Verifica únicamente esa afirmación, no otras relacionadas.",
-"Si la afirmación consiste únicamente en comprobar la existencia de un sitio, organización, persona, documento, empresa, institución o servicio, o verificar cómo se presenta públicamente, evalúa únicamente esa afirmación.",
-"Cuando la propia fuente oficial confirme directamente esa afirmación y no existan indicios de manipulación, asigna una confianza entre 95 y 100.",
-"No reduzcas la confianza por ausencia de auditorías, metodología pública, transparencia, reputación o evaluaciones independientes cuando esos aspectos no formen parte de la afirmación investigada.",
-"La evaluación de la calidad, independencia, precisión, imparcialidad, rigor o confiabilidad general de un servicio constituye una afirmación distinta y debe investigarse por separado.",
-"Nunca confundas verificar una descripción pública con demostrar la calidad o confiabilidad del servicio.",
-"Aplica esta regla a cualquier sitio web, empresa, gobierno, institución, organización, partido político, medio de comunicación, periodista, plataforma digital o red social, incluida La Verdad Incómoda.",
-"",
-"JUSTIFICACIÓN DE LA CONFIANZA:",
-"Antes de asignar el porcentaje de confianza identifica exactamente qué evidencia existe para ESA afirmación concreta.",
-"La confianza debe depender de la cantidad, calidad, actualidad e independencia de la evidencia obtenida para la afirmación específica.",
-"No penalices una afirmación sencilla porque falten pruebas sobre aspectos diferentes que no forman parte de la consulta.",
-"Dos afirmaciones sobre el mismo sujeto pueden requerir niveles de evidencia completamente distintos.",
-"Justifica internamente el porcentaje de confianza antes de responder.",
-"No reutilices porcentajes frecuentes por costumbre.",
-"Calcula la confianza de forma proporcional a la evidencia realmente encontrada.",
       '"credibilidad" es la probabilidad estimada de que la afirmación sea cierta.',
       '"confianza" es la solidez del análisis.',
       "Ejemplo falso claro: credibilidad 5, confianza 95.",
@@ -188,6 +171,7 @@ const texto = tieneTexto
       '  "veredicto": "CLASIFICACIÓN PERMITIDA",',
       '  "credibilidad": 0,',
       '  "confianza": 0,',
+      "Usa null en credibilidad y confianza cuando estado sea sin_acceso.",
       '  "afirmacion_principal": "Afirmación precisa investigada",',
       '  "respuesta_directa": "Respuesta clara y completa",',
       '  "resumen": "Resumen explicativo",',
@@ -308,8 +292,8 @@ if (
             "INFORMACIÓN INSUFICIENTE", "NO VERIFICABLE"
           ]
         },
-        credibilidad: { type: "integer", minimum: 0, maximum: 100 },
-        confianza: { type: "integer", minimum: 0, maximum: 100 },
+        credibilidad: { type: ["integer", "null"], minimum: 0, maximum: 100 },
+        confianza: { type: ["integer", "null"], minimum: 0, maximum: 100 },
         afirmacion_principal: { type: "string" },
         respuesta_directa: { type: "string" },
         resumen: { type: "string" },
@@ -434,6 +418,24 @@ if (
 
     if (!openAIResponse.ok) {
       console.error("Error de OpenAI:", data);
+
+      if (openAIResponse.status === 429) {
+        const retryAfter = openAIResponse.headers.get("retry-after");
+        if (retryAfter) res.setHeader("Retry-After", retryAfter);
+
+        return res.status(429).json({
+          estado: "sin_acceso",
+          estado_tecnico: "OPENAI_HTTP_429",
+          veredicto_final: "NO VERIFICABLE",
+          veredicto: "NO VERIFICABLE",
+          credibilidad: null,
+          confianza: null,
+          mensaje: "El servicio alcanzó temporalmente su límite de solicitudes. Reintenta más tarde.",
+          acciones_disponibles: ["REINTENTAR_MAS_TARDE"],
+          reintentar: true
+        });
+      }
+
       return res.status(openAIResponse.status).json({
         error: data?.error?.message || "OpenAI no pudo completar la investigación."
       });
@@ -496,8 +498,9 @@ if (
     }
 
     const limitarPorcentaje = valor => {
+      if (valor === null || valor === undefined || valor === "") return null;
       const numero = Number(valor);
-      if (!Number.isFinite(numero)) return 0;
+      if (!Number.isFinite(numero)) return null;
       return Math.max(0, Math.min(100, Math.round(numero)));
     };
 
@@ -678,18 +681,11 @@ if (
       tieneTexto &&
       /^https?:\/\//i.test(texto.trim());
 
-    const hayContenidoUtil =
-      Boolean(resultado.afirmacion_principal?.trim()) ||
-      Boolean(resultado.respuesta_directa?.trim()) ||
-      Boolean(resultado.resumen?.trim()) ||
-      resultado.hechos_comprobados.length > 0 ||
-      resultado.evidencia_a_favor.length > 0 ||
-      resultado.evidencia_en_contra.length > 0;
-
+    // Un enlace bloqueado puede producir texto explicativo generado por el modelo.
+    // Por eso no se usa la mera existencia de resumen/respuesta como prueba de acceso.
     const accesoRealmenteBloqueado =
       consultaEsEnlace &&
       !esImagen &&
-      !hayContenidoUtil &&
       (
         resultado.estado === "sin_acceso" ||
         pareceSinAcceso(textoDiagnostico)
@@ -697,30 +693,47 @@ if (
 
     if (accesoRealmenteBloqueado) {
       resultado.estado = "sin_acceso";
+      resultado.estado_tecnico = /(?:\b429\b|too many requests)/i.test(textoDiagnostico)
+        ? "HTTP_429"
+        : "ACCESO_RESTRINGIDO";
       resultado.veredicto = "NO VERIFICABLE";
       resultado.veredicto_final = "NO VERIFICABLE";
-      resultado.credibilidad = 50;
-      resultado.confianza = Math.min(resultado.confianza || 40, 40);
+
+      // null significa “no calculado”. Nunca convertir un fallo técnico en 0%.
+      resultado.credibilidad = null;
+      resultado.confianza = null;
 
       resultado.explicacion_veredicto_final =
-        "La plataforma restringió el acceso y no fue posible recuperar suficiente contenido verificable para evaluar la afirmación.";
+        resultado.estado_tecnico === "HTTP_429"
+          ? "Threads limitó temporalmente las solicitudes (HTTP 429). No se evaluó la veracidad de la publicación."
+          : "La plataforma restringió el acceso y no fue posible recuperar suficiente contenido para evaluar la afirmación.";
 
       resultado.respuesta_directa =
-        "No fue posible acceder automáticamente a esta publicación. Comparte una captura legible, el texto completo o un enlace público alternativo para realizar la verificación.";
+        "El contenido aún no fue evaluado. Sube una captura legible, pega el texto completo o reintenta después del tiempo de espera.";
 
       resultado.resumen =
-        "La investigación intentó consultar la publicación y buscar referencias públicas, pero no recuperó contenido suficiente. El resultado correcto es NO VERIFICABLE.";
+        "El análisis quedó pendiente por una restricción técnica de acceso. Esto no implica que la publicación sea verdadera ni falsa.";
 
       resultado.conclusion =
         "Sin conocer la afirmación concreta no se puede confirmar ni desmentir responsablemente su veracidad.";
 
+      resultado.hechos_comprobados = [];
       resultado.evidencia_a_favor = [];
       resultado.evidencia_en_contra = [];
       resultado.indicadores_desinformacion = [];
       resultado.mensaje =
-        "La plataforma limitó el acceso al contenido. Comparte una captura legible, el texto completo o un enlace alternativo para continuar.";
+        "Acceso limitado temporalmente. La credibilidad y la confianza permanecen pendientes de evaluación.";
+      resultado.acciones_disponibles = [
+        "REINTENTAR_MAS_TARDE",
+        "SUBIR_CAPTURA",
+        "PEGAR_TEXTO"
+      ];
+      resultado.reintentar = resultado.estado_tecnico === "HTTP_429";
     } else {
       resultado.estado = "analizado";
+      resultado.estado_tecnico = "OK";
+      resultado.acciones_disponibles = [];
+      resultado.reintentar = false;
     }
 
     const fuentesBusqueda = [];
@@ -806,7 +819,7 @@ if (
       resultado.evidencia_en_contra.length > 0;
 
     const calibrarConfianza = () => {
-      if (resultado.estado === "sin_acceso") return Math.min(resultado.confianza || 40, 40);
+      if (resultado.estado === "sin_acceso") return null;
 
       let valor = 45;
 
@@ -847,11 +860,11 @@ if (
 
     resultado.contraste_fuentes = contraste;
 
-    if (resultado.veredicto === "FALSO" && resultado.credibilidad > 50) {
+    if (typeof resultado.credibilidad === "number" && resultado.veredicto === "FALSO" && resultado.credibilidad > 50) {
       resultado.credibilidad = 100 - resultado.credibilidad;
     }
 
-    if (resultado.veredicto === "VERDADERO" && resultado.credibilidad < 50) {
+    if (typeof resultado.credibilidad === "number" && resultado.veredicto === "VERDADERO" && resultado.credibilidad < 50) {
       resultado.credibilidad = 100 - resultado.credibilidad;
     }
 

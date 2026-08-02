@@ -1,24 +1,25 @@
-LA VERDAD INCÓMODA — analyze.js v2.0
+LA VERDAD INCÓMODA — ANALYZE v2.1
 
-1. Descomprime el ZIP.
-2. En GitHub abre el archivo actual analyze.js.
-3. Reemplázalo completamente por analyze.js incluido en este paquete.
-4. Haz Commit directly to main.
-5. Espera que Vercel cree un deployment nuevo y marque Ready.
-6. Prueba:
-   - imagen con texto, sin escribir consulta;
-   - enlace público;
-   - enlace bloqueado o privado;
-   - afirmación verdadera y falsa.
+ARCHIVO A REEMPLAZAR
+1. Sustituye el archivo actual api/analyze.js por analyze.js incluido en este ZIP.
+2. Conserva OPENAI_API_KEY configurada en Vercel.
+3. Vuelve a desplegar el proyecto.
 
-CAMBIOS PRINCIPALES
-- Envía imágenes con detail: high.
-- Lee el texto visible y lo usa para la búsqueda web.
-- Una imagen con información útil no activa sin_acceso.
-- El aviso para aportar contenido se reserva para enlaces realmente bloqueados y sin información recuperable.
-- Mensajes más claros para 429, contenido privado o restringido.
-- Confianza calculada según fuentes reales, fuentes primarias y limitaciones.
-- Evita presentar una clasificación parcial como completamente cierta o falsa.
+CORRECCIONES INCLUIDAS
+- HTTP 429 ya no produce credibilidad 0% ni 50%.
+- En acceso bloqueado, credibilidad y confianza se devuelven como null.
+- Se agrega estado_tecnico: HTTP_429, ACCESO_RESTRINGIDO u OK.
+- Se agregan acciones_disponibles: reintentar, subir captura o pegar texto.
+- Se evita confundir una explicación generada con contenido realmente recuperado.
+- Se respeta Retry-After cuando el límite proviene de la API de OpenAI.
 
-IMPORTANTE
-No incluyas OPENAI_API_KEY en GitHub.
+COMPORTAMIENTO ESPERADO EN THREADS 429
+estado: sin_acceso
+estado_tecnico: HTTP_429
+veredicto: NO VERIFICABLE
+veredicto_final: NO VERIFICABLE
+credibilidad: null
+confianza: null
+
+NOTA PARA LA INTERFAZ
+Cuando credibilidad o confianza sean null, mostrar “Pendiente de evaluación” o “No calculada”; nunca convertir null a 0%.
