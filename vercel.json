@@ -10,6 +10,10 @@
       "use": "@vercel/node"
     },
     {
+      "src": "translate-ui.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "index.html",
       "use": "@vercel/static"
     },
@@ -30,6 +34,10 @@
     {
       "src": "/api/health",
       "dest": "/health.js"
+    },
+    {
+      "src": "/api/translate-ui",
+      "dest": "/translate-ui.js"
     },
     {
       "src": "/robots.txt",

@@ -8,3 +8,8 @@ Vercel publica:
 
 Configura `OPENAI_API_KEY` en Vercel.
 Actualización de configuración.
+
+
+## Idiomas
+
+La interfaz detecta automáticamente el idioma del navegador y permite seleccionar cualquier idioma mediante un código BCP-47. Las traducciones de interfaz se generan bajo demanda y se guardan en el navegador. Los informes se redactan en el idioma elegido, mientras los valores técnicos del JSON conservan sus nombres estables para no romper la aplicación.

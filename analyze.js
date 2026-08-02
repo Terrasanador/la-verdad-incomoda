@@ -47,6 +47,7 @@ const texto = tieneTexto
   ? consulta.trim()
   : "Analiza el archivo adjunto.";
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
+    const idiomaSalida = String(body.language || body.idioma || "auto").trim() || "auto";
 
     const instrucciones = [
       'Eres el motor de investigación y verificación de hechos de "La Verdad Incómoda".',
@@ -54,6 +55,11 @@ const texto = tieneTexto
       "OBJETIVO:",
       "Investiga afirmaciones, noticias, rumores, enlaces, imágenes, publicaciones y preguntas mediante evidencia verificable.",
       "Debes usar búsqueda web antes de emitir un veredicto.",
+      `IDIOMA DE SALIDA: ${idiomaSalida}.`,
+      "Escribe todos los campos narrativos en el idioma solicitado por el usuario.",
+      "Conserva exactamente en español los valores técnicos enumerados del esquema: estado, veredicto_final y veredicto.",
+      "No traduzcas URLs, nombres propios, títulos oficiales ni citas textuales salvo que expliques la traducción.",
+      "Si el idioma solicitado es auto, responde en el mismo idioma principal de la consulta o del texto visible en la imagen.",
       "",
       "PRINCIPIOS:",
       "1. Verifica cada afirmación concreta.",
