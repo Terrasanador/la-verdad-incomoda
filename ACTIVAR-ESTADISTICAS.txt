@@ -1,0 +1,27 @@
+ACTIVAR EL RESUMEN DE USO EN VERCEL
+
+Este proyecto ya incluye el código de Vercel Web Analytics en index.html.
+
+PASOS DESPUÉS DE SUBIR ESTA VERSIÓN A GITHUB
+
+1. Espera a que Vercel termine el nuevo despliegue.
+2. En Vercel abre el proyecto "La Verdad Incómoda".
+3. Entra en Analytics.
+4. Pulsa Enable si todavía aparece.
+5. Abre la página pública una vez y navega normalmente.
+6. Regresa a Analytics después de aproximadamente un minuto y actualiza.
+
+AHÍ PODRÁS VER
+- Visitors: visitantes aproximados.
+- Page Views: veces que se abrió la página.
+- País, dispositivo y navegador, cuando existan suficientes datos.
+- Periodos: últimas 24 horas, 7 días, 30 días o rango personalizado.
+
+PARA CONTAR VERIFICACIONES REALES
+Cada análisis genera una solicitud POST a /api/analyze. En Vercel entra a:
+Observability (o Logs/Functions, según la vista) > filtra la ruta /api/analyze > revisa Invocations/Requests.
+
+IMPORTANTE
+- Analytics empieza a contar desde que se habilita y despliega; no reconstruye visitas anteriores.
+- Page Views no equivale necesariamente a verificaciones: una persona puede abrir la página sin analizar nada.
+- La ruta /api/analyze es la medida más cercana al número de verificaciones iniciadas.
