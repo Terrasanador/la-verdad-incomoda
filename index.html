@@ -151,8 +151,6 @@
 
     @media print{header,.hero,.quick-how,details,.workspace,.disclaimer,footer,.actions{display:none!important}body{background:#fff;color:#000}.result{display:block!important;border:0;box-shadow:none;background:#fff}.card,.source{background:#fff;color:#000;border-color:#bbb}.card p,.card li,.source small{color:#222}}
   </style>
-  <!-- Vercel Web Analytics: cuenta visitantes y páginas vistas una vez habilitado en Vercel -->
-  <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 <header><div class="nav"><div class="brand">LA VERDAD <span>INCÓMODA</span></div><div class="status">IA + Evidencia Digital</div></div></header>
@@ -226,6 +224,19 @@
 
 <footer>© 2026 La Verdad Incómoda · Verifica antes de creer</footer>
 <script>
+  // Vercel Web Analytics + eventos de uso.
+  window.va = window.va || function () {
+    (window.vaq = window.vaq || []).push(arguments);
+  };
+
+  function trackUsage(name, properties = {}) {
+    try {
+      window.va("event", { name, ...properties });
+    } catch (_) {
+      // La medición nunca debe interrumpir la verificación.
+    }
+  }
+
   const newsInput = document.getElementById("newsInput");
   const fileInput = document.getElementById("fileInput");
   const dropZone = document.getElementById("dropZone");
@@ -634,8 +645,6 @@
       technicalVerdict === "INFORMACIÓN INSUFICIENTE" ||
       technicalVerdict === "INFORMACION INSUFICIENTE";
 
-    // Aunque el backend incluya textos explicativos, el contenido original
-    // sigue sin haberse analizado. Por eso debe abrirse la captura manual.
     return explicitlyBlocked && noVerifiable;
   }
 
@@ -656,6 +665,9 @@
     contentModal.style.display = "flex";
     contentModal.classList.add("visible");
     document.body.classList.add("modal-open");
+    trackUsage("contenido_manual_solicitado", {
+      motivo: String(data?.estado_tecnico || "sin_acceso")
+    });
 
     setTimeout(() => {
       contentModalInput.focus();
@@ -721,6 +733,7 @@
 
     closeContentModal();
     lastResultWasSupplemented = true;
+    trackUsage("contenido_manual_enviado");
     await analyze(combined, true);
   }
 
@@ -770,9 +783,9 @@
   }
 
   function render(data) {
-    // Un fallo técnico nunca debe mostrarse como análisis con porcentajes 0%.
-    // Renderizamos el estado bloqueado y solicitamos el contenido manual.
-    if (data.estado === "sin_acceso" || data.analizado === false) {
+    if (
+      data.estado === "sin_acceso" || data.analizado === false
+    ) {
       renderBlocked(data);
       return;
     }
@@ -976,6 +989,11 @@
     analyzeButton.disabled = true;
     result.classList.remove("visible");
     startProgress();
+    trackUsage("verificacion_iniciada", {
+      modo: selectedMode,
+      entrada: selectedFile ? "archivo" : "texto_o_enlace",
+      complemento_manual: Boolean(isSupplement)
+    });
 
     try {
       const payload = {
@@ -1017,6 +1035,16 @@
       }
 
       if (!response.ok) {
+        if (data?.estado === "sin_acceso" || data?.analizado === false) {
+          endProgress(false);
+          trackUsage("verificacion_sin_acceso", {
+            codigo_http: response.status,
+            motivo: String(data?.estado_tecnico || "sin_acceso")
+          });
+          render(data);
+          return;
+        }
+
         const error =
           data.detalle ||
           data.error ||
@@ -1031,9 +1059,14 @@
       }
 
       endProgress(true);
+      trackUsage("verificacion_completada", {
+        estado: String(data?.estado || "analizado"),
+        veredicto: String(data?.veredicto_final || data?.veredicto || "sin_veredicto")
+      });
       render(data);
     } catch (error) {
       endProgress(false);
+      trackUsage("verificacion_error", { mensaje: String(error?.message || "error") });
       renderError(error.message);
     } finally {
       analyzeButton.disabled = false;
@@ -1130,5 +1163,6 @@
     }
   };
 </script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

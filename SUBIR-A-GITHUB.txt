@@ -1,0 +1,19 @@
+ARCHIVOS QUE DEBES REEMPLAZAR EN GITHUB
+
+1. index.html
+2. analyze.js
+
+Después de subir ambos archivos a la rama main, confirma el cambio (Commit changes).
+Vercel hará el despliegue automáticamente.
+
+QUÉ SE CORRIGIÓ
+- El error HTTP 429 ya no termina únicamente como error.
+- Se abre la ventana para pegar el texto cuando no se puede acceder a Threads.
+- No se muestran 0 % falsos cuando no hubo análisis.
+- Se agregó Vercel Web Analytics para este sitio HTML.
+- Se agregaron eventos: verificacion_iniciada, verificacion_completada,
+  verificacion_sin_acceso, contenido_manual_solicitado y contenido_manual_enviado.
+
+DÓNDE VERLO
+Vercel > proyecto > Analytics.
+Los eventos pueden tardar unos minutos en aparecer.
