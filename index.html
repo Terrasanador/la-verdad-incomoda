@@ -17,10 +17,6 @@
     .nav{width:min(1000px,calc(100% - 28px));min-height:62px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
     .brand{font-weight:900;letter-spacing:-.5px}.brand span{color:var(--red)}
     .status{font-size:12px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:7px 10px}
-    .language-picker{display:flex;align-items:center;gap:7px;margin-left:auto}
-    .language-picker label{font-size:12px;color:var(--muted)}
-    .language-picker select{max-width:190px;border:1px solid var(--border);border-radius:999px;background:#111115;color:#fff;padding:7px 30px 7px 10px;outline:none}
-    html[dir="rtl"] .language-picker{margin-left:0;margin-right:auto}
     main{width:min(950px,calc(100% - 24px));margin:auto;padding:14px 0 60px}
     .hero{text-align:center;margin-bottom:8px}.badge{display:inline-block;color:#ff8580;border:1px solid #70302d;background:rgba(255,59,48,.08);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;letter-spacing:.3px;margin-bottom:6px}
     h1{font-size:clamp(32px,7vw,56px);line-height:.96;letter-spacing:-2.4px;margin-bottom:4px}h1 span{color:var(--red)}
@@ -117,6 +113,49 @@
       .metric{font-size:10px}
     }
 
+
+    .how-link{
+      width:100%;margin:14px 0 18px;padding:14px 16px;border:1px solid var(--border);
+      border-radius:16px;background:#15151a;color:#fff;font-weight:900;text-align:left;
+      display:flex;align-items:center;justify-content:space-between;gap:12px
+    }
+    .how-link span{color:var(--muted);font-weight:700;font-size:13px}
+    .how-modal{
+      position:fixed;inset:0;z-index:1100;display:none;align-items:center;justify-content:center;
+      padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(9px)
+    }
+    .how-modal.visible{display:flex}
+    .how-dialog{
+      width:min(860px,100%);max-height:calc(100vh - 36px);overflow:auto;
+      border:1px solid var(--border);border-radius:24px;background:#111116;
+      box-shadow:0 24px 80px rgba(0,0,0,.7);padding:22px
+    }
+    .how-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+    .how-header h2{font-size:clamp(25px,5vw,36px);line-height:1.08}
+    .how-close{
+      flex:0 0 auto;width:42px;height:42px;border:1px solid #494953;border-radius:50%;
+      background:#1d1d22;color:#fff;font-size:23px
+    }
+    .how-lead{color:#d2d2da;line-height:1.6;margin:14px 0}
+    .how-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+    .how-option{border:1px solid var(--border);border-radius:15px;background:#18181e;padding:13px;line-height:1.45}
+    .how-steps{margin:16px 0 20px;padding-left:22px;color:#ddd;line-height:1.6}
+    .example-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .example-card{border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#18181e}
+    .example-card img{display:block;width:100%;height:310px;object-fit:cover;object-position:top}
+    .example-card p{padding:10px 12px;color:var(--muted);font-size:12px;line-height:1.4}
+    .share-callout{
+      margin-top:18px;padding:16px;border:1px solid var(--red);border-radius:16px;
+      background:rgba(255,55,55,.09);text-align:center;font-weight:1000;font-size:clamp(18px,4vw,25px)
+    }
+    .share-callout small{display:block;color:#ddd;font-size:13px;margin-top:7px}
+    @media(max-width:700px){
+      .how-modal{padding:10px;align-items:flex-end}
+      .how-dialog{max-height:94vh;border-radius:22px 22px 14px 14px;padding:17px 14px}
+      .how-options,.example-grid{grid-template-columns:1fr}
+      .example-card img{height:auto}
+    }
+
     .content-modal{
       position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
       padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)
@@ -157,31 +196,7 @@
   </style>
 </head>
 <body>
-<header><div class="nav">
-  <div class="brand">LA VERDAD <span>INCÓMODA</span></div>
-  <div class="language-picker">
-    <label for="languageSelect" id="languageLabel">Idioma</label>
-    <select id="languageSelect" aria-label="Idioma">
-      <option value="auto">Automático</option>
-      <option value="es">Español</option>
-      <option value="en">English</option>
-      <option value="fr">Français</option>
-      <option value="de">Deutsch</option>
-      <option value="it">Italiano</option>
-      <option value="pt">Português</option>
-      <option value="zh">中文</option>
-      <option value="ja">日本語</option>
-      <option value="ko">한국어</option>
-      <option value="ar">العربية</option>
-      <option value="hi">हिन्दी</option>
-      <option value="ru">Русский</option>
-      <option value="tr">Türkçe</option>
-      <option value="id">Bahasa Indonesia</option>
-      <option value="other">Otro idioma…</option>
-    </select>
-  </div>
-  <div class="status">IA + Evidencia Digital</div>
-</div></header>
+<header><div class="nav"><div class="brand">LA VERDAD <span>INCÓMODA</span></div><div class="status">IA + Evidencia Digital</div></div></header>
 <main>
   <section class="hero">
     <div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA DIGITAL</div>
@@ -189,7 +204,10 @@
     <p class="subtitle">Pregunta, pega un enlace o sube un archivo. La IA investiga y contrasta evidencia pública.</p>
   </section>
   <div class="quick-how"><span>💬 Pregunta</span><span>🌐 Pega un enlace</span><span>📷 Imagen</span><span>🎧 Audio</span><span>📄 Documento</span></div>
-  <details><summary>¿Cómo funciona?</summary><p>Identifica afirmaciones verificables, analiza el material disponible, consulta fuentes públicas, compara evidencia favorable y desfavorable y explica por qué la credibilidad resulta positiva, negativa, mixta o insuficiente.</p></details>
+  <button class="how-link" id="openHowModal" type="button">
+    <strong>¿Cómo funciona?</strong>
+    <span>Ver explicación y ejemplo →</span>
+  </button>
 
   <section class="workspace">
     <h2>¿Qué quieres verificar?</h2>
@@ -214,6 +232,62 @@
   <section class="result" id="result" aria-live="polite"></section>
   <p class="disclaimer">La Verdad Incómoda ayuda a evaluar credibilidad con IA, evidencia digital y fuentes públicas. No sustituye el trabajo periodístico ni un peritaje profesional. Si no puede acceder al contenido, no inventa un resultado.</p>
 </main>
+
+
+<div class="how-modal" id="howModal" hidden role="dialog" aria-modal="true" aria-labelledby="howModalTitle">
+  <div class="how-dialog">
+    <div class="how-header">
+      <div>
+        <div class="badge">GUÍA RÁPIDA</div>
+        <h2 id="howModalTitle">¿Cómo funciona?</h2>
+      </div>
+      <button class="how-close" id="closeHowModal" type="button" aria-label="Cerrar">×</button>
+    </div>
+
+    <p class="how-lead">
+      La Verdad Incómoda usa inteligencia artificial, búsqueda web y contraste de evidencia pública
+      para analizar afirmaciones y explicar cómo llegó a cada conclusión.
+    </p>
+
+    <div class="how-options">
+      <div class="how-option">🔗 Pega el enlace de una noticia, publicación, video o red social.</div>
+      <div class="how-option">📷 Sube una imagen o captura de pantalla con texto visible.</div>
+      <div class="how-option">📄 Adjunta un documento compatible.</div>
+      <div class="how-option">📝 <strong>También puedes copiar y pegar el texto o la noticia que quieres verificar.</strong> No necesitas tener un enlace.</div>
+    </div>
+
+    <ol class="how-steps">
+      <li>Identifica la afirmación principal.</li>
+      <li>Lee el texto visible de imágenes y documentos cuando es necesario.</li>
+      <li>Busca documentos, registros y fuentes públicas.</li>
+      <li>Contrasta evidencia favorable, desfavorable y limitaciones.</li>
+      <li>Entrega un veredicto, porcentajes, contexto y fuentes consultadas.</li>
+    </ol>
+
+    <h3>Ejemplo de un resultado</h3>
+    <p class="how-lead">Estas imágenes muestran las secciones principales que puede incluir un informe.</p>
+
+    <div class="example-grid">
+      <article class="example-card">
+        <img src="assets/ejemplo-1.webp" alt="Ejemplo del veredicto y resumen de una verificación" loading="lazy">
+        <p>Veredicto, clasificación técnica, credibilidad, confianza y resumen.</p>
+      </article>
+      <article class="example-card">
+        <img src="assets/ejemplo-2.webp" alt="Ejemplo de hechos, evidencia y contexto" loading="lazy">
+        <p>Hechos comprobados, evidencia, limitaciones y contexto necesario.</p>
+      </article>
+      <article class="example-card">
+        <img src="assets/ejemplo-3.webp" alt="Ejemplo de fuentes consultadas" loading="lazy">
+        <p>Contraste y lista de fuentes utilizadas durante la investigación.</p>
+      </article>
+    </div>
+
+    <div class="share-callout">
+      COMPARTE ESTA PÁGINA PARA COMBATIR LAS FAKE NEWS
+      <small>No creas. Comprueba.</small>
+    </div>
+  </div>
+</div>
 
 <div class="content-modal" id="contentModal" hidden role="dialog" aria-modal="true" aria-labelledby="contentModalTitle">
   <div class="content-modal-dialog">
@@ -252,6 +326,31 @@
 
 <footer>© 2026 La Verdad Incómoda · Verifica antes de creer</footer>
 <script>
+
+  const howModal = document.getElementById("howModal");
+  const openHowModal = document.getElementById("openHowModal");
+  const closeHowModal = document.getElementById("closeHowModal");
+
+  function showHowModal() {
+    howModal.hidden = false;
+    howModal.style.display = "flex";
+    howModal.classList.add("visible");
+    document.body.classList.add("modal-open");
+  }
+
+  function hideHowModal() {
+    howModal.classList.remove("visible");
+    howModal.style.display = "none";
+    howModal.hidden = true;
+    document.body.classList.remove("modal-open");
+  }
+
+  openHowModal.addEventListener("click", showHowModal);
+  closeHowModal.addEventListener("click", hideHowModal);
+  howModal.addEventListener("click", event => {
+    if (event.target === howModal) hideHowModal();
+  });
+
   // Vercel Web Analytics + eventos de uso.
   window.va = window.va || function () {
     (window.vaq = window.vaq || []).push(arguments);
@@ -264,162 +363,6 @@
       // La medición nunca debe interrumpir la verificación.
     }
   }
-
-  const I18N_VERSION = "2026-08-02-1";
-  const RTL_LANGUAGES = new Set(["ar", "he", "fa", "ur", "ps", "sd", "yi"]);
-  const languageSelect = document.getElementById("languageSelect");
-  let currentLanguage = "es";
-  let uiTranslations = {};
-  let translationPromise = Promise.resolve();
-
-  const DYNAMIC_UI_STRINGS = [
-    "Tamaño desconocido", "Tipo desconocido", "El archivo excede 3.5 MB.",
-    "No se pudo leer el archivo.", "Recibiendo información…", "Extrayendo contenido…",
-    "Buscando evidencia en Internet…", "Contrastando fuentes…", "Preparando conclusión…",
-    "Análisis terminado.", "No se pudo completar.", "Copiar informe", "Compartir",
-    "Guardar como PDF", "Fuentes consultadas", "Fuente consultada",
-    "VEREDICTO FINAL", "No fue posible acceder automáticamente al enlace.",
-    "Pega el texto completo, una transcripción o una descripción fiel para continuar.",
-    "ESCRIBIR CONTENIDO PARA CONTINUAR", "ACCESO LIMITADO", tr("Qué ocurrió"),
-    tr("Información disponible"), tr("Conclusión"), tr("Limitaciones"), "Clasificación técnica",
-    "Credibilidad de la afirmación", "Confianza del análisis", "Búsqueda web: realizada",
-    tr("Explicación del veredicto final"), tr("Resumen ejecutivo"), tr("Afirmación analizada"),
-    tr("Respuesta directa"), tr("Hechos y evidencia comprobada"), tr("Evidencia favorable"),
-    tr("Evidencia desfavorable"), tr("No comprobado o limitado"), tr("Indicadores de desinformación"),
-    tr("Contexto necesario"), tr("Contraste de fuentes"), tr("Advertencia"), "NO SE PUDO COMPLETAR",
-    "Detalle", "Error desconocido.",
-    tr("Escribe una pregunta, pega una afirmación, un enlace o selecciona un archivo."),
-    "El servidor devolvió una respuesta inválida.", "Informe copiado.",
-    "No se pudo copiar automáticamente.", "Informe y enlace copiados.",
-    "No se pudo compartir.", "Idioma", "Automático", "Otro idioma…"
-  ];
-
-  function normalizeLanguage(value) {
-    const raw = String(value || "").trim().replace("_", "-");
-    if (!raw || raw === "auto") return (navigator.language || "es").toLowerCase();
-    return raw.toLowerCase();
-  }
-
-  function baseLanguage(value) {
-    return normalizeLanguage(value).split("-")[0];
-  }
-
-  function tr(source) {
-    return uiTranslations[source] || source;
-  }
-
-  function translationCacheKey(language) {
-    return `lvi:i18n:${I18N_VERSION}:${language}`;
-  }
-
-  function collectStaticUiStrings() {
-    const strings = new Set(DYNAMIC_UI_STRINGS);
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-      acceptNode(node) {
-        const parent = node.parentElement;
-        if (!parent || ["SCRIPT", "STYLE", "OPTION"].includes(parent.tagName)) {
-          return NodeFilter.FILTER_REJECT;
-        }
-        const value = node.nodeValue.trim();
-        return value ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-      }
-    });
-    while (walker.nextNode()) strings.add(walker.currentNode.nodeValue.trim());
-    document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(element => {
-      ["placeholder", "aria-label", "title"].forEach(attribute => {
-        const value = element.getAttribute(attribute);
-        if (value) strings.add(value.trim());
-      });
-    });
-    return [...strings].filter(Boolean);
-  }
-
-  function applyStaticTranslations() {
-    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
-      acceptNode(node) {
-        const parent = node.parentElement;
-        if (!parent || ["SCRIPT", "STYLE", "OPTION"].includes(parent.tagName)) {
-          return NodeFilter.FILTER_REJECT;
-        }
-        return node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-      }
-    });
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
-      const original = node.nodeValue.trim();
-      const translated = tr(original);
-      if (translated !== original) {
-        const leading = node.nodeValue.match(/^\s*/)?.[0] || "";
-        const trailing = node.nodeValue.match(/\s*$/)?.[0] || "";
-        node.nodeValue = `${leading}${translated}${trailing}`;
-      }
-    }
-    document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(element => {
-      ["placeholder", "aria-label", "title"].forEach(attribute => {
-        const original = element.getAttribute(attribute);
-        if (original && tr(original) !== original) element.setAttribute(attribute, tr(original));
-      });
-    });
-    document.title = tr("La Verdad Incómoda | IA + Evidencia Digital");
-  }
-
-  async function loadTranslations(language) {
-    const normalized = normalizeLanguage(language);
-    const base = baseLanguage(normalized);
-    currentLanguage = normalized;
-    document.documentElement.lang = normalized;
-    document.documentElement.dir = RTL_LANGUAGES.has(base) ? "rtl" : "ltr";
-
-    if (base === "es") {
-      uiTranslations = {};
-      applyStaticTranslations();
-      return;
-    }
-
-    const cacheKey = translationCacheKey(normalized);
-    try {
-      const cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
-      if (cached && typeof cached === "object") uiTranslations = cached;
-    } catch (_) {}
-
-    const strings = collectStaticUiStrings().filter(item => !uiTranslations[item]);
-    if (strings.length) {
-      const response = await fetch("/api/translate-ui", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language: normalized, strings })
-      });
-      if (!response.ok) throw new Error("UI translation failed");
-      const data = await response.json();
-      strings.forEach((source, index) => {
-        const translated = data.translations?.[index];
-        if (typeof translated === "string" && translated.trim()) {
-          uiTranslations[source] = translated.trim();
-        }
-      });
-      try { localStorage.setItem(cacheKey, JSON.stringify(uiTranslations)); } catch (_) {}
-    }
-    applyStaticTranslations();
-  }
-
-  async function chooseLanguage(value) {
-    let selected = value;
-    if (value === "other") {
-      selected = prompt("Escribe el código del idioma, por ejemplo: nl, pl, sw, vi, th o uk.") || "auto";
-    }
-    localStorage.setItem("lvi:language", selected);
-    translationPromise = loadTranslations(selected).catch(error => {
-      console.error("Language error:", error);
-    });
-    await translationPromise;
-  }
-
-  const savedLanguage = localStorage.getItem("lvi:language") || "auto";
-  languageSelect.value = [...languageSelect.options].some(option => option.value === savedLanguage)
-    ? savedLanguage
-    : "other";
-  languageSelect.addEventListener("change", event => chooseLanguage(event.target.value));
-  translationPromise = loadTranslations(savedLanguage).catch(error => console.error("Language error:", error));
 
   const newsInput = document.getElementById("newsInput");
   const fileInput = document.getElementById("fileInput");
@@ -465,7 +408,7 @@
   }
 
   function bytes(size) {
-    if (!size) return tr("Tamaño desconocido");
+    if (!size) return "Tamaño desconocido";
 
     const units = ["B", "KB", "MB", "GB"];
     const index = Math.min(
@@ -521,7 +464,7 @@
     }
 
     if (file.size > 3500000) {
-      alert(tr("El archivo excede 3.5 MB."));
+      alert("El archivo excede 3.5 MB.");
       fileInput.value = "";
       selectedFile = null;
       return;
@@ -529,7 +472,7 @@
 
     fileName.textContent = file.name;
     fileDetails.textContent =
-      `${file.type || tr("Tipo desconocido")} · ${bytes(file.size)}`;
+      `${file.type || "Tipo desconocido"} · ${bytes(file.size)}`;
 
     selectedFileBox.classList.add("visible");
   }
@@ -544,7 +487,7 @@
       };
 
       reader.onerror = () =>
-        reject(new Error(tr("No se pudo leer el archivo.")));
+        reject(new Error("No se pudo leer el archivo."));
 
       reader.readAsDataURL(file);
     });
@@ -552,11 +495,11 @@
 
   function startProgress() {
     const stages = [
-      [tr("Recibiendo información…"), 12],
-      [tr("Extrayendo contenido…"), 30],
-      [tr("Buscando evidencia en Internet…"), 50],
-      [tr("Contrastando fuentes…"), 72],
-      [tr("Preparando conclusión…"), 90]
+      ["Recibiendo información…", 12],
+      ["Extrayendo contenido…", 30],
+      ["Buscando evidencia en Internet…", 50],
+      ["Contrastando fuentes…", 72],
+      ["Preparando conclusión…", 90]
     ];
 
     let index = 0;
@@ -577,8 +520,8 @@
     timer = null;
 
     progressLabel.textContent = success
-      ? tr("Análisis terminado.")
-      : tr("No se pudo completar.");
+      ? "Análisis terminado."
+      : "No se pudo completar.";
 
     progressBar.style.width = "100%";
 
@@ -628,9 +571,9 @@
   function actions() {
     return `
       <div class="actions">
-        <button onclick="copyReport()">${esc(tr("Copiar informe"))}</button>
-        <button onclick="shareReport()">${esc(tr("Compartir"))}</button>
-        <button onclick="window.print()">${esc(tr("Guardar como PDF"))}</button>
+        <button onclick="copyReport()">Copiar informe</button>
+        <button onclick="shareReport()">Compartir</button>
+        <button onclick="window.print()">Guardar como PDF</button>
       </div>
     `;
   }
@@ -646,7 +589,7 @@
 
     return `
       <article class="card full">
-        <h3>${esc(tr("Fuentes consultadas"))}</h3>
+        <h3>Fuentes consultadas</h3>
 
         <div class="sources">
           ${validSources.map(source => {
@@ -656,7 +599,7 @@
               source.titulo ||
               source.title ||
               url ||
-              tr("Fuente consultada");
+              "Fuente consultada";
 
             const details = [
               source.tipo,
@@ -785,7 +728,7 @@
 
     return `
       <div class="final-verdict-box">
-        <span class="final-verdict-label">${esc(tr("VEREDICTO FINAL"))}</span>
+        <span class="final-verdict-label">VEREDICTO FINAL</span>
         <div class="final-verdict ${finalVerdictClass(finalVerdict)}">
           ${esc(finalVerdict)}
         </div>
@@ -874,7 +817,7 @@
     const button = document.createElement("button");
     button.id = "requestContentButton";
     button.type = "button";
-    button.textContent = tr("ESCRIBIR CONTENIDO PARA CONTINUAR");
+    button.textContent = "ESCRIBIR CONTENIDO PARA CONTINUAR";
     button.className = "analyze";
     button.style.marginTop = "16px";
     button.addEventListener("click", () => openContentModal(data));
@@ -924,18 +867,18 @@
   function renderBlocked(data) {
     result.innerHTML = `
       ${renderFinalVerdict(data)}
-      <h2 class="verdict">${esc(tr("ACCESO LIMITADO"))}</h2>
+      <h2 class="verdict">ACCESO LIMITADO</h2>
 
       <div class="grid">
         ${textCard(
-          tr("Qué ocurrió"),
+          "Qué ocurrió",
           data.mensaje ||
           "No fue posible acceder directamente a todo el contenido.",
           true
         )}
 
         ${listCard(
-          tr("Información disponible"),
+          "Información disponible",
           data.evidencia_a_favor ||
           data.hechos_comprobados ||
           data.elementos_disponibles,
@@ -943,14 +886,14 @@
         )}
 
         ${textCard(
-          tr("Conclusión"),
+          "Conclusión",
           data.conclusion ||
           "El análisis se realizó únicamente con la información pública disponible.",
           true
         )}
 
         ${listCard(
-          tr("Limitaciones"),
+          "Limitaciones",
           data.limitaciones || data.instrucciones,
           true
         )}
@@ -1032,87 +975,87 @@
     result.innerHTML = `
       ${renderFinalVerdict(data, verdict)}
       <h2 class="verdict">
-        ${esc(tr("Clasificación técnica"))}: ${esc(verdict)}
+        Clasificación técnica: ${esc(verdict)}
       </h2>
 
       <div class="metrics">
         <span class="metric">
-          ${esc(tr("Credibilidad de la afirmación"))}: ${credibility}%
+          Credibilidad de la afirmación: ${credibility}%
         </span>
 
         <span class="metric">
-          ${esc(tr("Confianza del análisis"))}: ${analysisConfidence}%
+          Confianza del análisis: ${analysisConfidence}%
         </span>
 
         ${
           data.busqueda_web_realizada === true
-            ? `<span class="metric">${esc(tr("Búsqueda web: realizada"))}</span>`
+            ? `<span class="metric">Búsqueda web: realizada</span>`
             : ""
         }
       </div>
 
       <div class="grid">
         ${textCard(
-          tr("Explicación del veredicto final"),
+          "Explicación del veredicto final",
           data.explicacion_veredicto_final ||
           data.justificacion_veredicto_final,
           true
         )}
 
-        ${textCard(tr("Resumen ejecutivo"), summary, true)}
+        ${textCard("Resumen ejecutivo", summary, true)}
 
         ${textCard(
-          tr("Afirmación analizada"),
+          "Afirmación analizada",
           data.afirmacion_principal,
           true
         )}
 
         ${textCard(
-          tr("Respuesta directa"),
+          "Respuesta directa",
           data.respuesta_directa,
           true
         )}
 
         ${listCard(
-          tr("Hechos y evidencia comprobada"),
+          "Hechos y evidencia comprobada",
           verifiedFacts
         )}
 
         ${listCard(
-          tr("Evidencia favorable"),
+          "Evidencia favorable",
           favorable
         )}
 
         ${listCard(
-          tr("Evidencia desfavorable"),
+          "Evidencia desfavorable",
           unfavorable
         )}
 
         ${listCard(
-          tr("No comprobado o limitado"),
+          "No comprobado o limitado",
           limitations
         )}
 
         ${listCard(
-          tr("Indicadores de desinformación"),
+          "Indicadores de desinformación",
           misinformationIndicators,
           true
         )}
 
         ${textCard(
-          tr("Contexto necesario"),
+          "Contexto necesario",
           data.contexto,
           true
         )}
 
         ${textCard(
-          tr("Contraste de fuentes"),
+          "Contraste de fuentes",
           sourceContrast,
           true
         )}
 
         ${textCard(
-          tr("Conclusión"),
+          "Conclusión",
           data.conclusion ||
           data.respuesta_directa ||
           summary,
@@ -1120,7 +1063,7 @@
         )}
 
         ${textCard(
-          tr("Advertencia"),
+          "Advertencia",
           data.advertencia,
           true
         )}
@@ -1138,12 +1081,12 @@
 
   function renderError(message) {
     result.innerHTML = `
-      <h2 class="verdict">${esc(tr("NO SE PUDO COMPLETAR"))}</h2>
+      <h2 class="verdict">NO SE PUDO COMPLETAR</h2>
 
       <div class="grid">
         <article class="card full">
-          <h3>${esc(tr("Detalle"))}</h3>
-          <p>${esc(message || tr("Error desconocido."))}</p>
+          <h3>Detalle</h3>
+          <p>${esc(message || "Error desconocido.")}</p>
         </article>
       </div>
     `;
@@ -1165,7 +1108,7 @@
 
     if (!text && !selectedFile) {
       alert(
-        tr("Escribe una pregunta, pega una afirmación, un enlace o selecciona un archivo.")
+        "Escribe una pregunta, pega una afirmación, un enlace o selecciona un archivo."
       );
       return;
     }
@@ -1180,13 +1123,10 @@
     });
 
     try {
-      await translationPromise;
-
       const payload = {
         text,
         consulta: text,
-        mode: selectedMode,
-        language: currentLanguage
+        mode: selectedMode
       };
 
       if (selectedFile) {
@@ -1322,9 +1262,9 @@
   window.copyReport = async () => {
     try {
       await navigator.clipboard.writeText(result.innerText);
-      alert(tr("Informe copiado."));
+      alert("Informe copiado.");
     } catch {
-      alert(tr("No se pudo copiar automáticamente."));
+      alert("No se pudo copiar automáticamente.");
     }
   };
 
@@ -1341,11 +1281,11 @@
           `${result.innerText}\n${location.href}`
         );
 
-        alert(tr("Informe y enlace copiados."));
+        alert("Informe y enlace copiados.");
       }
     } catch (error) {
       if (error.name !== "AbortError") {
-        alert(tr("No se pudo compartir."));
+        alert("No se pudo compartir.");
       }
     }
   };
