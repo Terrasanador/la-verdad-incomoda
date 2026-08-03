@@ -1,4 +1,4 @@
-LA VERDAD INCÓMODA — VOZ CON INTERRUPCIÓN DURANTE LA BIENVENIDA
+LA VERDAD INCÓMODA — BIENVENIDA BREVE Y MICRÓFONO SEGURO
 
 ARCHIVOS:
 - index.html
@@ -6,35 +6,30 @@ ARCHIVOS:
 
 NO USA CARPETAS NI ASSETS.
 
-IMPORTANTE SOBRE LOS NAVEGADORES
-Los navegadores no permiten activar el micrófono sin permiso del usuario.
-Por eso, al entrar aparece un único botón:
-“ACTIVAR VOZ Y MICRÓFONO”.
-
-DESPUÉS DE ESE TOQUE:
-1. Se solicita permiso del micrófono.
-2. Empieza la bienvenida.
-3. El micrófono permanece escuchando durante la bienvenida.
-4. Puedes interrumpir hablando en cualquier momento.
-5. Al detectar tu voz, la bienvenida se detiene.
-6. Tu pregunta se convierte en texto.
+NUEVO FLUJO DE VOZ
+1. El usuario toca “ACTIVAR VOZ Y MICRÓFONO”.
+2. Se escucha una bienvenida de aproximadamente tres segundos:
+   “Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?”
+3. Durante la bienvenida, el micrófono permanece apagado.
+4. Al terminar la bienvenida, el micrófono se activa.
+5. El usuario hace su pregunta.
+6. La pregunta se convierte en texto.
 7. La investigación comienza automáticamente.
-8. Al terminar se lee el resumen y lo más importante.
-9. Después puedes escuchar el informe completo.
+8. Al finalizar, se lee el veredicto, el resumen y lo más importante.
+9. Después se ofrece escuchar el informe completo.
 
-OTROS MEDIOS DISPONIBLES
+POR QUÉ CAMBIÓ
+El micrófono ya no escucha durante la explicación. Así evita confundir la voz
+sintética de la página con la voz del usuario.
+
+OTROS MEDIOS
 - Pegar un enlace.
 - Copiar y pegar una noticia o texto.
 - Subir una imagen.
 - Subir un documento.
 
-NOTA TÉCNICA
-La escucha simultánea con la voz sintética depende del navegador y del dispositivo.
-Chrome y Edge ofrecen normalmente la mejor compatibilidad. Los audífonos ayudan
-a evitar que el micrófono confunda la voz del sistema con la voz del usuario.
-
 INSTALACIÓN
 1. Reemplaza index.html en GitHub.
 2. Haz Commit directly to main.
 3. Espera que Vercel marque Ready.
-4. Entra a la web y toca “ACTIVAR VOZ Y MICRÓFONO”.
+4. Permite el acceso al micrófono cuando se solicite.

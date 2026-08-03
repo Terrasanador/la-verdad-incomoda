@@ -260,7 +260,7 @@
     <h2 id="voiceStartTitle">Activa el micrófono</h2>
     <p>
       Por seguridad, el navegador necesita un toque inicial para autorizar el micrófono.
-      Después podrás interrumpir la bienvenida hablando y tu pregunta se investigará automáticamente.
+      Escucharás una bienvenida breve. Al terminar, el micrófono se activará para escuchar tu pregunta.
     </p>
     <button id="enableVoiceOnEntry" type="button">ACTIVAR VOZ Y MICRÓFONO</button>
   </div>
@@ -297,7 +297,7 @@
         <span aria-hidden="true">🔇</span> Detener lectura
       </button>
       <p class="voice-status" id="voiceStatus" aria-live="polite">
-        Activa el modo de voz al entrar. Durante la bienvenida puedes interrumpir hablando; tu pregunta se escuchará y se investigará automáticamente. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
+        Activa el modo de voz. Escucharás una bienvenida de unos tres segundos y después el micrófono se activará para recibir tu pregunta. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
       </p>
     </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
@@ -439,8 +439,6 @@
   let pendingVoiceCallback = null;
   let welcomePending = false;
   let welcomeHasPlayed = false;
-  let bargeInRecognition = null;
-  let bargeInActive = false;
   let voiceEntryEnabled = false;
 
 
@@ -504,7 +502,7 @@
 
     if (alreadyEnabled) {
       voiceEntryEnabled = true;
-      startWelcomeWithBargeIn();
+      startShortWelcomeThenListen();
       return;
     }
 
@@ -519,153 +517,63 @@
     voiceStartOverlay.hidden = true;
   }
 
-  function stopBargeInRecognition() {
-    bargeInActive = false;
-    if (bargeInRecognition) {
-      try { bargeInRecognition.stop(); } catch {}
-    }
-  }
-
-  function submitBargeInQuestion(transcript) {
-    const question = String(transcript || "").trim();
-    if (!question) return;
-
-    welcomePending = false;
-    window.speechSynthesis?.cancel();
-    stopBargeInRecognition();
-
-    newsInput.value = question;
-    voiceModeEnabled = true;
-    voiceConversationState = "analyzing";
-    setVoiceStatus(`Pregunta reconocida: ${question}`);
-
-    speakText(`Escuché: ${question}. Iniciando la verificación.`);
-
-    const waitUntilSpeechEnds = () => {
-      if (window.speechSynthesis?.speaking) {
-        setTimeout(waitUntilSpeechEnds, 180);
-      } else {
-        analyze();
-      }
-    };
-    setTimeout(waitUntilSpeechEnds, 180);
-  }
-
-  function startBargeInRecognition() {
-    if (!SpeechRecognitionAPI) {
-      setVoiceStatus(
-        "Este navegador no admite escucha continua durante la bienvenida. Usa el botón Preguntar por voz."
-      );
-      return;
-    }
-
-    stopBargeInRecognition();
-
-    bargeInRecognition = new SpeechRecognitionAPI();
-    bargeInRecognition.lang = selectedSpeechLanguage();
-    bargeInRecognition.interimResults = true;
-    bargeInRecognition.continuous = true;
-    bargeInRecognition.maxAlternatives = 1;
-
-    let finalText = "";
-    let humanSpeechDetected = false;
-
-    bargeInRecognition.onstart = () => {
-      bargeInActive = true;
-      voiceModeEnabled = true;
-      setVoiceStatus(
-        "Micrófono activo. Puedes interrumpir la bienvenida diciendo tu pregunta."
-      );
-    };
-
-    bargeInRecognition.onresult = event => {
-      let interimText = "";
-
-      for (let index = event.resultIndex; index < event.results.length; index++) {
-        const transcript = event.results[index][0]?.transcript || "";
-
-        if (event.results[index].isFinal) {
-          finalText += ` ${transcript}`;
-        } else {
-          interimText += ` ${transcript}`;
-        }
-      }
-
-      const candidate = `${finalText} ${interimText}`.trim();
-
-      if (candidate.length >= 4) {
-        humanSpeechDetected = true;
-        window.speechSynthesis?.cancel();
-        setVoiceStatus("Te escucho. Termina tu pregunta.");
-      }
-
-      if (finalText.trim().length >= 4) {
-        submitBargeInQuestion(finalText.trim());
-      }
-    };
-
-    bargeInRecognition.onerror = event => {
-      if (event.error === "not-allowed") {
-        setVoiceStatus("Debes permitir el acceso al micrófono.");
-      } else if (!["aborted", "no-speech"].includes(event.error)) {
-        setVoiceStatus("No fue posible mantener el micrófono activo.");
-      }
-    };
-
-    bargeInRecognition.onend = () => {
-      bargeInActive = false;
-
-      if (
-        voiceEntryEnabled &&
-        voiceConversationState === "idle" &&
-        window.speechSynthesis?.speaking &&
-        !humanSpeechDetected
-      ) {
-        setTimeout(startBargeInRecognition, 250);
-      }
-    };
-
-    try {
-      bargeInRecognition.start();
-    } catch {
-      setVoiceStatus("El micrófono ya está activo.");
-    }
-  }
-
-  function startWelcomeWithBargeIn() {
+  function startShortWelcomeThenListen() {
     voiceEntryEnabled = true;
     voiceModeEnabled = true;
-    voiceConversationState = "idle";
+    voiceConversationState = "welcome";
     sessionStorage.setItem("lvi_voice_entry_enabled", "1");
 
-    startBargeInRecognition();
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
 
-    const message = welcomeMessage();
-    speakText(message);
+    setVoiceStatus("Escucha la bienvenida. El micrófono se activará al terminar.");
+    speakText(welcomeMessage());
 
     const waitForWelcomeEnd = () => {
       if (window.speechSynthesis?.speaking) {
-        setTimeout(waitForWelcomeEnd, 250);
-      } else if (voiceConversationState === "idle") {
-        setVoiceStatus(
-          "Micrófono activo. Di ahora lo que deseas verificar o usa cualquiera de los otros medios."
-        );
+        setTimeout(waitForWelcomeEnd, 150);
+        return;
       }
+
+      voiceConversationState = "awaiting_query";
+      setVoiceStatus("Micrófono activo. Di lo que deseas verificar.");
+
+      listenOnce({
+        state: "awaiting_query",
+        onResult: transcript => {
+          if (handleGeneralVoiceCommand(transcript)) return;
+
+          const question = String(transcript || "").trim();
+          if (!question) {
+            speakText("No escuché una pregunta. Inténtalo de nuevo.");
+            setTimeout(startShortWelcomeThenListen, 500);
+            return;
+          }
+
+          newsInput.value = question;
+          voiceConversationState = "analyzing";
+          setVoiceStatus(`Pregunta reconocida: ${question}`);
+          speakText(`Escuché: ${question}. Iniciando la verificación.`);
+
+          const waitUntilSpeechEnds = () => {
+            if (window.speechSynthesis?.speaking) {
+              setTimeout(waitUntilSpeechEnds, 180);
+            } else {
+              analyze();
+            }
+          };
+
+          setTimeout(waitUntilSpeechEnds, 180);
+        }
+      });
     };
 
-    setTimeout(waitForWelcomeEnd, 250);
+    setTimeout(waitForWelcomeEnd, 150);
   }
 
   function welcomeMessage() {
-    return [
-      "Bienvenido a La Verdad Incómoda.",
-      "Aquí puedes verificar noticias, publicaciones, imágenes, documentos y cualquier afirmación mediante inteligencia artificial y evidencia pública.",
-      "Puedes interrumpir esta explicación en cualquier momento pulsando el botón Preguntar por voz. En cuanto lo pulses, dejaré de hablar y escucharé tu pregunta.",
-      "También puedes pegar un enlace, copiar y pegar el texto de una noticia, o subir una imagen o un documento.",
-      "Al terminar, recibirás un veredicto, un resumen claro, la credibilidad de la afirmación, la confianza del análisis y las fuentes consultadas.",
-      "Si utilizas el micrófono, escucharás el resumen y lo más importante del resultado, y después podrás pedir el informe completo.",
-      "No creas. Comprueba."
-    ].join(" ");
+    return "Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?";
   }
 
   function shortVoiceInstructions() {
@@ -848,7 +756,7 @@
   function startVoiceConversation() {
     voiceModeEnabled = true;
     welcomePending = false;
-    stopBargeInRecognition();
+    
 
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
@@ -1963,7 +1871,7 @@
       }
 
       hideVoiceActivationOverlay();
-      startWelcomeWithBargeIn();
+      startShortWelcomeThenListen();
     } catch {
       hideVoiceActivationOverlay();
       const message =
@@ -1983,15 +1891,15 @@
     welcomeHasPlayed = true;
     localStorage.setItem("lvi_voice_welcome_played", "1");
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    stopBargeInRecognition();
-    setVoiceStatus("Bienvenida omitida. Puedes usar el micrófono o cualquiera de los otros medios.");
+    
+    setVoiceStatus("Bienvenida omitida. Pulsa Preguntar por voz cuando quieras hablar, o utiliza cualquiera de los otros medios.");
   });
   speakSummaryButton.addEventListener("click", speakSummary);
   speakFullButton.addEventListener("click", speakFullReport);
   stopSpeechButton.addEventListener("click", () => {
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     if (isListening && voiceRecognition) voiceRecognition.stop();
-    stopBargeInRecognition();
+    
     voiceConversationState = "idle";
     pendingVoiceCallback = null;
     voiceStatus.textContent = "Lectura y micrófono detenidos.";
