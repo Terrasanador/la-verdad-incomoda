@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- LVI-WELCOME-RESTORED-MIC-AFTER-V1 -->
+  <!-- LVI-MIC-FUNCTION-RESTORED-V2 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="La Verdad Incómoda: inteligencia artificial y evidencia digital para evaluar la credibilidad de información pública." />
@@ -470,6 +470,110 @@
       "También puedes pegar un enlace, copiar una noticia, o subir una imagen o un documento.",
       "Cuando termine el análisis, escucharás el resumen y lo más importante."
     ].join(" ");
+  }
+
+  function startVoiceRecognition() {
+    if (!SpeechRecognitionAPI) {
+      const message =
+        "El reconocimiento de voz no está disponible en este navegador.";
+      voiceStatus.textContent = message;
+      speakText(message);
+      return;
+    }
+
+    if (voiceRecognition) {
+      try { voiceRecognition.abort(); } catch {}
+    }
+
+    voiceRecognition = new SpeechRecognitionAPI();
+    voiceRecognition.lang = selectedSpeechLanguage();
+    voiceRecognition.interimResults = false;
+    voiceRecognition.continuous = false;
+    voiceRecognition.maxAlternatives = 1;
+
+    voiceRecognition.onstart = () => {
+      isListening = true;
+      voiceInputButton.classList.add("listening");
+      voiceInputButton.setAttribute("aria-pressed", "true");
+      voiceInputLabel.textContent = "Escuchando…";
+      voiceStatus.textContent = "Micrófono activo. Haz tu pregunta.";
+    };
+
+    voiceRecognition.onresult = event => {
+      const transcript =
+        event.results?.[0]?.[0]?.transcript?.trim() || "";
+
+      if (!transcript) return;
+
+      newsInput.value = transcript;
+      voiceStatus.textContent = `Pregunta reconocida: ${transcript}`;
+      voiceModeEnabled = true;
+
+      speakText(`Escuché: ${transcript}. Iniciando la verificación.`);
+
+      const waitUntilSpeechEnds = () => {
+        if (window.speechSynthesis?.speaking) {
+          setTimeout(waitUntilSpeechEnds, 180);
+        } else {
+          analyze();
+        }
+      };
+
+      setTimeout(waitUntilSpeechEnds, 180);
+    };
+
+    voiceRecognition.onerror = event => {
+      const messages = {
+        "not-allowed":
+          "Debes permitir el acceso al micrófono. Pulsa Preguntar por voz.",
+        "service-not-allowed":
+          "El navegador no permitió usar el micrófono.",
+        "no-speech":
+          "No se detectó voz. Pulsa Preguntar por voz e inténtalo de nuevo.",
+        "audio-capture":
+          "No se encontró un micrófono disponible.",
+        "network":
+          "No fue posible usar el reconocimiento de voz por un problema de red."
+      };
+
+      const message =
+        messages[event.error] || "No fue posible reconocer la voz.";
+
+      voiceStatus.textContent = message;
+
+      if (event.error !== "aborted") {
+        speakText(message);
+      }
+    };
+
+    voiceRecognition.onend = () => {
+      isListening = false;
+      voiceInputButton.classList.remove("listening");
+      voiceInputButton.setAttribute("aria-pressed", "false");
+      voiceInputLabel.textContent = "Preguntar por voz";
+    };
+
+    try {
+      voiceRecognition.start();
+    } catch {
+      voiceStatus.textContent =
+        "No fue posible activar el micrófono. Pulsa Preguntar por voz.";
+    }
+  }
+
+  function activateVoiceMode() {
+    voiceModeEnabled = true;
+
+    if (window.speechSynthesis?.speaking) {
+      window.speechSynthesis.cancel();
+    }
+
+    if (isListening && voiceRecognition) {
+      try { voiceRecognition.stop(); } catch {}
+      return;
+    }
+
+    startVoiceRecognition();
   }
 
   function playWelcomeAndThenListen() {

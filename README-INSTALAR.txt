@@ -1,24 +1,23 @@
-LA VERDAD INCÓMODA — BIENVENIDA RESTAURADA
+LA VERDAD INCÓMODA — MICRÓFONO RESTAURADO
 
-Esta versión recupera el método anterior que sí reproducía la bienvenida.
+PROBLEMA ENCONTRADO
+La versión anterior llamaba a startVoiceRecognition(), pero esa función no
+existía dentro del archivo. Por eso la bienvenida podía terminar, pero el
+micrófono nunca se activaba.
 
-FLUJO:
-1. La página intenta reproducir:
-   “Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?”
-2. El reconocimiento de voz todavía no está activo.
-3. Cuando termina la locución, espera 700 milisegundos.
-4. Después activa el micrófono.
-5. La persona hace su pregunta.
-6. El análisis comienza automáticamente.
-7. Al terminar, se lee el resultado resumido.
+CORRECCIÓN
+- Se restauró startVoiceRecognition().
+- Se restauró activateVoiceMode().
+- La bienvenida se reproduce primero.
+- Al terminar, espera 700 milisegundos.
+- Después activa el micrófono.
+- La pregunta hablada se coloca en el campo y comienza el análisis.
 
-No incluye ventana ni botón inicial.
+MARCA DE VERSIÓN
+LVI-MIC-FUNCTION-RESTORED-V2
 
-INSTALACIÓN:
+INSTALACIÓN
 1. Reemplaza completamente index.html en GitHub.
 2. Haz Commit directly to main.
 3. Espera que Vercel marque Ready.
-4. Prueba en una pestaña de incógnito.
-
-MARCA DE VERSIÓN:
-LVI-WELCOME-RESTORED-MIC-AFTER-V1
+4. Prueba en incógnito.
