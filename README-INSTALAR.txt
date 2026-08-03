@@ -1,29 +1,24 @@
-LA VERDAD INCÓMODA — SIN BOTÓN INICIAL
+LA VERDAD INCÓMODA — BIENVENIDA RESTAURADA
 
-Este paquete contiene únicamente:
-- index.html
-- README-INSTALAR.txt
+Esta versión recupera el método anterior que sí reproducía la bienvenida.
 
-CAMBIO CONFIRMADO
-- Se eliminó completamente la ventana “Activa el micrófono”.
-- Se eliminó el botón inicial “COMENZAR”.
-- Al cargar la página se intenta reproducir automáticamente:
-  “Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?”
-- Durante esa voz no existe reconocimiento activo.
-- Al terminar espera 750 milisegundos.
-- Después intenta activar el micrófono automáticamente.
-- Si el navegador bloquea el micrófono automático, queda disponible el botón normal
-  “Preguntar por voz”; no aparece ninguna ventana inicial.
+FLUJO:
+1. La página intenta reproducir:
+   “Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?”
+2. El reconocimiento de voz todavía no está activo.
+3. Cuando termina la locución, espera 700 milisegundos.
+4. Después activa el micrófono.
+5. La persona hace su pregunta.
+6. El análisis comienza automáticamente.
+7. Al terminar, se lee el resultado resumido.
 
-INSTALACIÓN
-1. En GitHub reemplaza por completo el index.html actual.
+No incluye ventana ni botón inicial.
+
+INSTALACIÓN:
+1. Reemplaza completamente index.html en GitHub.
 2. Haz Commit directly to main.
-3. Espera a que Vercel marque Ready.
-4. Abre la web en incógnito o borra la caché.
-5. Para confirmar que subiste esta versión, busca en el código:
-   LVI-VOICE-NO-INITIAL-BUTTON-V1
+3. Espera que Vercel marque Ready.
+4. Prueba en una pestaña de incógnito.
 
-NOTA DEL NAVEGADOR
-Los navegadores móviles pueden impedir audio o micrófono automáticos hasta que
-exista una interacción del usuario. El código intenta ejecutar el flujo solicitado,
-pero esa restricción no puede eliminarse desde JavaScript.
+MARCA DE VERSIÓN:
+LVI-WELCOME-RESTORED-MIC-AFTER-V1

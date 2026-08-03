@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- LVI-VOICE-NO-INITIAL-BUTTON-V1 -->
+  <!-- LVI-WELCOME-RESTORED-MIC-AFTER-V1 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="La Verdad Incómoda: inteligencia artificial y evidencia digital para evaluar la credibilidad de información pública." />
@@ -113,6 +113,8 @@
       .verdict{font-size:22px}
       .metric{font-size:10px}
     }
+
+
 
     .voice-tools{
       display:flex;align-items:center;gap:9px;margin:10px 0 4px;flex-wrap:wrap
@@ -235,8 +237,6 @@
   <div class="nav"><div class="brand">LA VERDAD <span>INCÓMODA</span></div><div class="status">IA + Evidencia Digital</div></div>
   <div class="header-share">COMPARTE ESTA PÁGINA PARA <span>COMBATIR LAS FAKE NEWS</span></div>
 </header>
-
-
 <main>
   <section class="hero">
     <div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA DIGITAL</div>
@@ -251,7 +251,7 @@
     <p class="workspace-intro">Escribe, pega un enlace o añade un archivo.</p>
     <textarea id="newsInput" placeholder="Ejemplo: ¿Qué tan confiable es esta afirmación según la evidencia pública disponible?"></textarea>
     <div class="voice-tools" aria-label="Herramientas de accesibilidad por voz">
-      <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false" aria-keyshortcuts="Alt+M">
+      <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false">
         <span aria-hidden="true">🎙️</span>
         <span id="voiceInputLabel">Preguntar por voz</span>
       </button>
@@ -265,7 +265,7 @@
         <span aria-hidden="true">🔇</span> Detener lectura
       </button>
       <p class="voice-status" id="voiceStatus" aria-live="polite">
-        Al entrar escucharás una bienvenida breve. El micrófono se activará únicamente cuando la voz haya terminado. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
+        Pulsa el micrófono para hablar. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
       </p>
     </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
@@ -396,23 +396,14 @@
   const SpeechRecognitionAPI =
     window.SpeechRecognition || window.webkitSpeechRecognition || null;
 
-  const VOICE_STATES = Object.freeze({
-    IDLE: "idle",
-    WELCOME: "welcome",
-    LISTENING_QUERY: "listening_query",
-    ANALYZING: "analyzing",
-    READING_SUMMARY: "reading_summary",
-    ASKING_FULL_REPORT: "asking_full_report",
-    LISTENING_CONFIRMATION: "listening_confirmation",
-    READING_FULL_REPORT: "reading_full_report"
-  });
-
   let voiceModeEnabled = false;
   let voiceRecognition = null;
   let isListening = false;
   let lastAnalysisData = null;
-  let voiceConversationState = VOICE_STATES.IDLE;
+  let voiceConversationState = "idle";
   let pendingVoiceCallback = null;
+  let welcomePending = false;
+  let welcomeHasPlayed = false;
 
 
   let selectedFile = null;
@@ -469,372 +460,77 @@
     window.speechSynthesis.speak(utterance);
   }
 
-  function setVoiceStatus(message) {
-    voiceStatus.textContent = message;
+  function welcomeMessage() {
+    return "Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?";
   }
 
-  function setVoiceState(state) {
-    voiceConversationState = state;
-    document.body.dataset.voiceState = state;
+  function shortVoiceInstructions() {
+    return [
+      "Pulsa el botón Preguntar por voz y di qué información deseas verificar.",
+      "También puedes pegar un enlace, copiar una noticia, o subir una imagen o un documento.",
+      "Cuando termine el análisis, escucharás el resumen y lo más importante."
+    ].join(" ");
   }
 
-  function selectedSpeechLanguage() {
-    const pageLanguage = document.documentElement.lang || navigator.language || "es-MX";
-    return pageLanguage === "auto" ? (navigator.language || "es-MX") : pageLanguage;
-  }
+  function playWelcomeAndThenListen() {
+    if (welcomeHasPlayed) return;
 
-  function cleanSpeechText(value) {
-    return String(value || "")
-      .replace(/\s+/g, " ")
-      .replace(/https?:\/\/\S+/g, " enlace ")
-      .trim();
-  }
-
-  function stopSpeech() {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-  }
-
-  function speakTextPromise(text) {
-    return new Promise(resolve => {
-      if (!("speechSynthesis" in window)) {
-        setVoiceStatus("Este navegador no permite leer el contenido en voz alta.");
-        resolve();
-        return;
-      }
-
-      const spoken = cleanSpeechText(text);
-      if (!spoken) {
-        resolve();
-        return;
-      }
-
-      stopSpeech();
-
-      const utterance = new SpeechSynthesisUtterance(spoken);
-      utterance.lang = selectedSpeechLanguage();
-      utterance.rate = 0.92;
-      utterance.pitch = 1;
-
-      let finished = false;
-      const finish = () => {
-        if (finished) return;
-        finished = true;
-        resolve();
-      };
-
-      utterance.onstart = () => setVoiceStatus("Reproduciendo bienvenida breve.");
-      utterance.onend = finish;
-      utterance.onerror = finish;
-
-      window.speechSynthesis.resume();
-      window.speechSynthesis.speak(utterance);
-
-      setTimeout(finish, Math.max(3500, spoken.length * 100));
-    });
-  }
-
-  function speakText(text) {
-    void speakTextPromise(text);
-  }
-
-  function destroyRecognition() {
-    if (!voiceRecognition) return;
-
-    try {
-      voiceRecognition.onstart = null;
-      voiceRecognition.onresult = null;
-      voiceRecognition.onerror = null;
-      voiceRecognition.onend = null;
-      voiceRecognition.abort();
-    } catch {}
-
-    voiceRecognition = null;
-    isListening = false;
-    pendingVoiceCallback = null;
-    voiceInputButton.classList.remove("listening");
-    voiceInputButton.setAttribute("aria-pressed", "false");
-    voiceInputLabel.textContent = "Preguntar por voz";
-  }
-
-  function createRecognition() {
-    if (!SpeechRecognitionAPI) return null;
-
-    const recognition = new SpeechRecognitionAPI();
-    recognition.lang = selectedSpeechLanguage();
-    recognition.interimResults = false;
-    recognition.continuous = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      isListening = true;
-      voiceInputButton.classList.add("listening");
-      voiceInputButton.setAttribute("aria-pressed", "true");
-      voiceInputLabel.textContent = "Escuchando…";
-      setVoiceStatus("Micrófono activo. Ahora te escucho. Haz tu pregunta.");
-    };
-
-    recognition.onresult = event => {
-      const transcript = event.results?.[0]?.[0]?.transcript?.trim() || "";
-      const callback = pendingVoiceCallback;
-      pendingVoiceCallback = null;
-      if (transcript && callback) callback(transcript);
-    };
-
-    recognition.onerror = event => {
-      const messages = {
-        "not-allowed":
-          "El navegador necesita permiso para usar el micrófono. Pulsa Preguntar por voz para concederlo.",
-        "no-speech":
-          "No se detectó voz. Pulsa Preguntar por voz e inténtalo de nuevo.",
-        "audio-capture":
-          "No se encontró un micrófono disponible.",
-        "network":
-          "No fue posible usar el reconocimiento de voz por un problema de red."
-      };
-
-      const message = messages[event.error] || "No fue posible reconocer la voz.";
-      setVoiceStatus(message);
-      if (event.error !== "aborted") speakText(message);
-    };
-
-    recognition.onend = () => {
-      isListening = false;
-      voiceInputButton.classList.remove("listening");
-      voiceInputButton.setAttribute("aria-pressed", "false");
-      voiceInputLabel.textContent = "Preguntar por voz";
-    };
-
-    return recognition;
-  }
-
-  function listenOnce({ state, onResult }) {
-    destroyRecognition();
-
-    if (!SpeechRecognitionAPI) {
-      const message =
-        "El reconocimiento de voz no está disponible en este navegador. Puedes usar el dictado del teclado.";
-      setVoiceStatus(message);
-      speakText(message);
-      return;
-    }
-
-    setVoiceState(state);
-    pendingVoiceCallback = onResult;
-    voiceRecognition = createRecognition();
-
-    try {
-      voiceRecognition.start();
-    } catch {
-      setVoiceStatus(
-        "No fue posible iniciar el micrófono automáticamente. Pulsa Preguntar por voz."
-      );
-    }
-  }
-
-  function normalizeVoiceCommand(value) {
-    return String(value || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^\p{L}\p{N}\s]/gu, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-  }
-
-  function handleGeneralVoiceCommand(transcript) {
-    const command = normalizeVoiceCommand(transcript);
-
-    if (/\b(detener|deten|para|silencio)\b/.test(command)) {
-      stopSpeech();
-      destroyRecognition();
-      setVoiceState(VOICE_STATES.IDLE);
-      setVoiceStatus("Lectura y escucha detenidas.");
-      return true;
-    }
-
-    if (/\b(leer|escuchar)\s+(el\s+)?resumen\b/.test(command)) {
-      speakSummary();
-      return true;
-    }
-
-    if (/\b(leer|escuchar)\s+(el\s+)?informe\s+completo\b/.test(command)) {
-      speakFullReport();
-      return true;
-    }
-
-    if (/\b(nueva|otra)\s+(consulta|pregunta|verificacion)\b/.test(command)) {
-      newsInput.value = "";
-      setFile(null);
-      startAutomaticWelcomeThenListen();
-      return true;
-    }
-
-    return false;
-  }
-
-  function handleSpokenQuery(transcript) {
-    if (handleGeneralVoiceCommand(transcript)) return;
-
-    const question = String(transcript || "").trim();
-    if (!question) {
-      speakText("No escuché una pregunta. Pulsa el micrófono e inténtalo de nuevo.");
-      return;
-    }
-
-    newsInput.value = question;
-    setVoiceState(VOICE_STATES.ANALYZING);
-    setVoiceStatus(`Pregunta reconocida: ${question}`);
-
-    speakTextPromise(`Escuché: ${question}. Iniciando la verificación.`)
-      .then(() => analyze());
-  }
-
-  async function startAutomaticWelcomeThenListen() {
+    welcomeHasPlayed = true;
+    welcomePending = false;
     voiceModeEnabled = true;
-    destroyRecognition();
-    setVoiceState(VOICE_STATES.WELCOME);
-    setVoiceStatus("Reproduciendo bienvenida breve.");
 
-    await speakTextPromise(
-      "Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?"
-    );
-
-    // Separación para impedir que el reconocimiento capture el final de la voz sintética.
-    await new Promise(resolve => setTimeout(resolve, 750));
-
-    setVoiceStatus("Micrófono activo. Ahora te escucho. Haz tu pregunta.");
-
-    listenOnce({
-      state: VOICE_STATES.LISTENING_QUERY,
-      onResult: handleSpokenQuery
-    });
-  }
-
-  function activateVoiceMode() {
-    voiceModeEnabled = true;
-    stopSpeech();
-
-    if (isListening) {
-      destroyRecognition();
-      setVoiceState(VOICE_STATES.IDLE);
-      setVoiceStatus("Micrófono detenido.");
+    if (!("speechSynthesis" in window)) {
+      startVoiceRecognition();
       return;
     }
 
-    setVoiceStatus("Micrófono activo. Ahora te escucho. Haz tu pregunta.");
+    window.speechSynthesis.cancel();
 
-    listenOnce({
-      state: VOICE_STATES.LISTENING_QUERY,
-      onResult: handleSpokenQuery
-    });
+    const utterance = new SpeechSynthesisUtterance(welcomeMessage());
+    utterance.lang = selectedSpeechLanguage();
+    utterance.rate = 0.92;
+    utterance.pitch = 1;
+
+    utterance.onstart = () => {
+      voiceStatus.textContent = "Reproduciendo bienvenida breve.";
+    };
+
+    utterance.onend = () => {
+      voiceStatus.textContent = "Micrófono activo. Haz tu pregunta.";
+      setTimeout(() => startVoiceRecognition(), 700);
+    };
+
+    utterance.onerror = () => {
+      voiceStatus.textContent = "Micrófono activo. Haz tu pregunta.";
+      setTimeout(() => startVoiceRecognition(), 700);
+    };
+
+    window.speechSynthesis.resume();
+    window.speechSynthesis.speak(utterance);
   }
 
-  function firstUsefulItem(...collections) {
-    for (const collection of collections) {
-      if (!Array.isArray(collection)) continue;
-      const value = collection.find(item => String(item || "").trim());
-      if (value) return String(value).trim();
-    }
-    return "";
-  }
+  function scheduleWelcome() {
+    welcomePending = true;
 
-  function buildSpokenSummary(data = lastAnalysisData) {
-    if (!data || typeof data !== "object") {
-      return result.innerText.trim();
-    }
+    const tryPlay = () => {
+      if (!welcomePending || welcomeHasPlayed) return;
+      playWelcomeAndThenListen();
+    };
 
-    const finalVerdict =
-      data.veredicto_final ||
-      data.veredicto ||
-      "No verificable";
+    // Conserva el comportamiento anterior que sí reproducía la bienvenida.
+    setTimeout(tryPlay, 700);
 
-    const technicalVerdict =
-      data.veredicto ||
-      "Información insuficiente";
+    // Respaldo para navegadores que requieren el primer toque.
+    const firstInteraction = () => {
+      tryPlay();
+      window.removeEventListener("pointerdown", firstInteraction);
+      window.removeEventListener("keydown", firstInteraction);
+      window.removeEventListener("touchstart", firstInteraction);
+    };
 
-    const credibility = percent(
-      data.credibilidad ??
-      data.credibilidad_porcentaje ??
-      0
-    );
-
-    const confidence = percent(
-      data.confianza ??
-      data.confianza_analisis ??
-      0
-    );
-
-    const summary =
-      data.resumen ||
-      data.resumen_ejecutivo ||
-      data.respuesta_directa ||
-      data.conclusion ||
-      "";
-
-    const mostImportant =
-      firstUsefulItem(
-        data.hechos_comprobados,
-        data.evidencia_a_favor,
-        data.evidencia_en_contra
-      ) ||
-      data.afirmacion_principal ||
-      data.conclusion ||
-      "";
-
-    const conclusion =
-      data.conclusion ||
-      data.respuesta_directa ||
-      "";
-
-    const parts = [
-      "Fuente de consulta: La Verdad Incómoda.",
-      `Veredicto final: ${finalVerdict}.`,
-      `Clasificación técnica: ${technicalVerdict}.`,
-      `Credibilidad de la afirmación: ${credibility} por ciento.`,
-      `Confianza del análisis: ${confidence} por ciento.`,
-      summary ? `Resumen de la nota: ${summary}` : "",
-      mostImportant ? `Lo más importante del texto: ${mostImportant}` : "",
-      conclusion ? `Conclusión: ${conclusion}` : ""
-    ];
-
-    return parts.filter(Boolean).join(" ");
-  }
-
-  function buildFullSpokenReport() {
-    const text = result.innerText.trim();
-    if (!text) return "";
-    return text.startsWith("Fuente de consulta:")
-      ? text
-      : `Fuente de consulta: La Verdad Incómoda. ${text}`;
-  }
-
-  function speakSummary() {
-    const text = buildSpokenSummary();
-    if (!text) {
-      speakText("Todavía no hay un resultado para leer.");
-      return;
-    }
-    speakText(text);
-  }
-
-  function speakFullReport() {
-    const text = buildFullSpokenReport();
-    if (!text) {
-      speakText("Todavía no hay un informe completo para leer.");
-      return;
-    }
-    speakText(text);
-  }
-
-  async function speakResultIfNeeded() {
-    if (!voiceModeEnabled) return;
-
-    destroyRecognition();
-    setVoiceState(VOICE_STATES.READING_SUMMARY);
-    await speakTextPromise(buildSpokenSummary());
-    askForFullReport();
+    window.addEventListener("pointerdown", firstInteraction, { once: true });
+    window.addEventListener("keydown", firstInteraction, { once: true });
+    window.addEventListener("touchstart", firstInteraction, { once: true });
   }
 
   function safeUrl(value) {
@@ -1252,20 +948,25 @@
     }, 100);
 
     if (voiceModeEnabled) {
-      const blockedMessage =
-        `${contentModalTitle.textContent}. ${contentModalMessage.textContent} ` +
-        "Puedes dictar el texto, la noticia o una descripción clara de lo que deseas verificar.";
+      listenOnce({
+        prompt:
+          `${contentModalTitle.textContent}. ${contentModalMessage.textContent} ` +
+          "Puedes dictar ahora el texto o la descripción que deseas verificar.",
+        state: "awaiting_blocked_content",
+        onResult: transcript => {
+          if (handleGeneralVoiceCommand(transcript)) return;
+          contentModalInput.value = transcript;
+          speakText("Contenido recibido. Continuando el análisis.");
 
-      speakTextPromise(blockedMessage).then(() => {
-        listenOnce({
-          state: VOICE_STATES.LISTENING_QUERY,
-          onResult: transcript => {
-            if (handleGeneralVoiceCommand(transcript)) return;
-            contentModalInput.value = transcript;
-            speakTextPromise("Contenido recibido. Continuando el análisis.")
-              .then(() => continueWithProvidedContent());
-          }
-        });
+          const waitUntilSpeechEnds = () => {
+            if (window.speechSynthesis?.speaking) {
+              setTimeout(waitUntilSpeechEnds, 200);
+            } else {
+              continueWithProvidedContent();
+            }
+          };
+          setTimeout(waitUntilSpeechEnds, 200);
+        }
       });
     }
   }
@@ -1750,24 +1451,15 @@
     });
   });
 
-  function scheduleWelcome() {
-    setTimeout(() => {
-      startAutomaticWelcomeThenListen();
-    }, 700);
-  }
-
+  scheduleWelcome();
 
   analyzeButton.addEventListener("click", () => analyze());
-  voiceInputButton.addEventListener("click", event => {
-    event.preventDefault();
-    activateVoiceMode();
-  });
+  voiceInputButton.addEventListener("click", activateVoiceMode);
   speakSummaryButton.addEventListener("click", speakSummary);
   speakFullButton.addEventListener("click", speakFullReport);
   stopSpeechButton.addEventListener("click", () => {
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     if (isListening && voiceRecognition) voiceRecognition.stop();
-    
     voiceConversationState = "idle";
     pendingVoiceCallback = null;
     voiceStatus.textContent = "Lectura y micrófono detenidos.";
@@ -1788,13 +1480,6 @@
   contentModalInput.addEventListener("keydown", event => {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
       continueWithProvidedContent();
-    }
-  });
-
-  window.addEventListener("keydown", event => {
-    if (event.altKey && event.key.toLowerCase() === "m") {
-      event.preventDefault();
-      activateVoiceMode();
     }
   });
 
