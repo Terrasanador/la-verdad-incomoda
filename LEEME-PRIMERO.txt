@@ -1,4 +1,37 @@
-EDICIÓN ANDROID SIN CARPETAS
+LA VERDAD INCÓMODA — VERSIÓN DE PRODUCCIÓN
 
-Sube todos los archivos directamente a la raíz.
-No subas el ZIP: sube los archivos que contiene.
+Esta versión ya incluye:
+
+- Google Analytics 4:
+  G-VJ6ECPYJVJ
+
+- Google AdSense:
+  ca-pub-3013146050600948
+
+- Botón ANALIZAR CREDIBILIDAD inmediatamente debajo del campo de texto.
+- Micrófono con apagado automático si no detecta voz durante 2 segundos.
+- Lectura accesible del resumen y del resultado.
+- Corrección visual de coherencia entre clasificación técnica y veredicto final.
+- Sin carpetas nuevas obligatorias.
+
+INSTALACIÓN RECOMENDADA
+
+1. Descomprime este ZIP.
+2. En GitHub reemplaza todos los archivos del repositorio por los incluidos.
+3. Verifica que el archivo principal se llame exactamente:
+   index.html
+4. Haz Commit directly to main.
+5. Espera a que Vercel muestre Ready.
+6. Abre la página en una pestaña de incógnito.
+7. En Google Analytics abre Informes > Tiempo real.
+8. Visita laverdadincomoda.mx desde otra pestaña y espera unos minutos.
+
+MARCA DE VERSIÓN
+
+Busca dentro de index.html:
+
+LVI-PRODUCTION-GA4-ADSENSE-V6
+
+IMPORTANTE
+
+No subas OPENAI_API_KEY a GitHub.
