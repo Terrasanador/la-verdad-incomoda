@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- LVI-MIC-FUNCTION-RESTORED-V2 -->
+  <!-- LVI-VOICE-RESULT-FIXED-V3 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="La Verdad Incómoda: inteligencia artificial y evidencia digital para evaluar la credibilidad de información pública." />
@@ -805,6 +805,84 @@
         ${list(values)}
       </article>
     `;
+  }
+
+  function firstSpokenItem(...groups) {
+    for (const group of groups) {
+      if (!Array.isArray(group)) continue;
+      const value = group.find(item => String(item || "").trim());
+      if (value) return String(value).trim();
+    }
+    return "";
+  }
+
+  function buildSpokenSummary(data = lastAnalysisData) {
+    if (!data || typeof data !== "object") {
+      return result.innerText.trim();
+    }
+
+    const finalVerdict = String(
+      data.veredicto_final || data.veredicto || "NO VERIFICABLE"
+    ).trim();
+
+    const technicalVerdict = String(
+      data.veredicto || "INFORMACIÓN INSUFICIENTE"
+    ).trim();
+
+    const credibility = percent(
+      data.credibilidad ?? data.credibilidad_porcentaje ?? 0
+    );
+
+    const confidence = percent(
+      data.confianza ?? data.confianza_analisis ?? 0
+    );
+
+    const summary = String(
+      data.resumen ||
+      data.resumen_ejecutivo ||
+      data.respuesta_directa ||
+      data.conclusion ||
+      "No se recibió un resumen."
+    ).trim();
+
+    const mostImportant = firstSpokenItem(
+      data.hechos_comprobados,
+      data.evidencia_a_favor,
+      data.evidencia_en_contra
+    ) || String(data.conclusion || "").trim();
+
+    return [
+      "Fuente de consulta: La Verdad Incómoda.",
+      `Veredicto final: ${finalVerdict}.`,
+      `Clasificación técnica: ${technicalVerdict}.`,
+      `Credibilidad de la afirmación: ${credibility} por ciento.`,
+      `Confianza del análisis: ${confidence} por ciento.`,
+      `Resumen: ${summary}`,
+      mostImportant ? `Lo más importante: ${mostImportant}` : ""
+    ].filter(Boolean).join(" ");
+  }
+
+  function speakSummary() {
+    const text = buildSpokenSummary();
+    if (!text) {
+      speakText("Todavía no hay un resultado para leer.");
+      return;
+    }
+    speakText(text);
+  }
+
+  function speakFullReport() {
+    const text = result.innerText.trim();
+    if (!text) {
+      speakText("Todavía no hay un informe para leer.");
+      return;
+    }
+    speakText(text);
+  }
+
+  function speakResultIfNeeded() {
+    if (!voiceModeEnabled) return;
+    speakSummary();
   }
 
   function reportSource() {
