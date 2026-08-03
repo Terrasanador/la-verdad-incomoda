@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <script async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXX"
-    crossorigin="anonymous"></script>
+  <!-- LVI-VOICE-NO-INITIAL-BUTTON-V1 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="La Verdad Incómoda: inteligencia artificial y evidencia digital para evaluar la credibilidad de información pública." />
@@ -114,25 +112,6 @@
       .final-verdict{font-size:36px}
       .verdict{font-size:22px}
       .metric{font-size:10px}
-    }
-
-
-
-
-    .voice-start-overlay{
-      position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;
-      padding:18px;background:rgba(0,0,0,.86);backdrop-filter:blur(10px)
-    }
-    .voice-start-overlay.visible{display:flex}
-    .voice-start-card{
-      width:min(560px,100%);padding:24px;border:1px solid #555563;border-radius:24px;
-      background:#111116;box-shadow:0 24px 80px rgba(0,0,0,.72);text-align:center
-    }
-    .voice-start-card h2{font-size:clamp(25px,6vw,38px);margin-bottom:10px}
-    .voice-start-card p{color:#d3d3da;line-height:1.6;margin-bottom:16px}
-    .voice-start-card button{
-      width:100%;min-height:58px;border:0;border-radius:16px;background:var(--red);
-      color:#fff;font-size:19px;font-weight:1000;padding:12px
     }
 
     .voice-tools{
@@ -257,17 +236,6 @@
   <div class="header-share">COMPARTE ESTA PÁGINA PARA <span>COMBATIR LAS FAKE NEWS</span></div>
 </header>
 
-<div class="voice-start-overlay" id="voiceStartOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="voiceStartTitle">
-  <div class="voice-start-card">
-    <div class="badge">MODO DE VOZ</div>
-    <h2 id="voiceStartTitle">Activa el micrófono</h2>
-    <p>
-      Por seguridad, el navegador necesita un toque inicial para autorizar el micrófono.
-      Escucharás una bienvenida breve. Al terminar, el micrófono se activará para escuchar tu pregunta.
-    </p>
-    <button id="enableVoiceOnEntry" type="button">COMENZAR</button>
-  </div>
-</div>
 
 <main>
   <section class="hero">
@@ -297,7 +265,7 @@
         <span aria-hidden="true">🔇</span> Detener lectura
       </button>
       <p class="voice-status" id="voiceStatus" aria-live="polite">
-        Pulsa comenzar. Escucharás una bienvenida breve y el micrófono se activará únicamente cuando la voz haya terminado. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
+        Al entrar escucharás una bienvenida breve. El micrófono se activará únicamente cuando la voz haya terminado. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
       </p>
     </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
@@ -423,8 +391,6 @@
   const voiceStatus = document.getElementById("voiceStatus");
   const speakSummaryButton = document.getElementById("speakSummaryButton");
   const speakFullButton = document.getElementById("speakFullButton");
-  const voiceStartOverlay = document.getElementById("voiceStartOverlay");
-  const enableVoiceOnEntry = document.getElementById("enableVoiceOnEntry");
   const stopSpeechButton = document.getElementById("stopSpeechButton");
 
   const SpeechRecognitionAPI =
@@ -503,18 +469,6 @@
     window.speechSynthesis.speak(utterance);
   }
 
-  function showVoiceActivationOverlay() {
-    voiceStartOverlay.hidden = false;
-    voiceStartOverlay.style.display = "flex";
-    voiceStartOverlay.classList.add("visible");
-  }
-
-  function hideVoiceActivationOverlay() {
-    voiceStartOverlay.classList.remove("visible");
-    voiceStartOverlay.style.display = "none";
-    voiceStartOverlay.hidden = true;
-  }
-
   function setVoiceStatus(message) {
     voiceStatus.textContent = message;
   }
@@ -563,34 +517,21 @@
       utterance.rate = 0.92;
       utterance.pitch = 1;
 
-      const voices = window.speechSynthesis.getVoices();
-      const languagePrefix = utterance.lang.toLowerCase().split("-")[0];
-      const matchingVoice = voices.find(voice =>
-        String(voice.lang || "").toLowerCase().startsWith(languagePrefix)
-      );
-      if (matchingVoice) utterance.voice = matchingVoice;
-
-      let completed = false;
+      let finished = false;
       const finish = () => {
-        if (completed) return;
-        completed = true;
+        if (finished) return;
+        finished = true;
         resolve();
       };
 
-      utterance.onstart = () => setVoiceStatus("Leyendo en voz alta…");
+      utterance.onstart = () => setVoiceStatus("Reproduciendo bienvenida breve.");
       utterance.onend = finish;
-      utterance.onerror = () => {
-        setVoiceStatus("No fue posible completar la lectura en voz alta.");
-        finish();
-      };
+      utterance.onerror = finish;
 
       window.speechSynthesis.resume();
+      window.speechSynthesis.speak(utterance);
 
-      setTimeout(() => {
-        window.speechSynthesis.speak(utterance);
-      }, 120);
-
-      setTimeout(finish, Math.max(3500, spoken.length * 95));
+      setTimeout(finish, Math.max(3500, spoken.length * 100));
     });
   }
 
@@ -598,12 +539,9 @@
     void speakTextPromise(text);
   }
 
-  function welcomeMessage() {
-    return "Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?";
-  }
-
   function destroyRecognition() {
     if (!voiceRecognition) return;
+
     try {
       voiceRecognition.onstart = null;
       voiceRecognition.onresult = null;
@@ -611,6 +549,7 @@
       voiceRecognition.onend = null;
       voiceRecognition.abort();
     } catch {}
+
     voiceRecognition = null;
     isListening = false;
     pendingVoiceCallback = null;
@@ -633,7 +572,7 @@
       voiceInputButton.classList.add("listening");
       voiceInputButton.setAttribute("aria-pressed", "true");
       voiceInputLabel.textContent = "Escuchando…";
-      setVoiceStatus("Micrófono activo. Habla ahora.");
+      setVoiceStatus("Micrófono activo. Ahora te escucho. Haz tu pregunta.");
     };
 
     recognition.onresult = event => {
@@ -645,12 +584,16 @@
 
     recognition.onerror = event => {
       const messages = {
-        "not-allowed": "Debes permitir el acceso al micrófono.",
-        "no-speech": "No se detectó voz. Inténtalo de nuevo.",
-        "audio-capture": "No se encontró un micrófono disponible.",
-        "network": "No fue posible usar el reconocimiento de voz por un problema de red.",
-        "aborted": "La escucha fue detenida."
+        "not-allowed":
+          "El navegador necesita permiso para usar el micrófono. Pulsa Preguntar por voz para concederlo.",
+        "no-speech":
+          "No se detectó voz. Pulsa Preguntar por voz e inténtalo de nuevo.",
+        "audio-capture":
+          "No se encontró un micrófono disponible.",
+        "network":
+          "No fue posible usar el reconocimiento de voz por un problema de red."
       };
+
       const message = messages[event.error] || "No fue posible reconocer la voz.";
       setVoiceStatus(message);
       if (event.error !== "aborted") speakText(message);
@@ -684,7 +627,9 @@
     try {
       voiceRecognition.start();
     } catch {
-      setVoiceStatus("No fue posible iniciar el micrófono.");
+      setVoiceStatus(
+        "No fue posible iniciar el micrófono automáticamente. Pulsa Preguntar por voz."
+      );
     }
   }
 
@@ -722,51 +667,55 @@
     if (/\b(nueva|otra)\s+(consulta|pregunta|verificacion)\b/.test(command)) {
       newsInput.value = "";
       setFile(null);
-      startVoiceFlow();
+      startAutomaticWelcomeThenListen();
       return true;
     }
 
     return false;
   }
 
-  async function startVoiceFlow() {
-    voiceModeEnabled = true;
-    hideVoiceActivationOverlay();
+  function handleSpokenQuery(transcript) {
+    if (handleGeneralVoiceCommand(transcript)) return;
 
-    // No debe existir ningún reconocimiento activo durante la bienvenida.
+    const question = String(transcript || "").trim();
+    if (!question) {
+      speakText("No escuché una pregunta. Pulsa el micrófono e inténtalo de nuevo.");
+      return;
+    }
+
+    newsInput.value = question;
+    setVoiceState(VOICE_STATES.ANALYZING);
+    setVoiceStatus(`Pregunta reconocida: ${question}`);
+
+    speakTextPromise(`Escuché: ${question}. Iniciando la verificación.`)
+      .then(() => analyze());
+  }
+
+  async function startAutomaticWelcomeThenListen() {
+    voiceModeEnabled = true;
     destroyRecognition();
     setVoiceState(VOICE_STATES.WELCOME);
     setVoiceStatus("Reproduciendo bienvenida breve.");
 
-    await speakTextPromise(welcomeMessage());
+    await speakTextPromise(
+      "Bienvenido a La Verdad Incómoda. ¿Qué deseas verificar?"
+    );
 
-    // Pequeña separación para evitar que el reconocimiento capture el final de la voz sintética.
-    await new Promise(resolve => setTimeout(resolve, 650));
+    // Separación para impedir que el reconocimiento capture el final de la voz sintética.
+    await new Promise(resolve => setTimeout(resolve, 750));
 
-    setVoiceStatus("Micrófono activo. Di lo que deseas verificar.");
+    setVoiceStatus("Micrófono activo. Ahora te escucho. Haz tu pregunta.");
 
     listenOnce({
       state: VOICE_STATES.LISTENING_QUERY,
-      onResult: transcript => {
-        if (handleGeneralVoiceCommand(transcript)) return;
-
-        const question = String(transcript || "").trim();
-        if (!question) {
-          speakText("No escuché una pregunta. Inténtalo de nuevo.");
-          setTimeout(startVoiceFlow, 600);
-          return;
-        }
-
-        newsInput.value = question;
-        setVoiceState(VOICE_STATES.ANALYZING);
-        setVoiceStatus(`Pregunta reconocida: ${question}`);
-        speakTextPromise(`Escuché: ${question}. Iniciando la verificación.`)
-          .then(() => analyze());
-      }
+      onResult: handleSpokenQuery
     });
   }
 
   function activateVoiceMode() {
+    voiceModeEnabled = true;
+    stopSpeech();
+
     if (isListening) {
       destroyRecognition();
       setVoiceState(VOICE_STATES.IDLE);
@@ -774,35 +723,11 @@
       return;
     }
 
-    startVoiceFlow();
-  }
-
-  async function askForFullReport() {
-    setVoiceState(VOICE_STATES.ASKING_FULL_REPORT);
-    await speakTextPromise("¿Deseas escuchar el informe completo? Responde sí o no.");
+    setVoiceStatus("Micrófono activo. Ahora te escucho. Haz tu pregunta.");
 
     listenOnce({
-      state: VOICE_STATES.LISTENING_CONFIRMATION,
-      onResult: transcript => {
-        const answer = normalizeVoiceCommand(transcript);
-
-        if (/^(si|sí|claro|adelante|correcto|por supuesto)\b/.test(answer)) {
-          setVoiceState(VOICE_STATES.READING_FULL_REPORT);
-          speakFullReport();
-          return;
-        }
-
-        if (/^(no|gracias|terminar|finalizar)\b/.test(answer)) {
-          setVoiceState(VOICE_STATES.IDLE);
-          speakText("De acuerdo. La lectura ha terminado.");
-          return;
-        }
-
-        if (handleGeneralVoiceCommand(transcript)) return;
-
-        speakTextPromise("No entendí la respuesta.")
-          .then(() => askForFullReport());
-      }
+      state: VOICE_STATES.LISTENING_QUERY,
+      onResult: handleSpokenQuery
     });
   }
 
@@ -1826,30 +1751,11 @@
   });
 
   function scheduleWelcome() {
-    showVoiceActivationOverlay();
+    setTimeout(() => {
+      startAutomaticWelcomeThenListen();
+    }, 700);
   }
 
-  scheduleWelcome();
-
-  enableVoiceOnEntry.addEventListener("click", async () => {
-    try {
-      setVoiceStatus("Solicitando permiso para el micrófono.");
-
-      if (navigator.mediaDevices?.getUserMedia) {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop());
-      }
-
-      await new Promise(resolve => setTimeout(resolve, 300));
-      startVoiceFlow();
-    } catch {
-      hideVoiceActivationOverlay();
-      const message =
-        "No fue posible activar el micrófono. Puedes continuar usando texto, enlaces, imágenes o documentos.";
-      setVoiceStatus(message);
-      speakText(message);
-    }
-  });
 
   analyzeButton.addEventListener("click", () => analyze());
   voiceInputButton.addEventListener("click", event => {
