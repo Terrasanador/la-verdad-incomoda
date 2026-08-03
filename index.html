@@ -264,7 +264,7 @@
         <span aria-hidden="true">🔇</span> Detener lectura
       </button>
       <p class="voice-status" id="voiceStatus" aria-live="polite">
-        Pulsa el micrófono, habla con naturalidad y recibirás el resumen del resultado por voz.
+        Pulsa el micrófono para hablar. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
       </p>
     </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
@@ -401,6 +401,8 @@
   let lastAnalysisData = null;
   let voiceConversationState = "idle";
   let pendingVoiceCallback = null;
+  let welcomePending = false;
+  let welcomeHasPlayed = false;
 
 
   let selectedFile = null;
@@ -457,15 +459,62 @@
     window.speechSynthesis.speak(utterance);
   }
 
-  function shortVoiceInstructions() {
+  function welcomeMessage() {
     return [
       "Bienvenido a La Verdad Incómoda.",
-      "Después de esta explicación se activará el micrófono.",
-      "Di una pregunta, una afirmación o el contenido que quieres verificar.",
-      "También puedes pegar un enlace o subir una imagen.",
-      "Cuando termine la investigación, el resultado se leerá en voz alta.",
-      "Si una plataforma bloquea el contenido, se leerán las instrucciones para continuar."
+      "Aquí puedes verificar noticias, publicaciones, imágenes, documentos y cualquier afirmación utilizando inteligencia artificial y evidencia pública.",
+      "Si prefieres hablar, pulsa el botón Preguntar por voz y di con naturalidad lo que deseas verificar.",
+      "También puedes pegar un enlace, copiar y pegar el texto de una noticia, o subir una imagen o un documento.",
+      "Al terminar, recibirás un veredicto, un resumen claro, el nivel de credibilidad, la confianza del análisis y las fuentes consultadas.",
+      "Si usas el micrófono, también escucharás el resumen y lo más importante del resultado.",
+      "No creas. Comprueba."
     ].join(" ");
+  }
+
+  function shortVoiceInstructions() {
+    return [
+      "Pulsa el botón Preguntar por voz y di qué información deseas verificar.",
+      "También puedes pegar un enlace, copiar una noticia, o subir una imagen o un documento.",
+      "Cuando termine el análisis, escucharás el resumen y lo más importante."
+    ].join(" ");
+  }
+
+  function playWelcome() {
+    if (welcomeHasPlayed) return;
+    welcomeHasPlayed = true;
+    localStorage.setItem("lvi_voice_welcome_played", "1");
+    speakText(welcomeMessage());
+  }
+
+  function scheduleWelcome() {
+    const alreadyPlayed =
+      localStorage.getItem("lvi_voice_welcome_played") === "1";
+
+    if (alreadyPlayed) return;
+
+    welcomePending = true;
+
+    const tryPlay = () => {
+      if (!welcomePending || welcomeHasPlayed) return;
+
+      if ("speechSynthesis" in window) {
+        playWelcome();
+        welcomePending = false;
+      }
+    };
+
+    setTimeout(tryPlay, 700);
+
+    const firstInteraction = () => {
+      tryPlay();
+      window.removeEventListener("pointerdown", firstInteraction);
+      window.removeEventListener("keydown", firstInteraction);
+      window.removeEventListener("touchstart", firstInteraction);
+    };
+
+    window.addEventListener("pointerdown", firstInteraction, { once: true });
+    window.addEventListener("keydown", firstInteraction, { once: true });
+    window.addEventListener("touchstart", firstInteraction, { once: true });
   }
 
   function setVoiceStatus(message) {
@@ -634,10 +683,10 @@
     }
 
     const prompt = [
-      "Bienvenido a La Verdad Incómoda.",
       "¿Qué información deseas verificar?",
-      "Puedes decir una pregunta, una afirmación o un enlace.",
-      "Cuando termine la investigación, te leeré el resumen y lo más importante."
+      "Habla con naturalidad.",
+      "También puedes usar los otros medios disponibles: pegar un enlace, copiar y pegar una noticia, o subir una imagen o un documento.",
+      "Cuando termine la investigación, escucharás el resumen y lo más importante."
     ].join(" ");
 
     listenOnce({
@@ -1726,6 +1775,8 @@
       });
     });
   });
+
+  scheduleWelcome();
 
   analyzeButton.addEventListener("click", () => analyze());
   voiceInputButton.addEventListener("click", activateVoiceMode);
