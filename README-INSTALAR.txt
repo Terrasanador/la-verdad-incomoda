@@ -1,4 +1,4 @@
-LA VERDAD INCÓMODA — BIENVENIDA Y VOZ ACCESIBLE
+LA VERDAD INCÓMODA — VOZ CON INTERRUPCIÓN DURANTE LA BIENVENIDA
 
 ARCHIVOS:
 - index.html
@@ -6,33 +6,35 @@ ARCHIVOS:
 
 NO USA CARPETAS NI ASSETS.
 
-NOVEDADES:
-- Al ingresar por primera vez, la página reproduce una bienvenida por voz.
-- La bienvenida explica que puedes:
-  - usar el micrófono;
-  - pegar un enlace;
-  - copiar y pegar una noticia o un texto;
-  - subir una imagen o un documento.
-- Al pulsar “Preguntar por voz”, la página pregunta qué deseas verificar.
-- Puedes hablar con naturalidad y el análisis comienza automáticamente.
-- Al terminar, se lee:
-  - veredicto;
-  - credibilidad;
-  - confianza;
-  - resumen de la nota;
-  - lo más importante del texto;
-  - conclusión.
-- Después puedes escuchar el informe completo.
-- Los errores 429 y otros avisos también se leen.
-- Copiar, compartir e imprimir incluye al inicio:
-  “Fuente de consulta: La Verdad Incómoda”.
+IMPORTANTE SOBRE LOS NAVEGADORES
+Los navegadores no permiten activar el micrófono sin permiso del usuario.
+Por eso, al entrar aparece un único botón:
+“ACTIVAR VOZ Y MICRÓFONO”.
 
-IMPORTANTE:
-Algunos navegadores bloquean el audio automático. En ese caso, la bienvenida
-se reproduce al primer toque, clic o tecla. Solo se reproduce una vez por dispositivo.
+DESPUÉS DE ESE TOQUE:
+1. Se solicita permiso del micrófono.
+2. Empieza la bienvenida.
+3. El micrófono permanece escuchando durante la bienvenida.
+4. Puedes interrumpir hablando en cualquier momento.
+5. Al detectar tu voz, la bienvenida se detiene.
+6. Tu pregunta se convierte en texto.
+7. La investigación comienza automáticamente.
+8. Al terminar se lee el resumen y lo más importante.
+9. Después puedes escuchar el informe completo.
 
-INSTALACIÓN:
+OTROS MEDIOS DISPONIBLES
+- Pegar un enlace.
+- Copiar y pegar una noticia o texto.
+- Subir una imagen.
+- Subir un documento.
+
+NOTA TÉCNICA
+La escucha simultánea con la voz sintética depende del navegador y del dispositivo.
+Chrome y Edge ofrecen normalmente la mejor compatibilidad. Los audífonos ayudan
+a evitar que el micrófono confunda la voz del sistema con la voz del usuario.
+
+INSTALACIÓN
 1. Reemplaza index.html en GitHub.
 2. Haz Commit directly to main.
-3. Espera el deployment Ready de Vercel.
-4. Abre la web y permite el acceso al micrófono cuando se solicite.
+3. Espera que Vercel marque Ready.
+4. Entra a la web y toca “ACTIVAR VOZ Y MICRÓFONO”.

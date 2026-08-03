@@ -115,6 +115,23 @@
 
 
 
+
+    .voice-start-overlay{
+      position:fixed;inset:0;z-index:1300;display:none;align-items:center;justify-content:center;
+      padding:18px;background:rgba(0,0,0,.86);backdrop-filter:blur(10px)
+    }
+    .voice-start-overlay.visible{display:flex}
+    .voice-start-card{
+      width:min(560px,100%);padding:24px;border:1px solid #555563;border-radius:24px;
+      background:#111116;box-shadow:0 24px 80px rgba(0,0,0,.72);text-align:center
+    }
+    .voice-start-card h2{font-size:clamp(25px,6vw,38px);margin-bottom:10px}
+    .voice-start-card p{color:#d3d3da;line-height:1.6;margin-bottom:16px}
+    .voice-start-card button{
+      width:100%;min-height:58px;border:0;border-radius:16px;background:var(--red);
+      color:#fff;font-size:19px;font-weight:1000;padding:12px
+    }
+
     .voice-tools{
       display:flex;align-items:center;gap:9px;margin:10px 0 4px;flex-wrap:wrap
     }
@@ -236,6 +253,19 @@
   <div class="nav"><div class="brand">LA VERDAD <span>INCÓMODA</span></div><div class="status">IA + Evidencia Digital</div></div>
   <div class="header-share">COMPARTE ESTA PÁGINA PARA <span>COMBATIR LAS FAKE NEWS</span></div>
 </header>
+
+<div class="voice-start-overlay" id="voiceStartOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="voiceStartTitle">
+  <div class="voice-start-card">
+    <div class="badge">MODO DE VOZ</div>
+    <h2 id="voiceStartTitle">Activa el micrófono</h2>
+    <p>
+      Por seguridad, el navegador necesita un toque inicial para autorizar el micrófono.
+      Después podrás interrumpir la bienvenida hablando y tu pregunta se investigará automáticamente.
+    </p>
+    <button id="enableVoiceOnEntry" type="button">ACTIVAR VOZ Y MICRÓFONO</button>
+  </div>
+</div>
+
 <main>
   <section class="hero">
     <div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA DIGITAL</div>
@@ -250,7 +280,7 @@
     <p class="workspace-intro">Escribe, pega un enlace o añade un archivo.</p>
     <textarea id="newsInput" placeholder="Ejemplo: ¿Qué tan confiable es esta afirmación según la evidencia pública disponible?"></textarea>
     <div class="voice-tools" aria-label="Herramientas de accesibilidad por voz">
-      <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false">
+      <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false" aria-keyshortcuts="Alt+M">
         <span aria-hidden="true">🎙️</span>
         <span id="voiceInputLabel">Preguntar por voz</span>
       </button>
@@ -260,11 +290,14 @@
       <button class="speak-button" id="speakFullButton" type="button">
         <span aria-hidden="true">📖</span> Escuchar informe completo
       </button>
+      <button class="speak-button" id="skipWelcomeButton" type="button">
+        <span aria-hidden="true">⏭️</span> Omitir bienvenida
+      </button>
       <button class="speak-button" id="stopSpeechButton" type="button">
         <span aria-hidden="true">🔇</span> Detener lectura
       </button>
       <p class="voice-status" id="voiceStatus" aria-live="polite">
-        Pulsa el micrófono para hablar. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
+        Activa el modo de voz al entrar. Durante la bienvenida puedes interrumpir hablando; tu pregunta se escuchará y se investigará automáticamente. También puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
       </p>
     </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
@@ -390,6 +423,9 @@
   const voiceStatus = document.getElementById("voiceStatus");
   const speakSummaryButton = document.getElementById("speakSummaryButton");
   const speakFullButton = document.getElementById("speakFullButton");
+  const voiceStartOverlay = document.getElementById("voiceStartOverlay");
+  const enableVoiceOnEntry = document.getElementById("enableVoiceOnEntry");
+  const skipWelcomeButton = document.getElementById("skipWelcomeButton");
   const stopSpeechButton = document.getElementById("stopSpeechButton");
 
   const SpeechRecognitionAPI =
@@ -403,6 +439,9 @@
   let pendingVoiceCallback = null;
   let welcomePending = false;
   let welcomeHasPlayed = false;
+  let bargeInRecognition = null;
+  let bargeInActive = false;
+  let voiceEntryEnabled = false;
 
 
   let selectedFile = null;
@@ -459,14 +498,172 @@
     window.speechSynthesis.speak(utterance);
   }
 
+  function showVoiceActivationOverlay() {
+    const alreadyEnabled =
+      sessionStorage.getItem("lvi_voice_entry_enabled") === "1";
+
+    if (alreadyEnabled) {
+      voiceEntryEnabled = true;
+      startWelcomeWithBargeIn();
+      return;
+    }
+
+    voiceStartOverlay.hidden = false;
+    voiceStartOverlay.style.display = "flex";
+    voiceStartOverlay.classList.add("visible");
+  }
+
+  function hideVoiceActivationOverlay() {
+    voiceStartOverlay.classList.remove("visible");
+    voiceStartOverlay.style.display = "none";
+    voiceStartOverlay.hidden = true;
+  }
+
+  function stopBargeInRecognition() {
+    bargeInActive = false;
+    if (bargeInRecognition) {
+      try { bargeInRecognition.stop(); } catch {}
+    }
+  }
+
+  function submitBargeInQuestion(transcript) {
+    const question = String(transcript || "").trim();
+    if (!question) return;
+
+    welcomePending = false;
+    window.speechSynthesis?.cancel();
+    stopBargeInRecognition();
+
+    newsInput.value = question;
+    voiceModeEnabled = true;
+    voiceConversationState = "analyzing";
+    setVoiceStatus(`Pregunta reconocida: ${question}`);
+
+    speakText(`Escuché: ${question}. Iniciando la verificación.`);
+
+    const waitUntilSpeechEnds = () => {
+      if (window.speechSynthesis?.speaking) {
+        setTimeout(waitUntilSpeechEnds, 180);
+      } else {
+        analyze();
+      }
+    };
+    setTimeout(waitUntilSpeechEnds, 180);
+  }
+
+  function startBargeInRecognition() {
+    if (!SpeechRecognitionAPI) {
+      setVoiceStatus(
+        "Este navegador no admite escucha continua durante la bienvenida. Usa el botón Preguntar por voz."
+      );
+      return;
+    }
+
+    stopBargeInRecognition();
+
+    bargeInRecognition = new SpeechRecognitionAPI();
+    bargeInRecognition.lang = selectedSpeechLanguage();
+    bargeInRecognition.interimResults = true;
+    bargeInRecognition.continuous = true;
+    bargeInRecognition.maxAlternatives = 1;
+
+    let finalText = "";
+    let humanSpeechDetected = false;
+
+    bargeInRecognition.onstart = () => {
+      bargeInActive = true;
+      voiceModeEnabled = true;
+      setVoiceStatus(
+        "Micrófono activo. Puedes interrumpir la bienvenida diciendo tu pregunta."
+      );
+    };
+
+    bargeInRecognition.onresult = event => {
+      let interimText = "";
+
+      for (let index = event.resultIndex; index < event.results.length; index++) {
+        const transcript = event.results[index][0]?.transcript || "";
+
+        if (event.results[index].isFinal) {
+          finalText += ` ${transcript}`;
+        } else {
+          interimText += ` ${transcript}`;
+        }
+      }
+
+      const candidate = `${finalText} ${interimText}`.trim();
+
+      if (candidate.length >= 4) {
+        humanSpeechDetected = true;
+        window.speechSynthesis?.cancel();
+        setVoiceStatus("Te escucho. Termina tu pregunta.");
+      }
+
+      if (finalText.trim().length >= 4) {
+        submitBargeInQuestion(finalText.trim());
+      }
+    };
+
+    bargeInRecognition.onerror = event => {
+      if (event.error === "not-allowed") {
+        setVoiceStatus("Debes permitir el acceso al micrófono.");
+      } else if (!["aborted", "no-speech"].includes(event.error)) {
+        setVoiceStatus("No fue posible mantener el micrófono activo.");
+      }
+    };
+
+    bargeInRecognition.onend = () => {
+      bargeInActive = false;
+
+      if (
+        voiceEntryEnabled &&
+        voiceConversationState === "idle" &&
+        window.speechSynthesis?.speaking &&
+        !humanSpeechDetected
+      ) {
+        setTimeout(startBargeInRecognition, 250);
+      }
+    };
+
+    try {
+      bargeInRecognition.start();
+    } catch {
+      setVoiceStatus("El micrófono ya está activo.");
+    }
+  }
+
+  function startWelcomeWithBargeIn() {
+    voiceEntryEnabled = true;
+    voiceModeEnabled = true;
+    voiceConversationState = "idle";
+    sessionStorage.setItem("lvi_voice_entry_enabled", "1");
+
+    startBargeInRecognition();
+
+    const message = welcomeMessage();
+    speakText(message);
+
+    const waitForWelcomeEnd = () => {
+      if (window.speechSynthesis?.speaking) {
+        setTimeout(waitForWelcomeEnd, 250);
+      } else if (voiceConversationState === "idle") {
+        setVoiceStatus(
+          "Micrófono activo. Di ahora lo que deseas verificar o usa cualquiera de los otros medios."
+        );
+      }
+    };
+
+    setTimeout(waitForWelcomeEnd, 250);
+  }
+
   function welcomeMessage() {
     return [
       "Bienvenido a La Verdad Incómoda.",
-      "Aquí puedes verificar noticias, publicaciones, imágenes, documentos y cualquier afirmación utilizando inteligencia artificial y evidencia pública.",
-      "Si prefieres hablar, pulsa el botón Preguntar por voz y di con naturalidad lo que deseas verificar.",
+      "Aquí puedes verificar noticias, publicaciones, imágenes, documentos y cualquier afirmación mediante inteligencia artificial y evidencia pública.",
+      "Puedes interrumpir esta explicación en cualquier momento pulsando el botón Preguntar por voz. En cuanto lo pulses, dejaré de hablar y escucharé tu pregunta.",
       "También puedes pegar un enlace, copiar y pegar el texto de una noticia, o subir una imagen o un documento.",
-      "Al terminar, recibirás un veredicto, un resumen claro, el nivel de credibilidad, la confianza del análisis y las fuentes consultadas.",
-      "Si usas el micrófono, también escucharás el resumen y lo más importante del resultado.",
+      "Al terminar, recibirás un veredicto, un resumen claro, la credibilidad de la afirmación, la confianza del análisis y las fuentes consultadas.",
+      "Si utilizas el micrófono, escucharás el resumen y lo más importante del resultado, y después podrás pedir el informe completo.",
       "No creas. Comprueba."
     ].join(" ");
   }
@@ -483,38 +680,12 @@
     if (welcomeHasPlayed) return;
     welcomeHasPlayed = true;
     localStorage.setItem("lvi_voice_welcome_played", "1");
+    setVoiceStatus("Bienvenida por voz. Pulsa el micrófono para interrumpirla y preguntar.");
     speakText(welcomeMessage());
   }
 
   function scheduleWelcome() {
-    const alreadyPlayed =
-      localStorage.getItem("lvi_voice_welcome_played") === "1";
-
-    if (alreadyPlayed) return;
-
-    welcomePending = true;
-
-    const tryPlay = () => {
-      if (!welcomePending || welcomeHasPlayed) return;
-
-      if ("speechSynthesis" in window) {
-        playWelcome();
-        welcomePending = false;
-      }
-    };
-
-    setTimeout(tryPlay, 700);
-
-    const firstInteraction = () => {
-      tryPlay();
-      window.removeEventListener("pointerdown", firstInteraction);
-      window.removeEventListener("keydown", firstInteraction);
-      window.removeEventListener("touchstart", firstInteraction);
-    };
-
-    window.addEventListener("pointerdown", firstInteraction, { once: true });
-    window.addEventListener("keydown", firstInteraction, { once: true });
-    window.addEventListener("touchstart", firstInteraction, { once: true });
+    showVoiceActivationOverlay();
   }
 
   function setVoiceStatus(message) {
@@ -676,6 +847,12 @@
 
   function startVoiceConversation() {
     voiceModeEnabled = true;
+    welcomePending = false;
+    stopBargeInRecognition();
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
 
     if (isListening) {
       stopListening();
@@ -1276,7 +1453,7 @@
       listenOnce({
         prompt:
           `${contentModalTitle.textContent}. ${contentModalMessage.textContent} ` +
-          "Puedes dictar ahora el texto o la descripción que deseas verificar.",
+          "Puedes dictar ahora el texto, la noticia o una descripción clara de lo que deseas verificar. También puedes cerrar esta ventana y subir una captura o un documento.",
         state: "awaiting_blocked_content",
         onResult: transcript => {
           if (handleGeneralVoiceCommand(transcript)) return;
@@ -1778,13 +1955,43 @@
 
   scheduleWelcome();
 
+  enableVoiceOnEntry.addEventListener("click", async () => {
+    try {
+      if (navigator.mediaDevices?.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop());
+      }
+
+      hideVoiceActivationOverlay();
+      startWelcomeWithBargeIn();
+    } catch {
+      hideVoiceActivationOverlay();
+      const message =
+        "No fue posible activar el micrófono. Puedes continuar usando texto, enlaces, imágenes o documentos.";
+      setVoiceStatus(message);
+      speakText(message);
+    }
+  });
+
   analyzeButton.addEventListener("click", () => analyze());
-  voiceInputButton.addEventListener("click", activateVoiceMode);
+  voiceInputButton.addEventListener("click", event => {
+    event.preventDefault();
+    activateVoiceMode();
+  });
+  skipWelcomeButton.addEventListener("click", () => {
+    welcomePending = false;
+    welcomeHasPlayed = true;
+    localStorage.setItem("lvi_voice_welcome_played", "1");
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    stopBargeInRecognition();
+    setVoiceStatus("Bienvenida omitida. Puedes usar el micrófono o cualquiera de los otros medios.");
+  });
   speakSummaryButton.addEventListener("click", speakSummary);
   speakFullButton.addEventListener("click", speakFullReport);
   stopSpeechButton.addEventListener("click", () => {
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     if (isListening && voiceRecognition) voiceRecognition.stop();
+    stopBargeInRecognition();
     voiceConversationState = "idle";
     pendingVoiceCallback = null;
     voiceStatus.textContent = "Lectura y micrófono detenidos.";
@@ -1805,6 +2012,13 @@
   contentModalInput.addEventListener("keydown", event => {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
       continueWithProvidedContent();
+    }
+  });
+
+  window.addEventListener("keydown", event => {
+    if (event.altKey && event.key.toLowerCase() === "m") {
+      event.preventDefault();
+      activateVoiceMode();
     }
   });
 
