@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- LVI-VERDICT-BUTTON-MIC-2S-V4 -->
   <!-- LVI-VOICE-RESULT-FIXED-V3 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -250,6 +251,7 @@
     <h2>¿Qué quieres verificar?</h2>
     <p class="workspace-intro">Escribe, pega un enlace o añade un archivo.</p>
     <textarea id="newsInput" placeholder="Ejemplo: ¿Qué tan confiable es esta afirmación según la evidencia pública disponible?"></textarea>
+    <button class="analyze" id="analyzeButton" type="button">ANALIZAR CREDIBILIDAD</button>
     <div class="voice-tools" aria-label="Herramientas de accesibilidad por voz">
       <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false">
         <span aria-hidden="true">🎙️</span>
@@ -280,7 +282,6 @@
       <button class="mode active" type="button" data-mode="rapido"><strong>⚡ Análisis rápido</strong><small>Evaluación breve con fuentes.</small></button>
       <button class="mode" type="button" data-mode="profundo"><strong>🔎 Investigación profunda</strong><small>Mayor contraste y detalle.</small></button>
     </div>
-    <button class="analyze" id="analyzeButton" type="button">ANALIZAR CREDIBILIDAD</button>
     <div class="progress" id="progress"><div class="progress-label" id="progressLabel">Preparando…</div><div class="track"><div class="bar" id="progressBar"></div></div></div>
   </section>
 
@@ -399,6 +400,8 @@
   let voiceModeEnabled = false;
   let voiceRecognition = null;
   let isListening = false;
+  let microphoneSilenceTimer = null;
+  let microphoneDetectedSpeech = false;
   let lastAnalysisData = null;
   let voiceConversationState = "idle";
   let pendingVoiceCallback = null;
@@ -472,6 +475,26 @@
     ].join(" ");
   }
 
+  function clearMicrophoneSilenceTimer() {
+    if (microphoneSilenceTimer) {
+      clearTimeout(microphoneSilenceTimer);
+      microphoneSilenceTimer = null;
+    }
+  }
+
+  function startMicrophoneSilenceTimer() {
+    clearMicrophoneSilenceTimer();
+    microphoneDetectedSpeech = false;
+
+    microphoneSilenceTimer = setTimeout(() => {
+      if (!microphoneDetectedSpeech && isListening && voiceRecognition) {
+        voiceStatus.textContent =
+          "No se detectó voz en dos segundos. El micrófono se apagó.";
+        try { voiceRecognition.stop(); } catch {}
+      }
+    }, 2000);
+  }
+
   function startVoiceRecognition() {
     if (!SpeechRecognitionAPI) {
       const message =
@@ -487,12 +510,13 @@
 
     voiceRecognition = new SpeechRecognitionAPI();
     voiceRecognition.lang = selectedSpeechLanguage();
-    voiceRecognition.interimResults = false;
+    voiceRecognition.interimResults = true;
     voiceRecognition.continuous = false;
     voiceRecognition.maxAlternatives = 1;
 
     voiceRecognition.onstart = () => {
       isListening = true;
+      startMicrophoneSilenceTimer();
       voiceInputButton.classList.add("listening");
       voiceInputButton.setAttribute("aria-pressed", "true");
       voiceInputLabel.textContent = "Escuchando…";
@@ -500,9 +524,24 @@
     };
 
     voiceRecognition.onresult = event => {
-      const transcript =
-        event.results?.[0]?.[0]?.transcript?.trim() || "";
+      let finalTranscript = "";
 
+      for (let index = event.resultIndex; index < event.results.length; index++) {
+        const transcript =
+          event.results[index]?.[0]?.transcript?.trim() || "";
+
+        if (transcript) {
+          microphoneDetectedSpeech = true;
+          clearMicrophoneSilenceTimer();
+          voiceStatus.textContent = "Voz detectada. Termina tu pregunta.";
+        }
+
+        if (event.results[index].isFinal) {
+          finalTranscript += ` ${transcript}`;
+        }
+      }
+
+      const transcript = finalTranscript.trim();
       if (!transcript) return;
 
       newsInput.value = transcript;
@@ -523,13 +562,14 @@
     };
 
     voiceRecognition.onerror = event => {
+      clearMicrophoneSilenceTimer();
       const messages = {
         "not-allowed":
           "Debes permitir el acceso al micrófono. Pulsa Preguntar por voz.",
         "service-not-allowed":
           "El navegador no permitió usar el micrófono.",
         "no-speech":
-          "No se detectó voz. Pulsa Preguntar por voz e inténtalo de nuevo.",
+          "No se detectó voz. El micrófono se apagó; pulsa Preguntar por voz para intentarlo de nuevo.",
         "audio-capture":
           "No se encontró un micrófono disponible.",
         "network":
@@ -547,6 +587,7 @@
     };
 
     voiceRecognition.onend = () => {
+      clearMicrophoneSilenceTimer();
       isListening = false;
       voiceInputButton.classList.remove("listening");
       voiceInputButton.setAttribute("aria-pressed", "false");
@@ -1035,6 +1076,42 @@
     return "";
   }
 
+  function coherentFinalVerdict(data, fallbackVerdict = "") {
+    const technical = String(data?.veredicto || fallbackVerdict || "")
+      .trim()
+      .toUpperCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+    if (["VERDADERO", "MAYORMENTE VERDADERO"].includes(technical)) {
+      return "CIERTA";
+    }
+
+    if ([
+      "FALSO",
+      "ENGANOSO",
+      "FUERA DE CONTEXTO",
+      "CONTENIDO MANIPULADO",
+      "CADENA DE DESINFORMACION"
+    ].includes(technical)) {
+      return "FALSA";
+    }
+
+    if ([
+      "PARCIALMENTE VERDADERO",
+      "INFORMACION INSUFICIENTE",
+      "NO VERIFICABLE",
+      "RUMOR NO CONFIRMADO"
+    ].includes(technical)) {
+      return "NO VERIFICABLE";
+    }
+
+    return (
+      normalizeFinalVerdict(data?.veredicto_final) ||
+      normalizeFinalVerdict(fallbackVerdict)
+    );
+  }
+
   function finalVerdictClass(value) {
     if (value === "CIERTA") return "cierta";
     if (value === "FALSA") return "falsa";
@@ -1043,8 +1120,7 @@
 
   function renderFinalVerdict(data, fallbackVerdict = "") {
     const finalVerdict =
-      normalizeFinalVerdict(data.veredicto_final) ||
-      normalizeFinalVerdict(fallbackVerdict);
+      coherentFinalVerdict(data, fallbackVerdict);
 
     if (!finalVerdict) return "";
 
