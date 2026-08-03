@@ -114,6 +114,43 @@
     }
 
 
+
+    .voice-tools{
+      display:flex;align-items:center;gap:9px;margin:10px 0 4px;flex-wrap:wrap
+    }
+    .voice-button{
+      flex:1 1 230px;min-height:50px;border:1px solid #5a5a67;border-radius:15px;
+      background:#1b1b22;color:#fff;font-weight:900;padding:10px 14px;
+      display:flex;align-items:center;justify-content:center;gap:9px
+    }
+    .voice-button.listening{border-color:var(--red);background:rgba(255,59,48,.15)}
+    .voice-button:focus-visible,.speak-button:focus-visible{
+      outline:3px solid #fff;outline-offset:3px
+    }
+    .speak-button{
+      flex:1 1 190px;min-height:50px;border:1px solid #5a5a67;border-radius:15px;
+      background:#1b1b22;color:#fff;font-weight:900;padding:10px 14px
+    }
+    .voice-status{width:100%;color:var(--muted);font-size:12px;line-height:1.4}
+    .report-source{
+      margin-bottom:15px;padding:11px 13px;border:1px solid #565663;border-radius:13px;
+      background:#17171d;color:#e8e8ed;font-size:13px;font-weight:800;line-height:1.45
+    }
+    .report-source a{color:#fff;text-decoration:underline}
+    .sr-only{
+      position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
+      margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;
+      white-space:nowrap!important;border:0!important
+    }
+    @media(max-width:700px){
+      .voice-tools{display:grid;grid-template-columns:1fr}
+      .voice-button,.speak-button{width:100%}
+    }
+    @media print{
+      .voice-tools{display:none!important}
+      .report-source{display:block!important;color:#000;background:#fff;border:1px solid #777}
+    }
+
     /* Ventana ¿Cómo funciona? — sin assets externos */
     .header-share{
       width:min(1000px,calc(100% - 28px));margin:0 auto;padding:8px 0 10px;
@@ -212,6 +249,24 @@
     <h2>¿Qué quieres verificar?</h2>
     <p class="workspace-intro">Escribe, pega un enlace o añade un archivo.</p>
     <textarea id="newsInput" placeholder="Ejemplo: ¿Qué tan confiable es esta afirmación según la evidencia pública disponible?"></textarea>
+    <div class="voice-tools" aria-label="Herramientas de accesibilidad por voz">
+      <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false">
+        <span aria-hidden="true">🎙️</span>
+        <span id="voiceInputLabel">Preguntar por voz</span>
+      </button>
+      <button class="speak-button" id="speakSummaryButton" type="button">
+        <span aria-hidden="true">🗣️</span> Escuchar resumen
+      </button>
+      <button class="speak-button" id="speakFullButton" type="button">
+        <span aria-hidden="true">📖</span> Escuchar informe completo
+      </button>
+      <button class="speak-button" id="stopSpeechButton" type="button">
+        <span aria-hidden="true">🔇</span> Detener lectura
+      </button>
+      <p class="voice-status" id="voiceStatus" aria-live="polite">
+        El botón de micrófono dicta instrucciones breves, escucha tu pregunta y lee el resultado.
+      </p>
+    </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
     <div class="drop-zone" id="dropZone">
       <h3>Arrastra un archivo aquí</h3>
@@ -330,6 +385,21 @@
   const contentModalClose = document.getElementById("contentModalClose");
   const contentModalCancel = document.getElementById("contentModalCancel");
   const contentModalContinue = document.getElementById("contentModalContinue");
+  const voiceInputButton = document.getElementById("voiceInputButton");
+  const voiceInputLabel = document.getElementById("voiceInputLabel");
+  const voiceStatus = document.getElementById("voiceStatus");
+  const speakSummaryButton = document.getElementById("speakSummaryButton");
+  const speakFullButton = document.getElementById("speakFullButton");
+  const stopSpeechButton = document.getElementById("stopSpeechButton");
+
+  const SpeechRecognitionAPI =
+    window.SpeechRecognition || window.webkitSpeechRecognition || null;
+
+  let voiceModeEnabled = false;
+  let voiceRecognition = null;
+  let isListening = false;
+  let lastAnalysisData = null;
+
 
   let selectedFile = null;
   let selectedMode = "rapido";
@@ -344,6 +414,243 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
+
+  function selectedSpeechLanguage() {
+    const pageLanguage = document.documentElement.lang || navigator.language || "es-MX";
+    return pageLanguage === "auto" ? (navigator.language || "es-MX") : pageLanguage;
+  }
+
+  function cleanSpeechText(value) {
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .replace(/https?:\/\/\S+/g, " enlace ")
+      .trim();
+  }
+
+  function speakText(text, interrupt = true) {
+    if (!("speechSynthesis" in window)) {
+      voiceStatus.textContent = "Este navegador no permite leer el contenido en voz alta.";
+      return;
+    }
+
+    const spoken = cleanSpeechText(text);
+    if (!spoken) return;
+
+    if (interrupt) window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(spoken);
+    utterance.lang = selectedSpeechLanguage();
+    utterance.rate = 0.92;
+    utterance.pitch = 1;
+    utterance.onstart = () => {
+      voiceStatus.textContent = "Leyendo en voz alta…";
+    };
+    utterance.onend = () => {
+      voiceStatus.textContent = "Lectura terminada. Puedes volver a usar el micrófono.";
+    };
+    utterance.onerror = () => {
+      voiceStatus.textContent = "No fue posible completar la lectura en voz alta.";
+    };
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function shortVoiceInstructions() {
+    return [
+      "Bienvenido a La Verdad Incómoda.",
+      "Después de esta explicación se activará el micrófono.",
+      "Di una pregunta, una afirmación o el contenido que quieres verificar.",
+      "También puedes pegar un enlace o subir una imagen.",
+      "Cuando termine la investigación, el resultado se leerá en voz alta.",
+      "Si una plataforma bloquea el contenido, se leerán las instrucciones para continuar."
+    ].join(" ");
+  }
+
+  function startVoiceRecognition() {
+    if (!SpeechRecognitionAPI) {
+      voiceStatus.textContent =
+        "El reconocimiento de voz no está disponible en este navegador. Puedes usar el dictado del teclado.";
+      speakText(voiceStatus.textContent);
+      return;
+    }
+
+    if (!voiceRecognition) {
+      voiceRecognition = new SpeechRecognitionAPI();
+      voiceRecognition.lang = selectedSpeechLanguage();
+      voiceRecognition.interimResults = false;
+      voiceRecognition.continuous = false;
+      voiceRecognition.maxAlternatives = 1;
+
+      voiceRecognition.onstart = () => {
+        isListening = true;
+        voiceInputButton.classList.add("listening");
+        voiceInputButton.setAttribute("aria-pressed", "true");
+        voiceInputLabel.textContent = "Escuchando… toca para detener";
+        voiceStatus.textContent = "Escuchando tu pregunta.";
+      };
+
+      voiceRecognition.onresult = event => {
+        const transcript = event.results?.[0]?.[0]?.transcript?.trim() || "";
+        if (!transcript) return;
+        newsInput.value = transcript;
+        voiceStatus.textContent = `Pregunta reconocida: ${transcript}`;
+        newsInput.focus();
+        speakText(`Escuché: ${transcript}. Iniciando la verificación.`);
+        setTimeout(() => analyze(), 900);
+      };
+
+      voiceRecognition.onerror = event => {
+        const messages = {
+          "not-allowed": "Debes permitir el acceso al micrófono.",
+          "no-speech": "No se detectó voz. Toca el micrófono e inténtalo de nuevo.",
+          "audio-capture": "No se encontró un micrófono disponible.",
+          "network": "No fue posible usar el reconocimiento de voz por un problema de red."
+        };
+        const message = messages[event.error] || "No fue posible reconocer la voz.";
+        voiceStatus.textContent = message;
+        speakText(message);
+      };
+
+      voiceRecognition.onend = () => {
+        isListening = false;
+        voiceInputButton.classList.remove("listening");
+        voiceInputButton.setAttribute("aria-pressed", "false");
+        voiceInputLabel.textContent = "Preguntar por voz";
+      };
+    }
+
+    voiceRecognition.lang = selectedSpeechLanguage();
+
+    try {
+      voiceRecognition.start();
+    } catch {
+      voiceStatus.textContent = "El micrófono ya está activo.";
+    }
+  }
+
+  function activateVoiceMode() {
+    voiceModeEnabled = true;
+
+    if (isListening && voiceRecognition) {
+      voiceRecognition.stop();
+      return;
+    }
+
+    speakText(shortVoiceInstructions());
+    voiceStatus.textContent = "Escucha las instrucciones. El micrófono se activará después.";
+
+    const waitForSpeech = () => {
+      if (window.speechSynthesis?.speaking) {
+        setTimeout(waitForSpeech, 250);
+      } else {
+        startVoiceRecognition();
+      }
+    };
+    setTimeout(waitForSpeech, 250);
+  }
+
+  function firstUsefulItem(...collections) {
+    for (const collection of collections) {
+      if (!Array.isArray(collection)) continue;
+      const value = collection.find(item => String(item || "").trim());
+      if (value) return String(value).trim();
+    }
+    return "";
+  }
+
+  function buildSpokenSummary(data = lastAnalysisData) {
+    if (!data || typeof data !== "object") {
+      return result.innerText.trim();
+    }
+
+    const finalVerdict =
+      data.veredicto_final ||
+      data.veredicto ||
+      "No verificable";
+
+    const technicalVerdict =
+      data.veredicto ||
+      "Información insuficiente";
+
+    const credibility = percent(
+      data.credibilidad ??
+      data.credibilidad_porcentaje ??
+      0
+    );
+
+    const confidence = percent(
+      data.confianza ??
+      data.confianza_analisis ??
+      0
+    );
+
+    const summary =
+      data.resumen ||
+      data.resumen_ejecutivo ||
+      data.respuesta_directa ||
+      data.conclusion ||
+      "";
+
+    const mostImportant =
+      firstUsefulItem(
+        data.hechos_comprobados,
+        data.evidencia_a_favor,
+        data.evidencia_en_contra
+      ) ||
+      data.afirmacion_principal ||
+      data.conclusion ||
+      "";
+
+    const conclusion =
+      data.conclusion ||
+      data.respuesta_directa ||
+      "";
+
+    const parts = [
+      "Fuente de consulta: La Verdad Incómoda.",
+      `Veredicto final: ${finalVerdict}.`,
+      `Clasificación técnica: ${technicalVerdict}.`,
+      `Credibilidad de la afirmación: ${credibility} por ciento.`,
+      `Confianza del análisis: ${confidence} por ciento.`,
+      summary ? `Resumen de la nota: ${summary}` : "",
+      mostImportant ? `Lo más importante: ${mostImportant}` : "",
+      conclusion ? `Conclusión: ${conclusion}` : "",
+      "Puedes pulsar Escuchar informe completo para oír todos los detalles."
+    ];
+
+    return parts.filter(Boolean).join(" ");
+  }
+
+  function buildFullSpokenReport() {
+    const text = result.innerText.trim();
+    if (!text) return "";
+    return text.startsWith("Fuente de consulta:")
+      ? text
+      : `Fuente de consulta: La Verdad Incómoda. ${text}`;
+  }
+
+  function speakSummary() {
+    const text = buildSpokenSummary();
+    if (!text) {
+      speakText("Todavía no hay un resultado para leer.");
+      return;
+    }
+    speakText(text);
+  }
+
+  function speakFullReport() {
+    const text = buildFullSpokenReport();
+    if (!text) {
+      speakText("Todavía no hay un informe completo para leer.");
+      return;
+    }
+    speakText(text);
+  }
+
+  function speakResultIfNeeded() {
+    if (!voiceModeEnabled) return;
+    speakSummary();
+  }
 
   function safeUrl(value) {
     try {
@@ -512,6 +819,17 @@
         <h3>${esc(title)}</h3>
         ${list(values)}
       </article>
+    `;
+  }
+
+  function reportSource() {
+    return `
+      <div class="report-source">
+        Fuente de consulta: <strong>La Verdad Incómoda</strong> ·
+        <a href="https://www.laverdadincomoda.mx/" target="_blank" rel="noopener noreferrer">
+          www.laverdadincomoda.mx
+        </a>
+      </div>
     `;
   }
 
@@ -747,6 +1065,13 @@
       contentModalInput.focus();
       contentModal.scrollIntoView({ block: "center" });
     }, 100);
+
+    if (voiceModeEnabled) {
+      speakText(
+        `${contentModalTitle.textContent}. ${contentModalMessage.textContent} ` +
+        "Puedes dictar o escribir el contenido y después continuar el análisis."
+      );
+    }
   }
 
   function closeContentModal() {
@@ -812,7 +1137,9 @@
   }
 
   function renderBlocked(data) {
+    lastAnalysisData = data;
     result.innerHTML = `
+      ${reportSource()}
       ${renderFinalVerdict(data)}
       <h2 class="verdict">ACCESO LIMITADO</h2>
 
@@ -854,9 +1181,11 @@
     result.classList.add("visible");
     result.scrollIntoView({ behavior: "smooth" });
     maybeRequestContent(data);
+    setTimeout(speakResultIfNeeded, 150);
   }
 
   function render(data) {
+    lastAnalysisData = data;
     if (
       data.estado === "sin_acceso" || data.analizado === false
     ) {
@@ -920,6 +1249,7 @@
     ).toUpperCase();
 
     result.innerHTML = `
+      ${reportSource()}
       ${renderFinalVerdict(data, verdict)}
       <h2 class="verdict">
         Clasificación técnica: ${esc(verdict)}
@@ -1024,10 +1354,20 @@
     result.classList.add("visible");
     result.scrollIntoView({ behavior: "smooth" });
     maybeRequestContent(data);
+    setTimeout(speakResultIfNeeded, 150);
   }
 
   function renderError(message) {
+    lastAnalysisData = {
+      veredicto_final: "NO VERIFICABLE",
+      veredicto: "ERROR",
+      credibilidad: 0,
+      confianza: 0,
+      resumen: message || "No fue posible completar el análisis.",
+      conclusion: message || "No fue posible completar el análisis."
+    };
     result.innerHTML = `
+      ${reportSource()}
       <h2 class="verdict">NO SE PUDO COMPLETAR</h2>
 
       <div class="grid">
@@ -1040,6 +1380,7 @@
 
     result.classList.add("visible");
     result.scrollIntoView({ behavior: "smooth" });
+    setTimeout(speakResultIfNeeded, 150);
   }
 
   async function analyze(textOverride = "", isSupplement = false) {
@@ -1214,6 +1555,14 @@
   });
 
   analyzeButton.addEventListener("click", () => analyze());
+  voiceInputButton.addEventListener("click", activateVoiceMode);
+  speakSummaryButton.addEventListener("click", speakSummary);
+  speakFullButton.addEventListener("click", speakFullReport);
+  stopSpeechButton.addEventListener("click", () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    if (isListening && voiceRecognition) voiceRecognition.stop();
+    voiceStatus.textContent = "Lectura y micrófono detenidos.";
+  });
 
   contentModalClose.addEventListener("click", closeContentModal);
   contentModalCancel.addEventListener("click", closeContentModal);
@@ -1235,7 +1584,10 @@
 
   window.copyReport = async () => {
     try {
-      await navigator.clipboard.writeText(result.innerText);
+      const reportText =
+        "Fuente de consulta: La Verdad Incómoda — https://www.laverdadincomoda.mx/\n\n" +
+        result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim();
+      await navigator.clipboard.writeText(reportText);
       alert("Informe copiado.");
     } catch {
       alert("No se pudo copiar automáticamente.");
@@ -1247,12 +1599,14 @@
       if (navigator.share) {
         await navigator.share({
           title: "La Verdad Incómoda",
-          text: result.innerText,
+          text:
+            "Fuente de consulta: La Verdad Incómoda — https://www.laverdadincomoda.mx/\n\n" +
+            result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim(),
           url: location.href
         });
       } else {
         await navigator.clipboard.writeText(
-          `${result.innerText}\n${location.href}`
+          `Fuente de consulta: La Verdad Incómoda — https://www.laverdadincomoda.mx/\n\n${result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim()}\n${location.href}`
         );
 
         alert("Informe y enlace copiados.");
