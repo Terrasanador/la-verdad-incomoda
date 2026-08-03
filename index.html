@@ -559,14 +559,35 @@
       utterance.lang = selectedSpeechLanguage();
       utterance.rate = 0.92;
       utterance.pitch = 1;
-      utterance.onstart = () => setVoiceStatus("Leyendo en voz alta…");
-      utterance.onend = () => resolve();
-      utterance.onerror = () => {
-        setVoiceStatus("No fue posible completar la lectura en voz alta.");
+
+      const voices = window.speechSynthesis.getVoices();
+      const languagePrefix = utterance.lang.toLowerCase().split("-")[0];
+      const matchingVoice = voices.find(voice =>
+        String(voice.lang || "").toLowerCase().startsWith(languagePrefix)
+      );
+      if (matchingVoice) utterance.voice = matchingVoice;
+
+      let completed = false;
+      const finish = () => {
+        if (completed) return;
+        completed = true;
         resolve();
       };
 
-      window.speechSynthesis.speak(utterance);
+      utterance.onstart = () => setVoiceStatus("Leyendo en voz alta…");
+      utterance.onend = finish;
+      utterance.onerror = () => {
+        setVoiceStatus("No fue posible completar la lectura en voz alta.");
+        finish();
+      };
+
+      window.speechSynthesis.resume();
+
+      setTimeout(() => {
+        window.speechSynthesis.speak(utterance);
+      }, 120);
+
+      setTimeout(finish, Math.max(3500, spoken.length * 95));
     });
   }
 
@@ -708,11 +729,16 @@
   async function startVoiceFlow() {
     voiceModeEnabled = true;
     hideVoiceActivationOverlay();
+
+    // No debe existir ningún reconocimiento activo durante la bienvenida.
     destroyRecognition();
     setVoiceState(VOICE_STATES.WELCOME);
     setVoiceStatus("Reproduciendo bienvenida breve.");
 
     await speakTextPromise(welcomeMessage());
+
+    // Pequeña separación para evitar que el reconocimiento capture el final de la voz sintética.
+    await new Promise(resolve => setTimeout(resolve, 650));
 
     setVoiceStatus("Micrófono activo. Di lo que deseas verificar.");
 
@@ -1796,15 +1822,22 @@
     });
   });
 
+  function scheduleWelcome() {
+    showVoiceActivationOverlay();
+  }
+
   scheduleWelcome();
 
   enableVoiceOnEntry.addEventListener("click", async () => {
     try {
+      setVoiceStatus("Solicitando permiso para el micrófono.");
+
       if (navigator.mediaDevices?.getUserMedia) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         stream.getTracks().forEach(track => track.stop());
       }
 
+      await new Promise(resolve => setTimeout(resolve, 300));
       startVoiceFlow();
     } catch {
       hideVoiceActivationOverlay();
