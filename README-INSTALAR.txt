@@ -1,4 +1,4 @@
-LA VERDAD INCÓMODA — VOZ Y RESUMEN ACCESIBLE
+LA VERDAD INCÓMODA — VOZ CONVERSACIONAL ACCESIBLE
 
 ARCHIVOS:
 - index.html
@@ -6,25 +6,42 @@ ARCHIVOS:
 
 NO USA CARPETAS NI ASSETS.
 
-NOVEDADES:
-- Al usar el micrófono, la aplicación lee instrucciones breves.
-- Después del análisis lee:
-  1. Veredicto final.
-  2. Clasificación técnica.
-  3. Credibilidad.
-  4. Confianza.
-  5. Resumen de la nota.
-  6. Lo más importante encontrado.
-  7. Conclusión.
-- Botón “Escuchar resumen”.
-- Botón “Escuchar informe completo”.
-- Botón “Detener lectura”.
-- Los errores 429, enlaces bloqueados y otros avisos también se leen en voz alta.
-- Los informes copiados, compartidos e impresos comienzan con:
-  “Fuente de consulta: La Verdad Incómoda”.
+FUNCIONAMIENTO:
+1. Pulsa “Preguntar por voz”.
+2. La página pregunta: “¿Qué información deseas verificar?”
+3. Habla con naturalidad.
+4. La consulta se convierte en texto y el análisis comienza automáticamente.
+5. Al terminar, la página lee:
+   - veredicto final;
+   - clasificación;
+   - credibilidad;
+   - confianza;
+   - resumen de la nota;
+   - lo más importante del texto;
+   - conclusión.
+6. Después pregunta si deseas escuchar el informe completo.
+7. Responde “sí” o “no”.
+
+ENLACES BLOQUEADOS Y ERROR 429:
+- La ventana se lee en voz alta.
+- La aplicación vuelve a activar el micrófono.
+- Puedes dictar el texto o una descripción.
+- El análisis continúa automáticamente.
+
+COMANDOS:
+- “Leer resumen”.
+- “Leer informe completo”.
+- “Detener”.
+- “Nueva consulta”.
+- “Copiar resultado”.
+- “Compartir resultado”.
 
 INSTALACIÓN:
 1. Reemplaza index.html en GitHub.
 2. Haz Commit directly to main.
-3. Espera que Vercel muestre Ready.
-4. Concede permiso al micrófono cuando el navegador lo solicite.
+3. Espera el deployment Ready de Vercel.
+4. Abre la web y permite el acceso al micrófono.
+
+NOTA:
+El reconocimiento de voz depende del navegador. Chrome y Edge suelen ofrecer
+la mejor compatibilidad. En iPhone puede variar según la versión de Safari.

@@ -264,7 +264,7 @@
         <span aria-hidden="true">🔇</span> Detener lectura
       </button>
       <p class="voice-status" id="voiceStatus" aria-live="polite">
-        El botón de micrófono dicta instrucciones breves, escucha tu pregunta y lee el resultado.
+        Pulsa el micrófono, habla con naturalidad y recibirás el resumen del resultado por voz.
       </p>
     </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
@@ -399,6 +399,8 @@
   let voiceRecognition = null;
   let isListening = false;
   let lastAnalysisData = null;
+  let voiceConversationState = "idle";
+  let pendingVoiceCallback = null;
 
 
   let selectedFile = null;
@@ -466,17 +468,32 @@
     ].join(" ");
   }
 
-  function startVoiceRecognition() {
+  function setVoiceStatus(message) {
+    voiceStatus.textContent = message;
+  }
+
+  function stopListening() {
+    if (voiceRecognition && isListening) {
+      try {
+        voiceRecognition.stop();
+      } catch {}
+    }
+  }
+
+  function listenOnce({ prompt = "", onResult = null, state = "listening" } = {}) {
     if (!SpeechRecognitionAPI) {
-      voiceStatus.textContent =
+      const message =
         "El reconocimiento de voz no está disponible en este navegador. Puedes usar el dictado del teclado.";
-      speakText(voiceStatus.textContent);
+      setVoiceStatus(message);
+      speakText(message);
       return;
     }
 
+    pendingVoiceCallback = typeof onResult === "function" ? onResult : null;
+    voiceConversationState = state;
+
     if (!voiceRecognition) {
       voiceRecognition = new SpeechRecognitionAPI();
-      voiceRecognition.lang = selectedSpeechLanguage();
       voiceRecognition.interimResults = false;
       voiceRecognition.continuous = false;
       voiceRecognition.maxAlternatives = 1;
@@ -486,17 +503,21 @@
         voiceInputButton.classList.add("listening");
         voiceInputButton.setAttribute("aria-pressed", "true");
         voiceInputLabel.textContent = "Escuchando… toca para detener";
-        voiceStatus.textContent = "Escuchando tu pregunta.";
+        setVoiceStatus("Escuchando.");
       };
 
       voiceRecognition.onresult = event => {
         const transcript = event.results?.[0]?.[0]?.transcript?.trim() || "";
         if (!transcript) return;
-        newsInput.value = transcript;
-        voiceStatus.textContent = `Pregunta reconocida: ${transcript}`;
-        newsInput.focus();
-        speakText(`Escuché: ${transcript}. Iniciando la verificación.`);
-        setTimeout(() => analyze(), 900);
+
+        setVoiceStatus(`Escuché: ${transcript}`);
+
+        const callback = pendingVoiceCallback;
+        pendingVoiceCallback = null;
+
+        if (callback) {
+          callback(transcript);
+        }
       };
 
       voiceRecognition.onerror = event => {
@@ -504,11 +525,19 @@
           "not-allowed": "Debes permitir el acceso al micrófono.",
           "no-speech": "No se detectó voz. Toca el micrófono e inténtalo de nuevo.",
           "audio-capture": "No se encontró un micrófono disponible.",
-          "network": "No fue posible usar el reconocimiento de voz por un problema de red."
+          "network": "No fue posible usar el reconocimiento de voz por un problema de red.",
+          "aborted": "La escucha fue detenida."
         };
+
         const message = messages[event.error] || "No fue posible reconocer la voz.";
-        voiceStatus.textContent = message;
-        speakText(message);
+        setVoiceStatus(message);
+
+        if (event.error !== "aborted") {
+          speakText(message);
+        }
+
+        pendingVoiceCallback = null;
+        voiceConversationState = "idle";
       };
 
       voiceRecognition.onend = () => {
@@ -521,32 +550,149 @@
 
     voiceRecognition.lang = selectedSpeechLanguage();
 
-    try {
-      voiceRecognition.start();
-    } catch {
-      voiceStatus.textContent = "El micrófono ya está activo.";
+    const beginListening = () => {
+      try {
+        voiceRecognition.start();
+      } catch {
+        setVoiceStatus("El micrófono ya está activo.");
+      }
+    };
+
+    if (prompt) {
+      speakText(prompt);
+      const waitUntilSpeechEnds = () => {
+        if (window.speechSynthesis?.speaking) {
+          setTimeout(waitUntilSpeechEnds, 200);
+        } else {
+          beginListening();
+        }
+      };
+      setTimeout(waitUntilSpeechEnds, 200);
+    } else {
+      beginListening();
     }
   }
 
-  function activateVoiceMode() {
+  function normalizeVoiceCommand(value) {
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\p{L}\p{N}\s]/gu, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function handleGeneralVoiceCommand(transcript) {
+    const command = normalizeVoiceCommand(transcript);
+
+    if (/\b(detener|deten|para|silencio|callate)\b/.test(command)) {
+      window.speechSynthesis?.cancel();
+      stopListening();
+      setVoiceStatus("Lectura y escucha detenidas.");
+      voiceConversationState = "idle";
+      return true;
+    }
+
+    if (/\b(leer|escuchar)\s+(el\s+)?resumen\b/.test(command)) {
+      speakSummary();
+      return true;
+    }
+
+    if (/\b(leer|escuchar)\s+(el\s+)?informe\s+completo\b/.test(command)) {
+      speakFullReport();
+      return true;
+    }
+
+    if (/\b(nueva|otra)\s+(consulta|pregunta|verificacion)\b/.test(command)) {
+      newsInput.value = "";
+      setFile(null);
+      startVoiceConversation();
+      return true;
+    }
+
+    if (/\b(copiar)\s+(resultado|informe)\b/.test(command)) {
+      window.copyReport?.();
+      speakText("El informe fue copiado.");
+      return true;
+    }
+
+    if (/\b(compartir)\s+(resultado|informe)\b/.test(command)) {
+      window.shareReport?.();
+      return true;
+    }
+
+    return false;
+  }
+
+  function startVoiceConversation() {
     voiceModeEnabled = true;
 
-    if (isListening && voiceRecognition) {
-      voiceRecognition.stop();
+    if (isListening) {
+      stopListening();
       return;
     }
 
-    speakText(shortVoiceInstructions());
-    voiceStatus.textContent = "Escucha las instrucciones. El micrófono se activará después.";
+    const prompt = [
+      "Bienvenido a La Verdad Incómoda.",
+      "¿Qué información deseas verificar?",
+      "Puedes decir una pregunta, una afirmación o un enlace.",
+      "Cuando termine la investigación, te leeré el resumen y lo más importante."
+    ].join(" ");
 
-    const waitForSpeech = () => {
-      if (window.speechSynthesis?.speaking) {
-        setTimeout(waitForSpeech, 250);
-      } else {
-        startVoiceRecognition();
+    listenOnce({
+      prompt,
+      state: "awaiting_query",
+      onResult: transcript => {
+        if (handleGeneralVoiceCommand(transcript)) return;
+
+        newsInput.value = transcript;
+        voiceConversationState = "analyzing";
+        speakText(`Escuché: ${transcript}. Iniciando la verificación.`);
+
+        const waitUntilSpeechEnds = () => {
+          if (window.speechSynthesis?.speaking) {
+            setTimeout(waitUntilSpeechEnds, 200);
+          } else {
+            analyze();
+          }
+        };
+        setTimeout(waitUntilSpeechEnds, 200);
       }
-    };
-    setTimeout(waitForSpeech, 250);
+    });
+  }
+
+  function askForFullReport() {
+    voiceConversationState = "awaiting_full_report_confirmation";
+
+    listenOnce({
+      prompt: "¿Deseas escuchar el informe completo? Responde sí o no.",
+      state: "awaiting_full_report_confirmation",
+      onResult: transcript => {
+        const answer = normalizeVoiceCommand(transcript);
+
+        if (/^(si|sí|claro|adelante|correcto|por supuesto)\b/.test(answer)) {
+          voiceConversationState = "reading_full_report";
+          speakFullReport();
+          return;
+        }
+
+        if (/^(no|gracias|terminar|finalizar)\b/.test(answer)) {
+          voiceConversationState = "idle";
+          speakText("De acuerdo. La lectura ha terminado.");
+          return;
+        }
+
+        if (handleGeneralVoiceCommand(transcript)) return;
+
+        speakText("No entendí la respuesta.");
+        setTimeout(askForFullReport, 500);
+      }
+    });
+  }
+
+  function activateVoiceMode() {
+    startVoiceConversation();
   }
 
   function firstUsefulItem(...collections) {
@@ -613,9 +759,8 @@
       `Credibilidad de la afirmación: ${credibility} por ciento.`,
       `Confianza del análisis: ${confidence} por ciento.`,
       summary ? `Resumen de la nota: ${summary}` : "",
-      mostImportant ? `Lo más importante: ${mostImportant}` : "",
-      conclusion ? `Conclusión: ${conclusion}` : "",
-      "Puedes pulsar Escuchar informe completo para oír todos los detalles."
+      mostImportant ? `Lo más importante del texto: ${mostImportant}` : "",
+      conclusion ? `Conclusión: ${conclusion}` : ""
     ];
 
     return parts.filter(Boolean).join(" ");
@@ -649,7 +794,19 @@
 
   function speakResultIfNeeded() {
     if (!voiceModeEnabled) return;
-    speakSummary();
+
+    voiceConversationState = "reading_summary";
+    speakText(buildSpokenSummary());
+
+    const waitUntilSummaryEnds = () => {
+      if (window.speechSynthesis?.speaking) {
+        setTimeout(waitUntilSummaryEnds, 250);
+      } else {
+        askForFullReport();
+      }
+    };
+
+    setTimeout(waitUntilSummaryEnds, 250);
   }
 
   function safeUrl(value) {
@@ -1067,10 +1224,26 @@
     }, 100);
 
     if (voiceModeEnabled) {
-      speakText(
-        `${contentModalTitle.textContent}. ${contentModalMessage.textContent} ` +
-        "Puedes dictar o escribir el contenido y después continuar el análisis."
-      );
+      listenOnce({
+        prompt:
+          `${contentModalTitle.textContent}. ${contentModalMessage.textContent} ` +
+          "Puedes dictar ahora el texto o la descripción que deseas verificar.",
+        state: "awaiting_blocked_content",
+        onResult: transcript => {
+          if (handleGeneralVoiceCommand(transcript)) return;
+          contentModalInput.value = transcript;
+          speakText("Contenido recibido. Continuando el análisis.");
+
+          const waitUntilSpeechEnds = () => {
+            if (window.speechSynthesis?.speaking) {
+              setTimeout(waitUntilSpeechEnds, 200);
+            } else {
+              continueWithProvidedContent();
+            }
+          };
+          setTimeout(waitUntilSpeechEnds, 200);
+        }
+      });
     }
   }
 
@@ -1561,6 +1734,8 @@
   stopSpeechButton.addEventListener("click", () => {
     if ("speechSynthesis" in window) window.speechSynthesis.cancel();
     if (isListening && voiceRecognition) voiceRecognition.stop();
+    voiceConversationState = "idle";
+    pendingVoiceCallback = null;
     voiceStatus.textContent = "Lectura y micrófono detenidos.";
   });
 
