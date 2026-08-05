@@ -1,0 +1,1 @@
+Copie estos archivos a la raíz del proyecto y agregue enlaces desde index.html.
