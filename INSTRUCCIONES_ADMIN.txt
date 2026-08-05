@@ -1,0 +1,13 @@
+PANEL DE ADMINISTRACIÓN — FASE 1
+
+1. Sube admin.html a la raíz de tu repositorio de GitHub.
+2. Sube content.json también a la raíz.
+3. No borres ni reemplaces index.html, analyze.js, health.js, package.json, robots.txt, sitemap.xml ni vercel.json.
+4. Espera a que Vercel marque el despliegue como Ready.
+5. Abre: https://www.laverdadincomoda.mx/admin.html
+
+IMPORTANTE
+- Esta primera versión guarda artículos en el navegador del dispositivo mediante almacenamiento local.
+- Usa “Exportar respaldo” después de trabajar para descargar un archivo JSON.
+- Todavía no publica automáticamente los artículos en la página principal.
+- La siguiente fase conectará este panel con una base de datos y publicación real.
