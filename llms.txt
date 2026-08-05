@@ -1,0 +1,17 @@
+# La Verdad Incómoda
+
+> Plataforma web en español para analizar noticias, afirmaciones, enlaces y archivos mediante inteligencia artificial, contraste de fuentes y evidencia pública verificable.
+
+## URL canónica
+- https://www.laverdadincomoda.mx/
+
+## Función principal
+- Verificación de afirmaciones y contenidos.
+- Distinción entre hechos, opinión, predicción y contenido no verificable.
+- Presentación de fuentes consultadas y nivel de confianza.
+
+## Principios
+- No inventar fuentes ni resultados.
+- Separar hechos, estimaciones y conclusiones.
+- Priorizar fuentes primarias y oficiales.
+- Informar cuando la evidencia sea insuficiente.
