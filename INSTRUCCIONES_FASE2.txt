@@ -1,0 +1,53 @@
+LA VERDAD INCÓMODA — PANEL FASE 2 (PUBLICACIÓN PERMANENTE)
+
+ARCHIVOS QUE DEBES SUBIR A LA RAÍZ DE GITHUB:
+1. admin.html — reemplaza el anterior.
+2. content-api.js — archivo nuevo.
+3. articles.html — archivo nuevo.
+4. article.html — archivo nuevo.
+5. vercel.json — reemplaza el actual.
+6. content.json — solo si todavía está vacío o no existe.
+
+NO BORRES:
+index.html, analyze.js, health.js, package.json, robots.txt, sitemap.xml,
+favicon.svg, site.webmanifest ni los demás archivos actuales.
+
+DESPUÉS DE SUBIRLOS:
+1. En Vercel entra al proyecto.
+2. Abre Settings > Environment Variables.
+3. Agrega estas variables para Production, Preview y Development:
+
+ADMIN_PASSWORD
+- Una contraseña larga que solo tú conozcas.
+
+GITHUB_CONTENT_TOKEN
+- Un token de GitHub con permiso de lectura y escritura para el repositorio.
+- No lo escribas dentro de ningún archivo ni lo publiques en GitHub.
+
+GITHUB_OWNER
+Terrasanador
+
+GITHUB_REPO
+la-verdad-incomoda
+
+GITHUB_BRANCH
+main
+
+4. Guarda las variables.
+5. Ve a Deployments y pulsa Redeploy en el despliegue más reciente.
+6. Abre:
+https://www.laverdadincomoda.mx/admin.html
+
+PRUEBA:
+- Entra con ADMIN_PASSWORD.
+- Crea un artículo y selecciona “Publicado”.
+- Pulsa Guardar.
+- Espera de uno a tres minutos para que GitHub y Vercel publiquen el cambio.
+- Abre:
+https://www.laverdadincomoda.mx/articles.html
+
+SEGURIDAD:
+- admin.html no guarda la contraseña de forma permanente; solo durante la sesión.
+- El token de GitHub queda protegido como variable privada de Vercel.
+- Los visitantes únicamente pueden leer artículos publicados.
+- Los borradores solo se devuelven cuando la contraseña es correcta.

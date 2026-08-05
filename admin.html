@@ -1,82 +1,89 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="robots" content="noindex,nofollow" />
-  <title>Panel de Administración | La Verdad Incómoda</title>
-  <style>
-    :root{--bg:#070708;--panel:#121216;--panel2:#19191f;--border:#34343c;--text:#fff;--muted:#b7b7c0;--red:#ff3b30;--green:#43d392;--yellow:#f2c94c}
-    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 50% 0%,#2a1010 0%,#0c0c0e 35%,var(--bg) 75%);color:var(--text);min-height:100vh}
-    header{position:sticky;top:0;z-index:5;background:rgba(7,7,8,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-    .nav{max-width:1200px;margin:auto;padding:16px;display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:900}.brand span{color:var(--red)}
-    main{max-width:1200px;margin:auto;padding:24px 16px 70px}.grid{display:grid;grid-template-columns:320px 1fr;gap:18px}@media(max-width:900px){.grid{grid-template-columns:1fr}}
-    .panel{background:rgba(18,18,22,.96);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 18px 60px rgba(0,0,0,.32)}
-    h1,h2,h3{margin:0 0 12px}p{color:var(--muted);line-height:1.5}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.stat{padding:12px;border:1px solid var(--border);border-radius:14px;background:var(--panel2);text-align:center}.stat strong{display:block;font-size:22px}
-    label{display:block;font-weight:700;font-size:13px;margin:12px 0 6px}input,textarea,select{width:100%;border:1px solid var(--border);border-radius:12px;background:#0d0d10;color:#fff;padding:12px;font:inherit}textarea{min-height:160px;resize:vertical}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:650px){.row{grid-template-columns:1fr}}
-    button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer}.primary{background:var(--red);color:#fff}.secondary{background:#24242b;color:#fff;border:1px solid var(--border)}.success{background:var(--green);color:#06150f}.danger{background:#501b1b;color:#fff}.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-    .item{border:1px solid var(--border);border-radius:14px;padding:12px;background:#0f0f13;margin-bottom:10px}.item-top{display:flex;justify-content:space-between;gap:10px}.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900}.pub{background:rgba(67,211,146,.15);color:#7ef0b9}.draft{background:rgba(242,201,76,.14);color:#f6d970}.item small{color:var(--muted)}
-    .preview{border:1px dashed var(--border);border-radius:14px;padding:14px;background:#0b0b0e}.preview h2{margin-top:0}.empty{color:var(--muted);text-align:center;padding:28px 8px}.hidden{display:none!important}
-    .notice{padding:10px 12px;border-radius:12px;margin:0 0 14px;background:rgba(242,201,76,.1);border:1px solid rgba(242,201,76,.35);color:#ffe89c;font-size:13px}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Administración | La Verdad Incómoda</title>
+<style>
+:root{--bg:#070708;--panel:#121216;--border:#34343d;--text:#fff;--muted:#b9b9c2;--red:#ff3b30;--green:#46d79a}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#281010,#070708 45%);color:var(--text);font-family:Arial,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--border);background:#09090b;position:sticky;top:0;z-index:5}
+.brand{font-weight:900}.brand span{color:var(--red)}button,input,textarea,select{font:inherit}
+button{border:0;border-radius:10px;padding:11px 14px;font-weight:800;cursor:pointer;background:#292930;color:white}.primary{background:var(--red)}.save{background:var(--green);color:#07140e}
+main{width:min(1180px,calc(100% - 22px));margin:18px auto}.login,.panel{background:rgba(18,18,22,.96);border:1px solid var(--border);border-radius:17px;padding:16px}
+.login{max-width:520px;margin:60px auto}.login input{width:100%;margin:12px 0}
+.grid{display:grid;grid-template-columns:330px 1fr;gap:14px}.sidebar,.editor{background:rgba(18,18,22,.96);border:1px solid var(--border);border-radius:17px;padding:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.stat{background:#1a1a20;border:1px solid var(--border);border-radius:11px;text-align:center;padding:11px}.stat b{font-size:22px;display:block}
+input,textarea,select{width:100%;background:#0d0d10;color:white;border:1px solid var(--border);border-radius:10px;padding:11px;margin:5px 0 12px}
+textarea{min-height:120px;resize:vertical}.content{min-height:290px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.article{border:1px solid var(--border);border-radius:11px;padding:10px;margin:9px 0;background:#17171c;cursor:pointer}.article small{display:block;color:var(--muted);margin-top:5px}.article.active{border-color:var(--red)}
+.actions{display:flex;flex-wrap:wrap;gap:8px}.notice{color:#ffd29c;background:#332411;border:1px solid #6c4b20;padding:10px;border-radius:10px;margin-bottom:13px}.ok{color:#aaf0d1}.error{color:#ff9a95}
+.hidden{display:none!important}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.row{grid-template-columns:1fr}header{gap:8px}.sidebar{order:2}.editor{order:1}}
+</style>
 </head>
 <body>
-<header><div class="nav"><div class="brand">LA VERDAD <span>INCÓMODA</span> · ADMIN</div><button class="secondary" id="exportTop">Exportar respaldo</button></div></header>
+<header><div class="brand">LA VERDAD <span>INCÓMODA</span> · ADMIN</div><button id="logout" class="hidden">Cerrar sesión</button></header>
 <main>
-  <div class="notice">Primera versión operativa: administra artículos y categorías desde tu navegador. Los datos se guardan en este dispositivo y puedes exportarlos como respaldo JSON.</div>
-  <div class="grid">
-    <aside class="panel">
-      <h2>Contenido</h2>
-      <div class="stats"><div class="stat"><strong id="totalStat">0</strong><span>Total</span></div><div class="stat"><strong id="pubStat">0</strong><span>Publicados</span></div><div class="stat"><strong id="draftStat">0</strong><span>Borradores</span></div></div>
-      <div class="toolbar"><button class="primary" id="newBtn">Nuevo artículo</button><button class="secondary" id="importBtn">Importar</button><input class="hidden" id="importFile" type="file" accept="application/json" /></div>
-      <label for="search">Buscar</label><input id="search" placeholder="Título, categoría o autor" />
-      <div id="list" style="margin-top:14px"></div>
-    </aside>
+<section id="login" class="login">
+<h1>Acceso administrativo</h1>
+<p style="color:var(--muted)">Escribe la contraseña configurada en Vercel.</p>
+<input id="password" type="password" autocomplete="current-password" placeholder="Contraseña">
+<button id="enter" class="primary">Entrar</button>
+<p id="loginMsg"></p>
+</section>
 
-    <section class="panel">
-      <h1 id="formTitle">Nuevo artículo</h1>
-      <input type="hidden" id="articleId" />
-      <label for="title">Título</label><input id="title" maxlength="120" placeholder="Título del artículo" />
-      <div class="row"><div><label for="slug">URL amigable</label><input id="slug" placeholder="titulo-del-articulo" /></div><div><label for="category">Categoría</label><input id="category" list="categories" placeholder="Verificaciones" /><datalist id="categories"></datalist></div></div>
-      <div class="row"><div><label for="author">Autor</label><input id="author" placeholder="Manuel Méndez Feregrino" /></div><div><label for="status">Estado</label><select id="status"><option value="draft">Borrador</option><option value="published">Publicado</option></select></div></div>
-      <label for="summary">Resumen</label><textarea id="summary" style="min-height:90px" placeholder="Resumen breve para buscadores y redes sociales"></textarea>
-      <label for="content">Contenido</label><textarea id="content" placeholder="Escribe el contenido completo"></textarea>
-      <label for="sources">Fuentes consultadas (una por línea)</label><textarea id="sources" style="min-height:100px" placeholder="https://fuente-oficial.mx/..."></textarea>
-      <div class="toolbar"><button class="success" id="saveBtn">Guardar</button><button class="secondary" id="previewBtn">Vista previa</button><button class="danger hidden" id="deleteBtn">Eliminar</button></div>
-      <div id="preview" class="preview hidden" style="margin-top:18px"></div>
-    </section>
-  </div>
+<section id="app" class="hidden">
+<div class="notice">Los artículos se guardan permanentemente en <b>content.json</b> dentro de GitHub. Cada guardado crea un nuevo despliegue en Vercel.</div>
+<div class="grid">
+<aside class="sidebar">
+<div class="stats"><div class="stat"><b id="total">0</b>Total</div><div class="stat"><b id="published">0</b>Publicados</div><div class="stat"><b id="drafts">0</b>Borradores</div></div>
+<div class="actions" style="margin:12px 0"><button id="new" class="primary">Nuevo artículo</button><a href="/articles.html" target="_blank"><button>Ver publicados</button></a></div>
+<input id="search" placeholder="Buscar título, autor o categoría">
+<div id="list"></div>
+</aside>
+<section class="editor">
+<h1 id="formTitle">Nuevo artículo</h1>
+<input id="id" type="hidden">
+<label>Título</label><input id="title" placeholder="Título del artículo">
+<div class="row"><div><label>URL amigable</label><input id="slug" placeholder="titulo-del-articulo"></div><div><label>Categoría</label><input id="category" value="Verificaciones"></div></div>
+<div class="row"><div><label>Autor</label><input id="author" value="Manuel Méndez Feregrino"></div><div><label>Estado</label><select id="status"><option value="draft">Borrador</option><option value="published">Publicado</option></select></div></div>
+<label>Resumen</label><textarea id="summary" placeholder="Resumen para buscadores y redes sociales"></textarea>
+<label>Contenido</label><textarea id="content" class="content" placeholder="Escribe el contenido completo. Se respetarán los saltos de línea."></textarea>
+<label>Fuentes consultadas, una por línea</label><textarea id="sources" placeholder="https://fuente-oficial.mx/..."></textarea>
+<div class="actions"><button id="save" class="save">Guardar</button><button id="preview">Vista previa</button><button id="delete">Eliminar</button></div>
+<p id="message"></p>
+</section>
+</div>
+</section>
 </main>
 <script>
-(() => {
-  const KEY='lvi_admin_articles_v1';
-  const DEFAULT_CATEGORIES=['Verificaciones','Investigaciones','Tecnología','Ciencia','Política','Economía','Internacional','Salud'];
-  const $=id=>document.getElementById(id);
-  let articles=load();
-
-  function load(){try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}}
-  function persist(){localStorage.setItem(KEY,JSON.stringify(articles));renderList();updateStats();renderCategories()}
-  function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-  function slugify(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
-  function now(){return new Date().toISOString()}
-  function resetForm(){['articleId','title','slug','category','summary','content','sources'].forEach(id=>$(id).value='');$('author').value='Manuel Méndez Feregrino';$('status').value='draft';$('formTitle').textContent='Nuevo artículo';$('deleteBtn').classList.add('hidden');$('preview').classList.add('hidden')}
-  function current(){return {id:$('articleId').value||crypto.randomUUID(),title:$('title').value.trim(),slug:slugify($('slug').value||$('title').value),category:$('category').value.trim()||'Sin categoría',author:$('author').value.trim()||'La Verdad Incómoda',status:$('status').value,summary:$('summary').value.trim(),content:$('content').value.trim(),sources:$('sources').value.split('\n').map(x=>x.trim()).filter(Boolean),updatedAt:now()}}
-  function save(){const a=current();if(!a.title){alert('Escribe un título.');return}if(!a.content){alert('Escribe el contenido.');return}const i=articles.findIndex(x=>x.id===a.id);if(i>=0)a.createdAt=articles[i].createdAt||now(),articles[i]=a;else a.createdAt=now(),articles.unshift(a);persist();edit(a.id);alert('Artículo guardado en este dispositivo.')}
-  function edit(id){const a=articles.find(x=>x.id===id);if(!a)return;$('articleId').value=a.id;$('title').value=a.title;$('slug').value=a.slug;$('category').value=a.category;$('author').value=a.author;$('status').value=a.status;$('summary').value=a.summary||'';$('content').value=a.content||'';$('sources').value=(a.sources||[]).join('\n');$('formTitle').textContent='Editar artículo';$('deleteBtn').classList.remove('hidden');window.scrollTo({top:0,behavior:'smooth'})}
-  function remove(){const id=$('articleId').value;if(!id)return;if(confirm('¿Eliminar este artículo?')){articles=articles.filter(x=>x.id!==id);persist();resetForm()}}
-  function preview(){const a=current();$('preview').innerHTML=`<small>${esc(a.category)} · ${a.status==='published'?'Publicado':'Borrador'}</small><h2>${esc(a.title||'Sin título')}</h2><p><strong>${esc(a.author)}</strong></p><p>${esc(a.summary)}</p><div>${esc(a.content).replace(/\n/g,'<br>')}</div>${a.sources.length?`<h3>Fuentes</h3><ul>${a.sources.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:''}`;$('preview').classList.remove('hidden')}
-  function renderList(){const q=$('search').value.toLowerCase().trim();const rows=articles.filter(a=>[a.title,a.category,a.author].join(' ').toLowerCase().includes(q));$('list').innerHTML=rows.length?rows.map(a=>`<div class="item" data-id="${a.id}"><div class="item-top"><strong>${esc(a.title)}</strong><span class="badge ${a.status==='published'?'pub':'draft'}">${a.status==='published'?'Publicado':'Borrador'}</span></div><small>${esc(a.category)} · ${new Date(a.updatedAt).toLocaleDateString('es-MX')}</small></div>`).join(''):'<div class="empty">No hay artículos todavía.</div>';document.querySelectorAll('.item').forEach(el=>el.addEventListener('click',()=>edit(el.dataset.id)))}
-  function updateStats(){$('totalStat').textContent=articles.length;$('pubStat').textContent=articles.filter(a=>a.status==='published').length;$('draftStat').textContent=articles.filter(a=>a.status!=='published').length}
-  function renderCategories(){const cats=[...new Set([...DEFAULT_CATEGORIES,...articles.map(a=>a.category).filter(Boolean)])].sort();$('categories').innerHTML=cats.map(c=>`<option value="${esc(c)}"></option>`).join('')}
-  function exportData(){const blob=new Blob([JSON.stringify({project:'La Verdad Incómoda',version:1,exportedAt:now(),articles},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`lvi-contenido-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(url)}
-  function importData(file){const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);const incoming=Array.isArray(data)?data:data.articles;if(!Array.isArray(incoming))throw new Error();articles=incoming;persist();resetForm();alert('Contenido importado correctamente.')}catch{alert('El archivo no es un respaldo válido.')}};r.readAsText(file)}
-
-  $('title').addEventListener('input',()=>{if(!$('articleId').value||!$('slug').dataset.manual)$('slug').value=slugify($('title').value)});
-  $('slug').addEventListener('input',()=>{$('slug').dataset.manual='1'});
-  $('saveBtn').addEventListener('click',save);$('previewBtn').addEventListener('click',preview);$('deleteBtn').addEventListener('click',remove);$('newBtn').addEventListener('click',resetForm);$('search').addEventListener('input',renderList);$('exportTop').addEventListener('click',exportData);$('importBtn').addEventListener('click',()=>$('importFile').click());$('importFile').addEventListener('change',()=>{const f=$('importFile').files[0];if(f)importData(f)});
-  resetForm();persist();
-})();
+const $=id=>document.getElementById(id); let password="", articles=[], currentId="";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+function slugify(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,100)}
+async function api(method="GET",body){
+ const r=await fetch("/api/content",{method,headers:{"Content-Type":"application/json","X-Admin-Password":password},body:body?JSON.stringify(body):undefined});
+ const data=await r.json().catch(()=>({}));
+ if(!r.ok) throw new Error(data.error||`Error HTTP ${r.status}`); return data;
+}
+async function login(){
+ password=$("password").value; $("loginMsg").textContent="Comprobando…";
+ try{const data=await api();articles=data.articles||[];sessionStorage.setItem("lvi_admin_password",password);$("login").classList.add("hidden");$("app").classList.remove("hidden");$("logout").classList.remove("hidden");render();clearForm();}catch(e){$("loginMsg").className="error";$("loginMsg").textContent=e.message}
+}
+function render(){
+ const q=$("search").value.toLowerCase(); const visible=articles.filter(a=>[a.title,a.author,a.category].join(" ").toLowerCase().includes(q));
+ $("total").textContent=articles.length;$("published").textContent=articles.filter(a=>a.status==="published").length;$("drafts").textContent=articles.filter(a=>a.status!=="published").length;
+ $("list").innerHTML=visible.length?visible.map(a=>`<div class="article ${a.id===currentId?"active":""}" data-id="${esc(a.id)}"><b>${esc(a.title)}</b><small>${esc(a.category)} · ${a.status==="published"?"Publicado":"Borrador"}</small></div>`).join(""):"<p style='color:#999'>No hay artículos todavía.</p>";
+ document.querySelectorAll(".article").forEach(x=>x.onclick=()=>edit(x.dataset.id));
+}
+function clearForm(){currentId="";$("formTitle").textContent="Nuevo artículo";["id","title","slug","summary","content","sources"].forEach(x=>$(x).value="");$("category").value="Verificaciones";$("author").value="Manuel Méndez Feregrino";$("status").value="draft";$("message").textContent="";render()}
+function edit(id){const a=articles.find(x=>x.id===id);if(!a)return;currentId=id;$("formTitle").textContent="Editar artículo";$("id").value=a.id;$("title").value=a.title||"";$("slug").value=a.slug||"";$("category").value=a.category||"";$("author").value=a.author||"";$("status").value=a.status||"draft";$("summary").value=a.summary||"";$("content").value=a.content||"";$("sources").value=(a.sources||[]).join("\n");render();scrollTo({top:0,behavior:"smooth"})}
+function payload(){return{id:$("id").value,title:$("title").value,slug:$("slug").value||slugify($("title").value),category:$("category").value,author:$("author").value,status:$("status").value,summary:$("summary").value,content:$("content").value,sources:$("sources").value}}
+async function save(){const btn=$("save");btn.disabled=true;$("message").textContent="Guardando en GitHub…";try{const data=await api(currentId?"PUT":"POST",payload());const idx=articles.findIndex(x=>x.id===data.article.id);if(idx>=0)articles[idx]=data.article;else articles.unshift(data.article);currentId=data.article.id;$("id").value=currentId;$("message").className="ok";$("message").textContent="Guardado. Vercel publicará el cambio en unos momentos.";render()}catch(e){$("message").className="error";$("message").textContent=e.message}finally{btn.disabled=false}}
+async function remove(){if(!currentId)return alert("Selecciona un artículo.");if(!confirm("¿Eliminar este artículo definitivamente?"))return;try{await api("DELETE",{id:currentId});articles=articles.filter(x=>x.id!==currentId);clearForm();$("message").className="ok";$("message").textContent="Artículo eliminado."}catch(e){alert(e.message)}}
+function preview(){const data=payload();const w=open("","_blank");w.document.write(`<meta charset="utf-8"><title>${esc(data.title)}</title><style>body{font-family:Arial;max-width:760px;margin:40px auto;padding:20px;line-height:1.65}small{color:#666}pre{white-space:pre-wrap;font:inherit}</style><small>${esc(data.category)} · ${esc(data.author)}</small><h1>${esc(data.title)}</h1><p><b>${esc(data.summary)}</b></p><pre>${esc(data.content)}</pre>`);w.document.close()}
+$("enter").onclick=login;$("password").onkeydown=e=>{if(e.key==="Enter")login()};$("new").onclick=clearForm;$("save").onclick=save;$("delete").onclick=remove;$("preview").onclick=preview;$("search").oninput=render;$("title").oninput=()=>{if(!currentId)$("slug").value=slugify($("title").value)};
+$("logout").onclick=()=>{sessionStorage.removeItem("lvi_admin_password");location.reload()};
+const remembered=sessionStorage.getItem("lvi_admin_password");if(remembered){$("password").value=remembered;login()}
 </script>
-</body>
-</html>
+</body></html>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Artículo | La Verdad Incómoda</title>
+<meta name="robots" content="index,follow">
+<style>
+:root{--bg:#070708;--panel:#151519;--border:#373740;--text:#fff;--muted:#b8b8c1;--red:#ff3b30}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#291010,#070708 42%);color:var(--text);font-family:Arial,sans-serif}
+header{padding:18px;border-bottom:1px solid var(--border);background:#09090b}.brand{font-weight:900}.brand span{color:var(--red)}
+main{width:min(820px,calc(100% - 24px));margin:35px auto}.tag{color:#ff8e88;font-weight:bold}h1{font-size:clamp(35px,8vw,65px);line-height:1.02}.summary{font-size:20px;color:#ddd;line-height:1.5}.meta{color:var(--muted);border-bottom:1px solid var(--border);padding-bottom:18px}.content{white-space:pre-wrap;line-height:1.75;font-size:18px}.sources{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:16px;margin-top:30px}.sources a{color:#8bbcff;word-break:break-all}
+</style></head><body>
+<header><div class="brand"><a href="/" style="color:inherit;text-decoration:none">LA VERDAD <span>INCÓMODA</span></a></div></header>
+<main id="main"><p>Cargando artículo…</p></main>
+<script>
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const slug=new URLSearchParams(location.search).get("slug");
+fetch("/api/content").then(r=>r.json()).then(d=>{const a=(d.articles||[]).find(x=>x.slug===slug);if(!a)throw new Error("Artículo no encontrado.");
+document.title=`${a.title} | La Verdad Incómoda`;
+document.querySelector('meta[name="description"]')?.remove();const m=document.createElement("meta");m.name="description";m.content=a.summary||a.title;document.head.appendChild(m);
+const schema={"@context":"https://schema.org","@type":"Article",headline:a.title,description:a.summary,author:{"@type":"Person",name:a.author},datePublished:a.publishedAt,dateModified:a.updatedAt,mainEntityOfPage:`https://www.laverdadincomoda.mx/article.html?slug=${encodeURIComponent(a.slug)}`,publisher:{"@type":"Organization",name":"La Verdad Incómoda",url:"https://www.laverdadincomoda.mx/"}};
+const script=document.createElement("script");script.type="application/ld+json";script.textContent=JSON.stringify(schema);document.head.appendChild(script);
+document.getElementById("main").innerHTML=`<div class="tag">${esc(a.category)}</div><h1>${esc(a.title)}</h1><p class="summary">${esc(a.summary||"")}</p><p class="meta">${esc(a.author)} · ${new Date(a.publishedAt||a.updatedAt).toLocaleDateString("es-MX")}</p><div class="content">${esc(a.content||"")}</div>${(a.sources||[]).length?`<section class="sources"><h2>Fuentes consultadas</h2>${a.sources.map(s=>`<p><a href="${esc(s)}" target="_blank" rel="noopener noreferrer">${esc(s)}</a></p>`).join("")}</section>`:""}`;
+}).catch(e=>document.getElementById("main").innerHTML=`<h1>No se encontró el artículo</h1><p>${esc(e.message)}</p><p><a href="/articles.html" style="color:#8bbcff">Volver a artículos</a></p>`);
+</script></body></html>
