@@ -24,6 +24,10 @@
     {
       "src": "sitemap.xml",
       "use": "@vercel/static"
+    },
+    {
+      "src": "ads.txt",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -46,6 +50,10 @@
     {
       "src": "/sitemap.xml",
       "dest": "/sitemap.xml"
+    },
+    {
+      "src": "/ads.txt",
+      "dest": "/ads.txt"
     },
     {
       "src": "/(.*)",
