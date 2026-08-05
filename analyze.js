@@ -144,6 +144,27 @@ const texto = tieneTexto
       "SEÑALES DE DESINFORMACIÓN:",
       "Busca lenguaje alarmista, llamados urgentes a compartir, afirmaciones absolutas sin evidencia, ausencia de autor o fecha, cifras sin metodología, capturas sin contexto, citas falsas, contenido antiguo presentado como reciente, titulares que no corresponden al contenido, edición selectiva, fuentes anónimas sin corroboración, publicación coordinada, bots, hashtags artificiales, expertos sin credenciales, gráficos sin fuente y omisiones que cambian el sentido.",
       "",
+      "MOTOR ANTIAMARILLISMO E INTEGRIDAD INFORMATIVA:",
+      "Además de verificar hechos, evalúa si el contenido exagera, atemoriza, induce urgencia artificial o transforma incertidumbre en certeza.",
+      "Compara el titular, la bajada, el cuerpo, las imágenes, los datos y las fuentes. Un hecho verdadero puede estar presentado de forma amarillista o engañosa.",
+      "Detecta: lenguaje catastrófico, hipérboles, absolutos, preguntas insinuantes, clickbait, omisión de contexto tranquilizador o relevante, extrapolación de casos aislados, causalidad no demostrada, posibilidad presentada como certeza, riesgo hipotético presentado como inminente y llamados compulsivos a compartir.",
+      "No minimices riesgos reales. Distingue con claridad: riesgo confirmado, riesgo probable, posibilidad teórica, incertidumbre y escenario especulativo.",
+      "Propón un titular responsable que conserve el hecho relevante sin fabricar miedo.",
+      "CORROBORACIÓN INDEPENDIENTE Y CADENAS DE REPLICACIÓN:",
+      "Investiga si varias notas proceden de la misma agencia, comunicado, redacción, cadena, grupo empresarial, propietario, fuente matriz o texto sindicado.",
+      "No cuentes como fuentes independientes páginas que copian el mismo cable, comunicado, párrafos idénticos o una publicación original sin verificación propia.",
+      "Agrupa esas réplicas por fuente matriz y explica cuántas fuentes realmente independientes quedan después de deduplicarlas.",
+      "La repetición masiva no aumenta por sí sola la credibilidad.",
+      "DIFUSIÓN AUTOMATIZADA Y BOTS:",
+      "Busca señales públicas de amplificación coordinada: publicaciones casi simultáneas, texto o hashtags idénticos, frecuencia inhumana, cuentas recientes o vacías, patrones repetitivos, redes que solo retransmiten, proporción anormal de republicaciones y coordinación documentada por estudios o herramientas confiables.",
+      "No declares que una cuenta es bot solo por publicar mucho, ser anónima, apoyar una postura o repetir un mensaje.",
+      "Distingue entre bot confirmado, comportamiento compatible con automatización, campaña coordinada humana y evidencia insuficiente.",
+      "Solo usa la etiqueta exacta INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS cuando: el amarillismo sea alto, exista evidencia suficiente de amplificación automatizada y la confianza de esa detección sea alta.",
+      "Si solo hay indicios, escribe POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA y explica las limitaciones.",
+      "La detección de bots debe basarse en evidencia observable y nunca inventar métricas, cuentas o herramientas consultadas.",
+      "EDUCACIÓN DEL LECTOR:",
+      "Explica qué está confirmado, qué falta, qué se exageró, por qué la narrativa puede inducir miedo y cómo sería una formulación informativa responsable.",
+      "",
       "JERARQUÍA DE EVIDENCIA:",
       "Da mayor peso, sin aplicarlo mecánicamente, a: evidencia primaria; estudios con metodología; datos oficiales competentes; investigaciones periodísticas documentadas; verificadores transparentes; medios que enlazan evidencia primaria; declaraciones interesadas; opiniones y testimonios no corroborados.",
       "Una fuente oficial puede equivocarse y una fuente no oficial puede aportar evidencia válida. Evalúa el contenido.",
@@ -331,7 +352,7 @@ if (
         "evidencia_a_favor", "evidencia_en_contra",
         "indicadores_desinformacion", "contexto", "contraste_fuentes",
         "reputacion_fuente", "analisis_redes", "analisis_encuestas",
-        "limitaciones", "conclusion", "fuentes"
+        "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
       ],
       properties: {
         estado: {
@@ -416,6 +437,40 @@ if (
               limitaciones: { type: "string" },
               url: { type: "string" }
             }
+          }
+        },
+        analisis_integridad_informativa: {
+          type: "object",
+          additionalProperties: false,
+          required: [
+            "indice_amarillismo", "nivel_amarillismo", "carga_emocional",
+            "riesgo_confirmado", "riesgo_presentado", "extrapolaciones",
+            "contexto_omitido", "titular_responsable", "explicacion_educativa",
+            "fuentes_matriz", "replicas_no_independientes", "fuentes_independientes_reales",
+            "evidencia_bots", "probabilidad_automatizacion", "confianza_deteccion_bots",
+            "etiqueta_especial", "limitaciones"
+          ],
+          properties: {
+            indice_amarillismo: { type: "integer", minimum: 0, maximum: 100 },
+            nivel_amarillismo: { type: "string", enum: ["BAJO", "MODERADO", "ALTO", "EXTREMO"] },
+            carga_emocional: { type: "array", items: { type: "string" } },
+            riesgo_confirmado: { type: "string" },
+            riesgo_presentado: { type: "string" },
+            extrapolaciones: { type: "array", items: { type: "string" } },
+            contexto_omitido: { type: "array", items: { type: "string" } },
+            titular_responsable: { type: "string" },
+            explicacion_educativa: { type: "string" },
+            fuentes_matriz: { type: "array", items: { type: "string" } },
+            replicas_no_independientes: { type: "array", items: { type: "string" } },
+            fuentes_independientes_reales: { type: "integer", minimum: 0 },
+            evidencia_bots: { type: "array", items: { type: "string" } },
+            probabilidad_automatizacion: { type: "integer", minimum: 0, maximum: 100 },
+            confianza_deteccion_bots: { type: "integer", minimum: 0, maximum: 100 },
+            etiqueta_especial: {
+              type: "string",
+              enum: ["NINGUNA", "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA", "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS"]
+            },
+            limitaciones: { type: "array", items: { type: "string" } }
           }
         },
         limitaciones: { type: "array", items: { type: "string" } },
@@ -712,6 +767,52 @@ if (
     resultado.analisis_encuestas = Array.isArray(resultado.analisis_encuestas)
       ? resultado.analisis_encuestas
       : [];
+
+    const integridadBase =
+      resultado.analisis_integridad_informativa &&
+      typeof resultado.analisis_integridad_informativa === "object"
+        ? resultado.analisis_integridad_informativa
+        : {};
+
+    resultado.analisis_integridad_informativa = {
+      indice_amarillismo: limitarPorcentaje(integridadBase.indice_amarillismo),
+      nivel_amarillismo: ["BAJO", "MODERADO", "ALTO", "EXTREMO"].includes(integridadBase.nivel_amarillismo)
+        ? integridadBase.nivel_amarillismo
+        : "BAJO",
+      carga_emocional: limpiarLista(integridadBase.carga_emocional),
+      riesgo_confirmado: String(integridadBase.riesgo_confirmado || "No determinado.").trim(),
+      riesgo_presentado: String(integridadBase.riesgo_presentado || "No determinado.").trim(),
+      extrapolaciones: limpiarLista(integridadBase.extrapolaciones),
+      contexto_omitido: limpiarLista(integridadBase.contexto_omitido),
+      titular_responsable: String(integridadBase.titular_responsable || "").trim(),
+      explicacion_educativa: String(integridadBase.explicacion_educativa || "").trim(),
+      fuentes_matriz: limpiarLista(integridadBase.fuentes_matriz),
+      replicas_no_independientes: limpiarLista(integridadBase.replicas_no_independientes),
+      fuentes_independientes_reales: Math.max(0, Math.round(Number(integridadBase.fuentes_independientes_reales) || 0)),
+      evidencia_bots: limpiarLista(integridadBase.evidencia_bots),
+      probabilidad_automatizacion: limitarPorcentaje(integridadBase.probabilidad_automatizacion),
+      confianza_deteccion_bots: limitarPorcentaje(integridadBase.confianza_deteccion_bots),
+      etiqueta_especial: [
+        "NINGUNA",
+        "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA",
+        "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS"
+      ].includes(integridadBase.etiqueta_especial)
+        ? integridadBase.etiqueta_especial
+        : "NINGUNA",
+      limitaciones: limpiarLista(integridadBase.limitaciones)
+    };
+
+    // Salvaguarda: la etiqueta más grave exige evidencia y confianza altas.
+    const ii = resultado.analisis_integridad_informativa;
+    if (
+      ii.etiqueta_especial === "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS" &&
+      !(ii.indice_amarillismo >= 61 && ii.probabilidad_automatizacion >= 70 && ii.confianza_deteccion_bots >= 70 && ii.evidencia_bots.length > 0)
+    ) {
+      ii.etiqueta_especial = ii.evidencia_bots.length
+        ? "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA"
+        : "NINGUNA";
+      ii.limitaciones.push("La evidencia disponible no alcanza el umbral para afirmar difusión por bots con alta confianza.");
+    }
 
     if (
       resultado.hechos_comprobados.length === 0 &&

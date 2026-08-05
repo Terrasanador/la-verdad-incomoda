@@ -1,0 +1,33 @@
+LA VERDAD INCÓMODA — MOTOR ANTIAMARILLISMO v1.0
+
+Este ZIP contiene el proyecto completo actualizado.
+
+DESDE GITHUB MÓVIL:
+1. Descomprime el ZIP en tu teléfono.
+2. Abre la carpeta resultante.
+3. Selecciona todos los archivos internos, no la carpeta.
+4. Súbelos a la raíz del repositorio.
+5. Permite reemplazar los archivos con el mismo nombre.
+6. Confirma con Commit changes.
+7. Espera a que Vercel muestre Ready.
+
+CAMBIOS PRINCIPALES:
+- Índice de amarillismo de 0 a 100.
+- Lenguaje emocional y alarmista.
+- Riesgo confirmado frente al riesgo presentado.
+- Extrapolaciones y contexto omitido.
+- Titular responsable propuesto.
+- Detección de fuente matriz y réplicas de la misma cadena o grupo.
+- Las réplicas no cuentan como corroboración independiente.
+- Detección prudente de difusión coordinada o automatizada.
+- Etiqueta especial: INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS.
+- Salvaguardas para no acusar bots sin evidencia suficiente.
+
+NO CAMBIES NI PUBLIQUES:
+- OPENAI_API_KEY
+- GITHUB_CONTENT_TOKEN
+- ADMIN_PASSWORD
+Estas credenciales deben permanecer únicamente en Vercel.
+
+PRUEBA RECOMENDADA:
+Analiza un titular alarmista junto con el enlace o texto completo. Revisa la nueva sección “Motor antiamarillismo”.

@@ -1413,6 +1413,41 @@
     setTimeout(speakResultIfNeeded, 150);
   }
 
+  function renderIntegrityAnalysis(data) {
+    const info = data?.analisis_integridad_informativa;
+    if (!info || typeof info !== "object") return "";
+
+    const label = String(info.etiqueta_especial || "NINGUNA");
+    const alert = label !== "NINGUNA"
+      ? `<article class="card full" style="border-color:#ff3b30;background:#2a1111"><h3>⚠️ Alerta de integridad informativa</h3><p style="font-size:1.1rem;font-weight:900">${esc(label)}</p></article>`
+      : "";
+
+    return `
+      ${alert}
+      <article class="card full">
+        <h3>Motor antiamarillismo</h3>
+        <div class="metrics">
+          <span class="metric">Amarillismo: ${percent(info.indice_amarillismo)}%</span>
+          <span class="metric">Nivel: ${esc(info.nivel_amarillismo || "BAJO")}</span>
+          <span class="metric">Posible automatización: ${percent(info.probabilidad_automatizacion)}%</span>
+          <span class="metric">Confianza detección bots: ${percent(info.confianza_deteccion_bots)}%</span>
+          <span class="metric">Fuentes independientes reales: ${Number(info.fuentes_independientes_reales || 0)}</span>
+        </div>
+      </article>
+      ${textCard("Riesgo confirmado", info.riesgo_confirmado, true)}
+      ${textCard("Riesgo presentado por la noticia", info.riesgo_presentado, true)}
+      ${listCard("Carga emocional detectada", info.carga_emocional)}
+      ${listCard("Extrapolaciones injustificadas", info.extrapolaciones)}
+      ${listCard("Contexto omitido", info.contexto_omitido)}
+      ${textCard("Titular responsable propuesto", info.titular_responsable, true)}
+      ${textCard("Explicación educativa", info.explicacion_educativa, true)}
+      ${listCard("Fuentes matriz identificadas", info.fuentes_matriz)}
+      ${listCard("Réplicas que no cuentan como corroboración independiente", info.replicas_no_independientes)}
+      ${listCard("Evidencia de difusión automatizada o coordinada", info.evidencia_bots)}
+      ${listCard("Limitaciones del análisis antiamarillismo", info.limitaciones)}
+    `;
+  }
+
   function render(data) {
     lastAnalysisData = data;
     if (
@@ -1499,6 +1534,8 @@
             : ""
         }
       </div>
+
+      ${renderIntegrityAnalysis(data)}
 
       <div class="grid">
         ${textCard(
