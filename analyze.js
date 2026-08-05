@@ -1,3 +1,5 @@
+import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
+
 // La Verdad Incómoda — analyze.js v2.1
 // Corrección HTTP 429: separa el estado técnico del veredicto y evita mostrar 0%.
 
@@ -46,6 +48,31 @@ if (!tieneTexto && !tieneArchivo) {
 const texto = tieneTexto
   ? consulta.trim()
   : "Analiza el archivo adjunto.";
+
+    const enlaceDetectado = tieneTexto ? findFirstPublicUrl(texto) : "";
+    let extraccionEnlace = null;
+
+    if (enlaceDetectado) {
+      try {
+        extraccionEnlace = await extractPublicLink(enlaceDetectado);
+      } catch (error) {
+        console.error("Error inesperado al extraer enlace:", error);
+        extraccionEnlace = {
+          plataforma: "Desconocida",
+          url_original: enlaceDetectado,
+          url_final: enlaceDetectado,
+          acceso_directo: false,
+          titulo: "",
+          autor: "",
+          descripcion: "",
+          transcripcion: "",
+          texto_recuperado: "",
+          comentarios_recuperados: false,
+          limitaciones: ["La extracción directa falló de forma inesperada."]
+        };
+      }
+    }
+
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
     const idiomaSalida = String(body.language || body.idioma || "auto").trim() || "auto";
 
@@ -109,6 +136,10 @@ const texto = tieneTexto
       "Comprueba si el contenido fue recortado, editado, reutilizado o sacado de contexto.",
       "Si está privado, eliminado, bloqueado o requiere inicio de sesión, decláralo claramente.",
       "Nunca simules haber visto contenido inaccesible.",
+      "Si el backend adjunta CONTENIDO RECUPERADO DEL ENLACE, úsalo como material recibido, pero verifica sus afirmaciones mediante búsqueda web.",
+      "Que la extracción directa falle no obliga por sí sola a declarar NO VERIFICABLE: intenta identificar la publicación mediante URL final, título, autor, copias públicas, transcripciones, citas y cobertura independiente.",
+      "Solo afirma haber analizado comentarios cuando los comentarios aparezcan realmente en el contenido recuperado, en capturas o en texto aportado por el usuario.",
+      "No calcules porcentajes de comentarios positivos o negativos sin una muestra identificable. Indica tamaño, forma de selección y limitaciones de representatividad.",
       "",
       "SEÑALES DE DESINFORMACIÓN:",
       "Busca lenguaje alarmista, llamados urgentes a compartir, afirmaciones absolutas sin evidencia, ausencia de autor o fecha, cifras sin metodología, capturas sin contexto, citas falsas, contenido antiguo presentado como reciente, titulares que no corresponden al contenido, edición selectiva, fuentes anónimas sin corroboración, publicación coordinada, bots, hashtags artificiales, expertos sin credenciales, gráficos sin fuente y omisiones que cambian el sentido.",
@@ -233,12 +264,37 @@ const texto = tieneTexto
     const contenidoUsuario = [];
 
 if (tieneTexto) {
+  const bloqueExtraccion = extraccionEnlace
+    ? `
+
+CONTENIDO RECUPERADO DEL ENLACE POR EL BACKEND:
+Plataforma detectada: ${extraccionEnlace.plataforma || "Desconocida"}
+URL original: ${extraccionEnlace.url_original || enlaceDetectado}
+URL final después de redirecciones: ${extraccionEnlace.url_final || enlaceDetectado}
+Acceso directo útil: ${extraccionEnlace.acceso_directo ? "sí" : "no"}
+Título recuperado: ${extraccionEnlace.titulo || "No disponible"}
+Autor o cuenta: ${extraccionEnlace.autor || "No disponible"}
+Descripción: ${extraccionEnlace.descripcion || "No disponible"}
+Transcripción: ${extraccionEnlace.transcripcion || "No disponible"}
+Texto recuperado:
+${extraccionEnlace.texto_recuperado || "No se recuperó texto utilizable."}
+Comentarios recuperados realmente: ${extraccionEnlace.comentarios_recuperados ? "sí" : "no"}
+Limitaciones:
+${(extraccionEnlace.limitaciones || []).map(item => `- ${item}`).join("\n") || "- Ninguna registrada."}
+
+REGLAS SOBRE ESTE BLOQUE:
+- No lo presentes como una fuente independiente; es contenido técnico extraído del enlace enviado.
+- Busca y contrasta la afirmación en la web antes del veredicto.
+- Si el enlace directo está bloqueado pero la afirmación puede identificarse por fuentes públicas, continúa el análisis y explica la limitación.
+- No inventes comentarios, reacciones, transcripciones ni contenido no recuperado.`
+    : "";
+
   contenidoUsuario.push({
     type: "input_text",
     text: `Modo de investigación: ${modo}.
 
 Consulta:
-${texto}`
+${texto}${bloqueExtraccion}`
   });
 }
 
@@ -865,6 +921,19 @@ if (
     }
 
     resultado.contraste_fuentes = contraste;
+
+    if (extraccionEnlace) {
+      resultado.extraccion_enlace = {
+        plataforma: extraccionEnlace.plataforma || "Desconocida",
+        url_original: extraccionEnlace.url_original || enlaceDetectado,
+        url_final: extraccionEnlace.url_final || enlaceDetectado,
+        acceso_directo: Boolean(extraccionEnlace.acceso_directo),
+        comentarios_recuperados: Boolean(extraccionEnlace.comentarios_recuperados),
+        limitaciones: Array.isArray(extraccionEnlace.limitaciones)
+          ? extraccionEnlace.limitaciones
+          : []
+      };
+    }
 
     if (typeof resultado.credibilidad === "number" && resultado.veredicto === "FALSO" && resultado.credibilidad > 50) {
       resultado.credibilidad = 100 - resultado.credibilidad;

@@ -1,0 +1,40 @@
+LA VERDAD INCÓMODA — VERSIÓN 1.2 ESTABLE
+
+BASE
+Esta versión fue construida exclusivamente sobre el ZIP actual enviado por el usuario:
+la-verdad-incomoda-main (9).zip
+
+NO SE MODIFICÓ
+- index.html ni index-final.html
+- Diseño, botones, micrófono o lectura de voz
+- Google Analytics ni Google AdSense
+- ads.txt, robots.txt o sitemap.xml
+- vercel.json y sus rutas
+- health.js ni translate-ui.js
+- Páginas institucionales
+
+ARCHIVOS MODIFICADOS O AGREGADOS
+- analyze.js: integra de forma prudente el contenido recuperado del enlace.
+- extract-content.js: nuevo extractor con límites de tamaño, tiempo, redirecciones y protección contra URLs privadas.
+- package.json: incluye validación del nuevo archivo y versión 1.2.0.
+
+MEJORAS
+- Sigue enlaces compartidos y redirecciones públicas.
+- YouTube: intenta recuperar título, canal, descripción y subtítulos públicos.
+- Noticias y páginas: recupera metadatos y texto visible.
+- Threads, Instagram, Facebook, TikTok y X: intenta recuperar contenido público, pero declara las restricciones.
+- La falla de acceso directo no detiene la investigación si la afirmación puede identificarse mediante búsqueda web.
+- Nunca inventa comentarios ni afirma haberlos leído si no fueron recuperados.
+- No calcula porcentajes de comentarios sin una muestra identificable.
+
+LÍMITE REAL
+Las plataformas sociales pueden exigir inicio de sesión o API oficial. Ningún código del sitio puede eludir esas restricciones. En esos casos se usan búsqueda web, copias públicas, capturas o texto proporcionado por el usuario.
+
+INSTALACIÓN
+1. Sustituye los archivos del repositorio por los incluidos en este ZIP.
+2. No agregues OPENAI_API_KEY a GitHub.
+3. Haz Commit directly to main.
+4. Espera que Vercel marque Ready.
+5. Comprueba /ads.txt, /sitemap.xml y /api/health.
+6. Prueba primero un enlace de noticia y uno de YouTube.
+7. Después prueba Threads u otra red social.
