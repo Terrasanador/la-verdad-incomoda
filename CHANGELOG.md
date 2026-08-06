@@ -29,3 +29,13 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - La credibilidad aparece como "No aplica" cuando no existe una afirmación global única; nunca como 0% por falta de una afirmación indicada por el usuario.
 - Los comentarios continúan tratándose como contexto social y no como evidencia de veracidad.
 - Se conserva la configuración existente de Vercel, Analytics, Search Console, AdSense y verificación de enlaces.
+# Versión 1.6.0 - Perfiles sociales y recuperación de conexión (2026-08-06)
+
+- Los perfiles completos de Threads y otras redes se tratan como auditorías de perfil, no como afirmaciones individuales.
+- Se conservan y analizan nombre, usuario, biografía, seguidores y volumen declarado de publicaciones cuando la plataforma limita el historial completo.
+- La búsqueda web para enlaces es obligatoria y usa consultas específicas del usuario y de la plataforma.
+- El acceso parcial ya no borra los hallazgos verificables ni fuerza automáticamente un resultado vacío de “sin acceso”.
+- Se excluyen del informe las fuentes exploratorias que no fueron seleccionadas o citadas como relevantes.
+- La interfaz reintenta una vez los fallos transitorios de red y sustituye “Failed to fetch” por una explicación útil en español.
+- La función de análisis admite hasta 300 segundos en plataformas Vercel compatibles.
+- El endpoint de salud informa si las claves de OpenAI y YouTube están configuradas, sin exponer sus valores.

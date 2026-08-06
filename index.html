@@ -1043,14 +1043,24 @@
     const social = data?.analisis_redes;
     if (!extraction && !social) return "";
 
+    const profile = extraction?.perfil;
     const metadata = extraction ? [
       extraction.plataforma && `Plataforma: ${extraction.plataforma}`,
+      profile?.nombre && `Nombre público: ${profile.nombre}`,
+      profile?.usuario && `Usuario: @${profile.usuario}`,
+      profile?.biografia && `Biografía: ${profile.biografia}`,
+      Number.isFinite(profile?.seguidores) && `Seguidores declarados: ${profile.seguidores.toLocaleString("es-MX")}`,
+      Number.isFinite(profile?.publicaciones_declaradas) && `Publicaciones declaradas: ${profile.publicaciones_declaradas.toLocaleString("es-MX")}`,
       extraction.titulo && `Título: ${extraction.titulo}`,
       extraction.autor && `Autor o cuenta: ${extraction.autor}`,
       extraction.fecha_publicacion && `Publicado: ${extraction.fecha_publicacion}`,
       extraction.duracion_segundos && `Duración: ${Math.floor(extraction.duracion_segundos / 3600) ? `${Math.floor(extraction.duracion_segundos / 3600)} h ` : ""}${Math.floor((extraction.duracion_segundos % 3600) / 60)} min`,
       extraction.transcripcion_recuperada ? "Transcripción o subtítulos: recuperados" : "",
-      extraction.acceso_directo ? "Acceso directo: disponible" : "Acceso directo: limitado"
+      extraction.acceso_directo
+        ? "Acceso directo: disponible"
+        : extraction.acceso_parcial
+          ? "Acceso: ficha pública recuperada; historial parcialmente limitado"
+          : "Acceso directo: limitado"
     ].filter(Boolean) : [];
 
     const trends = unique(social?.tendencias_observadas || []);
@@ -1626,13 +1636,28 @@
         };
       }
 
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
+      let response;
+      let networkError;
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          response = await fetch("/api/analyze", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+          });
+          networkError = null;
+          break;
+        } catch (error) {
+          networkError = error;
+          if (attempt === 0) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+          }
+        }
+      }
+
+      if (!response) throw networkError || new Error("No se recibió respuesta del servidor.");
 
       const raw = await response.text();
 
@@ -1680,7 +1705,11 @@
     } catch (error) {
       endProgress(false);
       trackUsage("verificacion_error", { mensaje: String(error?.message || "error") });
-      renderError(error.message);
+      const technicalMessage = String(error?.message || "");
+      const friendlyMessage = /failed to fetch|networkerror|load failed|network request failed/i.test(technicalMessage)
+        ? "Se interrumpió la conexión con el servidor durante la investigación. El sistema intentó reconectarse automáticamente. Vuelve a pulsar ANALIZAR CREDIBILIDAD; tu enlace permanece en el cuadro de consulta."
+        : technicalMessage || "No se pudo completar la investigación.";
+      renderError(friendlyMessage);
     } finally {
       analyzeButton.disabled = false;
     }

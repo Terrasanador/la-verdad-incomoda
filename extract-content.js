@@ -10,13 +10,20 @@ const MAX_COMMENT_CHARS = 1200;
 const MAX_REDIRECTS = 5;
 
 function decodeHtml(value = "") {
+  const decodeCodePoint = (entity, code, radix) => {
+    const number = parseInt(code, radix);
+    if (!Number.isInteger(number) || number < 0 || number > 0x10ffff) return entity;
+    try { return String.fromCodePoint(number); } catch { return entity; }
+  };
   return String(value)
     .replace(/&nbsp;/gi, " ")
     .replace(/&amp;/gi, "&")
     .replace(/&quot;/gi, '"')
     .replace(/&#39;|&apos;/gi, "'")
     .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">");
+    .replace(/&gt;/gi, ">")
+    .replace(/&#(\d+);/g, (entity, code) => decodeCodePoint(entity, code, 10))
+    .replace(/&#x([0-9a-f]+);/gi, (entity, code) => decodeCodePoint(entity, code, 16));
 }
 
 function cleanText(value = "", max = MAX_TEXT_CHARS) {
@@ -154,6 +161,48 @@ function platformFromHostname(hostname = "") {
   if (host.endsWith("tiktok.com")) return "TikTok";
   if (host === "x.com" || host.endsWith("twitter.com")) return "X";
   return "Sitio web";
+}
+
+export function isSocialProfileUrl(url, platform) {
+  const parts = url.pathname.split("/").filter(Boolean);
+  if (platform === "Threads") {
+    return parts.length === 1 && /^@[^/]+$/i.test(parts[0]);
+  }
+  if (platform === "Instagram" || platform === "TikTok") {
+    return parts.length === 1 && !/^(?:p|reel|reels|video|stories)$/i.test(parts[0]);
+  }
+  if (platform === "X") {
+    return parts.length === 1 && !/^(?:home|explore|search|i)$/i.test(parts[0]);
+  }
+  return false;
+}
+
+function parseCompactNumber(value = "") {
+  const normalized = String(value).trim().toLowerCase().replace(/\s+/g, "");
+  const match = normalized.match(/([\d.,]+)(mill[oó]n(?:es)?|mil|k|m)?/i);
+  if (!match) return null;
+  let number = Number(match[1].replace(/,(?=\d{1,2}$)/, ".").replace(/,/g, ""));
+  if (!Number.isFinite(number)) return null;
+  if (match[2] === "k" || match[2] === "mil") number *= 1000;
+  else if (/^(?:m|mill)/i.test(match[2] || "")) number *= 1_000_000;
+  return Math.round(number);
+}
+
+export function profileDataFromMetadata(url, title = "", description = "") {
+  const username = decodeURIComponent(url.pathname.split("/").filter(Boolean)[0] || "").replace(/^@/, "");
+  const followers = description.match(/([\d.,]+\s*(?:k|m|mil|mill[oó]n(?:es)?)?)\s+(?:followers|seguidores)/i);
+  const posts = description.match(/([\d.,]+\s*(?:k|m|mil|mill[oó]n(?:es)?)?)\s+(?:threads|hilos|publicaciones|posts)/i);
+  const bio = description
+    .replace(/^[\s\S]*?(?:followers|seguidores)\s*[•·]\s*[\d.,]+\s*(?:k|m|mil|mill[oó]n(?:es)?)?\s*(?:threads|hilos|publicaciones|posts)\s*[•·]\s*/i, "")
+    .replace(/\s*(?:See|Mira)\s+(?:the latest|las últimas)[\s\S]*$/i, "")
+    .trim();
+  return {
+    usuario: username,
+    nombre: title.replace(/\s*\(@[^)]+\)[\s\S]*$/i, "").trim(),
+    biografia: bio,
+    seguidores: followers ? parseCompactNumber(followers[1]) : null,
+    publicaciones_declaradas: posts ? parseCompactNumber(posts[1]) : null
+  };
 }
 
 function isPrivateIp(address) {
@@ -522,11 +571,17 @@ export function findFirstPublicUrl(value = "") {
 
 export async function extractPublicLink(rawUrl) {
   let parsed;
+  let plataforma = "Desconocida";
+  let esPerfil = false;
   try {
-    parsed = await assertSafeUrl(rawUrl);
+    parsed = new URL(rawUrl);
+    plataforma = platformFromHostname(parsed.hostname);
+    esPerfil = isSocialProfileUrl(parsed, plataforma);
+    parsed = await assertSafeUrl(parsed.href);
   } catch (error) {
     return {
-      plataforma: "Desconocida",
+      plataforma,
+      tipo_enlace: esPerfil ? "perfil" : "publicacion_o_pagina",
       url_original: rawUrl,
       url_final: rawUrl,
       acceso_directo: false,
@@ -541,6 +596,9 @@ export async function extractPublicLink(rawUrl) {
       segmentos_transcripcion: [],
       texto_recuperado: "",
       comentarios: [],
+      perfil: esPerfil && parsed
+        ? profileDataFromMetadata(parsed, "", "")
+        : null,
       comentarios_recuperados: false,
       limitaciones: [error.message]
     };
@@ -549,9 +607,9 @@ export async function extractPublicLink(rawUrl) {
   const videoId = youtubeVideoId(parsed.href);
   if (videoId) return extractYouTube(parsed.href, videoId);
 
-  const plataforma = platformFromHostname(parsed.hostname);
   const result = {
     plataforma,
+    tipo_enlace: esPerfil ? "perfil" : "publicacion_o_pagina",
     url_original: parsed.href,
     url_final: parsed.href,
     acceso_directo: false,
@@ -564,6 +622,7 @@ export async function extractPublicLink(rawUrl) {
     transcripcion: "",
     texto_recuperado: "",
     comentarios: [],
+    perfil: null,
     comentarios_recuperados: false,
     limitaciones: []
   };
@@ -600,6 +659,9 @@ export async function extractPublicLink(rawUrl) {
       extractMeta(raw, "description") ||
       structured.descripcion;
     result.autor = extractMeta(raw, "author") || structured.autor;
+    if (esPerfil) {
+      result.perfil = profileDataFromMetadata(parsed, result.titulo, result.descripcion);
+    }
     result.fecha_publicacion =
       structured.fecha_publicacion ||
       extractMeta(raw, "article:published_time") ||
@@ -609,24 +671,32 @@ export async function extractPublicLink(rawUrl) {
     result.comentarios_recuperados = result.comentarios.length > 0;
 
     const body = raw.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] || raw;
-    const bodyText = cleanText(body);
+    const bodyText = plataforma === "Threads" && esPerfil ? "" : cleanText(body);
     result.texto_recuperado = [
       result.titulo && `Título: ${result.titulo}`,
       result.autor && `Autor o cuenta: ${result.autor}`,
       result.descripcion && `Descripción: ${result.descripcion}`,
+      result.perfil && `Ficha pública del perfil: ${JSON.stringify(result.perfil)}`,
       result.fecha_publicacion && `Fecha de publicación: ${result.fecha_publicacion}`,
       bodyText && `Texto visible: ${bodyText}`,
       result.comentarios.length && `Comentarios públicos expuestos en la página (${result.comentarios.length}):\n${commentsAsText(result.comentarios)}`
     ].filter(Boolean).join("\n\n").slice(0, MAX_TEXT_CHARS);
 
     const accessShell =
+      (plataforma === "Threads" && esPerfil) ||
       result.texto_recuperado.length < 120 ||
       /(?:log in|sign up|iniciar sesi[oó]n|crear cuenta|enable javascript|javascript is disabled)/i.test(result.texto_recuperado);
 
+    const metadataPerfilUtil = esPerfil && Boolean(
+      result.titulo || result.descripcion || result.perfil?.usuario
+    );
     result.acceso_directo = !accessShell;
+    result.acceso_parcial = accessShell && metadataPerfilUtil;
     if (accessShell) {
       result.limitaciones.push(
-        `${plataforma} entregó una página de acceso, una interfaz incompleta o contenido que requiere JavaScript o inicio de sesión.`
+        metadataPerfilUtil
+          ? `${plataforma} permitió recuperar la ficha pública del perfil, pero limitó el listado completo de publicaciones o contenido que requiere JavaScript o inicio de sesión.`
+          : `${plataforma} entregó una página de acceso, una interfaz incompleta o contenido que requiere JavaScript o inicio de sesión.`
       );
     }
 

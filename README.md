@@ -17,6 +17,12 @@ El analizador recupera metadatos públicos, texto estructurado, descripción y s
 Esta segunda variable es opcional: si no está configurada, el verificador continúa funcionando con metadatos, subtítulos y búsqueda web, y declara que no pudo solicitar comentarios. La clave debe permanecer únicamente en las variables de entorno de Vercel y nunca debe subirse a GitHub.
 
 En otras redes sociales se procesan exclusivamente el texto y los comentarios realmente expuestos en la página pública o en datos estructurados. El sistema no evade inicios de sesión ni controles de acceso.
+
+## Perfiles completos de redes sociales
+
+Cuando el usuario pega la URL de un perfil, el sistema realiza una auditoría de perfil y no exige una afirmación aislada. Conserva la ficha pública disponible —nombre, usuario, biografía, seguidores y volumen declarado de publicaciones—, busca publicaciones y menciones indexadas con consultas específicas y analiza únicamente contenido realmente recuperado.
+
+Si Threads u otra plataforma limita el historial completo, el informe mantiene los datos verificables del perfil, explica exactamente qué publicaciones pudo revisar y cuáles quedaron fuera de alcance. Un acceso parcial no se presenta como un fallo total.
 Actualización de configuración.
 
 

@@ -1,7 +1,9 @@
 import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
 
-// La Verdad Incómoda — analyze.js v2.2
-// Videos largos: resumen temático, contexto y verificación por afirmaciones.
+// La Verdad Incómoda — analyze.js v2.3
+// Perfiles sociales: auditoría parcial útil sin convertir metadatos públicos en un fallo total.
+
+export const config = { maxDuration: 300 };
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -75,6 +77,7 @@ const texto = tieneTexto
 
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
     const idiomaSalida = String(body.language || body.idioma || "auto").trim() || "auto";
+    const esPerfilSocial = extraccionEnlace?.tipo_enlace === "perfil";
 
     const instrucciones = [
       'Eres el motor de investigación y verificación de hechos de "La Verdad Incómoda".',
@@ -143,6 +146,14 @@ const texto = tieneTexto
       "Que la extracción directa falle no obliga por sí sola a declarar NO VERIFICABLE: intenta identificar la publicación mediante URL final, título, autor, copias públicas, transcripciones, citas y cobertura independiente.",
       "Solo afirma haber analizado comentarios cuando los comentarios aparezcan realmente en el contenido recuperado, en capturas o en texto aportado por el usuario.",
       "No calcules porcentajes de comentarios positivos o negativos sin una muestra identificable. Indica tamaño, forma de selección y limitaciones de representatividad.",
+      "PERFILES COMPLETOS DE REDES SOCIALES:",
+      "Si el enlace corresponde a un perfil y no a una publicación individual, realiza una auditoría de perfil; no exijas al usuario una afirmación concreta para poder comenzar.",
+      "Identifica la ficha pública recuperada, biografía, nombre, usuario, volumen declarado de publicaciones, seguidores y enlaces externos realmente disponibles.",
+      "Busca el nombre de usuario exacto entre comillas, la URL exacta y consultas site: limitadas a la plataforma para localizar publicaciones, respuestas, copias o menciones públicas indexadas.",
+      "Analiza únicamente las publicaciones realmente recuperadas o localizadas: temas recurrentes, afirmaciones verificables, fechas, contexto, fuentes enlazadas, lenguaje, posibles contradicciones y patrones de interacción.",
+      "No confundas páginas genéricas sobre cómo usar la plataforma con evidencia sobre el perfil. Excluye resultados que no mencionen o no correspondan al usuario analizado.",
+      "Si solo se recuperó la ficha del perfil, conserva y explica esos hallazgos, establece estado=analizado y declara por separado que no fue posible revisar el historial completo de publicaciones.",
+      "Un acceso parcial a publicaciones no debe borrar la información verificable del perfil ni convertirse automáticamente en estado=sin_acceso.",
       "VIDEOS LARGOS, PROGRAMAS Y TRANSMISIONES:",
       "Si el usuario envía únicamente el enlace de un video, su solicitud implícita es conocer el contenido, el contexto y su confiabilidad. No le exijas indicar previamente una frase o minuto.",
       "Usa la transcripción con marcas de tiempo para dividir el video en temas. Resume el contenido completo, identifica automáticamente las afirmaciones factuales principales y verifica las más relevantes.",
@@ -320,12 +331,15 @@ if (tieneTexto) {
 
 CONTENIDO RECUPERADO DEL ENLACE POR EL BACKEND:
 Plataforma detectada: ${extraccionEnlace.plataforma || "Desconocida"}
+Tipo de enlace: ${extraccionEnlace.tipo_enlace || "publicación o página"}
 URL original: ${extraccionEnlace.url_original || enlaceDetectado}
 URL final después de redirecciones: ${extraccionEnlace.url_final || enlaceDetectado}
 Acceso directo útil: ${extraccionEnlace.acceso_directo ? "sí" : "no"}
+Acceso parcial a metadatos: ${extraccionEnlace.acceso_parcial ? "sí" : "no"}
 Título recuperado: ${extraccionEnlace.titulo || "No disponible"}
 Autor o cuenta: ${extraccionEnlace.autor || "No disponible"}
 Descripción: ${extraccionEnlace.descripcion || "No disponible"}
+Ficha pública del perfil: ${extraccionEnlace.perfil ? JSON.stringify(extraccionEnlace.perfil) : "No aplica o no disponible"}
 Fecha de publicación: ${extraccionEnlace.fecha_publicacion || "No disponible"}
 Fecha de modificación: ${extraccionEnlace.fecha_modificacion || "No disponible"}
 Estadísticas públicas disponibles: ${Object.keys(extraccionEnlace.estadisticas || {}).length ? JSON.stringify(extraccionEnlace.estadisticas) : "No disponibles"}
@@ -613,7 +627,7 @@ if (
             timezone: "America/Mexico_City"
           }
         }],
-        tool_choice: "auto",
+        tool_choice: enlaceDetectado ? "required" : "auto",
         include: ["web_search_call.action.sources"],
         max_output_tokens: modo === "profundo" ? 8000 : 5000
       })
@@ -990,6 +1004,11 @@ if (
     const accesoRealmenteBloqueado =
       consultaEsEnlace &&
       !esImagen &&
+      !(esPerfilSocial && Boolean(
+        extraccionEnlace?.titulo ||
+        extraccionEnlace?.descripcion ||
+        extraccionEnlace?.perfil?.usuario
+      )) &&
       (
         resultado.estado === "sin_acceso" ||
         pareceSinAcceso(textoDiagnostico)
@@ -1107,7 +1126,9 @@ if (
 
     (Array.isArray(resultado.fuentes) ? resultado.fuentes : []).forEach(agregarFuente);
     citas.forEach(agregarFuente);
-    fuentesBusqueda.forEach(agregarFuente);
+    // Las fuentes completas de una búsqueda pueden incluir resultados exploratorios
+    // descartados por irrelevantes. Solo se muestran fuentes seleccionadas por el
+    // análisis estructurado o citadas expresamente en la respuesta.
 
     resultado.fuentes = fuentesFinales;
     resultado.busqueda_web_realizada = fuentesFinales.length > 0;
@@ -1167,9 +1188,11 @@ if (
     if (extraccionEnlace) {
       resultado.extraccion_enlace = {
         plataforma: extraccionEnlace.plataforma || "Desconocida",
+        tipo_enlace: extraccionEnlace.tipo_enlace || "publicacion_o_pagina",
         url_original: extraccionEnlace.url_original || enlaceDetectado,
         url_final: extraccionEnlace.url_final || enlaceDetectado,
         acceso_directo: Boolean(extraccionEnlace.acceso_directo),
+        acceso_parcial: Boolean(extraccionEnlace.acceso_parcial),
         comentarios_recuperados: Boolean(extraccionEnlace.comentarios_recuperados),
         titulo: String(extraccionEnlace.titulo || "").trim(),
         autor: String(extraccionEnlace.autor || "").trim(),
@@ -1184,6 +1207,9 @@ if (
         estadisticas: extraccionEnlace.estadisticas && typeof extraccionEnlace.estadisticas === "object"
           ? extraccionEnlace.estadisticas
           : {},
+        perfil: extraccionEnlace.perfil && typeof extraccionEnlace.perfil === "object"
+          ? extraccionEnlace.perfil
+          : null,
         comentarios: Array.isArray(extraccionEnlace.comentarios)
           ? extraccionEnlace.comentarios.slice(0, 50).map(comentario => ({
               autor: String(comentario.autor || "").trim(),
