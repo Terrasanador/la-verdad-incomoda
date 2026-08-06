@@ -1,7 +1,7 @@
 import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
 
-// La Verdad Incómoda — analyze.js v2.1
-// Corrección HTTP 429: separa el estado técnico del veredicto y evita mostrar 0%.
+// La Verdad Incómoda — analyze.js v2.2
+// Videos largos: resumen temático, contexto y verificación por afirmaciones.
 
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -143,6 +143,14 @@ const texto = tieneTexto
       "Que la extracción directa falle no obliga por sí sola a declarar NO VERIFICABLE: intenta identificar la publicación mediante URL final, título, autor, copias públicas, transcripciones, citas y cobertura independiente.",
       "Solo afirma haber analizado comentarios cuando los comentarios aparezcan realmente en el contenido recuperado, en capturas o en texto aportado por el usuario.",
       "No calcules porcentajes de comentarios positivos o negativos sin una muestra identificable. Indica tamaño, forma de selección y limitaciones de representatividad.",
+      "VIDEOS LARGOS, PROGRAMAS Y TRANSMISIONES:",
+      "Si el usuario envía únicamente el enlace de un video, su solicitud implícita es conocer el contenido, el contexto y su confiabilidad. No le exijas indicar previamente una frase o minuto.",
+      "Usa la transcripción con marcas de tiempo para dividir el video en temas. Resume el contenido completo, identifica automáticamente las afirmaciones factuales principales y verifica las más relevantes.",
+      "En un noticiero o programa con múltiples asuntos, no fuerces un único veredicto de cierto o falso para todo el video. Evalúa por separado cada tema o afirmación y reserva el veredicto general para describir la confiabilidad integral del contenido.",
+      "Distingue autenticidad del enlace, confiabilidad de la fuente, exactitud de cada afirmación, calidad de la evidencia y estilo editorial.",
+      "Si no hay transcripción, utiliza título, descripción, capítulos, citas, copias, notas relacionadas y búsqueda web para reconstruir prudentemente los temas. Declara el alcance real y nunca atribuyas al video una frase que no pudiste escuchar o leer.",
+      "La falta de subtítulos no autoriza a pedirle al usuario que haga el análisis. Agota primero la identificación automática de temas y afirmaciones mediante las fuentes públicas disponibles.",
+      "Cuando no exista una afirmación única, credibilidad debe ser null: no uses 0%, porque 0% podría interpretarse como falsedad.",
       "",
       "SEÑALES DE DESINFORMACIÓN:",
       "Busca lenguaje alarmista, llamados urgentes a compartir, afirmaciones absolutas sin evidencia, ausencia de autor o fecha, cifras sin metodología, capturas sin contexto, citas falsas, contenido antiguo presentado como reciente, titulares que no corresponden al contenido, edición selectiva, fuentes anónimas sin corroboración, publicación coordinada, bots, hashtags artificiales, expertos sin credenciales, gráficos sin fuente y omisiones que cambian el sentido.",
@@ -212,6 +220,7 @@ const texto = tieneTexto
 "Usa 40 a 69 cuando existan contradicciones, pocas fuentes o acceso parcial.",
 "Usa 0 a 39 solo cuando sí se analizó la afirmación y la solidez del análisis sea muy baja.",
 "Cuando el contenido no pueda consultarse, credibilidad y confianza deben ser null, no 0 ni 50.",
+"Cuando un video contenga varias afirmaciones y no exista una sola afirmación global que pueda calificarse responsablemente, credibilidad debe ser null; entrega evaluaciones separadas en temas_video.",
 "No reduzcas la confianza únicamente porque la conclusión sea FALSA.",
 "No aumentes la confianza únicamente porque muchas páginas repitan la misma información.",
       '"credibilidad" es la probabilidad estimada de que la afirmación sea cierta.',
@@ -252,6 +261,8 @@ const texto = tieneTexto
       '  "afirmacion_principal": "Afirmación precisa investigada",',
       '  "respuesta_directa": "Respuesta clara y completa",',
       '  "resumen": "Resumen explicativo",',
+      '  "resumen_video": "Síntesis completa del video o cadena vacía si no es video",',
+      '  "temas_video": [{"tema":"Tema", "minuto":"00:00", "resumen":"Síntesis", "afirmaciones":["Afirmación"], "veredicto":"Evaluación específica", "contexto":"Contexto", "fuentes":["Fuente"]}],',
       '  "hechos_comprobados": ["Hecho confirmado"],',
       '  "evidencia_a_favor": ["Evidencia favorable"],',
       '  "evidencia_en_contra": ["Evidencia contraria o limitante"],',
@@ -377,7 +388,7 @@ if (
       required: [
         "estado", "veredicto_final", "explicacion_veredicto_final",
         "veredicto", "credibilidad", "confianza", "afirmacion_principal",
-        "respuesta_directa", "resumen", "hechos_comprobados",
+        "respuesta_directa", "resumen", "resumen_video", "temas_video", "hechos_comprobados",
         "evidencia_a_favor", "evidencia_en_contra",
         "indicadores_desinformacion", "contexto", "contraste_fuentes",
         "reputacion_fuente", "analisis_redes", "analisis_encuestas",
@@ -409,6 +420,24 @@ if (
         afirmacion_principal: { type: "string" },
         respuesta_directa: { type: "string" },
         resumen: { type: "string" },
+        resumen_video: { type: "string" },
+        temas_video: {
+          type: "array",
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: ["tema", "minuto", "resumen", "afirmaciones", "veredicto", "contexto", "fuentes"],
+            properties: {
+              tema: { type: "string" },
+              minuto: { type: "string" },
+              resumen: { type: "string" },
+              afirmaciones: { type: "array", items: { type: "string" } },
+              veredicto: { type: "string" },
+              contexto: { type: "string" },
+              fuentes: { type: "array", items: { type: "string" } }
+            }
+          }
+        },
         hechos_comprobados: { type: "array", items: { type: "string" } },
         evidencia_a_favor: { type: "array", items: { type: "string" } },
         evidencia_en_contra: { type: "array", items: { type: "string" } },
@@ -771,6 +800,18 @@ if (
       resultado.conclusion ||
       "No se obtuvo un resumen."
     ).trim();
+    resultado.resumen_video = String(resultado.resumen_video || "").trim();
+    resultado.temas_video = Array.isArray(resultado.temas_video)
+      ? resultado.temas_video.map(tema => ({
+          tema: String(tema?.tema || "").trim(),
+          minuto: String(tema?.minuto || "").trim(),
+          resumen: String(tema?.resumen || "").trim(),
+          afirmaciones: limpiarLista(tema?.afirmaciones),
+          veredicto: String(tema?.veredicto || "NO VERIFICABLE").trim(),
+          contexto: String(tema?.contexto || "").trim(),
+          fuentes: limpiarLista(tema?.fuentes)
+        })).filter(tema => tema.tema || tema.resumen)
+      : [];
     const usadosEvidencia = new Set();
     resultado.hechos_comprobados = quitarRepetidos(
       resultado.hechos_comprobados,
@@ -935,6 +976,14 @@ if (
     const consultaEsEnlace =
       tieneTexto &&
       /^https?:\/\//i.test(texto.trim());
+
+    const esVideoYouTube = extraccionEnlace?.plataforma === "YouTube";
+    const videoConMultiplesTemas = esVideoYouTube && resultado.temas_video.length > 1;
+    const usuarioSoloEnvioEnlace = consultaEsEnlace && texto.trim() === enlaceDetectado;
+    if (videoConMultiplesTemas && usuarioSoloEnvioEnlace) {
+      resultado.credibilidad = null;
+      resultado.afirmacion_principal = "Contenido audiovisual con múltiples afirmaciones evaluadas por tema.";
+    }
 
     // Un enlace bloqueado puede producir texto explicativo generado por el modelo.
     // Por eso no se usa la mera existencia de resumen/respuesta como prueba de acceso.
@@ -1127,7 +1176,11 @@ if (
         descripcion: String(extraccionEnlace.descripcion || "").trim(),
         fecha_publicacion: String(extraccionEnlace.fecha_publicacion || "").trim(),
         fecha_modificacion: String(extraccionEnlace.fecha_modificacion || "").trim(),
+        duracion_segundos: Number(extraccionEnlace.duracion_segundos || 0) || null,
         transcripcion_recuperada: Boolean(extraccionEnlace.transcripcion),
+        segmentos_transcripcion: Array.isArray(extraccionEnlace.segmentos_transcripcion)
+          ? extraccionEnlace.segmentos_transcripcion.length
+          : 0,
         estadisticas: extraccionEnlace.estadisticas && typeof extraccionEnlace.estadisticas === "object"
           ? extraccionEnlace.estadisticas
           : {},

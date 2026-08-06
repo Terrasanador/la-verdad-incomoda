@@ -765,9 +765,10 @@
   }
 
   function percent(value) {
+    if (value === null || value === undefined || value === "") return null;
     const number = Number(value);
 
-    if (!Number.isFinite(number)) return 0;
+    if (!Number.isFinite(number)) return null;
 
     return Math.max(0, Math.min(100, Math.round(number)));
   }
@@ -909,11 +910,11 @@
     ).trim();
 
     const credibility = percent(
-      data.credibilidad ?? data.credibilidad_porcentaje ?? 0
+      data.credibilidad ?? data.credibilidad_porcentaje
     );
 
     const confidence = percent(
-      data.confianza ?? data.confianza_analisis ?? 0
+      data.confianza ?? data.confianza_analisis
     );
 
     const summary = String(
@@ -934,8 +935,8 @@
       "Fuente de consulta: La Verdad Incómoda.",
       `Veredicto final: ${finalVerdict}.`,
       `Clasificación técnica: ${technicalVerdict}.`,
-      `Credibilidad de la afirmación: ${credibility} por ciento.`,
-      `Confianza del análisis: ${confidence} por ciento.`,
+      credibility === null ? "Credibilidad de la afirmación: no aplica." : `Credibilidad de la afirmación: ${credibility} por ciento.`,
+      confidence === null ? "Confianza del análisis: no calculada." : `Confianza del análisis: ${confidence} por ciento.`,
       `Resumen: ${summary}`,
       mostImportant ? `Lo más importante: ${mostImportant}` : ""
     ].filter(Boolean).join(" ");
@@ -1047,6 +1048,7 @@
       extraction.titulo && `Título: ${extraction.titulo}`,
       extraction.autor && `Autor o cuenta: ${extraction.autor}`,
       extraction.fecha_publicacion && `Publicado: ${extraction.fecha_publicacion}`,
+      extraction.duracion_segundos && `Duración: ${Math.floor(extraction.duracion_segundos / 3600) ? `${Math.floor(extraction.duracion_segundos / 3600)} h ` : ""}${Math.floor((extraction.duracion_segundos % 3600) / 60)} min`,
       extraction.transcripcion_recuperada ? "Transcripción o subtítulos: recuperados" : "",
       extraction.acceso_directo ? "Acceso directo: disponible" : "Acceso directo: limitado"
     ].filter(Boolean) : [];
@@ -1073,6 +1075,28 @@
         ${manipulation.length ? `<h4>Posible manipulación o coordinación</h4><ul>${manipulation.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : ""}
         ${social?.representatividad ? `<p><strong>Representatividad:</strong> ${esc(social.representatividad)}</p>` : ""}
         ${social?.limitaciones ? `<p><strong>Limitaciones:</strong> ${esc(social.limitaciones)}</p>` : ""}
+      </article>
+    `;
+  }
+
+  function renderVideoTopics(data) {
+    const topics = Array.isArray(data?.temas_video)
+      ? data.temas_video.filter(topic => topic && (topic.tema || topic.resumen))
+      : [];
+    if (!topics.length && !data?.resumen_video) return "";
+    return `
+      <article class="card full">
+        <h3>Resumen y contexto del video</h3>
+        ${data.resumen_video ? `<p>${esc(data.resumen_video)}</p>` : ""}
+        ${topics.map(topic => `
+          <section class="source">
+            <strong>${topic.minuto ? `${esc(topic.minuto)} · ` : ""}${esc(topic.tema || "Tema identificado")}</strong>
+            ${topic.resumen ? `<p>${esc(topic.resumen)}</p>` : ""}
+            ${topic.afirmaciones?.length ? `<small><b>Afirmaciones:</b> ${topic.afirmaciones.map(esc).join(" · ")}</small>` : ""}
+            ${topic.veredicto ? `<small><b>Evaluación:</b> ${esc(topic.veredicto)}</small>` : ""}
+            ${topic.contexto ? `<small><b>Contexto:</b> ${esc(topic.contexto)}</small>` : ""}
+          </section>
+        `).join("")}
       </article>
     `;
   }
@@ -1372,14 +1396,12 @@
 
     const credibility = percent(
       data.credibilidad ??
-      data.credibilidad_porcentaje ??
-      0
+      data.credibilidad_porcentaje
     );
 
     const analysisConfidence = percent(
       data.confianza ??
-      data.confianza_analisis ??
-      0
+      data.confianza_analisis
     );
 
     const favorable = unique(
@@ -1430,11 +1452,11 @@
 
       <div class="metrics">
         <span class="metric">
-          Credibilidad de la afirmación: ${credibility}%
+          Credibilidad de la afirmación: ${credibility === null ? "No aplica" : `${credibility}%`}
         </span>
 
         <span class="metric">
-          Confianza del análisis: ${analysisConfidence}%
+          Confianza del análisis: ${analysisConfidence === null ? "No calculada" : `${analysisConfidence}%`}
         </span>
 
         ${
@@ -1453,6 +1475,8 @@
         )}
 
         ${textCard("Resumen ejecutivo", summary, true)}
+
+        ${renderVideoTopics(data)}
 
         ${textCard(
           "Afirmación analizada",

@@ -4,7 +4,7 @@ import net from "node:net";
 const FETCH_TIMEOUT_MS = 12000;
 const MAX_HTML_BYTES = 2_000_000;
 const MAX_TEXT_CHARS = 24000;
-const MAX_TRANSCRIPT_CHARS = 20000;
+const MAX_TRANSCRIPT_CHARS = 80000;
 const MAX_COMMENTS = 50;
 const MAX_COMMENT_CHARS = 1200;
 const MAX_REDIRECTS = 5;
@@ -283,6 +283,85 @@ function youtubeVideoId(rawUrl) {
   return "";
 }
 
+function extractBalancedJson(source = "", marker = "") {
+  const markerIndex = source.indexOf(marker);
+  if (markerIndex < 0) return null;
+  const start = source.indexOf("{", markerIndex + marker.length);
+  if (start < 0) return null;
+
+  let depth = 0;
+  let quoted = false;
+  let escaped = false;
+  for (let index = start; index < source.length; index++) {
+    const character = source[index];
+    if (quoted) {
+      if (escaped) escaped = false;
+      else if (character === "\\") escaped = true;
+      else if (character === '"') quoted = false;
+      continue;
+    }
+    if (character === '"') quoted = true;
+    else if (character === "{") depth += 1;
+    else if (character === "}" && --depth === 0) {
+      try { return JSON.parse(source.slice(start, index + 1)); } catch { return null; }
+    }
+  }
+  return null;
+}
+
+function formatTimestamp(milliseconds = 0) {
+  const totalSeconds = Math.max(0, Math.floor(Number(milliseconds) / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return hours
+    ? `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`
+    : `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+async function fetchYouTubeTranscript(playerResponse) {
+  const tracks = playerResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks || [];
+  const preferred =
+    tracks.find(track => /^es/i.test(track.languageCode || "")) ||
+    tracks.find(track => /^en/i.test(track.languageCode || "")) ||
+    tracks[0];
+  if (!preferred?.baseUrl) return { transcript: "", segments: [] };
+
+  const captions = await safeFetch(`${preferred.baseUrl}&fmt=json3`, {
+    headers: { Accept: "application/json" }
+  });
+  if (!captions.ok) return { transcript: "", segments: [] };
+
+  const data = await captions.json();
+  const segments = (data.events || []).map(event => ({
+    inicio: formatTimestamp(event.tStartMs),
+    inicio_ms: Number(event.tStartMs || 0),
+    texto: (event.segs || []).map(segment => segment.utf8 || "").join("").replace(/\s+/g, " ").trim()
+  })).filter(segment => segment.texto);
+
+  const transcript = segments
+    .map(segment => `[${segment.inicio}] ${segment.texto}`)
+    .join(" ")
+    .slice(0, MAX_TRANSCRIPT_CHARS);
+  return { transcript, segments };
+}
+
+async function fetchInnertubePlayer(html, id) {
+  const apiKey = html.match(/"INNERTUBE_API_KEY":"([^"]+)"/)?.[1];
+  const clientVersion = html.match(/"INNERTUBE_CLIENT_VERSION":"([^"]+)"/)?.[1];
+  if (!apiKey || !clientVersion) return null;
+  const response = await safeFetch(`https://www.youtube.com/youtubei/v1/player?key=${encodeURIComponent(apiKey)}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({
+      videoId: id,
+      context: { client: { clientName: "WEB", clientVersion, hl: "es", gl: "MX" } },
+      playbackContext: { contentPlaybackContext: { html5Preference: "HTML5_PREF_WANTS" } }
+    })
+  });
+  return response.ok ? response.json() : null;
+}
+
 async function extractYouTube(rawUrl, id) {
   const result = {
     plataforma: "YouTube",
@@ -295,7 +374,9 @@ async function extractYouTube(rawUrl, id) {
     fecha_publicacion: "",
     fecha_modificacion: "",
     estadisticas: {},
+    duracion_segundos: null,
     transcripcion: "",
+    segmentos_transcripcion: [],
     texto_recuperado: "",
     comentarios: [],
     limitaciones: [],
@@ -333,35 +414,22 @@ async function extractYouTube(rawUrl, id) {
       result.fecha_modificacion = structured.fecha_modificacion;
       result.comentarios.push(...structured.comentarios);
 
-      const captionMatch = html.match(/"captionTracks":(\[[\s\S]*?\])/);
-      if (captionMatch) {
-        try {
-          const tracks = JSON.parse(captionMatch[1].replace(/\\u0026/g, "&"));
-          const preferred =
-            tracks.find(track => /^es/i.test(track.languageCode || "")) ||
-            tracks.find(track => /^en/i.test(track.languageCode || "")) ||
-            tracks[0];
-
-          if (preferred?.baseUrl) {
-            const captions = await safeFetch(`${preferred.baseUrl}&fmt=json3`, {
-              headers: { Accept: "application/json" }
-            });
-            if (captions.ok) {
-              const data = await captions.json();
-              result.transcripcion = (data.events || [])
-                .flatMap(event => event.segs || [])
-                .map(segment => segment.utf8 || "")
-                .join(" ")
-                .replace(/\s+/g, " ")
-                .trim()
-                .slice(0, MAX_TRANSCRIPT_CHARS);
-            }
-          }
-        } catch {
-          result.limitaciones.push("Se detectaron subtítulos, pero no pudieron procesarse.");
+      try {
+        let playerResponse =
+          extractBalancedJson(html, "ytInitialPlayerResponse") ||
+          extractBalancedJson(html, '"playerResponse":');
+        if (!playerResponse?.captions) {
+          playerResponse = await fetchInnertubePlayer(html, id) || playerResponse;
         }
-      } else {
-        result.limitaciones.push("El video no expuso subtítulos públicos.");
+        result.duracion_segundos = Number(playerResponse?.videoDetails?.lengthSeconds || 0) || null;
+        const transcriptData = await fetchYouTubeTranscript(playerResponse);
+        result.transcripcion = transcriptData.transcript;
+        result.segmentos_transcripcion = transcriptData.segments;
+        if (!result.transcripcion) {
+          result.limitaciones.push("YouTube no proporcionó subtítulos públicos ni transcripción automática recuperable para este video.");
+        }
+      } catch (error) {
+        result.limitaciones.push(`No se pudo recuperar la transcripción disponible: ${error.message}`);
       }
       result.acceso_directo = true;
     } else {
@@ -438,6 +506,7 @@ async function extractYouTube(rawUrl, id) {
     result.autor && `Canal: ${result.autor}`,
     result.descripcion && `Descripción: ${result.descripcion}`,
     result.fecha_publicacion && `Fecha de publicación: ${result.fecha_publicacion}`,
+    result.duracion_segundos && `Duración: ${formatTimestamp(result.duracion_segundos * 1000)}`,
     Object.keys(result.estadisticas).length && `Estadísticas públicas: ${JSON.stringify(result.estadisticas)}`,
     result.transcripcion && `Transcripción: ${result.transcripcion}`,
     result.comentarios.length && `Muestra de comentarios públicos (${result.comentarios.length}, orden de relevancia de YouTube):\n${commentsAsText(result.comentarios)}`
@@ -467,7 +536,9 @@ export async function extractPublicLink(rawUrl) {
       fecha_publicacion: "",
       fecha_modificacion: "",
       estadisticas: {},
+      duracion_segundos: null,
       transcripcion: "",
+      segmentos_transcripcion: [],
       texto_recuperado: "",
       comentarios: [],
       comentarios_recuperados: false,
