@@ -3,7 +3,10 @@ import net from "node:net";
 
 const FETCH_TIMEOUT_MS = 12000;
 const MAX_HTML_BYTES = 2_000_000;
-const MAX_TEXT_CHARS = 16000;
+const MAX_TEXT_CHARS = 24000;
+const MAX_TRANSCRIPT_CHARS = 20000;
+const MAX_COMMENTS = 50;
+const MAX_COMMENT_CHARS = 1200;
 const MAX_REDIRECTS = 5;
 
 function decodeHtml(value = "") {
@@ -40,6 +43,106 @@ function extractMeta(html, key) {
     if (match?.[1]) return cleanText(match[1], 3000);
   }
   return "";
+}
+
+function extractJsonObjects(html = "") {
+  const objects = [];
+  const pattern = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  let match;
+  while ((match = pattern.exec(html)) && objects.length < 20) {
+    try {
+      const parsed = JSON.parse(decodeHtml(match[1]).trim());
+      objects.push(...(Array.isArray(parsed) ? parsed : [parsed]));
+    } catch {}
+  }
+  return objects;
+}
+
+function visitJson(value, visitor, seen = new Set()) {
+  if (!value || typeof value !== "object" || seen.has(value)) return;
+  seen.add(value);
+  visitor(value);
+  for (const child of Object.values(value)) {
+    if (Array.isArray(child)) child.forEach(item => visitJson(item, visitor, seen));
+    else visitJson(child, visitor, seen);
+  }
+}
+
+function textValue(value) {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") {
+    return value.text || value.name || value.description || "";
+  }
+  return "";
+}
+
+function authorValue(value) {
+  if (Array.isArray(value)) return value.map(authorValue).filter(Boolean).join(", ");
+  if (typeof value === "string") return value;
+  return value?.name || value?.alternateName || "";
+}
+
+function structuredPageData(html = "") {
+  const result = {
+    titulo: "",
+    autor: "",
+    descripcion: "",
+    fecha_publicacion: "",
+    fecha_modificacion: "",
+    comentarios: []
+  };
+
+  for (const root of extractJsonObjects(html)) {
+    visitJson(root, node => {
+      const type = Array.isArray(node["@type"]) ? node["@type"].join(" ") : node["@type"] || "";
+      if (/VideoObject|SocialMediaPosting|NewsArticle|Article|BlogPosting/i.test(type)) {
+        result.titulo ||= cleanText(node.headline || node.name || "", 1000);
+        result.autor ||= cleanText(authorValue(node.author || node.creator), 1000);
+        result.descripcion ||= cleanText(node.description || node.articleBody || "", 5000);
+        result.fecha_publicacion ||= cleanText(node.datePublished || node.uploadDate || "", 100);
+        result.fecha_modificacion ||= cleanText(node.dateModified || "", 100);
+      }
+
+      if (/Comment|UserComments/i.test(type) && result.comentarios.length < MAX_COMMENTS) {
+        const texto = cleanText(
+          node.text || node.commentText || node.description || node.reviewBody || "",
+          MAX_COMMENT_CHARS
+        );
+        if (!texto) return;
+        result.comentarios.push({
+          autor: cleanText(authorValue(node.author || node.creator), 300),
+          texto,
+          publicado: cleanText(node.dateCreated || node.datePublished || "", 100),
+          me_gusta: Number(node.upvoteCount || node.interactionStatistic?.userInteractionCount || 0) || 0,
+          respuestas: 0
+        });
+      }
+    });
+  }
+
+  return result;
+}
+
+function uniqueComments(comments = []) {
+  const seen = new Set();
+  return comments.filter(comment => {
+    const key = cleanText(comment?.texto || "", MAX_COMMENT_CHARS).toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).slice(0, MAX_COMMENTS);
+}
+
+function commentsAsText(comments = []) {
+  return comments.map((comment, index) => {
+    const details = [
+      comment.autor && `autor: ${comment.autor}`,
+      comment.publicado && `fecha: ${comment.publicado}`,
+      Number.isFinite(comment.me_gusta) && `me gusta: ${comment.me_gusta}`,
+      Number.isFinite(comment.respuestas) && `respuestas: ${comment.respuestas}`
+    ].filter(Boolean).join(", ");
+    return `${index + 1}. ${comment.texto}${details ? ` (${details})` : ""}`;
+  }).join("\n");
 }
 
 function platformFromHostname(hostname = "") {
@@ -189,8 +292,12 @@ async function extractYouTube(rawUrl, id) {
     titulo: "",
     autor: "",
     descripcion: "",
+    fecha_publicacion: "",
+    fecha_modificacion: "",
+    estadisticas: {},
     transcripcion: "",
     texto_recuperado: "",
+    comentarios: [],
     limitaciones: [],
     comentarios_recuperados: false
   };
@@ -217,8 +324,14 @@ async function extractYouTube(rawUrl, id) {
     result.url_final = page.url || rawUrl;
     if (page.ok) {
       const html = await readLimitedText(page);
+      const structured = structuredPageData(html);
       result.titulo ||= extractMeta(html, "og:title") || extractMeta(html, "twitter:title");
-      result.descripcion = extractMeta(html, "og:description") || extractMeta(html, "description");
+      result.titulo ||= structured.titulo;
+      result.autor ||= structured.autor;
+      result.descripcion = extractMeta(html, "og:description") || extractMeta(html, "description") || structured.descripcion;
+      result.fecha_publicacion = structured.fecha_publicacion;
+      result.fecha_modificacion = structured.fecha_modificacion;
+      result.comentarios.push(...structured.comentarios);
 
       const captionMatch = html.match(/"captionTracks":(\[[\s\S]*?\])/);
       if (captionMatch) {
@@ -241,7 +354,7 @@ async function extractYouTube(rawUrl, id) {
                 .join(" ")
                 .replace(/\s+/g, " ")
                 .trim()
-                .slice(0, MAX_TEXT_CHARS);
+                .slice(0, MAX_TRANSCRIPT_CHARS);
             }
           }
         } catch {
@@ -258,11 +371,76 @@ async function extractYouTube(rawUrl, id) {
     result.limitaciones.push(`No se pudo abrir la página del video: ${error.message}`);
   }
 
+  if (process.env.YOUTUBE_API_KEY) {
+    try {
+      const videoUrl = new URL("https://www.googleapis.com/youtube/v3/videos");
+      videoUrl.searchParams.set("part", "snippet,statistics");
+      videoUrl.searchParams.set("id", id);
+      videoUrl.searchParams.set("key", process.env.YOUTUBE_API_KEY);
+      const videoResponse = await safeFetch(videoUrl.href, { headers: { Accept: "application/json" } });
+      if (videoResponse.ok) {
+        const videoData = await videoResponse.json();
+        const video = videoData.items?.[0];
+        result.titulo ||= cleanText(video?.snippet?.title || "", 1000);
+        result.autor ||= cleanText(video?.snippet?.channelTitle || "", 1000);
+        result.descripcion ||= cleanText(video?.snippet?.description || "", 5000);
+        result.fecha_publicacion ||= cleanText(video?.snippet?.publishedAt || "", 100);
+        result.estadisticas = {
+          visualizaciones: Number(video?.statistics?.viewCount || 0),
+          me_gusta: Number(video?.statistics?.likeCount || 0),
+          comentarios: Number(video?.statistics?.commentCount || 0)
+        };
+      } else {
+        result.limitaciones.push(`La API de YouTube respondió HTTP ${videoResponse.status} al solicitar metadatos.`);
+      }
+
+      const commentsUrl = new URL("https://www.googleapis.com/youtube/v3/commentThreads");
+      commentsUrl.searchParams.set("part", "snippet,replies");
+      commentsUrl.searchParams.set("videoId", id);
+      commentsUrl.searchParams.set("maxResults", String(MAX_COMMENTS));
+      commentsUrl.searchParams.set("order", "relevance");
+      commentsUrl.searchParams.set("textFormat", "plainText");
+      commentsUrl.searchParams.set("key", process.env.YOUTUBE_API_KEY);
+      const commentsResponse = await safeFetch(commentsUrl.href, { headers: { Accept: "application/json" } });
+      if (commentsResponse.ok) {
+        const commentsData = await commentsResponse.json();
+        for (const thread of commentsData.items || []) {
+          const top = thread.snippet?.topLevelComment?.snippet;
+          const text = cleanText(top?.textDisplay || top?.textOriginal || "", MAX_COMMENT_CHARS);
+          if (!text) continue;
+          result.comentarios.push({
+            autor: cleanText(top?.authorDisplayName || "", 300),
+            texto: text,
+            publicado: cleanText(top?.publishedAt || "", 100),
+            me_gusta: Number(top?.likeCount || 0),
+            respuestas: Number(thread.snippet?.totalReplyCount || 0)
+          });
+        }
+      } else if (commentsResponse.status === 403) {
+        result.limitaciones.push("Los comentarios de YouTube están desactivados, restringidos o la clave no tiene habilitada YouTube Data API v3.");
+      } else {
+        result.limitaciones.push(`La API de YouTube respondió HTTP ${commentsResponse.status} al solicitar comentarios.`);
+      }
+    } catch (error) {
+      result.limitaciones.push(`No se completó la consulta oficial de YouTube: ${error.message}`);
+    }
+  } else {
+    result.limitaciones.push(
+      "No se configuró YOUTUBE_API_KEY; se analizaron metadatos y subtítulos públicos, pero no fue posible solicitar una muestra de comentarios mediante YouTube Data API v3."
+    );
+  }
+
+  result.comentarios = uniqueComments(result.comentarios);
+  result.comentarios_recuperados = result.comentarios.length > 0;
+
   result.texto_recuperado = [
     result.titulo && `Título: ${result.titulo}`,
     result.autor && `Canal: ${result.autor}`,
     result.descripcion && `Descripción: ${result.descripcion}`,
-    result.transcripcion && `Transcripción: ${result.transcripcion}`
+    result.fecha_publicacion && `Fecha de publicación: ${result.fecha_publicacion}`,
+    Object.keys(result.estadisticas).length && `Estadísticas públicas: ${JSON.stringify(result.estadisticas)}`,
+    result.transcripcion && `Transcripción: ${result.transcripcion}`,
+    result.comentarios.length && `Muestra de comentarios públicos (${result.comentarios.length}, orden de relevancia de YouTube):\n${commentsAsText(result.comentarios)}`
   ].filter(Boolean).join("\n\n").slice(0, MAX_TEXT_CHARS);
 
   return result;
@@ -286,8 +464,12 @@ export async function extractPublicLink(rawUrl) {
       titulo: "",
       autor: "",
       descripcion: "",
+      fecha_publicacion: "",
+      fecha_modificacion: "",
+      estadisticas: {},
       transcripcion: "",
       texto_recuperado: "",
+      comentarios: [],
       comentarios_recuperados: false,
       limitaciones: [error.message]
     };
@@ -305,8 +487,12 @@ export async function extractPublicLink(rawUrl) {
     titulo: "",
     autor: "",
     descripcion: "",
+    fecha_publicacion: "",
+    fecha_modificacion: "",
+    estadisticas: {},
     transcripcion: "",
     texto_recuperado: "",
+    comentarios: [],
     comentarios_recuperados: false,
     limitaciones: []
   };
@@ -331,15 +517,25 @@ export async function extractPublicLink(rawUrl) {
       return result;
     }
 
+    const structured = structuredPageData(raw);
     result.titulo =
       extractMeta(raw, "og:title") ||
       extractMeta(raw, "twitter:title") ||
+      structured.titulo ||
       cleanText(raw.match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1] || "", 1000);
     result.descripcion =
       extractMeta(raw, "og:description") ||
       extractMeta(raw, "twitter:description") ||
-      extractMeta(raw, "description");
-    result.autor = extractMeta(raw, "author");
+      extractMeta(raw, "description") ||
+      structured.descripcion;
+    result.autor = extractMeta(raw, "author") || structured.autor;
+    result.fecha_publicacion =
+      structured.fecha_publicacion ||
+      extractMeta(raw, "article:published_time") ||
+      extractMeta(raw, "date");
+    result.fecha_modificacion = structured.fecha_modificacion || extractMeta(raw, "article:modified_time");
+    result.comentarios = uniqueComments(structured.comentarios);
+    result.comentarios_recuperados = result.comentarios.length > 0;
 
     const body = raw.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] || raw;
     const bodyText = cleanText(body);
@@ -347,7 +543,9 @@ export async function extractPublicLink(rawUrl) {
       result.titulo && `Título: ${result.titulo}`,
       result.autor && `Autor o cuenta: ${result.autor}`,
       result.descripcion && `Descripción: ${result.descripcion}`,
-      bodyText && `Texto visible: ${bodyText}`
+      result.fecha_publicacion && `Fecha de publicación: ${result.fecha_publicacion}`,
+      bodyText && `Texto visible: ${bodyText}`,
+      result.comentarios.length && `Comentarios públicos expuestos en la página (${result.comentarios.length}):\n${commentsAsText(result.comentarios)}`
     ].filter(Boolean).join("\n\n").slice(0, MAX_TEXT_CHARS);
 
     const accessShell =

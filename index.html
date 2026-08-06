@@ -1037,6 +1037,46 @@
     `;
   }
 
+  function renderLinkContext(data) {
+    const extraction = data?.extraccion_enlace;
+    const social = data?.analisis_redes;
+    if (!extraction && !social) return "";
+
+    const metadata = extraction ? [
+      extraction.plataforma && `Plataforma: ${extraction.plataforma}`,
+      extraction.titulo && `Título: ${extraction.titulo}`,
+      extraction.autor && `Autor o cuenta: ${extraction.autor}`,
+      extraction.fecha_publicacion && `Publicado: ${extraction.fecha_publicacion}`,
+      extraction.transcripcion_recuperada ? "Transcripción o subtítulos: recuperados" : "",
+      extraction.acceso_directo ? "Acceso directo: disponible" : "Acceso directo: limitado"
+    ].filter(Boolean) : [];
+
+    const trends = unique(social?.tendencias_observadas || []);
+    const manipulation = unique(social?.posible_manipulacion || []);
+    const comments = Array.isArray(extraction?.comentarios)
+      ? extraction.comentarios.filter(comment => comment?.texto)
+      : [];
+
+    return `
+      <article class="card full">
+        <h3>Contexto recuperado del enlace y redes</h3>
+        ${metadata.length ? `<p>${metadata.map(esc).join("<br>")}</p>` : ""}
+        ${comments.length ? `
+          <h4>Comentarios públicos recuperados (${comments.length})</h4>
+          <p class="muted">Son una muestra contextual y no representan una votación sobre la veracidad.</p>
+          <ul>${comments.map(comment => {
+            const details = [comment.autor, comment.publicado].filter(Boolean).join(" · ");
+            return `<li>${esc(comment.texto)}${details ? `<small>${esc(details)}</small>` : ""}</li>`;
+          }).join("")}</ul>
+        ` : ""}
+        ${trends.length ? `<h4>Tendencias observadas</h4><ul>${trends.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : ""}
+        ${manipulation.length ? `<h4>Posible manipulación o coordinación</h4><ul>${manipulation.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : ""}
+        ${social?.representatividad ? `<p><strong>Representatividad:</strong> ${esc(social.representatividad)}</p>` : ""}
+        ${social?.limitaciones ? `<p><strong>Limitaciones:</strong> ${esc(social.limitaciones)}</p>` : ""}
+      </article>
+    `;
+  }
+
   function buildSourceContrast(data, sources) {
     if (data.contraste_fuentes) {
       return String(data.contraste_fuentes).trim();
@@ -1304,6 +1344,7 @@
           true
         )}
 
+        ${renderLinkContext(data)}
         ${renderSources(data.fuentes || [])}
       </div>
 
@@ -1477,6 +1518,7 @@
           true
         )}
 
+        ${renderLinkContext(data)}
         ${renderSources(sources)}
       </div>
 

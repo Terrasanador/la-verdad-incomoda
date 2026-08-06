@@ -133,6 +133,9 @@ const texto = tieneTexto
       "REDES SOCIALES Y ENLACES:",
       "Para TikTok, Facebook, Instagram, YouTube, X, Threads y otras plataformas, intenta consultar el contenido público.",
       "Revisa autor, fecha, texto, título, descripción, transcripción, subtítulos, metadatos y copias disponibles.",
+      "Cuando se recupere una muestra real de comentarios, úsala para comprender qué interpretan, cuestionan o aportan los usuarios, no como votación de verdad.",
+      "Distingue siempre el contenido de la publicación, los comentarios del público y la evidencia externa; no atribuyas al autor lo dicho por comentaristas.",
+      "Si los comentarios aportan nombres, fechas, lugares, fuentes o versiones alternativas relevantes, comprueba esos datos mediante búsqueda web antes de usarlos como contexto.",
       "Comprueba si el contenido fue recortado, editado, reutilizado o sacado de contexto.",
       "Si está privado, eliminado, bloqueado o requiere inicio de sesión, decláralo claramente.",
       "Nunca simules haber visto contenido inaccesible.",
@@ -312,10 +315,20 @@ Acceso directo útil: ${extraccionEnlace.acceso_directo ? "sí" : "no"}
 Título recuperado: ${extraccionEnlace.titulo || "No disponible"}
 Autor o cuenta: ${extraccionEnlace.autor || "No disponible"}
 Descripción: ${extraccionEnlace.descripcion || "No disponible"}
+Fecha de publicación: ${extraccionEnlace.fecha_publicacion || "No disponible"}
+Fecha de modificación: ${extraccionEnlace.fecha_modificacion || "No disponible"}
+Estadísticas públicas disponibles: ${Object.keys(extraccionEnlace.estadisticas || {}).length ? JSON.stringify(extraccionEnlace.estadisticas) : "No disponibles"}
 Transcripción: ${extraccionEnlace.transcripcion || "No disponible"}
 Texto recuperado:
 ${extraccionEnlace.texto_recuperado || "No se recuperó texto utilizable."}
 Comentarios recuperados realmente: ${extraccionEnlace.comentarios_recuperados ? "sí" : "no"}
+Cantidad de comentarios recuperados: ${Array.isArray(extraccionEnlace.comentarios) ? extraccionEnlace.comentarios.length : 0}
+Muestra de comentarios recuperados:
+${Array.isArray(extraccionEnlace.comentarios) && extraccionEnlace.comentarios.length
+  ? extraccionEnlace.comentarios.map((comentario, indice) =>
+      `${indice + 1}. ${comentario.texto}${comentario.autor ? ` — ${comentario.autor}` : ""}${comentario.publicado ? ` (${comentario.publicado})` : ""}`
+    ).join("\n")
+  : "No se recuperaron comentarios."}
 Limitaciones:
 ${(extraccionEnlace.limitaciones || []).map(item => `- ${item}`).join("\n") || "- Ninguna registrada."}
 
@@ -1109,6 +1122,24 @@ if (
         url_final: extraccionEnlace.url_final || enlaceDetectado,
         acceso_directo: Boolean(extraccionEnlace.acceso_directo),
         comentarios_recuperados: Boolean(extraccionEnlace.comentarios_recuperados),
+        titulo: String(extraccionEnlace.titulo || "").trim(),
+        autor: String(extraccionEnlace.autor || "").trim(),
+        descripcion: String(extraccionEnlace.descripcion || "").trim(),
+        fecha_publicacion: String(extraccionEnlace.fecha_publicacion || "").trim(),
+        fecha_modificacion: String(extraccionEnlace.fecha_modificacion || "").trim(),
+        transcripcion_recuperada: Boolean(extraccionEnlace.transcripcion),
+        estadisticas: extraccionEnlace.estadisticas && typeof extraccionEnlace.estadisticas === "object"
+          ? extraccionEnlace.estadisticas
+          : {},
+        comentarios: Array.isArray(extraccionEnlace.comentarios)
+          ? extraccionEnlace.comentarios.slice(0, 50).map(comentario => ({
+              autor: String(comentario.autor || "").trim(),
+              texto: String(comentario.texto || "").trim(),
+              publicado: String(comentario.publicado || "").trim(),
+              me_gusta: Number(comentario.me_gusta || 0),
+              respuestas: Number(comentario.respuestas || 0)
+            }))
+          : [],
         limitaciones: Array.isArray(extraccionEnlace.limitaciones)
           ? extraccionEnlace.limitaciones
           : []
@@ -1124,7 +1155,7 @@ if (
     }
 
     if (resultado.veredicto === "PARCIALMENTE VERDADERO") {
-      resultado.veredicto_final = "NO VERIFICABLE";
+      resultado.veredicto_final = "PARCIALMENTE CIERTA";
       resultado.explicacion_veredicto_final =
         resultado.explicacion_veredicto_final ||
         "La afirmación mezcla elementos confirmados con partes falsas, imprecisas o no demostradas; por eso no corresponde declararla completamente cierta o falsa.";
@@ -1139,4 +1170,3 @@ if (
     });
   }
 }
-
