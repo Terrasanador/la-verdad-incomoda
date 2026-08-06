@@ -356,7 +356,7 @@
   </div>
 </div>
 
-<div class="content-modal" id="contentModal" hidden role="dialog" aria-modal="true" aria-labelledby="contentModalTitle">
+<div class="content-modal" id="contentModal" hidden style="display:none!important" role="dialog" aria-modal="true" aria-labelledby="contentModalTitle">
   <div class="content-modal-dialog">
     <div class="content-modal-header">
       <div>
@@ -1218,53 +1218,12 @@
   }
 
   function openContentModal(data = {}) {
-    if (lastResultWasSupplemented) return;
-
-    const reason =
-      data?.mensaje ||
-      data?.respuesta_directa ||
-      "No fue posible acceder automáticamente al enlace.";
-
-    contentModalMessage.textContent =
-      `${reason} Pega el texto completo, una transcripción o una descripción fiel para continuar.`;
-
-    contentModalInput.value = "";
-    contentModalError.classList.remove("visible");
-    contentModal.hidden = false;
-    contentModal.style.display = "flex";
-    contentModal.classList.add("visible");
-    document.body.classList.add("modal-open");
-    trackUsage("contenido_manual_solicitado", {
-      motivo: String(data?.estado_tecnico || "sin_acceso")
+    // Versión 1.3: el sitio investiga el enlace automáticamente y nunca
+    // solicita al usuario copiar o transcribir la publicación.
+    trackUsage("enlace_investigado_sin_solicitar_texto", {
+      estado: data?.estado || "desconocido"
     });
-
-    setTimeout(() => {
-      contentModalInput.focus();
-      contentModal.scrollIntoView({ block: "center" });
-    }, 100);
-
-    if (voiceModeEnabled) {
-      listenOnce({
-        prompt:
-          `${contentModalTitle.textContent}. ${contentModalMessage.textContent} ` +
-          "Puedes dictar ahora el texto o la descripción que deseas verificar.",
-        state: "awaiting_blocked_content",
-        onResult: transcript => {
-          if (handleGeneralVoiceCommand(transcript)) return;
-          contentModalInput.value = transcript;
-          speakText("Contenido recibido. Continuando el análisis.");
-
-          const waitUntilSpeechEnds = () => {
-            if (window.speechSynthesis?.speaking) {
-              setTimeout(waitUntilSpeechEnds, 200);
-            } else {
-              continueWithProvidedContent();
-            }
-          };
-          setTimeout(waitUntilSpeechEnds, 200);
-        }
-      });
-    }
+    return;
   }
 
   function closeContentModal() {
@@ -1276,33 +1235,13 @@
   }
 
   function addManualContentButton(data) {
-    if (!isNoVerifiableResult(data) || lastResultWasSupplemented) return;
-    if (document.getElementById("requestContentButton")) return;
-
-    const button = document.createElement("button");
-    button.id = "requestContentButton";
-    button.type = "button";
-    button.textContent = "ESCRIBIR CONTENIDO PARA CONTINUAR";
-    button.className = "analyze";
-    button.style.marginTop = "16px";
-    button.addEventListener("click", () => openContentModal(data));
-    result.appendChild(button);
+    // Desactivado: no se muestra un botón para pedir contenido manual.
+    return;
   }
 
   function maybeRequestContent(data) {
-    const isImage =
-      selectedFile &&
-      typeof selectedFile.type === "string" &&
-      selectedFile.type.startsWith("image/");
-
-    if (
-      !lastResultWasSupplemented &&
-      !isImage &&
-      isNoVerifiableResult(data)
-    ) {
-      addManualContentButton(data);
-      setTimeout(() => openContentModal(data), 500);
-    }
+    // Desactivado: el backend continúa con búsqueda web y fuentes públicas.
+    return;
   }
 
   async function continueWithProvidedContent() {

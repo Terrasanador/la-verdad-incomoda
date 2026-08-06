@@ -1,0 +1,34 @@
+LA VERDAD INCÓMODA v1.3 — ENLACES SIN VENTANA DE TEXTO
+
+Cambios:
+- El sitio intenta leer automáticamente todos los enlaces HTTP/HTTPS.
+- Sigue enlaces cortos y redirecciones.
+- YouTube: intenta título, canal, descripción y transcripción pública.
+- Sitios web: intenta título, autor, descripción y texto visible.
+- Threads, Instagram, Facebook, TikTok y X: intenta metadatos y contenido público.
+- Si una red bloquea el acceso directo, el motor continúa con búsqueda web,
+  copias públicas, archivos, citas y fuentes relacionadas.
+- Ya no aparece la ventana que pide pegar o transcribir el contenido.
+- Nunca inventa comentarios ni afirma haberlos leído si no pudo recuperarlos.
+
+No se alteraron:
+- Google Analytics
+- Google AdSense
+- ads.txt
+- sitemap.xml
+- robots.txt
+- rutas de Vercel
+- diseño, micrófono, audio o carga de archivos
+
+Límite real:
+Ningún sitio puede garantizar leer el 100% de publicaciones privadas, eliminadas
+o protegidas por inicio de sesión. En esos casos, esta versión hace toda la
+investigación pública posible y devuelve un informe con sus limitaciones, sin
+pedir al usuario que copie el texto.
+
+Instalación:
+1. Sube el contenido completo de este ZIP a la raíz del repositorio.
+2. Reemplaza los archivos del mismo nombre.
+3. Haz Commit en main.
+4. Espera a que Vercel indique Ready.
+5. Prueba /ads.txt, /sitemap.xml, /api/health y luego varios enlaces.

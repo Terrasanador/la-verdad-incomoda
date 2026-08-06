@@ -34,10 +34,3 @@ La repetición no equivale a corroboración independiente. Likes, seguidores, co
 ## Limitaciones
 
 La herramienta utiliza inteligencia artificial y búsqueda web. Puede cometer errores, no siempre puede abrir contenido privado o bloqueado y no sustituye el trabajo profesional de periodistas, científicos, médicos, abogados, peritos o autoridades competentes.
-
-
-## Motor antiamarillismo e integridad informativa
-
-El sistema distingue veracidad factual de presentación editorial. Evalúa lenguaje alarmista, extrapolaciones, omisiones de contexto, desproporción entre titular y evidencia, riesgo confirmado frente a riesgo presentado, independencia real de fuentes y señales públicas de amplificación coordinada.
-
-Las publicaciones de una misma cadena, grupo, agencia, comunicado o fuente matriz se agrupan y no se cuentan como corroboración independiente. La etiqueta **INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS** solo se utiliza cuando existe amarillismo alto y evidencia observable suficiente de automatización con alta confianza. Cuando la evidencia es parcial, se usa **POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA** y se explican las limitaciones.
