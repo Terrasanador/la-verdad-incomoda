@@ -169,6 +169,22 @@ const texto = tieneTexto
       "Da mayor peso, sin aplicarlo mecánicamente, a: evidencia primaria; estudios con metodología; datos oficiales competentes; investigaciones periodísticas documentadas; verificadores transparentes; medios que enlazan evidencia primaria; declaraciones interesadas; opiniones y testimonios no corroborados.",
       "Una fuente oficial puede equivocarse y una fuente no oficial puede aportar evidencia válida. Evalúa el contenido.",
       "",
+      "AUDITORÍA OBLIGATORIA DE SESGO Y PLURALIDAD DE FUENTES:",
+      "Antes de concluir, separa la afirmación principal en componentes verificables. No permitas que un hecho verdadero preste credibilidad automática a otra acusación distinta incluida en la misma frase.",
+      "Busca activamente evidencia favorable, evidencia contraria y evidencia neutral o primaria. Esta obligación de contradicción es indispensable antes de emitir el veredicto.",
+      "Clasifica la orientación política de cada medio o actor únicamente como IZQUIERDA, DERECHA, MIXTO o NO DETERMINADO. No uses subdivisiones adicionales.",
+      "La orientación política es contexto de propagación, nunca prueba de verdad o falsedad.",
+      "No clasifiques una fuente por una sola nota. Usa evidencia pública acumulada: línea editorial recurrente, propiedad, vínculos declarados, posicionamientos sistemáticos, estudios de contenido o autodefinición. Si falta evidencia, usa NO DETERMINADO.",
+      "Deduplica medios de la misma cadena, grupo empresarial, agencia, comunicado o fuente matriz. Varias réplicas no son corroboraciones independientes.",
+      "Informa cuántas fuentes son de IZQUIERDA, cuántas de DERECHA, cuántas MIXTAS y cuántas NO DETERMINADAS, después de deduplicar réplicas.",
+      "Si más del 70 por ciento de las fuentes independientes con orientación identificable pertenecen a un solo lado y faltan fuentes primarias o contrarias suficientes, marca ADVERTENCIA DE DESEQUILIBRIO DE FUENTES y reduce la confianza del análisis.",
+      "No uses agresiones, amenazas o asesinatos de periodistas como prueba de una política gubernamental de censura sin identificar al agresor, el vínculo institucional y evidencia específica de coordinación estatal.",
+      "Las críticas, descalificaciones o confrontaciones verbales de un gobernante con periodistas no equivalen por sí solas a censura, prohibición de publicar, cierre de medios ni política sistemática para silenciar a la prensa.",
+      "Una investigación periodística sobre presuntos delitos es evidencia de que existe una acusación documentada, no prueba automática de que el delito ocurrió. Evalúa documentos, testimonios, corroboración independiente, refutaciones y estado procesal.",
+      "La ausencia de sentencia no vuelve falsa una afirmación, pero tampoco permite presentarla como hecho probado. Distingue evidencia factual, acusación, investigación abierta y responsabilidad judicial.",
+      "En afirmaciones sobre aprobación, popularidad o respaldo político, revisa varias encuestas recientes, sus fechas, preguntas, muestras, patrocinadores y metodologías. No extrapoles una encuesta aislada ni mezcles aprobación presidencial con aceptación de un movimiento político distinto.",
+      "Explica si el resultado podría estar condicionado por una selección desequilibrada de fuentes. Si no se logró pluralidad suficiente, no presentes una conclusión tajante de alta confianza.",
+      "",
       "CLASIFICACIONES PERMITIDAS:",
       "VERDADERO",
       "MAYORMENTE VERDADERO",
@@ -214,9 +230,9 @@ const texto = tieneTexto
       "",
       "",
 "COHERENCIA DEL VEREDICTO:",
-"Si la clasificación técnica es PARCIALMENTE VERDADERO, el veredicto_final no puede ser CIERTA ni FALSA de forma categórica.",
-"Si la clasificación técnica es VERDADERO, el veredicto_final debe ser CIERTA.",
-"Si la clasificación técnica es FALSO, el veredicto_final debe ser FALSA.",
+"Si la clasificación técnica es PARCIALMENTE VERDADERO, el veredicto_final debe ser PARCIALMENTE CIERTA.",
+"Si la clasificación técnica es VERDADERO o MAYORMENTE VERDADERO, el veredicto_final debe ser CIERTA.",
+"Si la clasificación técnica es FALSO, el veredicto_final debe ser FALSA. Si es ENGAÑOSO, FUERA DE CONTEXTO o CONTENIDO MANIPULADO, usa ENGAÑOSA salvo que la afirmación central sea materialmente falsa.",
 "Si existen partes verdaderas y partes falsas, usa PARCIALMENTE VERDADERO como clasificación y explica cuáles son.",
 "No conviertas una generalización sobre un medio, gobierno, periodista o institución en un hecho probado sin evidencia suficiente.",
 "FORMATO:",
@@ -224,7 +240,7 @@ const texto = tieneTexto
       "Usa exactamente esta estructura:",
       "{",
       '  "estado": "analizado | sin_acceso",',
-      '  "veredicto_final": "CIERTA | FALSA | NO VERIFICABLE",',
+      '  "veredicto_final": "CIERTA | FALSA | PARCIALMENTE CIERTA | ENGAÑOSA | NO VERIFICABLE",',
       '  "explicacion_veredicto_final": "Explicación breve y directa",',
       '  "veredicto": "CLASIFICACIÓN PERMITIDA",',
       '  "credibilidad": 0,',
@@ -352,7 +368,7 @@ if (
         "evidencia_a_favor", "evidencia_en_contra",
         "indicadores_desinformacion", "contexto", "contraste_fuentes",
         "reputacion_fuente", "analisis_redes", "analisis_encuestas",
-        "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
+        "auditoria_sesgo_fuentes", "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
       ],
       properties: {
         estado: {
@@ -361,7 +377,7 @@ if (
         },
         veredicto_final: {
           type: "string",
-          enum: ["CIERTA", "FALSA", "NO VERIFICABLE"]
+          enum: ["CIERTA", "FALSA", "PARCIALMENTE CIERTA", "ENGAÑOSA", "NO VERIFICABLE"]
         },
         explicacion_veredicto_final: { type: "string" },
         veredicto: {
@@ -437,6 +453,36 @@ if (
               limitaciones: { type: "string" },
               url: { type: "string" }
             }
+          }
+        },
+        auditoria_sesgo_fuentes: {
+          type: "object",
+          additionalProperties: false,
+          required: [
+            "fuentes_izquierda", "fuentes_derecha", "fuentes_mixtas",
+            "fuentes_no_determinadas", "fuentes_primarias",
+            "fuentes_independientes_deduplicadas", "predominio",
+            "porcentaje_predominio", "confianza_clasificacion",
+            "advertencia_desequilibrio", "obligacion_contradiccion_cumplida",
+            "evidencia_contraria_buscada", "problemas_metodologicos",
+            "explicacion", "limitaciones"
+          ],
+          properties: {
+            fuentes_izquierda: { type: "array", items: { type: "string" } },
+            fuentes_derecha: { type: "array", items: { type: "string" } },
+            fuentes_mixtas: { type: "array", items: { type: "string" } },
+            fuentes_no_determinadas: { type: "array", items: { type: "string" } },
+            fuentes_primarias: { type: "array", items: { type: "string" } },
+            fuentes_independientes_deduplicadas: { type: "integer", minimum: 0 },
+            predominio: { type: "string", enum: ["IZQUIERDA", "DERECHA", "MIXTO", "NO DETERMINADO"] },
+            porcentaje_predominio: { type: "integer", minimum: 0, maximum: 100 },
+            confianza_clasificacion: { type: "integer", minimum: 0, maximum: 100 },
+            advertencia_desequilibrio: { type: "boolean" },
+            obligacion_contradiccion_cumplida: { type: "boolean" },
+            evidencia_contraria_buscada: { type: "array", items: { type: "string" } },
+            problemas_metodologicos: { type: "array", items: { type: "string" } },
+            explicacion: { type: "string" },
+            limitaciones: { type: "array", items: { type: "string" } }
           }
         },
         analisis_integridad_informativa: {
@@ -767,6 +813,39 @@ if (
     resultado.analisis_encuestas = Array.isArray(resultado.analisis_encuestas)
       ? resultado.analisis_encuestas
       : [];
+
+    const sesgoBase =
+      resultado.auditoria_sesgo_fuentes &&
+      typeof resultado.auditoria_sesgo_fuentes === "object"
+        ? resultado.auditoria_sesgo_fuentes
+        : {};
+
+    resultado.auditoria_sesgo_fuentes = {
+      fuentes_izquierda: limpiarLista(sesgoBase.fuentes_izquierda),
+      fuentes_derecha: limpiarLista(sesgoBase.fuentes_derecha),
+      fuentes_mixtas: limpiarLista(sesgoBase.fuentes_mixtas),
+      fuentes_no_determinadas: limpiarLista(sesgoBase.fuentes_no_determinadas),
+      fuentes_primarias: limpiarLista(sesgoBase.fuentes_primarias),
+      fuentes_independientes_deduplicadas: Math.max(0, Math.round(Number(sesgoBase.fuentes_independientes_deduplicadas) || 0)),
+      predominio: ["IZQUIERDA", "DERECHA", "MIXTO", "NO DETERMINADO"].includes(sesgoBase.predominio)
+        ? sesgoBase.predominio
+        : "NO DETERMINADO",
+      porcentaje_predominio: limitarPorcentaje(sesgoBase.porcentaje_predominio),
+      confianza_clasificacion: limitarPorcentaje(sesgoBase.confianza_clasificacion),
+      advertencia_desequilibrio: Boolean(sesgoBase.advertencia_desequilibrio),
+      obligacion_contradiccion_cumplida: Boolean(sesgoBase.obligacion_contradiccion_cumplida),
+      evidencia_contraria_buscada: limpiarLista(sesgoBase.evidencia_contraria_buscada),
+      problemas_metodologicos: limpiarLista(sesgoBase.problemas_metodologicos),
+      explicacion: String(sesgoBase.explicacion || "").trim(),
+      limitaciones: limpiarLista(sesgoBase.limitaciones)
+    };
+
+    // Salvaguarda: si el análisis reconoce desequilibrio o no cumplió la contradicción,
+    // la confianza no puede presentarse como alta.
+    const asf = resultado.auditoria_sesgo_fuentes;
+    if ((asf.advertencia_desequilibrio || !asf.obligacion_contradiccion_cumplida) && Number.isFinite(Number(resultado.confianza))) {
+      resultado.confianza = Math.min(Number(resultado.confianza), 69);
+    }
 
     const integridadBase =
       resultado.analisis_integridad_informativa &&

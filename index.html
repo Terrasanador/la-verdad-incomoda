@@ -1413,6 +1413,38 @@
     setTimeout(speakResultIfNeeded, 150);
   }
 
+  function renderBiasAudit(data) {
+    const audit = data?.auditoria_sesgo_fuentes;
+    if (!audit || typeof audit !== "object") return "";
+
+    const warning = audit.advertencia_desequilibrio
+      ? `<article class="card full" style="border-color:#f2c94c;background:#2b2410"><h3>⚠️ Advertencia de desequilibrio de fuentes</h3><p>La selección de fuentes está concentrada en una sola orientación o no incluye suficiente evidencia primaria y contraria. La confianza del análisis fue limitada.</p></article>`
+      : "";
+
+    return `
+      ${warning}
+      <article class="card full">
+        <h3>Auditoría de sesgo y pluralidad</h3>
+        <div class="metrics">
+          <span class="metric">Predominio: ${esc(audit.predominio || "NO DETERMINADO")}</span>
+          <span class="metric">Predominio observado: ${percent(audit.porcentaje_predominio)}%</span>
+          <span class="metric">Confianza de clasificación: ${percent(audit.confianza_clasificacion)}%</span>
+          <span class="metric">Fuentes independientes: ${Number(audit.fuentes_independientes_deduplicadas || 0)}</span>
+          <span class="metric">Contradicción buscada: ${audit.obligacion_contradiccion_cumplida ? "SÍ" : "NO"}</span>
+        </div>
+      </article>
+      ${listCard("Fuentes clasificadas como izquierda", audit.fuentes_izquierda)}
+      ${listCard("Fuentes clasificadas como derecha", audit.fuentes_derecha)}
+      ${listCard("Fuentes mixtas", audit.fuentes_mixtas)}
+      ${listCard("Fuentes sin orientación determinada", audit.fuentes_no_determinadas)}
+      ${listCard("Fuentes primarias consultadas", audit.fuentes_primarias)}
+      ${listCard("Mejor evidencia contraria buscada", audit.evidencia_contraria_buscada)}
+      ${listCard("Problemas metodológicos detectados", audit.problemas_metodologicos)}
+      ${textCard("Explicación de pluralidad y sesgo", audit.explicacion, true)}
+      ${listCard("Limitaciones de la auditoría de sesgo", audit.limitaciones)}
+    `;
+  }
+
   function renderIntegrityAnalysis(data) {
     const info = data?.analisis_integridad_informativa;
     if (!info || typeof info !== "object") return "";
@@ -1535,6 +1567,7 @@
         }
       </div>
 
+      ${renderBiasAudit(data)}
       ${renderIntegrityAnalysis(data)}
 
       <div class="grid">

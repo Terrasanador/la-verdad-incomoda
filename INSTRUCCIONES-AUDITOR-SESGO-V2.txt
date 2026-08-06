@@ -1,0 +1,30 @@
+LA VERDAD INCÓMODA — AUDITOR DE SESGO Y PLURALIDAD V2
+
+CAMBIOS PRINCIPALES
+- Obligación de buscar evidencia favorable, contraria y primaria.
+- Clasificación política simplificada: IZQUIERDA, DERECHA, MIXTO o NO DETERMINADO.
+- La orientación de una fuente nunca decide si la afirmación es cierta o falsa.
+- Deduplicación de medios de una misma cadena, agencia, grupo o fuente matriz.
+- Advertencia automática cuando más del 70 % de las fuentes orientadas proviene de un solo lado y falta contraste suficiente.
+- La confianza queda limitada cuando no se cumple la obligación de contradicción o existe desequilibrio de fuentes.
+- Separación obligatoria de afirmaciones compuestas.
+- No se confunden agresiones criminales contra periodistas con censura gubernamental sin evidencia específica de autoría o coordinación estatal.
+- Una confrontación verbal con periodistas no equivale por sí sola a censura o cierre de medios.
+- Las investigaciones periodísticas se presentan como investigaciones, no como condenas ni hechos judicialmente establecidos.
+- Veredicto final coherente: CIERTA, FALSA, PARCIALMENTE CIERTA, ENGAÑOSA o NO VERIFICABLE.
+
+INSTALACIÓN DESDE ANDROID
+1. Descomprime el ZIP.
+2. Abre la carpeta resultante.
+3. Selecciona todos los archivos internos.
+4. Súbelos a la raíz del repositorio de GitHub.
+5. Autoriza reemplazar los archivos existentes.
+6. Pulsa Commit changes.
+7. Espera a que Vercel muestre Ready.
+8. Prueba de nuevo la misma afirmación.
+
+NO CAMBIES NI PUBLIQUES
+- OPENAI_API_KEY
+- GITHUB_CONTENT_TOKEN
+- ADMIN_PASSWORD
+Estas variables deben permanecer únicamente en Vercel.
