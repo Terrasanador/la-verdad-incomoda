@@ -1,0 +1,34 @@
+LA VERDAD INCÓMODA — ANALYTICS / VISUALIZACIONES
+
+ARCHIVOS A REEMPLAZAR:
+- index.html
+- index-final.html (solo si lo conservas en el repositorio)
+
+NO CAMBIA:
+- analyze.js
+- vercel.json
+- ads.txt
+- robots.txt
+- sitemap.xml
+- AdSense
+- micrófono, diseño o funciones de análisis
+
+AJUSTES:
+- Conserva el ID correcto G-VJ6ECPYJVJ.
+- Envía una sola vista de página real por cada carga.
+- Usa beacon para mejorar el envío en móviles.
+- Registra el evento analysis_started cuando se inicia una verificación.
+- Añade un indicador de diagnóstico en el navegador.
+
+IMPORTANTE:
+Este cambio mejora la medición, pero no crea visitantes. Analytics solo mostrará
+usuarios y vistas reales. Algunos bloqueadores, navegadores privados y ajustes de
+consentimiento pueden impedir el seguimiento.
+
+PRUEBA:
+1. Reemplaza index.html.
+2. Commit en main.
+3. Espera Vercel Ready.
+4. Abre el sitio en incógnito, sin bloqueador.
+5. Ve a Analytics > Informes > Tiempo real.
+6. Espera 1 a 3 minutos.

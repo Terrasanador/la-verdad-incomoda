@@ -7,80 +7,44 @@
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3013146050600948"
     crossorigin="anonymous"></script>
 
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZG3W5K0C05"></script>
+  <!-- Google Analytics 4 — seguimiento reforzado -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJ6ECPYJVJ"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+
     gtag("js", new Date());
-    gtag("config", "G-ZG3W5K0C05");
+    gtag("config", "G-VJ6ECPYJVJ", {
+      send_page_view: false,
+      cookie_domain: "auto",
+      cookie_flags: "SameSite=None;Secure",
+      transport_type: "beacon"
+    });
+
+    // Una sola vista por carga real de página.
+    gtag("event", "page_view", {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname + window.location.search,
+      send_to: "G-VJ6ECPYJVJ"
+    });
+
+    // Diagnóstico local: no genera visitas artificiales; solo confirma que la etiqueta se ejecutó.
+    window.addEventListener("load", function () {
+      document.documentElement.dataset.ga4Loaded = "true";
+      console.info("GA4 activo: G-VJ6ECPYJVJ");
+    });
   </script>
 
-  <!-- LVI-FINAL-ADSENSE-GA4-V5 -->
+  <!-- LVI-ANALYTICS-VIEWS-REINFORCED-V1 -->
+  <!-- LVI-PRODUCTION-GA4-ADSENSE-V6 -->
+
   <!-- LVI-VERDICT-BUTTON-MIC-2S-V4 -->
   <!-- LVI-VOICE-RESULT-FIXED-V3 -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>La Verdad Incómoda | Verificación de información con IA y evidencia</title>
-  <meta name="description" content="Verifica noticias, afirmaciones, enlaces y archivos con inteligencia artificial, contraste de fuentes y evidencia pública verificable." />
-  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" />
-  <meta name="author" content="La Verdad Incómoda" />
-  <meta name="theme-color" content="#050506" />
-  <link rel="canonical" href="https://www.laverdadincomoda.mx/" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="manifest" href="/site.webmanifest" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:locale" content="es_MX" />
-  <meta property="og:site_name" content="La Verdad Incómoda" />
-  <meta property="og:title" content="La Verdad Incómoda | Verifica antes de creer" />
-  <meta property="og:description" content="Analiza noticias, afirmaciones, enlaces y archivos mediante inteligencia artificial, contraste de fuentes y evidencia pública." />
-  <meta property="og:url" content="https://www.laverdadincomoda.mx/" />
-  <meta property="og:image" content="https://www.laverdadincomoda.mx/og-image.svg" />
-  <meta property="og:image:alt" content="La Verdad Incómoda: No creas, comprueba" />
-
-  <!-- X / Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="La Verdad Incómoda | Verifica antes de creer" />
-  <meta name="twitter:description" content="Verificación de información con IA, fuentes públicas y evidencia digital." />
-  <meta name="twitter:image" content="https://www.laverdadincomoda.mx/og-image.svg" />
-
-  <!-- Datos estructurados -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://www.laverdadincomoda.mx/#organization",
-        "name": "La Verdad Incómoda",
-        "url": "https://www.laverdadincomoda.mx/",
-        "logo": "https://www.laverdadincomoda.mx/favicon.svg"
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://www.laverdadincomoda.mx/#website",
-        "url": "https://www.laverdadincomoda.mx/",
-        "name": "La Verdad Incómoda",
-        "description": "Plataforma de verificación de información mediante inteligencia artificial, fuentes públicas y evidencia digital.",
-        "inLanguage": "es-MX",
-        "publisher": {"@id": "https://www.laverdadincomoda.mx/#organization"}
-      },
-      {
-        "@type": "WebApplication",
-        "@id": "https://www.laverdadincomoda.mx/#app",
-        "name": "La Verdad Incómoda",
-        "url": "https://www.laverdadincomoda.mx/",
-        "applicationCategory": "ReferenceApplication",
-        "operatingSystem": "Web",
-        "isAccessibleForFree": true,
-        "description": "Herramienta para analizar la credibilidad de noticias, afirmaciones, enlaces y archivos con IA y evidencia pública.",
-        "inLanguage": "es-MX"
-      }
-    ]
-  }
-  </script>
+  <meta name="description" content="La Verdad Incómoda: inteligencia artificial y evidencia digital para evaluar la credibilidad de información pública." />
+  <title>La Verdad Incómoda | IA + Evidencia Digital</title>
   <style>
     :root {
       --bg:#050506; --panel:#121216; --panel2:#19191f; --border:#373740;
@@ -1413,73 +1377,6 @@
     setTimeout(speakResultIfNeeded, 150);
   }
 
-  function renderBiasAudit(data) {
-    const audit = data?.auditoria_sesgo_fuentes;
-    if (!audit || typeof audit !== "object") return "";
-
-    const warning = audit.advertencia_desequilibrio
-      ? `<article class="card full" style="border-color:#f2c94c;background:#2b2410"><h3>⚠️ Advertencia de desequilibrio de fuentes</h3><p>La selección de fuentes está concentrada en una sola orientación o no incluye suficiente evidencia primaria y contraria. La confianza del análisis fue limitada.</p></article>`
-      : "";
-
-    return `
-      ${warning}
-      <article class="card full">
-        <h3>Auditoría de sesgo y pluralidad</h3>
-        <div class="metrics">
-          <span class="metric">Predominio: ${esc(audit.predominio || "NO DETERMINADO")}</span>
-          <span class="metric">Predominio observado: ${percent(audit.porcentaje_predominio)}%</span>
-          <span class="metric">Confianza de clasificación: ${percent(audit.confianza_clasificacion)}%</span>
-          <span class="metric">Fuentes independientes: ${Number(audit.fuentes_independientes_deduplicadas || 0)}</span>
-          <span class="metric">Contradicción buscada: ${audit.obligacion_contradiccion_cumplida ? "SÍ" : "NO"}</span>
-        </div>
-      </article>
-      ${listCard("Fuentes clasificadas como izquierda", audit.fuentes_izquierda)}
-      ${listCard("Fuentes clasificadas como derecha", audit.fuentes_derecha)}
-      ${listCard("Fuentes mixtas", audit.fuentes_mixtas)}
-      ${listCard("Fuentes sin orientación determinada", audit.fuentes_no_determinadas)}
-      ${listCard("Fuentes primarias consultadas", audit.fuentes_primarias)}
-      ${listCard("Mejor evidencia contraria buscada", audit.evidencia_contraria_buscada)}
-      ${listCard("Problemas metodológicos detectados", audit.problemas_metodologicos)}
-      ${textCard("Explicación de pluralidad y sesgo", audit.explicacion, true)}
-      ${listCard("Limitaciones de la auditoría de sesgo", audit.limitaciones)}
-    `;
-  }
-
-  function renderIntegrityAnalysis(data) {
-    const info = data?.analisis_integridad_informativa;
-    if (!info || typeof info !== "object") return "";
-
-    const label = String(info.etiqueta_especial || "NINGUNA");
-    const alert = label !== "NINGUNA"
-      ? `<article class="card full" style="border-color:#ff3b30;background:#2a1111"><h3>⚠️ Alerta de integridad informativa</h3><p style="font-size:1.1rem;font-weight:900">${esc(label)}</p></article>`
-      : "";
-
-    return `
-      ${alert}
-      <article class="card full">
-        <h3>Motor antiamarillismo</h3>
-        <div class="metrics">
-          <span class="metric">Amarillismo: ${percent(info.indice_amarillismo)}%</span>
-          <span class="metric">Nivel: ${esc(info.nivel_amarillismo || "BAJO")}</span>
-          <span class="metric">Posible automatización: ${percent(info.probabilidad_automatizacion)}%</span>
-          <span class="metric">Confianza detección bots: ${percent(info.confianza_deteccion_bots)}%</span>
-          <span class="metric">Fuentes independientes reales: ${Number(info.fuentes_independientes_reales || 0)}</span>
-        </div>
-      </article>
-      ${textCard("Riesgo confirmado", info.riesgo_confirmado, true)}
-      ${textCard("Riesgo presentado por la noticia", info.riesgo_presentado, true)}
-      ${listCard("Carga emocional detectada", info.carga_emocional)}
-      ${listCard("Extrapolaciones injustificadas", info.extrapolaciones)}
-      ${listCard("Contexto omitido", info.contexto_omitido)}
-      ${textCard("Titular responsable propuesto", info.titular_responsable, true)}
-      ${textCard("Explicación educativa", info.explicacion_educativa, true)}
-      ${listCard("Fuentes matriz identificadas", info.fuentes_matriz)}
-      ${listCard("Réplicas que no cuentan como corroboración independiente", info.replicas_no_independientes)}
-      ${listCard("Evidencia de difusión automatizada o coordinada", info.evidencia_bots)}
-      ${listCard("Limitaciones del análisis antiamarillismo", info.limitaciones)}
-    `;
-  }
-
   function render(data) {
     lastAnalysisData = data;
     if (
@@ -1566,9 +1463,6 @@
             : ""
         }
       </div>
-
-      ${renderBiasAudit(data)}
-      ${renderIntegrityAnalysis(data)}
 
       <div class="grid">
         ${textCard(
