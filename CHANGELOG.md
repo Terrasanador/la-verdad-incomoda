@@ -1,3 +1,8 @@
+# Versión 1.6.2 - Verificación de Search Console (2026-08-07)
+
+- Se incorpora la etiqueta oficial de verificación de Google Search Console para la propiedad `https://www.laverdadincomoda.mx/`.
+- Se mantienen la URL canónica y las configuraciones existentes de Vercel, Analytics, AdSense y verificación de enlaces.
+
 # Versión 1.6.1 - URL canónica para Search Console (2026-08-07)
 
 - La página principal declara `https://www.laverdadincomoda.mx/` como URL canónica.
