@@ -1,3 +1,8 @@
+# Versión 1.6.1 - URL canónica para Search Console (2026-08-07)
+
+- La página principal declara `https://www.laverdadincomoda.mx/` como URL canónica.
+- Se conserva la redirección del dominio sin `www` y la configuración de Vercel, Analytics, Search Console, AdSense y verificación de enlaces.
+
 # Cambios v2.1
 
 ## Corrección principal

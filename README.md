@@ -1,6 +1,8 @@
-# La Verdad Incómoda 1.0 — Android
+# La Verdad Incómoda 1.6.1 — Android
 
 Todos los archivos van en la raíz del repositorio. No se necesitan carpetas.
+
+La página principal declara `https://www.laverdadincomoda.mx/` como URL canónica para mantener unificada la indexación en Google Search Console.
 
 Vercel publica:
 - `analyze.js` como `/api/analyze`
