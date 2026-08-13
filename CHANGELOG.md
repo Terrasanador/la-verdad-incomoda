@@ -1,3 +1,12 @@
+# Versión 1.8.0 - Contenido editorial para AdSense (2026-08-13)
+
+- La portada incorpora contenido educativo y navegación editorial visible incluso antes de usar el verificador.
+- Se publican ocho artículos originales con autor, fecha, fuentes y datos estructurados.
+- Se amplían metodología, quiénes somos y preguntas frecuentes.
+- Se añaden política editorial, procedimiento de correcciones, autores y responsabilidad editorial.
+- El sitemap incluye las páginas editoriales y los artículos para facilitar su indexación.
+- Se conservan Vercel, Analytics, Search Console, AdSense, Threads, TikTok, YouTube y el verificador.
+
 # Versión 1.7.7 - Patrones dirigidos (2026-08-13)
 
 - Identifica si las publicaciones se dirigen recurrentemente contra un gobierno, funcionario, institución, empresa o persona.

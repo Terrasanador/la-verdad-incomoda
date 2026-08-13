@@ -1,3 +1,140 @@
 {
-  "articles": []
+  "articles": [
+    {
+      "id": "editorial_01",
+      "slug": "como-verificar-noticia-antes-de-compartir",
+      "title": "Cómo verificar una noticia antes de compartirla",
+      "category": "Alfabetización mediática",
+      "summary": "Un método práctico para identificar la afirmación central, localizar la fuente original y evitar compartir información engañosa.",
+      "content": "Verificar una noticia no significa buscar una página que confirme lo que ya pensamos. Significa convertir el mensaje en afirmaciones concretas y comprobar cada una con evidencia independiente. El primer paso consiste en separar el titular, la opinión del autor y los datos verificables. Frases como “todo está peor” expresan una valoración; cifras, fechas, nombres y atribuciones sí pueden contrastarse.\n\nDespués conviene localizar la fuente original. Una captura de pantalla, un video recortado o una publicación que cita “expertos” puede ocultar el documento completo. Busque el comunicado, la entrevista íntegra, la ley, la base de datos, el estudio o la resolución mencionada. Compruebe la fecha: una noticia verdadera de años anteriores puede convertirse en desinformación cuando se presenta como reciente.\n\nLa segunda comprobación es la independencia. Diez portales que copian el mismo cable no equivalen a diez confirmaciones. Identifique de dónde procede cada dato y privilegie fuentes que aporten documentos, metodología o testimonios directos. Compare también evidencia contraria; una verificación responsable intenta refutar su primera hipótesis.\n\nObserve el lenguaje. Las órdenes de compartir con urgencia, los absolutos, la indignación fabricada y las preguntas insinuantes buscan provocar una reacción antes de que el lector compruebe. Sin embargo, un tono emocional no demuestra por sí mismo que el contenido sea falso: es una señal para investigar con mayor cuidado.\n\nFinalmente, formule una conclusión proporcional. La evidencia puede confirmar una parte y dejar otra sin demostrar. “No verificable” no significa falso; significa que la información disponible no permite resolver la afirmación. Antes de compartir, pregúntese qué sabemos, cómo lo sabemos, qué falta y quién se beneficia de que reaccionemos sin revisar.",
+      "sources": [
+        "https://unesdoc.unesco.org/ark:/48223/pf0000224187",
+        "https://www.ifla.org/publications/how-to-spot-fake-news/"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    },
+    {
+      "id": "editorial_02",
+      "slug": "diferencia-error-sesgo-desinformacion",
+      "title": "Error, sesgo, propaganda y desinformación: no son lo mismo",
+      "category": "Metodología",
+      "summary": "Una guía para clasificar información incorrecta sin atribuir automáticamente una intención que no está demostrada.",
+      "content": "Una información incorrecta puede surgir de un error honesto, de negligencia, de una interpretación sesgada o de una estrategia deliberada. Confundir estas categorías debilita cualquier verificación. El error se corrige cuando aparece evidencia mejor; la desinformación implica crear o difundir contenido falso o engañoso con conocimiento o intención de causar un efecto.\n\nEl sesgo es una selección desigual de asuntos, fuentes o enfoques. Todos los medios toman decisiones editoriales, pero el sesgo se vuelve problemático cuando omite contexto decisivo, presenta opinión como hecho o aplica criterios diferentes según el actor involucrado. Aun así, una línea editorial crítica u oficialista no prueba por sí sola que exista pago, coordinación o mentira deliberada.\n\nLa propaganda busca persuadir y puede combinar hechos ciertos, símbolos, emociones y omisiones. Su contenido no es necesariamente falso, pero debe evaluarse atendiendo a quién comunica, con qué propósito, qué información selecciona y qué alternativas excluye. La manipulación aparece cuando una edición, un título o una imagen modifica materialmente el sentido del material original.\n\nPara inferir intencionalidad hacen falta señales convergentes: repetir una falsedad después de una corrección comprobable, reutilizar material previamente desmentido, recortar deliberadamente una declaración, coordinar mensajes o mantener un patrón dirigido contra el mismo objetivo. Una sola equivocación no basta.\n\nUna clasificación responsable separa tres preguntas: ¿la afirmación es correcta?, ¿la presentación induce a una interpretación equivocada?, ¿hay evidencia de intención? Esta separación permite denunciar una operación deliberada cuando está sustentada y evita convertir desacuerdos políticos en acusaciones sin prueba.\n\nUn indicio adicional es la conducta posterior a la publicación. Quien corrige de manera visible y modifica su método ofrece una explicación compatible con el error. Quien conserva la falsedad, cambia de argumento sin reconocerla o la reutiliza contra el mismo objetivo aporta evidencia de un patrón. La conclusión debe documentar esa secuencia y no limitarse a adjetivos sobre el autor.",
+      "sources": [
+        "https://unesdoc.unesco.org/ark:/48223/pf0000265552",
+        "https://www.coe.int/en/web/freedom-expression/information-disorder"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    },
+    {
+      "id": "editorial_03",
+      "slug": "como-detectar-titulares-tendenciosos",
+      "title": "Cómo detectar un titular tendencioso sin ignorar el hecho principal",
+      "category": "Análisis de medios",
+      "summary": "Señales para reconocer exageración, contexto omitido y causalidad no demostrada en titulares y publicaciones.",
+      "content": "Un titular tendencioso puede partir de un hecho real y conducir al lector hacia una conclusión que la evidencia no sostiene. Por eso no basta con preguntar si “ocurrió algo”. Hay que comparar el titular con el cuerpo de la nota, el documento original y los límites reconocidos por la propia fuente.\n\nUna señal común es transformar posibilidad en certeza. “Podría”, “se investiga” o “no se descarta” se convierten en “ocurrió” o “está demostrado”. Otra consiste en atribuir causalidad donde solo existe coincidencia temporal. También es frecuente usar un caso aislado como prueba de una tendencia general sin datos comparables.\n\nLa omisión puede cambiar el sentido. Un porcentaje sin valor absoluto, una cifra sin periodo, una declaración sin la pregunta que la precedió o una fotografía fuera de contexto pueden producir una impresión falsa sin alterar literalmente los datos. La revisión debe reconstruir qué información necesitaba el lector para interpretar correctamente.\n\nEl lenguaje emocional merece atención: “escándalo”, “traición”, “desastre”, “humillación” y expresiones semejantes pueden describir una valoración, no un hecho. La verificación debe sustituirlas temporalmente por una formulación neutral y comprobar qué queda de la afirmación.\n\nEl objetivo no es eliminar la crítica ni volver indiferente al lector. Es conservar el hecho relevante sin fabricar miedo, certeza o culpabilidad. Un titular responsable identifica al actor, describe la acción comprobada, incluye el periodo y evita presentar acusaciones como hechos consumados.\n\nPara practicar, anote por separado el sujeto, la acción y la evidencia del titular. Luego reescríbalo sin calificativos y compare ambas versiones. Si la fuerza del mensaje desaparece al retirar palabras emocionales, probablemente la carga persuasiva era mayor que la información. Después confirme si el contenido aporta documentos suficientes para recuperar la afirmación factual.",
+      "sources": [
+        "https://www.ap.org/media-center/press-releases/2024/ap-stylebook-updates/",
+        "https://unesdoc.unesco.org/ark:/48223/pf0000377068"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    },
+    {
+      "id": "editorial_04",
+      "slug": "bots-coordinacion-y-repeticion",
+      "title": "Bots, coordinación y repetición: qué se puede demostrar",
+      "category": "Redes sociales",
+      "summary": "Publicar mucho o repetir una postura no convierte automáticamente una cuenta en bot; la detección requiere patrones observables.",
+      "content": "La palabra “bot” se utiliza con demasiada facilidad para desacreditar cuentas adversarias. Una cuenta anónima, partidista o muy activa puede estar operada por una persona. Para hablar de automatización se necesitan patrones observables y, cuando sea posible, análisis técnicos reproducibles.\n\nEntre las señales útiles están la publicación a intervalos incompatibles con actividad humana sostenida, textos idénticos difundidos simultáneamente, redes que solo retransmiten, perfiles creados en periodos concentrados y secuencias repetitivas de hashtags o enlaces. Ninguna señal aislada es concluyente; deben evaluarse juntas y compararse con explicaciones alternativas.\n\nLa coordinación tampoco implica necesariamente automatización. Grupos humanos, equipos de campaña, comunidades de seguidores y agencias pueden organizar mensajes. El análisis debe distinguir bot confirmado, comportamiento compatible con automatización, coordinación humana y evidencia insuficiente.\n\nRepetir una noticia falsa agrava el daño, pero para afirmar que una red automatizada difunde desinformación deben demostrarse dos componentes: que el contenido es falso o engañoso y que existe amplificación automatizada. Popularidad, número de republicaciones o coincidencia ideológica no sustituyen esas pruebas.\n\nUna conclusión prudente explica la muestra, el periodo, los patrones y las limitaciones. Si la evidencia no alcanza, debe hablar de posible coordinación, no de culpabilidad definitiva. Esta cautela protege el análisis de convertirse en otra forma de propaganda.\n\nTambién importa quién inicia la cadena. Una publicación original puede ser amplificada por cuentas automatizadas sin que su autor controle la red; del mismo modo, una campaña puede coordinarse sin bots. El informe debe separar creador, amplificadores, cronología y contenido falso. Atribuir toda la operación a una persona exige pruebas de relación, instrucciones o beneficio documentado.",
+      "sources": [
+        "https://www.cisa.gov/topics/cyber-threats-and-advisories/misinformation-disinformation-mal-information",
+        "https://www.nist.gov/artificial-intelligence"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    },
+    {
+      "id": "editorial_05",
+      "slug": "verificar-videos-recortados",
+      "title": "Cómo verificar videos recortados y declaraciones fuera de contexto",
+      "category": "Verificación audiovisual",
+      "summary": "Pasos para localizar el video completo, reconstruir la secuencia y comprobar si una edición altera el significado.",
+      "content": "Los videos breves circulan con velocidad porque producen una impresión inmediata. Sin embargo, un fragmento auténtico puede transmitir una idea falsa si elimina la pregunta, la frase anterior, la respuesta posterior o la fecha. La autenticidad de las imágenes no garantiza la veracidad de la interpretación.\n\nEl primer paso es localizar la versión más antigua y completa. Busque palabras exactas de la declaración, nombre del evento, fecha, participantes y transmisiones oficiales. Compare duración, encuadre, audio y cortes. Una transcripción facilita revisar lo dicho antes y después del segmento viral.\n\nDespués identifique la afirmación que acompaña al video. A veces el material muestra exactamente lo que ocurrió, pero el texto le atribuye un lugar, fecha o intención distintos. Compruebe metadatos disponibles, señales visuales, clima, edificios, uniformes y publicaciones contemporáneas sin depender de un solo detalle.\n\nLa edición es engañosa cuando cambia materialmente el sentido: une frases separadas, elimina una negación, presenta una respuesta hipotética como propuesta o sustituye el audio. Un corte por brevedad no es necesariamente manipulación; el criterio es si el espectador recibe una impresión incompatible con la secuencia completa.\n\nLa conclusión debe enlazar el original, describir el fragmento y explicar qué contexto cambia la interpretación. Si no aparece el material completo, conviene declarar esa limitación y evitar atribuir palabras o intenciones que no pueden comprobarse.\n\nLas herramientas automáticas de transcripción ayudan, pero pueden confundir nombres y negaciones. Verifique los segmentos decisivos escuchando el audio y comparando versiones. Cuando el video acusa a una persona, busque además su respuesta y documentos contemporáneos. Incluir la réplica no garantiza que sea correcta; permite identificar qué puntos están disputados y cuáles pueden resolverse con evidencia.",
+      "sources": [
+        "https://www.amnesty.org/en/latest/research/2019/12/citizenevidence-lab/",
+        "https://verificationhandbook.com/"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    },
+    {
+      "id": "editorial_06",
+      "slug": "fuentes-oficiales-no-son-verdad-automatica",
+      "title": "Por qué una fuente oficial no es verdad automática",
+      "category": "Fuentes y evidencia",
+      "summary": "Los documentos oficiales son fuentes primarias sobre decisiones y declaraciones, pero sus afirmaciones también deben contrastarse.",
+      "content": "Una fuente oficial es primaria cuando permite saber qué decidió, publicó o declaró una autoridad. Una ley confirma el texto aprobado; una base de datos muestra los registros que la institución reporta; un comunicado acredita la versión del organismo. Eso no significa que toda interpretación contenida sea correcta.\n\nLa verificación debe preguntar si la autoridad es competente para producir el dato, qué metodología utilizó, qué periodo cubre, si existen revisiones y si otras fuentes independientes pueden reproducir o cuestionar el resultado. Los cambios de definición pueden hacer que dos cifras parezcan comparables cuando no lo son.\n\nTambién hay que distinguir dato y valoración. “Se entregaron diez mil apoyos” es una afirmación cuantificable; “el programa fue un éxito” requiere criterios adicionales sobre cobertura, impacto, costo y población objetivo. Un documento oficial puede sustentar la primera frase sin demostrar la segunda.\n\nLa misma regla debe aplicarse a fuentes privadas. Una investigación periodística, una organización civil o una empresa puede aportar documentos decisivos, pero su prestigio no reemplaza la revisión de la evidencia. Evaluar con el mismo estándar reduce la tentación de aceptar solo las fuentes favorables.\n\nEl contraste responsable no consiste en equilibrar artificialmente dos opiniones. Consiste en jerarquizar evidencia, explicar conflictos metodológicos y reconocer lo que permanece incierto. Una fuente oficial merece atención por su acceso y responsabilidad institucional, no inmunidad frente a la comprobación.\n\nCuando dos instituciones publican cifras distintas, no elija la más conveniente. Revise unidad de medida, fecha de corte, población incluida, datos preliminares y revisiones. Muchas aparentes contradicciones surgen de definiciones diferentes. Si después de homologarlas persiste la discrepancia, el informe debe mostrar ambas y explicar por qué una metodología resulta más adecuada para la pregunta analizada.",
+      "sources": [
+        "https://www.oecd.org/gov/open-government/",
+        "https://data.worldbank.org/"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    },
+    {
+      "id": "editorial_07",
+      "slug": "como-auditar-perfil-red-social",
+      "title": "Cómo se audita un perfil de redes sociales sin juzgar a la persona",
+      "category": "Metodología",
+      "summary": "La auditoría examina una muestra identificable de publicaciones, no declara que una persona completa sea verdadera o falsa.",
+      "content": "Un perfil no es una afirmación. Por eso no tiene sentido declarar que una cuenta o una persona es “cierta” o “falsa”. Una auditoría responsable identifica una muestra de publicaciones, el periodo que cubre y las preguntas que pueden responderse con ese material.\n\nLa revisión registra temas recurrentes, objetivos principales, fuentes enlazadas, lenguaje, correcciones y afirmaciones comprobables. También cuenta cuántas publicaciones se dirigen contra un gobierno, institución o persona. Esa frecuencia describe una línea editorial, pero no demuestra por sí sola una campaña de desinformación.\n\nCada afirmación relevante debe verificarse. La crítica sustentada se distingue de la acusación falsa; una opinión adversa se separa de un dato manipulado. Para hablar de ataque sistemático hacen falta repetición contra el mismo objetivo y recursos reiterados de falsedad, omisión decisiva, edición engañosa o acusaciones no sustentadas.\n\nLos antecedentes importan cuando están documentados: rectificaciones, desmentidos, sentencias, sanciones, disculpas y montajes comprobados. Deben citarse casos concretos con fecha y desenlace. Acumulaciones vagas de polémicas no son una auditoría.\n\nEl informe final debe expresar el alcance: número de publicaciones revisadas, periodo, proporción dirigida al objetivo y ejemplos. Si la plataforma limita el historial, la muestra puede ser útil, pero no representa automáticamente toda la actividad de la cuenta.\n\nLa representatividad depende del modo de selección. Las veinte publicaciones más recientes permiten describir actividad actual, pero no toda la historia. Una muestra elegida por popularidad sobrerrepresenta mensajes virales. El informe debe indicar cómo se obtuvieron los contenidos y evitar porcentajes precisos cuando no existe una muestra identificable. La transparencia del muestreo es parte del resultado, no una nota secundaria.",
+      "sources": [
+        "https://unesdoc.unesco.org/ark:/48223/pf0000377068",
+        "https://www.coe.int/en/web/freedom-expression/information-disorder"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    },
+    {
+      "id": "editorial_08",
+      "slug": "corregir-informacion-y-transparencia",
+      "title": "Correcciones transparentes: una señal esencial de confiabilidad",
+      "category": "Ética editorial",
+      "summary": "Cómo debe corregirse un error sin borrar silenciosamente el historial ni ocultar el alcance de la modificación.",
+      "content": "Equivocarse no convierte automáticamente a una fuente en desinformadora. La respuesta al error es una señal más útil: reconocerlo, corregirlo con claridad y evitar repetirlo. Una política editorial debe explicar cómo reportar errores y cómo se documentan los cambios.\n\nUna corrección adecuada identifica la frase equivocada, proporciona la información correcta, explica la causa cuando sea relevante e indica la fecha. Si el error alteró el titular, la conclusión o una acusación, la nota de corrección debe tener una visibilidad proporcional al daño.\n\nBorrar silenciosamente una publicación impide comprender qué ocurrió. En casos excepcionales puede ser necesario retirar datos personales, material peligroso o contenido ilícito, pero debería conservarse una explicación pública que no reproduzca el daño. Las actualizaciones menores de estilo pueden distinguirse de correcciones sustantivas.\n\nTambién debe existir un canal accesible para solicitar revisión. La persona afectada necesita identificar el contenido, aportar evidencia y recibir una respuesta razonada. Esto no obliga al medio a aceptar cualquier objeción; exige evaluar la documentación con el mismo estándar aplicado en la publicación original.\n\nLa transparencia fortalece la confianza porque permite auditar el proceso. La Verdad Incómoda conserva limitaciones, fuentes y fecha de actualización, y diferencia una nueva evidencia de un simple cambio de opinión.\n\nUna corrección también debe llegar a quienes recibieron el error. Si la plataforma lo permite, conviene enlazar la aclaración desde la publicación original y evitar que versiones antiguas continúen circulando sin contexto. Cuando una conclusión cambia por evidencia nueva, debe explicarse qué documento apareció y por qué modifica la evaluación. Corregir no debilita una fuente: ocultar el cambio sí puede hacerlo.",
+      "sources": [
+        "https://www.spj.org/ethicscode.asp",
+        "https://www.ipso.co.uk/editors-code-of-practice/"
+      ],
+      "author": "Equipo editorial de La Verdad Incómoda",
+      "status": "published",
+      "createdAt": "2026-08-13T12:00:00.000Z",
+      "updatedAt": "2026-08-13T12:00:00.000Z",
+      "publishedAt": "2026-08-13T12:00:00.000Z"
+    }
+  ]
 }
