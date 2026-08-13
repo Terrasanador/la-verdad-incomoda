@@ -1246,7 +1246,7 @@ if (
           ? extraccionEnlace.limitaciones
           : []
       };
-      resultado.contexto_enlace.conector_multiplataforma = extraccionEnlace.datos_multiplataforma
+      resultado.extraccion_enlace.conector_multiplataforma = extraccionEnlace.datos_multiplataforma
         ? {
             proveedor: extraccionEnlace.datos_multiplataforma.proveedor,
             consultas_exitosas: extraccionEnlace.datos_multiplataforma.consultas_exitosas,

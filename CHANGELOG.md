@@ -1,3 +1,8 @@
+# Versión 1.7.1 - Corrección de respuesta social (2026-08-13)
+
+- Corrige la construcción de `extraccion_enlace` para que los resultados de Threads y TikTok puedan incorporar el resumen del conector sin interrumpir el análisis.
+- Mantiene Captapi, YouTube, Vercel, Analytics, Search Console, AdSense y el verificador de enlaces.
+
 # Versión 1.7.0 - Análisis de Threads y TikTok (2026-08-13)
 
 - Integración opcional y privada con Captapi mediante `CAPTAPI_API_KEY`, limitada a Threads y TikTok para cuidar los créditos.
