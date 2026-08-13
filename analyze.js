@@ -1,4 +1,5 @@
 import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
+import { extractSocialPublicData } from "./social-data.js";
 
 // La Verdad Incómoda — analyze.js v2.3
 // Perfiles sociales: auditoría parcial útil sin convertir metadatos públicos en un fallo total.
@@ -56,7 +57,25 @@ const texto = tieneTexto
 
     if (enlaceDetectado) {
       try {
-        extraccionEnlace = await extractPublicLink(enlaceDetectado);
+        const [extraccionDirecta, extraccionSocial] = await Promise.allSettled([
+          extractPublicLink(enlaceDetectado),
+          extractSocialPublicData(enlaceDetectado)
+        ]);
+        if (extraccionDirecta.status === "fulfilled") {
+          extraccionEnlace = extraccionDirecta.value;
+        } else {
+          throw extraccionDirecta.reason;
+        }
+        if (extraccionSocial.status === "fulfilled" && extraccionSocial.value) {
+          extraccionEnlace.datos_multiplataforma = extraccionSocial.value;
+          extraccionEnlace.limitaciones = [
+            ...(extraccionEnlace.limitaciones || []),
+            ...(extraccionSocial.value.limitaciones || [])
+          ];
+          if (extraccionSocial.value.consultas_exitosas > 0) {
+            extraccionEnlace.acceso_parcial = true;
+          }
+        }
       } catch (error) {
         console.error("Error inesperado al extraer enlace:", error);
         extraccionEnlace = {
@@ -340,6 +359,9 @@ Título recuperado: ${extraccionEnlace.titulo || "No disponible"}
 Autor o cuenta: ${extraccionEnlace.autor || "No disponible"}
 Descripción: ${extraccionEnlace.descripcion || "No disponible"}
 Ficha pública del perfil: ${extraccionEnlace.perfil ? JSON.stringify(extraccionEnlace.perfil) : "No aplica o no disponible"}
+Datos públicos adicionales recuperados mediante el conector multiplataforma:
+${extraccionEnlace.datos_multiplataforma?.contenido_json || "No disponibles o conector no configurado para esta plataforma."}
+Consultas adicionales exitosas: ${extraccionEnlace.datos_multiplataforma?.consultas_exitosas || 0} de ${extraccionEnlace.datos_multiplataforma?.consultas_intentadas || 0}
 Fecha de publicación: ${extraccionEnlace.fecha_publicacion || "No disponible"}
 Fecha de modificación: ${extraccionEnlace.fecha_modificacion || "No disponible"}
 Estadísticas públicas disponibles: ${Object.keys(extraccionEnlace.estadisticas || {}).length ? JSON.stringify(extraccionEnlace.estadisticas) : "No disponibles"}
@@ -359,6 +381,7 @@ ${(extraccionEnlace.limitaciones || []).map(item => `- ${item}`).join("\n") || "
 
 REGLAS SOBRE ESTE BLOQUE:
 - No lo presentes como una fuente independiente; es contenido técnico extraído del enlace enviado.
+- En auditorías de perfil, declara cuántas publicaciones fueron recuperadas y el periodo que cubren; preséntalas como una muestra, nunca como el historial completo.
 - Busca y contrasta la afirmación en la web antes del veredicto.
 - Si el enlace directo está bloqueado pero la afirmación puede identificarse por fuentes públicas, continúa el análisis y explica la limitación.
 - No inventes comentarios, reacciones, transcripciones ni contenido no recuperado.`
@@ -1223,6 +1246,13 @@ if (
           ? extraccionEnlace.limitaciones
           : []
       };
+      resultado.contexto_enlace.conector_multiplataforma = extraccionEnlace.datos_multiplataforma
+        ? {
+            proveedor: extraccionEnlace.datos_multiplataforma.proveedor,
+            consultas_exitosas: extraccionEnlace.datos_multiplataforma.consultas_exitosas,
+            consultas_intentadas: extraccionEnlace.datos_multiplataforma.consultas_intentadas
+          }
+        : null;
     }
 
     if (typeof resultado.credibilidad === "number" && resultado.veredicto === "FALSO" && resultado.credibilidad > 50) {

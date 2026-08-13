@@ -1,3 +1,21 @@
+# Versión 1.7.0 - Análisis de Threads y TikTok (2026-08-13)
+
+- Integración opcional y privada con Captapi mediante `CAPTAPI_API_KEY`, limitada a Threads y TikTok para cuidar los créditos.
+- Recuperación complementaria de perfiles y publicaciones públicas de Threads y TikTok.
+- Para publicaciones individuales compatibles, intenta recuperar detalles, comentarios y transcripciones realmente disponibles.
+- YouTube y las demás redes conservan la extracción existente y no consumen créditos de Captapi.
+- Auditorías de perfil limitadas inicialmente a 20 publicaciones y comentarios a 20, con topes configurables de 50.
+- Caché de 24 horas para reducir consumo en consultas repetidas.
+- Fallos del proveedor externo no interrumpen el verificador: se mantiene la extracción directa y la búsqueda web.
+- Se conservan Vercel, Analytics, Search Console, AdSense, canonical, verificación de Google y el Motor Antiamarillismo.
+
+# Versión 1.6.3 - Recuperación ante respuestas transitorias de Vercel (2026-08-07)
+
+- La interfaz reintenta una vez cuando Vercel devuelve HTML o un error HTTP 500, 502, 503 o 504 durante un análisis.
+- Las respuestas HTML ya no se muestran como errores técnicos de JSON; si el fallo persiste, aparece una explicación clara en español.
+- El endpoint de salud informa la versión correcta, sin exponer claves.
+- Se conservan Search Console, la URL canónica, Analytics, AdSense, YouTube Data API y el verificador de enlaces.
+
 # Versión 1.6.2 - Verificación de Search Console (2026-08-07)
 
 - Se incorpora la etiqueta oficial de verificación de Google Search Console para la propiedad `https://www.laverdadincomoda.mx/`.

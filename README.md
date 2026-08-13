@@ -1,4 +1,4 @@
-# La Verdad Incómoda 1.6.2 — Android
+# La Verdad Incómoda 1.7.0 — Android
 
 Todos los archivos van en la raíz del repositorio. No se necesitan carpetas.
 
@@ -10,6 +10,10 @@ Vercel publica:
 
 Configura `OPENAI_API_KEY` en Vercel.
 
+Para recuperar perfiles, publicaciones y comentarios públicos de Threads y TikTok, configura también `CAPTAPI_API_KEY` exclusivamente en las variables de entorno de Vercel. El conector nunca envía esta clave al navegador ni la incluye en los resultados. Las demás redes conservan la extracción pública existente sin consumir créditos de Captapi.
+
+La auditoría de perfiles consulta inicialmente hasta 20 publicaciones para controlar créditos. Los límites pueden ajustarse con `SOCIAL_PROFILE_POST_LIMIT` y `SOCIAL_COMMENT_LIMIT`, con un máximo de 50. Los resultados repetidos usan caché de 24 horas cuando el proveedor la ofrece.
+
 ## Extracción profunda de YouTube y redes
 
 El analizador recupera metadatos públicos, texto estructurado, descripción y subtítulos disponibles. Para consultar mediante la API oficial una muestra de hasta 50 comentarios públicos relevantes de YouTube, configura también en Vercel:
@@ -18,13 +22,13 @@ El analizador recupera metadatos públicos, texto estructurado, descripción y s
 
 Esta segunda variable es opcional: si no está configurada, el verificador continúa funcionando con metadatos, subtítulos y búsqueda web, y declara que no pudo solicitar comentarios. La clave debe permanecer únicamente en las variables de entorno de Vercel y nunca debe subirse a GitHub.
 
-En otras redes sociales se procesan exclusivamente el texto y los comentarios realmente expuestos en la página pública o en datos estructurados. El sistema no evade inicios de sesión ni controles de acceso.
+En Threads y TikTok, Captapi complementa el texto realmente expuesto con los datos públicos que pueda recuperar. En las demás redes se procesan exclusivamente el texto y los comentarios expuestos en la página pública o en datos estructurados. El sistema no evade inicios de sesión ni controles de acceso.
 
 ## Perfiles completos de redes sociales
 
 Cuando el usuario pega la URL de un perfil, el sistema realiza una auditoría de perfil y no exige una afirmación aislada. Conserva la ficha pública disponible —nombre, usuario, biografía, seguidores y volumen declarado de publicaciones—, busca publicaciones y menciones indexadas con consultas específicas y analiza únicamente contenido realmente recuperado.
 
-Si Threads u otra plataforma limita el historial completo, el informe mantiene los datos verificables del perfil, explica exactamente qué publicaciones pudo revisar y cuáles quedaron fuera de alcance. Un acceso parcial no se presenta como un fallo total.
+Si Threads o TikTok limita el historial completo, el informe mantiene los datos verificables del perfil, explica exactamente qué publicaciones pudo revisar y cuáles quedaron fuera de alcance. Un acceso parcial no se presenta como un fallo total.
 Actualización de configuración.
 
 

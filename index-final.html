@@ -1639,8 +1639,11 @@
       }
 
       let response;
+      let raw = "";
+      let data;
       let networkError;
       for (let attempt = 0; attempt < 2; attempt += 1) {
+        data = undefined;
         try {
           response = await fetch("/api/analyze", {
             method: "POST",
@@ -1650,29 +1653,42 @@
             body: JSON.stringify(payload)
           });
           networkError = null;
+
+          raw = await response.text();
+          const contentType = response.headers.get("content-type") || "";
+          const pareceHtml = /text\/html/i.test(contentType) || /^\s*</.test(raw);
+
+          try {
+            data = raw ? JSON.parse(raw) : {};
+          } catch {
+            if (attempt === 0 && pareceHtml) {
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              continue;
+            }
+            throw new Error(
+              "El servidor de análisis respondió temporalmente con una página de error. Intenta nuevamente en unos segundos."
+            );
+          }
+
+          if (attempt === 0 && [500, 502, 503, 504].includes(response.status)) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            continue;
+          }
+
           break;
         } catch (error) {
           networkError = error;
           if (attempt === 0) {
             await new Promise(resolve => setTimeout(resolve, 1500));
+            continue;
           }
         }
       }
 
       if (!response) throw networkError || new Error("No se recibió respuesta del servidor.");
-
-      const raw = await response.text();
-
-      let data;
-
-      try {
-        data = raw ? JSON.parse(raw) : {};
-      } catch {
-        throw new Error(
-          raw ||
-          `El servidor devolvió una respuesta inválida. HTTP ${response.status}`
-        );
-      }
+      if (!data) throw networkError || new Error(
+        "El servidor de análisis no devolvió una respuesta válida. Intenta nuevamente en unos segundos."
+      );
 
       if (!response.ok) {
         if (data?.estado === "sin_acceso" || data?.analizado === false) {
