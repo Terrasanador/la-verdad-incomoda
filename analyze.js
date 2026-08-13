@@ -96,7 +96,11 @@ const texto = tieneTexto
 
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
     const idiomaSalida = String(body.language || body.idioma || "auto").trim() || "auto";
-    const esPerfilSocial = extraccionEnlace?.tipo_enlace === "perfil";
+    const esPerfilSocial = Boolean(
+      extraccionEnlace?.tipo_enlace === "perfil" ||
+      extraccionEnlace?.datos_multiplataforma?.tipo_enlace === "perfil" ||
+      /^https?:\/\/(?:www\.)?(?:threads\.com|threads\.net|tiktok\.com)\/@[^/?#]+\/?(?:[?#].*)?$/i.test(enlaceDetectado)
+    );
 
     const instrucciones = [
       'Eres el motor de investigación y verificación de hechos de "La Verdad Incómoda".',
@@ -121,6 +125,7 @@ const texto = tieneTexto
       "8. No confundas repetición masiva con corroboración independiente.",
       "9. Distingue hechos, opinión, publicidad, propaganda, sátira, rumor y manipulación.",
       "10. Incluye únicamente fuentes realmente consultadas.",
+      "En auditorías de perfil incluye solamente fuentes que aporten evidencia directa sobre la cuenta, sus publicaciones, las afirmaciones verificadas o sus antecedentes documentados. Excluye resultados exploratorios sobre temas ajenos aunque hayan aparecido en la búsqueda.",
       "",
       "MEDIOS Y PERIODISTAS:",
       "TRATAMIENTO IMPARCIAL DE FUENTES POLÍTICAS Y MEDIOS:",
@@ -182,6 +187,9 @@ const texto = tieneTexto
       "En una auditoría de perfil NO determines si el perfil, la persona o la cuenta es cierta, falsa o creíble en general.",
       "El objetivo exclusivo es evaluar la muestra de publicaciones recuperadas: si presenta hechos con equilibrio, si usa lenguaje tendencioso, si omite contexto, si mezcla opinión con hechos y si publica o repite desinformación comprobable.",
       "Describe los patrones encontrados y cita ejemplos concretos de la muestra. No generalices más allá de las publicaciones realmente recuperadas.",
+      "Mide si la cuenta dirige de forma recurrente publicaciones negativas contra un mismo gobierno, administración, funcionario, partido, empresa o persona. Identifica el objetivo principal, cuenta las publicaciones revisadas y cuántas se dirigen contra ese objetivo, e indica el periodo cubierto por la muestra.",
+      "Distingue crítica periodística sustentada, opinión adversa, cobertura negativa recurrente, campaña de descrédito y ataque sistemático con desinformación. La crítica constante no es por sí misma mentira; verifica las afirmaciones y explica qué elementos son verdaderos, engañosos, falsos o insinuaciones sin sustento.",
+      "Solo usa ATAQUE SISTEMÁTICO cuando exista repetición frecuente contra el mismo objetivo y recursos reiterados de falsedad, manipulación, omisión decisiva o acusación no sustentada. Fundamenta la clasificación con conteos y ejemplos concretos.",
       "Para perfiles, credibilidad debe ser null porque no existe una afirmación única. La conclusión debe hablar de las publicaciones analizadas, nunca de que el perfil sea cierto o falso.",
       "Solo advierte que la cuenta es un bot cuando haya evidencia observable de automatización Y repetición de noticias falsas verificadas. Si no se cumplen ambas condiciones, no etiquetes la cuenta como bot ni incluyas una alerta de bot.",
       "Identifica la ficha pública recuperada, biografía, nombre, usuario, volumen declarado de publicaciones, seguidores y enlaces externos realmente disponibles.",
@@ -446,7 +454,7 @@ if (
         "evidencia_a_favor", "evidencia_en_contra",
         "indicadores_desinformacion", "contexto", "contraste_fuentes",
         "reputacion_fuente", "analisis_redes", "analisis_encuestas",
-        "auditoria_sesgo_fuentes", "analisis_intencionalidad", "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
+        "auditoria_sesgo_fuentes", "analisis_intencionalidad", "analisis_patron_objetivos", "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
       ],
       properties: {
         estado: {
@@ -630,6 +638,25 @@ if (
             contraindicadores: { type: "array", items: { type: "string" } },
             explicacion: { type: "string" },
             confianza: { type: "integer", minimum: 0, maximum: 100 }
+          }
+        },
+        analisis_patron_objetivos: {
+          type: "object",
+          additionalProperties: false,
+          required: ["objetivo_principal", "publicaciones_revisadas", "publicaciones_dirigidas", "periodo_muestra", "clasificacion", "recursos_recurrentes", "ejemplos", "fundamento", "limitaciones"],
+          properties: {
+            objetivo_principal: { type: "string" },
+            publicaciones_revisadas: { type: "integer", minimum: 0 },
+            publicaciones_dirigidas: { type: "integer", minimum: 0 },
+            periodo_muestra: { type: "string" },
+            clasificacion: {
+              type: "string",
+              enum: ["SIN PATRÓN DEMOSTRADO", "CRÍTICA RECURRENTE", "COBERTURA NEGATIVA SISTEMÁTICA", "CAMPAÑA DE DESCRÉDITO", "ATAQUE SISTEMÁTICO CON DESINFORMACIÓN"]
+            },
+            recursos_recurrentes: { type: "array", items: { type: "string" } },
+            ejemplos: { type: "array", items: { type: "string" } },
+            fundamento: { type: "string" },
+            limitaciones: { type: "array", items: { type: "string" } }
           }
         },
         limitaciones: { type: "array", items: { type: "string" } },
@@ -1077,11 +1104,7 @@ if (
     const accesoRealmenteBloqueado =
       consultaEsEnlace &&
       !esImagen &&
-      !(esPerfilSocial && Boolean(
-        extraccionEnlace?.titulo ||
-        extraccionEnlace?.descripcion ||
-        extraccionEnlace?.perfil?.usuario
-      )) &&
+      !esPerfilSocial &&
       (
         resultado.estado === "sin_acceso" ||
         pareceSinAcceso(textoDiagnostico)
@@ -1185,7 +1208,17 @@ if (
         return;
       }
 
-      if (fuentesFinales.some(existente => existente.url === urlValida)) return;
+      const normalizarTitulo = valor => String(valor || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .trim();
+      const tituloNormalizado = normalizarTitulo(fuente.titulo || fuente.title);
+      if (fuentesFinales.some(existente =>
+        existente.url === urlValida ||
+        (tituloNormalizado && tituloNormalizado === normalizarTitulo(existente.titulo))
+      )) return;
 
       fuentesFinales.push({
         titulo: String(fuente.titulo || fuente.title || urlValida).trim(),
@@ -1341,6 +1374,10 @@ if (
       );
 
       resultado.tipo_resultado = "auditoria_de_publicaciones";
+      resultado.estado = "analizado";
+      resultado.estado_tecnico = "AUDITORIA_PARCIAL";
+      resultado.acciones_disponibles = [];
+      resultado.reintentar = false;
       resultado.veredicto = "AUDITORÍA DE PUBLICACIONES";
       resultado.veredicto_final = "";
       resultado.credibilidad = null;

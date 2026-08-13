@@ -1473,6 +1473,12 @@
     const intentText = intentAnalysis.clasificacion
       ? `${intentAnalysis.clasificacion}. ${intentAnalysis.explicacion || ""}${intentAnalysis.objetivo_del_dano ? ` Objetivo identificado: ${intentAnalysis.objetivo_del_dano}.` : ""}`
       : "";
+    const targetPattern = data?.analisis_patron_objetivos || {};
+    const targetPatternText = targetPattern.clasificacion
+      ? `${targetPattern.clasificacion}. Objetivo principal: ${targetPattern.objetivo_principal || "no determinado"}. ` +
+        `Publicaciones dirigidas: ${Number(targetPattern.publicaciones_dirigidas || 0)} de ${Number(targetPattern.publicaciones_revisadas || 0)} revisadas. ` +
+        `${targetPattern.periodo_muestra ? `Periodo: ${targetPattern.periodo_muestra}. ` : ""}${targetPattern.fundamento || ""}`
+      : "";
 
     result.innerHTML = `
       ${reportSource()}
@@ -1555,6 +1561,22 @@
           "Intencionalidad y posible daño",
           intentText,
           true
+        )}
+
+        ${textCard(
+          "Patrón contra gobiernos o personas",
+          targetPatternText,
+          true
+        )}
+
+        ${listCard(
+          "Ejemplos que fundamentan el patrón",
+          targetPattern.ejemplos
+        )}
+
+        ${listCard(
+          "Recursos narrativos recurrentes",
+          targetPattern.recursos_recurrentes
         )}
 
         ${listCard(

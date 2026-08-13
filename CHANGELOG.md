@@ -1,3 +1,16 @@
+# Versión 1.7.7 - Patrones dirigidos (2026-08-13)
+
+- Identifica si las publicaciones se dirigen recurrentemente contra un gobierno, funcionario, institución, empresa o persona.
+- Informa cuántas publicaciones fueron revisadas, cuántas apuntan al objetivo y qué periodo cubre la muestra.
+- Distingue crítica recurrente, cobertura negativa sistemática, campaña de descrédito y ataque sistemático con desinformación.
+- Fundamenta la clasificación con ejemplos concretos y recursos narrativos repetidos.
+
+# Versión 1.7.6 - Auditoría parcial útil (2026-08-13)
+
+- Un perfil de Threads o TikTok se reconoce también por la URL y por Captapi, aunque la extracción directa de la plataforma esté limitada.
+- Si se recuperaron publicaciones, contexto o fuentes, la auditoría se muestra como analizada y nunca como un veredicto global de no verificable.
+- Se eliminan fuentes duplicadas por URL o título y se exige relevancia directa para la cuenta o las publicaciones evaluadas.
+
 # Versión 1.7.5 - Intencionalidad y daño (2026-08-13)
 
 - Separa la falsedad de la intención de perjudicar a personas, gobiernos, instituciones o grupos.
