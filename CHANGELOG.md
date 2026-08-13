@@ -1,3 +1,17 @@
+# Versión 1.7.5 - Intencionalidad y daño (2026-08-13)
+
+- Separa la falsedad de la intención de perjudicar a personas, gobiernos, instituciones o grupos.
+- Clasifica la evidencia como daño intencional sustentado, indicios de intención o intención no demostrada.
+- Revisa repetición después de correcciones, material previamente desmentido, recortes deliberados, objetivos sistemáticos, coordinación y vínculos financieros documentados.
+- Muestra la evidencia concreta utilizada para inferir intención y evita atribuirla por una falsedad aislada.
+
+# Versión 1.7.4 - Antecedentes y conflictos de interés (2026-08-13)
+
+- Las auditorías de medios y periodistas investigan antecedentes documentados de montajes, falsedades, retractaciones, sanciones, sentencias, correcciones y desmentidos.
+- Se revisan propiedad, financiamiento, contratos públicos y conflictos de interés cuando existen documentos verificables.
+- Los patrones comprobados se expresan directamente, pero las acusaciones de pagos o mercenarismo requieren evidencia financiera o contractual.
+- Los perfiles recuperan un contexto web intermedio para contrastar las publicaciones sin regresar al análisis excesivamente largo.
+
 # Versión 1.7.3 - Auditoría de publicaciones (2026-08-13)
 
 - Los perfiles ya no reciben un veredicto global de cierto o falso ni un porcentaje de credibilidad.

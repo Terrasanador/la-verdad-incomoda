@@ -1469,6 +1469,10 @@
 
     const isProfileAudit = data?.tipo_resultado === "auditoria_de_publicaciones";
     const profileEvaluation = data?.evaluacion_publicaciones || {};
+    const intentAnalysis = data?.analisis_intencionalidad || {};
+    const intentText = intentAnalysis.clasificacion
+      ? `${intentAnalysis.clasificacion}. ${intentAnalysis.explicacion || ""}${intentAnalysis.objetivo_del_dano ? ` Objetivo identificado: ${intentAnalysis.objetivo_del_dano}.` : ""}`
+      : "";
 
     result.innerHTML = `
       ${reportSource()}
@@ -1545,6 +1549,17 @@
           "Indicadores de desinformación",
           misinformationIndicators,
           true
+        )}
+
+        ${textCard(
+          "Intencionalidad y posible daño",
+          intentText,
+          true
+        )}
+
+        ${listCard(
+          "Evidencia sobre la intención",
+          intentAnalysis.evidencia
         )}
 
         ${textCard(

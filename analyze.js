@@ -130,6 +130,18 @@ const texto = tieneTexto
 "Un medio privado, crítico, opositor, oficialista, comercial o público tampoco recibe credibilidad o falsedad automática.",
 "No uses orientación política, propiedad del medio, popularidad o cercanía con el gobierno como sustituto de evidencia.",
 "Analiza por separado cada contenido de Latinus, TV Azteca, Televisa, Loret de Mola, López-Dóriga, Ciro Gómez Leyva, la conferencia matutina y cualquier otra fuente.",
+"Cuando se audite un medio o periodista, no te limites a su publicación actual: investiga antecedentes documentados de montajes, información falsa, ediciones engañosas, retractaciones, disculpas, sentencias, sanciones, correcciones y desmentidos de verificadores independientes.",
+"Para cada antecedente relevante identifica la publicación concreta, fecha, afirmación original, evidencia que la contradijo y desenlace documentado. Separa hechos probados de acusaciones partidistas o simples opiniones.",
+"Examina propiedad, estructura corporativa, patrocinadores, contratos públicos conocidos, relaciones comerciales y posibles conflictos de interés únicamente mediante registros, documentos o investigaciones sustentadas. Explica cómo podrían influir en la línea editorial sin asumir causalidad no demostrada.",
+"Si existe un patrón repetido y verificable de falsedades, montajes u omisiones decisivas en la muestra y los antecedentes consultados, dilo de forma directa, enumera los casos y califica el patrón proporcionalmente.",
+"No suavices un montaje o una falsedad comprobada llamándola solo polémica. Tampoco conviertas críticas, orientación opositora u oficialista en prueba automática de pago, corrupción o mercenarismo.",
+"Solo afirma que una persona o medio actúa a sueldo para afectar a un gobierno cuando existan pagos, contratos, instrucciones o vínculos financieros verificables que sustenten esa finalidad. Si solo hay coincidencia editorial, descríbela como línea editorial o sesgo, no como pago probado.",
+"ANÁLISIS DE INTENCIONALIDAD Y DAÑO:",
+"Después de establecer si una afirmación es falsa o engañosa, analiza separadamente si existen pruebas de que fue difundida para perjudicar a una persona, gobierno, institución o grupo identificable.",
+"Considera como indicios: repetición después de correcciones verificables; uso persistente de material ya desmentido; recortes que eliminan deliberadamente contexto decisivo; títulos incompatibles con la evidencia conocida; selección sistemática de falsedades contra el mismo objetivo; coordinación temporal o textual; instrucciones, pagos o contratos; y campañas documentadas.",
+"Distingue error razonable, negligencia, sesgo editorial, imprudencia temeraria, indicios de intención dañina y daño intencional sustentado. Una falsedad aislada no demuestra por sí sola intención.",
+"Identifica el objetivo aparente del daño y el posible perjuicio reputacional, político, económico o social, pero no atribuyas intención como hecho cuando solo pueda inferirse débilmente.",
+"Usa DAÑO INTENCIONAL SUSTENTADO únicamente cuando varias evidencias convergentes demuestren conocimiento de la falsedad o planificación dirigida. Usa INDICIOS DE INTENCIÓN cuando exista un patrón significativo pero falte prueba directa. En los demás casos usa INTENCIÓN NO DEMOSTRADA.",
 "Cuando existan conflictos entre la versión oficial y una publicación periodística, presenta ambas versiones y resuelve únicamente mediante evidencia documental verificable.",
 "Prioriza documentos originales, videos completos, transcripciones íntegras, estadísticas con metodología, resoluciones, contratos, presupuestos y registros públicos.",
 "No concluyas que una conferencia, programa o medio contiene desinformación de manera general sin delimitar afirmaciones, fechas, muestras y ejemplos comprobados.",
@@ -434,7 +446,7 @@ if (
         "evidencia_a_favor", "evidencia_en_contra",
         "indicadores_desinformacion", "contexto", "contraste_fuentes",
         "reputacion_fuente", "analisis_redes", "analisis_encuestas",
-        "auditoria_sesgo_fuentes", "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
+        "auditoria_sesgo_fuentes", "analisis_intencionalidad", "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
       ],
       properties: {
         estado: {
@@ -603,6 +615,23 @@ if (
             limitaciones: { type: "array", items: { type: "string" } }
           }
         },
+        analisis_intencionalidad: {
+          type: "object",
+          additionalProperties: false,
+          required: ["clasificacion", "objetivo_del_dano", "tipo_de_perjuicio", "evidencia", "contraindicadores", "explicacion", "confianza"],
+          properties: {
+            clasificacion: {
+              type: "string",
+              enum: ["DAÑO INTENCIONAL SUSTENTADO", "INDICIOS DE INTENCIÓN", "INTENCIÓN NO DEMOSTRADA", "NO APLICA"]
+            },
+            objetivo_del_dano: { type: "string" },
+            tipo_de_perjuicio: { type: "array", items: { type: "string" } },
+            evidencia: { type: "array", items: { type: "string" } },
+            contraindicadores: { type: "array", items: { type: "string" } },
+            explicacion: { type: "string" },
+            confianza: { type: "integer", minimum: 0, maximum: 100 }
+          }
+        },
         limitaciones: { type: "array", items: { type: "string" } },
         conclusion: { type: "string" },
         fuentes: {
@@ -652,7 +681,7 @@ if (
         input: [{ role: "user", content: contenidoUsuario }],
         tools: [{
           type: "web_search",
-          search_context_size: esPerfilSocial ? "low" : (modo === "profundo" ? "high" : "medium"),
+          search_context_size: esPerfilSocial ? "medium" : (modo === "profundo" ? "high" : "medium"),
           user_location: {
             type: "approximate",
             country: "MX",
