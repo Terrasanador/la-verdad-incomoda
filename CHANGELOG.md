@@ -1,3 +1,9 @@
+# Versión 1.7.3 - Auditoría de publicaciones (2026-08-13)
+
+- Los perfiles ya no reciben un veredicto global de cierto o falso ni un porcentaje de credibilidad.
+- La respuesta evalúa exclusivamente la muestra de publicaciones recuperadas: tendenciosidad, omisiones, manipulación y desinformación verificable.
+- La alerta de bot solo aparece cuando coinciden evidencia observable de automatización y repetición de noticias falsas verificadas.
+
 # Versión 1.7.2 - Estabilidad en análisis largos (2026-08-13)
 
 - Los perfiles sociales usan búsqueda web de contexto reducido y no obligatoria para priorizar el análisis de las publicaciones recuperadas.

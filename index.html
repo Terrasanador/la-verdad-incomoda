@@ -903,6 +903,7 @@
       return result.innerText.trim();
     }
 
+    const isProfileAudit = data?.tipo_resultado === "auditoria_de_publicaciones";
     const finalVerdict = String(
       data.veredicto_final || data.veredicto || "NO VERIFICABLE"
     ).trim();
@@ -932,6 +933,17 @@
       data.evidencia_a_favor,
       data.evidencia_en_contra
     ) || String(data.conclusion || "").trim();
+
+    if (isProfileAudit) {
+      return [
+        "Fuente de consulta: La Verdad Incómoda.",
+        "Auditoría de publicaciones.",
+        `Tendenciosidad observada: ${data?.evaluacion_publicaciones?.nivel_tendenciosidad || "no determinada"}.`,
+        `Resumen: ${summary}`,
+        data.bot_detectado === true ? data.alerta_bot : "",
+        mostImportant ? `Lo más importante: ${mostImportant}` : ""
+      ].filter(Boolean).join(" ");
+    }
 
     return [
       "Fuente de consulta: La Verdad Incómoda.",
@@ -1455,17 +1467,20 @@
       data.veredicto || "INFORMACIÓN INSUFICIENTE"
     ).toUpperCase();
 
+    const isProfileAudit = data?.tipo_resultado === "auditoria_de_publicaciones";
+    const profileEvaluation = data?.evaluacion_publicaciones || {};
+
     result.innerHTML = `
       ${reportSource()}
-      ${renderFinalVerdict(data, verdict)}
+      ${isProfileAudit ? "" : renderFinalVerdict(data, verdict)}
       <h2 class="verdict">
-        Clasificación técnica: ${esc(verdict)}
+        ${isProfileAudit ? "AUDITORÍA DE PUBLICACIONES" : `Clasificación técnica: ${esc(verdict)}`}
       </h2>
 
       <div class="metrics">
-        <span class="metric">
-          Credibilidad de la afirmación: ${credibility === null ? "No aplica" : `${credibility}%`}
-        </span>
+        ${isProfileAudit
+          ? `<span class="metric">Tendenciosidad observada: ${esc(profileEvaluation.nivel_tendenciosidad || "NO DETERMINADA")}</span>`
+          : `<span class="metric">Credibilidad de la afirmación: ${credibility === null ? "No aplica" : `${credibility}%`}</span>`}
 
         <span class="metric">
           Confianza del análisis: ${analysisConfidence === null ? "No calculada" : `${analysisConfidence}%`}
@@ -1479,8 +1494,12 @@
       </div>
 
       <div class="grid">
+        ${isProfileAudit && data.bot_detectado === true
+          ? textCard("Alerta de bot", data.alerta_bot, true)
+          : ""}
+
         ${textCard(
-          "Explicación del veredicto final",
+          isProfileAudit ? "Evaluación de las publicaciones" : "Explicación del veredicto final",
           data.explicacion_veredicto_final ||
           data.justificacion_veredicto_final,
           true
@@ -1491,7 +1510,7 @@
         ${renderVideoTopics(data)}
 
         ${textCard(
-          "Afirmación analizada",
+          isProfileAudit ? "Muestra analizada" : "Afirmación analizada",
           data.afirmacion_principal,
           true
         )}

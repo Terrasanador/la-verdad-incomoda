@@ -167,6 +167,11 @@ const texto = tieneTexto
       "No calcules porcentajes de comentarios positivos o negativos sin una muestra identificable. Indica tamaño, forma de selección y limitaciones de representatividad.",
       "PERFILES COMPLETOS DE REDES SOCIALES:",
       "Si el enlace corresponde a un perfil y no a una publicación individual, realiza una auditoría de perfil; no exijas al usuario una afirmación concreta para poder comenzar.",
+      "En una auditoría de perfil NO determines si el perfil, la persona o la cuenta es cierta, falsa o creíble en general.",
+      "El objetivo exclusivo es evaluar la muestra de publicaciones recuperadas: si presenta hechos con equilibrio, si usa lenguaje tendencioso, si omite contexto, si mezcla opinión con hechos y si publica o repite desinformación comprobable.",
+      "Describe los patrones encontrados y cita ejemplos concretos de la muestra. No generalices más allá de las publicaciones realmente recuperadas.",
+      "Para perfiles, credibilidad debe ser null porque no existe una afirmación única. La conclusión debe hablar de las publicaciones analizadas, nunca de que el perfil sea cierto o falso.",
+      "Solo advierte que la cuenta es un bot cuando haya evidencia observable de automatización Y repetición de noticias falsas verificadas. Si no se cumplen ambas condiciones, no etiquetes la cuenta como bot ni incluyas una alerta de bot.",
       "Identifica la ficha pública recuperada, biografía, nombre, usuario, volumen declarado de publicaciones, seguidores y enlaces externos realmente disponibles.",
       "Busca el nombre de usuario exacto entre comillas, la URL exacta y consultas site: limitadas a la plataforma para localizar publicaciones, respuestas, copias o menciones públicas indexadas.",
       "Analiza únicamente las publicaciones realmente recuperadas o localizadas: temas recurrentes, afirmaciones verificables, fechas, contexto, fuentes enlazadas, lenguaje, posibles contradicciones y patrones de interacción.",
@@ -1284,6 +1289,46 @@ if (
       resultado.explicacion_veredicto_final =
         resultado.explicacion_veredicto_final ||
         "La afirmación mezcla elementos confirmados con partes falsas, imprecisas o no demostradas; por eso no corresponde declararla completamente cierta o falsa.";
+    }
+
+    if (esPerfilSocial) {
+      const integridad = resultado.analisis_integridad_informativa || {};
+      const indiceTendencia = limitarPorcentaje(integridad.indice_amarillismo);
+      const evidenciaBots = Array.isArray(integridad.evidencia_bots)
+        ? integridad.evidencia_bots.filter(Boolean)
+        : [];
+      const automatizacion = limitarPorcentaje(integridad.probabilidad_automatizacion);
+      const confianzaBot = limitarPorcentaje(integridad.confianza_deteccion_bots);
+      const repiteDesinformacion = [
+        ...(resultado.indicadores_desinformacion || []),
+        ...(resultado.hechos_comprobados || []),
+        ...(resultado.evidencia_en_contra || [])
+      ].some(item => /(?:fals[ao]|desinformaci[oó]n|noticia falsa|engaños[ao]|fuera de contexto)/i.test(String(item)));
+      const botConfirmado = Boolean(
+        evidenciaBots.length > 0 &&
+        automatizacion >= 70 &&
+        confianzaBot >= 70 &&
+        repiteDesinformacion
+      );
+
+      resultado.tipo_resultado = "auditoria_de_publicaciones";
+      resultado.veredicto = "AUDITORÍA DE PUBLICACIONES";
+      resultado.veredicto_final = "";
+      resultado.credibilidad = null;
+      resultado.afirmacion_principal = "Publicaciones públicas recuperadas del perfil";
+      resultado.evaluacion_publicaciones = {
+        nivel_tendenciosidad: indiceTendencia === null
+          ? "NO DETERMINADO"
+          : indiceTendencia >= 61 ? "ALTO" : indiceTendencia >= 31 ? "MODERADO" : "BAJO",
+        indice_tendenciosidad: indiceTendencia,
+        senales_observadas: Array.isArray(resultado.indicadores_desinformacion)
+          ? resultado.indicadores_desinformacion
+          : []
+      };
+      resultado.bot_detectado = botConfirmado;
+      if (botConfirmado) {
+        resultado.alerta_bot = "ALERTA: la evidencia disponible indica automatización y repetición de noticias falsas verificadas.";
+      }
     }
 
     return res.status(200).json(resultado);
