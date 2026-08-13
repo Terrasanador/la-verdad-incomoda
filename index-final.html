@@ -1638,57 +1638,26 @@
         };
       }
 
-      let response;
-      let raw = "";
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+      const raw = await response.text();
+      const contentType = response.headers.get("content-type") || "";
+      const pareceHtml = /text\/html/i.test(contentType) || /^\s*</.test(raw);
       let data;
-      let networkError;
-      for (let attempt = 0; attempt < 2; attempt += 1) {
-        data = undefined;
-        try {
-          response = await fetch("/api/analyze", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-          });
-          networkError = null;
-
-          raw = await response.text();
-          const contentType = response.headers.get("content-type") || "";
-          const pareceHtml = /text\/html/i.test(contentType) || /^\s*</.test(raw);
-
-          try {
-            data = raw ? JSON.parse(raw) : {};
-          } catch {
-            if (attempt === 0 && pareceHtml) {
-              await new Promise(resolve => setTimeout(resolve, 1500));
-              continue;
-            }
-            throw new Error(
-              "El servidor de análisis respondió temporalmente con una página de error. Intenta nuevamente en unos segundos."
-            );
-          }
-
-          if (attempt === 0 && [500, 502, 503, 504].includes(response.status)) {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            continue;
-          }
-
-          break;
-        } catch (error) {
-          networkError = error;
-          if (attempt === 0) {
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            continue;
-          }
-        }
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        throw new Error(
+          pareceHtml
+            ? "El servidor de análisis respondió temporalmente con una página de error. Intenta nuevamente en unos segundos."
+            : "El servidor de análisis no devolvió una respuesta válida. Intenta nuevamente en unos segundos."
+        );
       }
-
-      if (!response) throw networkError || new Error("No se recibió respuesta del servidor.");
-      if (!data) throw networkError || new Error(
-        "El servidor de análisis no devolvió una respuesta válida. Intenta nuevamente en unos segundos."
-      );
 
       if (!response.ok) {
         if (data?.estado === "sin_acceso" || data?.analizado === false) {
@@ -1725,7 +1694,7 @@
       trackUsage("verificacion_error", { mensaje: String(error?.message || "error") });
       const technicalMessage = String(error?.message || "");
       const friendlyMessage = /failed to fetch|networkerror|load failed|network request failed/i.test(technicalMessage)
-        ? "Se interrumpió la conexión con el servidor durante la investigación. El sistema intentó reconectarse automáticamente. Vuelve a pulsar ANALIZAR CREDIBILIDAD; tu enlace permanece en el cuadro de consulta."
+        ? "Se interrumpió la conexión con el servidor durante la investigación. Vuelve a pulsar ANALIZAR CREDIBILIDAD; tu enlace permanece en el cuadro de consulta."
         : technicalMessage || "No se pudo completar la investigación.";
       renderError(friendlyMessage);
     } finally {

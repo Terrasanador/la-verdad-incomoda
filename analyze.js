@@ -617,7 +617,11 @@ if (
       }
     };
 
-    const openAIResponse = await fetch("https://api.openai.com/v1/responses", {
+    const openAIController = new AbortController();
+    const openAITimer = setTimeout(() => openAIController.abort(), 240000);
+    let openAIResponse;
+    try {
+      openAIResponse = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -643,18 +647,30 @@ if (
         input: [{ role: "user", content: contenidoUsuario }],
         tools: [{
           type: "web_search",
-          search_context_size: modo === "profundo" ? "high" : "medium",
+          search_context_size: esPerfilSocial ? "low" : (modo === "profundo" ? "high" : "medium"),
           user_location: {
             type: "approximate",
             country: "MX",
             timezone: "America/Mexico_City"
           }
         }],
-        tool_choice: enlaceDetectado ? "required" : "auto",
+        tool_choice: enlaceDetectado && !esPerfilSocial ? "required" : "auto",
         include: ["web_search_call.action.sources"],
         max_output_tokens: modo === "profundo" ? 8000 : 5000
-      })
-    });
+      }),
+      signal: openAIController.signal
+      });
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        return res.status(504).json({
+          error: "La investigación excedió el tiempo máximo de respuesta.",
+          detalle: "El contenido fue recuperado, pero el análisis con inteligencia artificial tardó demasiado. Reintenta en modo rápido."
+        });
+      }
+      throw error;
+    } finally {
+      clearTimeout(openAITimer);
+    }
 
     const data = await openAIResponse.json();
 

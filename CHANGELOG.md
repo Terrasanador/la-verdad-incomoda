@@ -1,3 +1,9 @@
+# Versión 1.7.2 - Estabilidad en análisis largos (2026-08-13)
+
+- Los perfiles sociales usan búsqueda web de contexto reducido y no obligatoria para priorizar el análisis de las publicaciones recuperadas.
+- Se establece un límite interno antes del máximo de Vercel para devolver siempre un error JSON comprensible si OpenAI tarda demasiado.
+- Se elimina el reintento automático del navegador para impedir consultas duplicadas y consumo doble de créditos de Captapi/OpenAI.
+
 # Versión 1.7.1 - Corrección de respuesta social (2026-08-13)
 
 - Corrige la construcción de `extraccion_enlace` para que los resultados de Threads y TikTok puedan incorporar el resumen del conector sin interrumpir el análisis.
