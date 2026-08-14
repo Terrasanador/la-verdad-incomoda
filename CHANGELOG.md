@@ -1,3 +1,9 @@
+# Versión 1.8.1 - Informes resumidos (2026-08-13)
+
+- El informe final muestra, copia, comparte, lee e imprime un máximo de cinco fuentes relevantes.
+- Se priorizan fuentes oficiales, primarias, documentales, académicas y verificadores que sustentan la conclusión.
+- Se limita a una sola página por red social y a dos fuentes por dominio para evitar listas repetitivas.
+
 # Versión 1.8.0 - Contenido editorial para AdSense (2026-08-13)
 
 - La portada incorpora contenido educativo y navegación editorial visible incluso antes de usar el verificador.

@@ -1007,7 +1007,7 @@
 
     const validSources = sources.filter(source =>
       source && (source.url || source.titulo)
-    );
+    ).slice(0, 5);
 
     if (!validSources.length) return "";
 

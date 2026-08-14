@@ -1236,6 +1236,33 @@ if (
     // descartados por irrelevantes. Solo se muestran fuentes seleccionadas por el
     // análisis estructurado o citadas expresamente en la respuesta.
 
+    const puntuarFuente = fuente => {
+      const textoFuente = `${fuente.tipo} ${fuente.titulo} ${fuente.aporte}`;
+      let puntos = 0;
+      if (/oficial|primaria|documento|registro|ley|sentencia|resoluci[oó]n/i.test(textoFuente)) puntos += 40;
+      if (/acad[eé]mica|cient[ií]fica|metodolog/i.test(textoFuente)) puntos += 30;
+      if (/verificador|investigaci[oó]n period[ií]stica/i.test(textoFuente)) puntos += 20;
+      if (/fuente citada|fuente consultada/i.test(fuente.tipo)) puntos += 5;
+      try {
+        const host = new URL(fuente.url).hostname.replace(/^www\./, "");
+        if (/threads\.(?:com|net)$|tiktok\.com$|facebook\.com$|instagram\.com$|x\.com$|twitter\.com$/i.test(host)) puntos -= 15;
+      } catch {}
+      return puntos;
+    };
+    fuentesFinales.sort((a, b) => puntuarFuente(b) - puntuarFuente(a));
+    const porDominio = new Map();
+    const fuentesSeleccionadas = fuentesFinales.filter(fuente => {
+      let host = "desconocido";
+      try { host = new URL(fuente.url).hostname.replace(/^www\./, ""); } catch {}
+      const esRedSocial = /threads\.(?:com|net)$|tiktok\.com$|facebook\.com$|instagram\.com$|x\.com$|twitter\.com$/i.test(host);
+      const maximoDominio = esRedSocial ? 1 : 2;
+      const cantidad = porDominio.get(host) || 0;
+      if (cantidad >= maximoDominio) return false;
+      porDominio.set(host, cantidad + 1);
+      return true;
+    }).slice(0, 5);
+    fuentesFinales.splice(0, fuentesFinales.length, ...fuentesSeleccionadas);
+
     resultado.fuentes = fuentesFinales;
     resultado.busqueda_web_realizada = fuentesFinales.length > 0;
 
