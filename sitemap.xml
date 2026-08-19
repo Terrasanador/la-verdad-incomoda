@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.laverdadincomoda.mx/</loc><lastmod>2026-08-13</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/articles.html</loc><lastmod>2026-08-13</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/</loc><lastmod>2026-08-19</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articles.html</loc><lastmod>2026-08-19</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/metodologia.html</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/politica-editorial.html</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/correcciones.html</loc><lastmod>2026-08-13</lastmod><priority>0.7</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/autores.html</loc><lastmod>2026-08-13</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/quienes-somos.html</loc><lastmod>2026-08-13</lastmod><priority>0.7</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/quienes-somos.html</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/preguntas-frecuentes.html</loc><lastmod>2026-08-13</lastmod><priority>0.7</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=como-verificar-noticia-antes-de-compartir</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=diferencia-error-sesgo-desinformacion</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=como-detectar-titulares-tendenciosos</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=bots-coordinacion-y-repeticion</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=verificar-videos-recortados</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=fuentes-oficiales-no-son-verdad-automatica</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=como-auditar-perfil-red-social</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/article.html?slug=corregir-informacion-y-transparencia</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/como-verificar-noticia-antes-de-compartir</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/diferencia-error-sesgo-desinformacion</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/como-detectar-titulares-tendenciosos</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/bots-coordinacion-y-repeticion</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/verificar-videos-recortados</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/fuentes-oficiales-no-son-verdad-automatica</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/como-auditar-perfil-red-social</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/corregir-informacion-y-transparencia</loc><lastmod>2026-08-19</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
 </urlset>
