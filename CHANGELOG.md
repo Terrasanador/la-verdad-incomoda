@@ -1,3 +1,15 @@
+# Versión 1.8.3 - Limpieza de recursos (2026-08-19)
+
+- Se retiró una imagen residual de prueba que no estaba vinculada ni publicada en el sitio.
+- Se conservaron únicamente los recursos gráficos propios necesarios para la identidad y la vista previa del sitio.
+
+# Versión 1.8.2 - Indexación y URL canónicas (2026-08-19)
+
+- Cada artículo se publica con una URL canónica individual renderizada desde el servidor.
+- Las direcciones anteriores con `article.html?slug=` redirigen permanentemente a las nuevas URL.
+- El sitemap y los enlaces internos utilizan exclusivamente las rutas canónicas.
+- Se reforzó el descubrimiento de los ocho artículos y de la página Quiénes somos.
+
 # Versión 1.8.1 - Informes resumidos (2026-08-13)
 
 - El informe final muestra, copia, comparte, lee e imprime un máximo de cinco fuentes relevantes.
