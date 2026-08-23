@@ -14,6 +14,10 @@
       "use": "@vercel/node"
     },
     {
+      "src": "article-render.js",
+      "use": "@vercel/node"
+    },
+    {
       "src": "*.html",
       "use": "@vercel/static"
     },
@@ -46,6 +50,14 @@
     {
       "src": "/api/content",
       "dest": "/content-api.js"
+    },
+    {
+      "src": "/article.html",
+      "dest": "/article-render.js"
+    },
+    {
+      "src": "/articulos/(.*)",
+      "dest": "/article-render.js?slug=$1"
     },
     {
       "src": "/(.*)",

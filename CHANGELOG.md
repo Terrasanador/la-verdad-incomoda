@@ -1,3 +1,9 @@
+# Versión 1.8.4 - Corrección de rutas editoriales (2026-08-23)
+
+- Se corrigió la regla de Vercel que entregaba error 404 en las nuevas URL canónicas de los artículos.
+- Se añadió una recuperación alternativa del identificador del artículo desde la propia ruta solicitada.
+- Se conservaron las redirecciones permanentes desde las URL editoriales anteriores.
+
 # Versión 1.8.3 - Limpieza de recursos (2026-08-19)
 
 - Se retiró una imagen residual de prueba que no estaba vinculada ni publicada en el sitio.
