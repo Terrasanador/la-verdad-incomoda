@@ -1,3 +1,10 @@
+# Versión 1.9.0 - Biblioteca editorial ampliada (2026-08-24)
+
+- Se publicaron diez artículos originales adicionales sobre verificación, encuestas, estadísticas, documentos, financiamiento, imágenes generadas, fuentes, gráficas, campañas, promesas y correcciones.
+- Se ampliaron los ocho artículos existentes con procedimientos y ejemplos prácticos.
+- Cada artículo incluye autoría, fecha, fuentes y enlaces a contenidos relacionados.
+- El sitio reúne ahora dieciocho artículos y una biblioteca editorial superior a siete mil palabras.
+
 # Versión 1.8.4 - Corrección de rutas editoriales (2026-08-23)
 
 - Se corrigió la regla de Vercel que entregaba error 404 en las nuevas URL canónicas de los artículos.

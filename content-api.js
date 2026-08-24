@@ -1,3 +1,8 @@
+import fs from "node:fs";
+
+const editorialContent = JSON.parse(fs.readFileSync(new URL("./editorial-library.json", import.meta.url), "utf8"));
+const expansions = JSON.parse(fs.readFileSync(new URL("./editorial-expansions.json", import.meta.url), "utf8"));
+
 const OWNER = process.env.GITHUB_OWNER || "Terrasanador";
 const REPO = process.env.GITHUB_REPO || "la-verdad-incomoda";
 const BRANCH = process.env.GITHUB_BRANCH || "main";
@@ -109,9 +114,13 @@ export default async function handler(req, res) {
     const { sha, data } = await readStore();
 
     if (req.method === "GET") {
+      const expandedBase = data.articles.map(article => ({
+        ...article,
+        content: expansions[article.slug] ? `${article.content}\n\n${expansions[article.slug]}` : article.content
+      }));
       const articles = isAdmin(req)
         ? data.articles
-        : data.articles.filter(article => article.status === "published");
+        : [...expandedBase.filter(article => article.status === "published"), ...(editorialContent.articles || []).filter(article => article.status === "published")];
       return send(res, 200, { articles });
     }
 
