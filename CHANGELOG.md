@@ -1,3 +1,11 @@
+# Versión 1.9.1 - Afirmaciones judiciales y persecución política (2026-08-26)
+
+- Separa situación procesal, existencia de imputaciones, datos de prueba, culpabilidad y supuesto móvil político.
+- Marca como falsa la negación de acusaciones o pruebas cuando los registros judiciales documentan su existencia.
+- Exige evidencia específica para sostener una persecución política; el respaldo partidista no basta.
+- Mantiene la presunción de inocencia: una detención o vinculación a proceso no equivale a culpabilidad.
+- Identifica propaganda o desinformación en defensas partidistas que niegan hechos procesales comprobables, sin condenar globalmente al partido.
+
 # Versión 1.9.0 - Biblioteca editorial ampliada (2026-08-24)
 
 - Se publicaron diez artículos originales adicionales sobre verificación, encuestas, estadísticas, documentos, financiamiento, imágenes generadas, fuentes, gráficas, campañas, promesas y correcciones.
