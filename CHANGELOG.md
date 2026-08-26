@@ -1,3 +1,19 @@
+# Versión 1.9.3 - Coordinación, nado sincronizado y granjas de bots (2026-08-26)
+
+- Compara textos, imágenes, hashtags, enlaces, errores compartidos y horarios para encontrar réplicas coordinadas.
+- Distingue repetición partidista, coordinación humana probable, nado sincronizado demostrado y automatización.
+- La etiqueta NADO SINCRONIZADO DE DESINFORMACIÓN exige una falsedad comprobada y evidencia coincidente de al menos tres emisores independientes.
+- La etiqueta GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN exige además señales observables de automatización con confianza alta.
+- Refuerza el análisis de campañas que niegan imputaciones o datos de prueba para exculpar a una persona procesada.
+- Aplica el mismo estándar probatorio a derecha, izquierda, gobiernos, oposiciones, medios y cuentas anónimas.
+
+# Versión 1.9.2 - Separación entre atribución y veracidad (2026-08-26)
+
+- Confirmar que una persona o partido difundió una afirmación ya no aumenta la veracidad de esa afirmación.
+- Impide clasificar como parcialmente cierta una falsedad solo porque la atribución de la declaración sea correcta.
+- Obliga a evaluar como afirmación principal el contenido investigado y a calificarlo como FALSO/FALSA cuando la evidencia lo contradiga.
+- Añade un caso de control específico para narrativas de persecución política y negación de pruebas documentadas.
+
 # Versión 1.9.1 - Afirmaciones judiciales y persecución política (2026-08-26)
 
 - Separa situación procesal, existencia de imputaciones, datos de prueba, culpabilidad y supuesto móvil político.
