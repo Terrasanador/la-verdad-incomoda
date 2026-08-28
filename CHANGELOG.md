@@ -1,3 +1,10 @@
+# Versión 1.9.4 - Corrección del límite de respuesta (2026-08-27)
+
+- Aumenta el límite de salida de 5,000 a 14,000 tokens en análisis rápido y de 8,000 a 20,000 en investigación profunda.
+- Limita cada lista a cinco elementos y cada informe a cinco fuentes para evitar respuestas truncadas.
+- Reduce repeticiones y textos de relleno sin eliminar las secciones de verificación.
+- Sustituye el mensaje técnico `max_output_tokens` por una explicación comprensible para el usuario.
+
 # Versión 1.9.3 - Coordinación, nado sincronizado y granjas de bots (2026-08-26)
 
 - Compara textos, imágenes, hashtags, enlaces, errores compartidos y horarios para encontrar réplicas coordinadas.
