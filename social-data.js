@@ -125,6 +125,25 @@ function safeSerialize(value) {
   return String(json || "").slice(0, MAX_SERIALIZED_CHARS);
 }
 
+function collectTikTokVideoUrls(value, output = new Set()) {
+  if (output.size >= 5 || value == null) return output;
+  if (typeof value === "string") {
+    const matches = value.match(/https?:\/\/(?:www\.)?tiktok\.com\/@[^\s"'<>]+\/video\/\d+/gi) || [];
+    matches.forEach(url => {
+      if (output.size < 5) output.add(url.replace(/[),.;]+$/, ""));
+    });
+    return output;
+  }
+  if (Array.isArray(value)) {
+    for (const item of value) collectTikTokVideoUrls(item, output);
+    return output;
+  }
+  if (typeof value === "object") {
+    for (const item of Object.values(value)) collectTikTokVideoUrls(item, output);
+  }
+  return output;
+}
+
 export async function extractSocialPublicData(rawUrl) {
   const apiKey = process.env.CAPTAPI_API_KEY;
   const platform = platformFromUrl(rawUrl);
@@ -149,6 +168,28 @@ export async function extractSocialPublicData(rawUrl) {
       limitations.push(`${path}: ${outcome.reason?.message || "consulta no disponible"}`);
     }
   });
+
+  // Un perfil no basta: abre hasta cinco videos públicos recuperados y solicita
+  // detalles y transcripción para que el verificador pueda evaluar lo que dicen.
+  if (profile && platform === "tiktok" && recovered.length) {
+    const videoUrls = [...collectTikTokVideoUrls(recovered)];
+    const detailRequests = videoUrls.flatMap(videoUrl => [
+      { path: "tiktok/video-details", url: videoUrl },
+      { path: "tiktok/transcript", url: videoUrl }
+    ]);
+    const details = await Promise.allSettled(
+      detailRequests.map(item => callCaptapi(apiKey, item.path, item.url))
+    );
+    details.forEach((outcome, index) => {
+      const request = detailRequests[index];
+      if (outcome.status === "fulfilled") {
+        recovered.push({ endpoint: request.path, url_analizada: request.url, respuesta: outcome.value });
+      } else {
+        limitations.push(`${request.path} (${request.url}): ${outcome.reason?.message || "consulta no disponible"}`);
+      }
+    });
+    requests.push(...detailRequests.map(item => [item.path, { url: item.url }]));
+  }
 
   if (!recovered.length) {
     return {
