@@ -1,3 +1,10 @@
+# Versión 1.9.7 - Resumen para redes sociales (2026-08-29)
+
+- Añade un botón para copiar un resumen listo para publicar en redes sociales.
+- Limita automáticamente el texto a 750 caracteres.
+- Incluye veredicto, afirmación, explicación esencial, enlace y etiquetas identificadoras.
+- Confirma visualmente la copia y muestra la cantidad de caracteres utilizada.
+
 # Versión 1.9.6 - Experiencia de verificación y resultados de coordinación (2026-08-29)
 
 - Ordena el flujo para elegir el tipo de análisis antes de aportar el contenido.
