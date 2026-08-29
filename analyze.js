@@ -238,6 +238,14 @@ const texto = tieneTexto
       "La repetición masiva no aumenta por sí sola la credibilidad.",
       "DIFUSIÓN AUTOMATIZADA Y BOTS:",
       "Busca señales públicas de amplificación coordinada: publicaciones casi simultáneas, texto o hashtags idénticos, frecuencia inhumana, cuentas recientes o vacías, patrones repetitivos, redes que solo retransmiten, proporción anormal de republicaciones y coordinación documentada por estudios o herramientas confiables.",
+      "AUDITORÍA COMPARATIVA DE CUENTAS:",
+      "Cuando la consulta incluya una publicación, un perfil o varias cuentas, busca otras publicaciones públicas que reproduzcan exactamente o casi exactamente el mismo texto, imagen, enlace, hashtags y orden de argumentos. Registra la URL de cada cuenta y publicación realmente observada; no inventes perfiles ni completes nombres truncados.",
+      "Compara por cuenta: nombre visible y usuario; antigüedad disponible; biografía; foto y datos genéricos; variedad temática; proporción aparente de contenido original frente a republicaciones; frecuencia y regularidad; intervalos entre mensajes; actividad nocturna continua; texto repetido; hashtags; enlaces; imágenes; errores idénticos; marcas de tiempo; y grupo estable de cuentas que publica en bloque.",
+      "Calcula la similitud textual de manera prudente: EXACTA solo si el texto sustantivo coincide palabra por palabra, CASI EXACTA cuando únicamente cambian menciones, emojis, puntuación o una introducción breve, y PARÁFRASIS cuando conserva la narrativa pero no el texto. Una consigna partidista común no es por sí sola contenido idéntico.",
+      "El nombre genérico, una foto predeterminada, pocos seguidores, una cuenta reciente o publicar en grupo son indicios débiles por separado. Nunca identifiques un bot únicamente por nombre, ideología, anonimato, volumen o coincidencia de un solo mensaje.",
+      "Clasifica cada cuenta como HUMANA O INSTITUCIONAL PROBABLE, COMPORTAMIENTO COORDINADO HUMANO, COMPATIBLE CON AUTOMATIZACIÓN, BOT CON ALTA CONFIANZA o EVIDENCIA INSUFICIENTE. BOT CON ALTA CONFIANZA exige al menos tres señales independientes observables, incluida una señal temporal o mecánica, además de repetición sistemática; enumera esas señales.",
+      "Para publicaciones en grupo, construye una cronología: primera aparición localizable, cuentas posteriores, diferencia de minutos u horas, fragmento coincidente y fuente matriz probable. Distingue copiar un comunicado distribuido públicamente de operar una red coordinada encubierta.",
+      "Si el usuario aporta varias capturas o enlaces, compáralos entre sí además de buscar coincidencias públicas. Si solo hay una captura sin identificadores, declara que no es posible atribuir cuentas ni medir coordinación con certeza.",
       "NADO SINCRONIZADO DE DESINFORMACIÓN:",
       "Cuando varias cuentas, dirigentes, medios o páginas difundan la misma afirmación falsa, compara literalmente titulares, frases, errores ortográficos, imágenes, hashtags, enlaces, orden de argumentos y marcas de tiempo. Identifica la publicación más antigua localizable y separa copias, paráfrasis y verificaciones independientes.",
       "La coincidencia ideológica no demuestra coordinación. Tampoco la demuestra que varias personas comenten el mismo hecho noticioso. Exige similitud textual o visual poco probable, proximidad temporal, fuente matriz común, instrucciones compartidas, red estable de republicación u otras señales observables.",
@@ -625,6 +633,7 @@ if (
             "contexto_omitido", "titular_responsable", "explicacion_educativa",
             "fuentes_matriz", "replicas_no_independientes", "fuentes_independientes_reales",
             "evidencia_coordinacion", "probabilidad_coordinacion", "confianza_deteccion_coordinacion",
+            "cuentas_comparadas", "publicaciones_coincidentes", "patron_publicacion_grupal",
             "evidencia_bots", "probabilidad_automatizacion", "confianza_deteccion_bots",
             "etiqueta_especial", "limitaciones"
           ],
@@ -644,6 +653,37 @@ if (
             evidencia_coordinacion: { type: "array", items: { type: "string" } },
             probabilidad_coordinacion: { type: "integer", minimum: 0, maximum: 100 },
             confianza_deteccion_coordinacion: { type: "integer", minimum: 0, maximum: 100 },
+            cuentas_comparadas: {
+              type: "array",
+              items: {
+                type: "object",
+                additionalProperties: false,
+                required: ["cuenta", "url", "clasificacion", "senales", "limitaciones"],
+                properties: {
+                  cuenta: { type: "string" },
+                  url: { type: "string" },
+                  clasificacion: { type: "string", enum: ["HUMANA O INSTITUCIONAL PROBABLE", "COMPORTAMIENTO COORDINADO HUMANO", "COMPATIBLE CON AUTOMATIZACIÓN", "BOT CON ALTA CONFIANZA", "EVIDENCIA INSUFICIENTE"] },
+                  senales: { type: "array", items: { type: "string" } },
+                  limitaciones: { type: "array", items: { type: "string" } }
+                }
+              }
+            },
+            publicaciones_coincidentes: {
+              type: "array",
+              items: {
+                type: "object",
+                additionalProperties: false,
+                required: ["cuenta", "url", "fecha", "similitud", "fragmento_coincidente"],
+                properties: {
+                  cuenta: { type: "string" },
+                  url: { type: "string" },
+                  fecha: { type: "string" },
+                  similitud: { type: "string", enum: ["EXACTA", "CASI EXACTA", "PARÁFRASIS", "NO DETERMINADA"] },
+                  fragmento_coincidente: { type: "string" }
+                }
+              }
+            },
+            patron_publicacion_grupal: { type: "string" },
             evidencia_bots: { type: "array", items: { type: "string" } },
             probabilidad_automatizacion: { type: "integer", minimum: 0, maximum: 100 },
             confianza_deteccion_bots: { type: "integer", minimum: 0, maximum: 100 },
@@ -1070,6 +1110,25 @@ if (
       evidencia_coordinacion: limpiarLista(integridadBase.evidencia_coordinacion),
       probabilidad_coordinacion: limitarPorcentaje(integridadBase.probabilidad_coordinacion),
       confianza_deteccion_coordinacion: limitarPorcentaje(integridadBase.confianza_deteccion_coordinacion),
+      cuentas_comparadas: Array.isArray(integridadBase.cuentas_comparadas)
+        ? integridadBase.cuentas_comparadas.slice(0, 10).map(item => ({
+            cuenta: String(item?.cuenta || "").trim(),
+            url: String(item?.url || "").trim(),
+            clasificacion: ["HUMANA O INSTITUCIONAL PROBABLE", "COMPORTAMIENTO COORDINADO HUMANO", "COMPATIBLE CON AUTOMATIZACIÓN", "BOT CON ALTA CONFIANZA", "EVIDENCIA INSUFICIENTE"].includes(item?.clasificacion) ? item.clasificacion : "EVIDENCIA INSUFICIENTE",
+            senales: limpiarLista(item?.senales).slice(0, 5),
+            limitaciones: limpiarLista(item?.limitaciones).slice(0, 3)
+          })).filter(item => item.cuenta || item.url)
+        : [],
+      publicaciones_coincidentes: Array.isArray(integridadBase.publicaciones_coincidentes)
+        ? integridadBase.publicaciones_coincidentes.slice(0, 10).map(item => ({
+            cuenta: String(item?.cuenta || "").trim(),
+            url: String(item?.url || "").trim(),
+            fecha: String(item?.fecha || "").trim(),
+            similitud: ["EXACTA", "CASI EXACTA", "PARÁFRASIS", "NO DETERMINADA"].includes(item?.similitud) ? item.similitud : "NO DETERMINADA",
+            fragmento_coincidente: String(item?.fragmento_coincidente || "").trim().slice(0, 300)
+          })).filter(item => item.url)
+        : [],
+      patron_publicacion_grupal: String(integridadBase.patron_publicacion_grupal || "").trim(),
       evidencia_bots: limpiarLista(integridadBase.evidencia_bots),
       probabilidad_automatizacion: limitarPorcentaje(integridadBase.probabilidad_automatizacion),
       confianza_deteccion_bots: limitarPorcentaje(integridadBase.confianza_deteccion_bots),
@@ -1088,6 +1147,15 @@ if (
 
     // Salvaguarda: la etiqueta más grave exige evidencia y confianza altas.
     const ii = resultado.analisis_integridad_informativa;
+    ii.cuentas_comparadas = ii.cuentas_comparadas.map(cuenta => {
+      if (cuenta.clasificacion === "BOT CON ALTA CONFIANZA" && !(cuenta.senales.length >= 3 && cuenta.url)) {
+        return { ...cuenta, clasificacion: "COMPATIBLE CON AUTOMATIZACIÓN", limitaciones: [...cuenta.limitaciones, "No reúne tres señales independientes y una URL verificable."].slice(0, 3) };
+      }
+      return cuenta;
+    });
+    const botsAltaConfianza = ii.cuentas_comparadas.filter(cuenta =>
+      cuenta.clasificacion === "BOT CON ALTA CONFIANZA" && cuenta.senales.length >= 3 && cuenta.url
+    );
     if (
       ii.etiqueta_especial === "NADO SINCRONIZADO DE DESINFORMACIÓN" &&
       !(resultado.veredicto_final === "FALSA" && ii.fuentes_independientes_reales >= 3 && ii.probabilidad_coordinacion >= 70 && ii.confianza_deteccion_coordinacion >= 70 && ii.evidencia_coordinacion.length >= 3)
@@ -1100,7 +1168,7 @@ if (
 
     if (
       ii.etiqueta_especial === "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN" &&
-      !(resultado.veredicto_final === "FALSA" && ii.probabilidad_automatizacion >= 70 && ii.confianza_deteccion_bots >= 70 && ii.evidencia_bots.length >= 3)
+      !(resultado.veredicto_final === "FALSA" && ii.probabilidad_automatizacion >= 70 && ii.confianza_deteccion_bots >= 70 && ii.evidencia_bots.length >= 3 && botsAltaConfianza.length >= 3)
     ) {
       ii.etiqueta_especial = ii.evidencia_bots.length
         ? "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA"
