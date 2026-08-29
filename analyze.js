@@ -95,6 +95,7 @@ const texto = tieneTexto
     }
 
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
+    const tipoTarea = ["afirmacion", "cuentas", "perfil"].includes(body.task) ? body.task : "afirmacion";
     const idiomaSalida = String(body.language || body.idioma || "auto").trim() || "auto";
     const esPerfilSocial = Boolean(
       extraccionEnlace?.tipo_enlace === "perfil" ||
@@ -107,6 +108,11 @@ const texto = tieneTexto
       "",
       "OBJETIVO:",
       "Investiga afirmaciones, noticias, rumores, enlaces, imágenes, publicaciones y preguntas mediante evidencia verificable.",
+      tipoTarea === "cuentas"
+        ? "TAREA SELECCIONADA: COMPARAR CUENTAS. Trata todos los enlaces aportados como un conjunto; busca réplicas adicionales, construye una cronología y completa obligatoriamente cuentas_comparadas, publicaciones_coincidentes y patron_publicacion_grupal."
+        : tipoTarea === "perfil"
+          ? "TAREA SELECCIONADA: AUDITAR UN PERFIL. Evalúa una muestra identificable de publicaciones públicas y declara periodo, alcance y limitaciones; no emitas un juicio global sobre la persona."
+          : "TAREA SELECCIONADA: VERIFICAR UNA AFIRMACIÓN. Identifica la proposición central y contrástala con evidencia favorable y contraria.",
       "Debes usar búsqueda web antes de emitir un veredicto.",
       `IDIOMA DE SALIDA: ${idiomaSalida}.`,
       "Escribe todos los campos narrativos en el idioma solicitado por el usuario.",
