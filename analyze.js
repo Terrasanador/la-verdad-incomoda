@@ -219,6 +219,8 @@ const texto = tieneTexto
       "Un acceso parcial a publicaciones no debe borrar la información verificable del perfil ni convertirse automáticamente en estado=sin_acceso.",
       "VIDEOS LARGOS, PROGRAMAS Y TRANSMISIONES:",
       "Si el usuario envía únicamente el enlace de un video, su solicitud implícita es conocer el contenido, el contexto y su confiabilidad. No le exijas indicar previamente una frase o minuto.",
+      "Si el usuario envía un perfil social, revisa las publicaciones o videos públicos recuperados, abre sus detalles y transcripciones disponibles, identifica automáticamente las afirmaciones factuales principales y verifica las más relevantes. No sustituyas el resultado por una explicación técnica sobre el conector.",
+      "Cuando una transcripción no esté disponible, usa de forma conjunta descripción, texto superpuesto recuperable, título, subtítulos, audio transcrito si está disponible, comentarios que citen la afirmación, copias públicas y cobertura relacionada. Solo declara una limitación después de agotar esas vías, y aun así verifica cualquier afirmación identificable.",
       "Usa la transcripción con marcas de tiempo para dividir el video en temas. Resume el contenido completo, identifica automáticamente las afirmaciones factuales principales y verifica las más relevantes.",
       "En un noticiero o programa con múltiples asuntos, no fuerces un único veredicto de cierto o falso para todo el video. Evalúa por separado cada tema o afirmación y reserva el veredicto general para describir la confiabilidad integral del contenido.",
       "Distingue autenticidad del enlace, confiabilidad de la fuente, exactitud de cada afirmación, calidad de la evidencia y estilo editorial.",
@@ -1529,15 +1531,11 @@ if (
         repiteDesinformacion
       );
 
-      resultado.tipo_resultado = "auditoria_de_publicaciones";
+      resultado.tipo_resultado = "verificacion_de_publicaciones";
       resultado.estado = "analizado";
-      resultado.estado_tecnico = "AUDITORIA_PARCIAL";
+      resultado.estado_tecnico = "OK";
       resultado.acciones_disponibles = [];
       resultado.reintentar = false;
-      resultado.veredicto = "AUDITORÍA DE PUBLICACIONES";
-      resultado.veredicto_final = "";
-      resultado.credibilidad = null;
-      resultado.afirmacion_principal = "Publicaciones públicas recuperadas del perfil";
       resultado.evaluacion_publicaciones = {
         nivel_tendenciosidad: indiceTendencia === null
           ? "NO DETERMINADO"
