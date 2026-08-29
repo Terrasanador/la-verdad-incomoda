@@ -1,3 +1,10 @@
+# Versión 1.9.10 - Resolución de enlaces cortos de video (2026-08-29)
+
+- Resuelve primero la redirección de enlaces cortos de TikTok.
+- Entrega al conector social la URL canónica `tiktok.com/@usuario/video/id`.
+- Evita que Captapi rechace enlaces `vt.tiktok.com` como videos inválidos.
+- Permite recuperar detalles, comentarios y transcripción del video específico.
+
 # Versión 1.9.9 - Análisis efectivo de perfiles y videos (2026-08-29)
 
 - Impide que una auditoría de perfil reemplace el veredicto factual por un mensaje técnico.
