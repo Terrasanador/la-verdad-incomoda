@@ -1,4 +1,4 @@
-# La Verdad Incómoda 1.9.9 — Android
+# La Verdad Incómoda 1.9.10 — Android
 
 Todos los archivos van en la raíz del repositorio. No se necesitan carpetas.
 
