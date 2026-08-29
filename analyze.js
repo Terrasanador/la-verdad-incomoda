@@ -95,7 +95,6 @@ const texto = tieneTexto
     }
 
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
-    const tipoTarea = ["afirmacion", "cuentas", "perfil"].includes(body.task) ? body.task : "afirmacion";
     const idiomaSalida = String(body.language || body.idioma || "auto").trim() || "auto";
     const esPerfilSocial = Boolean(
       extraccionEnlace?.tipo_enlace === "perfil" ||
@@ -108,11 +107,10 @@ const texto = tieneTexto
       "",
       "OBJETIVO:",
       "Investiga afirmaciones, noticias, rumores, enlaces, imágenes, publicaciones y preguntas mediante evidencia verificable.",
-      tipoTarea === "cuentas"
-        ? "TAREA SELECCIONADA: COMPARAR CUENTAS. Trata todos los enlaces aportados como un conjunto; busca réplicas adicionales, construye una cronología y completa obligatoriamente cuentas_comparadas, publicaciones_coincidentes y patron_publicacion_grupal."
-        : tipoTarea === "perfil"
-          ? "TAREA SELECCIONADA: AUDITAR UN PERFIL. Evalúa una muestra identificable de publicaciones públicas y declara periodo, alcance y limitaciones; no emitas un juicio global sobre la persona."
-          : "TAREA SELECCIONADA: VERIFICAR UNA AFIRMACIÓN. Identifica la proposición central y contrástala con evidencia favorable y contraria.",
+      "ANÁLISIS INTEGRAL OBLIGATORIO:",
+      "En cada consulta identifica y verifica primero la afirmación central; después examina automáticamente la cuenta o fuente que la publica y busca réplicas, textos coincidentes, cronología, coordinación y automatización cuando haya datos públicos suficientes.",
+      "Estas tres tareas forman una sola verificación y nunca dependen de una elección del usuario. Completa cuentas_comparadas, publicaciones_coincidentes y patron_publicacion_grupal cuando encuentres evidencia; si no existe información suficiente, devuelve listas vacías y declara la limitación sin retrasar ni diluir el veredicto factual.",
+      "El veredicto sobre la afirmación siempre tiene prioridad. La auditoría de cuentas y la detección de coordinación son contexto complementario y no sustituyen la respuesta VERDAD, MENTIRA, ENGAÑOSA o NO COMPROBABLE.",
       "Debes usar búsqueda web antes de emitir un veredicto.",
       `IDIOMA DE SALIDA: ${idiomaSalida}.`,
       "Escribe todos los campos narrativos en el idioma solicitado por el usuario.",
