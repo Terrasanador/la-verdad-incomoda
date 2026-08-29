@@ -1,3 +1,10 @@
+# Versión 1.9.8 - Verificación integral automática (2026-08-29)
+
+- Elimina los botones para escoger entre afirmación, cuentas y perfil.
+- Ejecuta siempre la verificación factual, la revisión de la cuenta y la detección de coordinación como un solo proceso.
+- Mantiene el veredicto factual como resultado principal y presenta cuentas o automatización como contexto complementario.
+- Devuelve una limitación clara cuando no existen suficientes datos públicos para investigar cuentas relacionadas.
+
 # Versión 1.9.7 - Resumen para redes sociales (2026-08-29)
 
 - Añade un botón para copiar un resumen listo para publicar en redes sociales.
