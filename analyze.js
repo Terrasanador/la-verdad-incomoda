@@ -57,22 +57,24 @@ const texto = tieneTexto
 
     if (enlaceDetectado) {
       try {
-        const [extraccionDirecta, extraccionSocial] = await Promise.allSettled([
-          extractPublicLink(enlaceDetectado),
-          extractSocialPublicData(enlaceDetectado)
-        ]);
-        if (extraccionDirecta.status === "fulfilled") {
-          extraccionEnlace = extraccionDirecta.value;
-        } else {
-          throw extraccionDirecta.reason;
-        }
-        if (extraccionSocial.status === "fulfilled" && extraccionSocial.value) {
-          extraccionEnlace.datos_multiplataforma = extraccionSocial.value;
+        // Resuelve primero los enlaces cortos. El conector social exige la URL
+        // canónica del video y rechaza direcciones como vt.tiktok.com.
+        extraccionEnlace = await extractPublicLink(enlaceDetectado);
+        const enlaceCanonico = extraccionEnlace.url_final || enlaceDetectado;
+        const extraccionSocial = await extractSocialPublicData(enlaceCanonico).catch(error => ({
+          proveedor: "Captapi",
+          consultas_exitosas: 0,
+          consultas_intentadas: 0,
+          contenido_json: "",
+          limitaciones: [`Conector social: ${error?.message || "consulta no disponible"}`]
+        }));
+        if (extraccionSocial) {
+          extraccionEnlace.datos_multiplataforma = extraccionSocial;
           extraccionEnlace.limitaciones = [
             ...(extraccionEnlace.limitaciones || []),
-            ...(extraccionSocial.value.limitaciones || [])
+            ...(extraccionSocial.limitaciones || [])
           ];
-          if (extraccionSocial.value.consultas_exitosas > 0) {
+          if (extraccionSocial.consultas_exitosas > 0) {
             extraccionEnlace.acceso_parcial = true;
           }
         }
