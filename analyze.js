@@ -148,6 +148,21 @@ const texto = tieneTexto
 "Identifica el objetivo aparente del daño y el posible perjuicio reputacional, político, económico o social, pero no atribuyas intención como hecho cuando solo pueda inferirse débilmente.",
 "Usa DAÑO INTENCIONAL SUSTENTADO únicamente cuando varias evidencias convergentes demuestren conocimiento de la falsedad o planificación dirigida. Usa INDICIOS DE INTENCIÓN cuando exista un patrón significativo pero falte prueba directa. En los demás casos usa INTENCIÓN NO DEMOSTRADA.",
 "Cuando existan conflictos entre la versión oficial y una publicación periodística, presenta ambas versiones y resuelve únicamente mediante evidencia documental verificable.",
+"ATRIBUCIÓN NO EQUIVALE A VERACIDAD:",
+"Distingue siempre la afirmación de atribución ('el PAN dijo que X') de la afirmación incrustada X. Confirmar que un partido, medio o persona efectivamente dijo X solo confirma la autoría; no aporta ninguna verdad a X.",
+"Si la consulta busca verificar X, evalúa X como afirmación principal. No uses el hecho verdadero de que alguien la publicó para asignar PARCIALMENTE VERDADERO, PARCIALMENTE CIERTA, MAYORMENTE VERDADERO ni aumentar la credibilidad.",
+"Cuando X esté materialmente contradicha por evidencia suficiente, usa veredicto = FALSO y veredicto_final = FALSA, aunque sea cierto que el actor difundió X.",
+"Solo evalúa como afirmación principal 'el actor dijo X' cuando el usuario pregunte expresamente si el actor realizó esa declaración. Aun entonces informa por separado si X es verdadera o falsa, sin mezclar ambos resultados.",
+"Ejemplo obligatorio: si está documentado que el PAN afirmó 'la persona es perseguida política y no existen pruebas', la existencia de la declaración es CIERTA; pero si se está verificando su contenido y existen imputaciones y datos de prueba documentados, esa narrativa debe calificarse FALSA, no PARCIALMENTE CIERTA.",
+"AFIRMACIONES JUDICIALES Y DEFENSA POLÍTICA:",
+"Cuando una publicación defienda a una persona investigada, detenida o procesada, divide obligatoriamente su mensaje en afirmaciones atómicas: situación procesal; existencia de imputaciones; existencia y naturaleza de los datos de prueba; legalidad de las medidas cautelares; culpabilidad; y supuesto móvil de persecución política.",
+"La detención, vinculación a proceso, prisión preventiva, acusación formal y presentación de datos de prueba son hechos procesales verificables en resoluciones, audiencias, comunicados judiciales o documentos del expediente. No equivalen por sí solos a una sentencia de culpabilidad.",
+"Si una publicación afirma que no existe acusación, delito imputado, prueba o fundamento judicial y los registros competentes documentan lo contrario, califica esa afirmación como FALSA. No la suavices como simple opinión política.",
+"La afirmación de que una persona no cometió el delito no queda demostrada ni refutada únicamente por su detención o vinculación a proceso. Mientras no exista resolución suficiente, explica la presunción de inocencia y clasifica esa proposición específica como NO VERIFICABLE o INFORMACIÓN INSUFICIENTE.",
+"La afirmación de persecución política es distinta de la inocencia y distinta de la existencia de un proceso penal. Exige evidencia específica de uso selectivo o irregular del sistema, órdenes o interferencia política, violaciones procesales relevantes, fabricación de evidencia o comparación documentada con casos equivalentes. La filiación partidista, el apoyo de dirigentes o la mera existencia de prisión preventiva no la prueban.",
+"Si la narrativa combina 'no hay pruebas' con 'es un perseguido político', y la primera parte está contradicha por registros judiciales, clasifica la narrativa central como FALSA cuando la negación de la evidencia sea esencial; enumera por separado qué parte está documentada y qué parte permanece sin demostrar.",
+"Una defensa partidista puede constituir propaganda o desinformación cuando niega hechos procesales comprobables, omite deliberadamente evidencia decisiva o presenta como hecho un móvil político no demostrado. Identifica la afirmación falsa concreta y no condenes globalmente al partido.",
+"No llames delincuente, criminal, culpable, cómplice ni defensor de delincuentes a una persona u organización sin sentencia o evidencia independiente suficiente. Distingue defender jurídicamente a un acusado de difundir una falsedad verificable sobre su proceso.",
 "Prioriza documentos originales, videos completos, transcripciones íntegras, estadísticas con metodología, resoluciones, contratos, presupuestos y registros públicos.",
 "No concluyas que una conferencia, programa o medio contiene desinformación de manera general sin delimitar afirmaciones, fechas, muestras y ejemplos comprobados.",
 "Una colección de verificaciones parciales no demuestra automáticamente que todo el contenido de una fuente sea falso.",
@@ -223,6 +238,13 @@ const texto = tieneTexto
       "La repetición masiva no aumenta por sí sola la credibilidad.",
       "DIFUSIÓN AUTOMATIZADA Y BOTS:",
       "Busca señales públicas de amplificación coordinada: publicaciones casi simultáneas, texto o hashtags idénticos, frecuencia inhumana, cuentas recientes o vacías, patrones repetitivos, redes que solo retransmiten, proporción anormal de republicaciones y coordinación documentada por estudios o herramientas confiables.",
+      "NADO SINCRONIZADO DE DESINFORMACIÓN:",
+      "Cuando varias cuentas, dirigentes, medios o páginas difundan la misma afirmación falsa, compara literalmente titulares, frases, errores ortográficos, imágenes, hashtags, enlaces, orden de argumentos y marcas de tiempo. Identifica la publicación más antigua localizable y separa copias, paráfrasis y verificaciones independientes.",
+      "La coincidencia ideológica no demuestra coordinación. Tampoco la demuestra que varias personas comenten el mismo hecho noticioso. Exige similitud textual o visual poco probable, proximidad temporal, fuente matriz común, instrucciones compartidas, red estable de republicación u otras señales observables.",
+      "Usa NADO SINCRONIZADO DE DESINFORMACIÓN únicamente cuando la afirmación central ya haya sido calificada FALSA y existan al menos tres emisores aparentemente distintos con coincidencias textuales o visuales y temporales verificables. Enumera las publicaciones comparadas, sus fechas, fragmentos coincidentes y URLs; nunca inventes cuentas ni métricas.",
+      "Si la falsedad se repite pero no hay evidencia suficiente de coordinación, descríbela como REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA. Si hay coordinación probable pero no demostrada, usa POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA.",
+      "Distingue siempre campaña coordinada humana de automatización. Para afirmar GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN exige simultáneamente: falsedad comprobada, varias cuentas relacionadas, señales observables de automatización y confianza alta. Las publicaciones idénticas por sí solas no prueban bots.",
+      "Cuando una campaña busque exculpar a una persona, verifica por separado: negación de imputaciones, negación de datos de prueba, estado procesal, alegación de inocencia y alegación de persecución política. Si niega hechos judiciales documentados, el veredicto de esa negación es FALSO aunque la repitan muchas cuentas o dirigentes.",
       "No declares que una cuenta es bot solo por publicar mucho, ser anónima, apoyar una postura o repetir un mensaje.",
       "Distingue entre bot confirmado, comportamiento compatible con automatización, campaña coordinada humana y evidencia insuficiente.",
       "Solo usa la etiqueta exacta INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS cuando: el amarillismo sea alto, exista evidencia suficiente de amplificación automatizada y la confianza de esa detección sea alta.",
@@ -294,13 +316,18 @@ const texto = tieneTexto
       "En esos casos establece estado = sin_acceso, veredicto = NO VERIFICABLE y veredicto_final = NO VERIFICABLE.",
       "No repitas el mismo hecho en varias secciones. Cada dato debe aparecer en la sección más adecuada.",
       "Mantén el resumen, la respuesta directa y la conclusión breves, claras y sin reiteraciones.",
+      "LÍMITES DE EXTENSIÓN:",
+      "La respuesta debe ser completa pero compacta. Cada explicación narrativa tendrá como máximo tres oraciones breves.",
+      "Incluye como máximo cinco elementos en cada lista, cinco fuentes totales y cinco ejemplos representativos. Prioriza la evidencia más fuerte y elimina repeticiones.",
+      "En campos no aplicables devuelve cadenas vacías o listas vacías según el esquema, sin explicaciones de relleno.",
+      "No reproduzcas artículos, publicaciones ni documentos completos; resume únicamente los fragmentos necesarios para el veredicto.",
       "",
       "",
 "COHERENCIA DEL VEREDICTO:",
 "Si la clasificación técnica es PARCIALMENTE VERDADERO, el veredicto_final debe ser PARCIALMENTE CIERTA.",
 "Si la clasificación técnica es VERDADERO o MAYORMENTE VERDADERO, el veredicto_final debe ser CIERTA.",
 "Si la clasificación técnica es FALSO, el veredicto_final debe ser FALSA. Si es ENGAÑOSO, FUERA DE CONTEXTO o CONTENIDO MANIPULADO, usa ENGAÑOSA salvo que la afirmación central sea materialmente falsa.",
-"Si existen partes verdaderas y partes falsas, usa PARCIALMENTE VERDADERO como clasificación y explica cuáles son.",
+"Si existen partes sustantivas verdaderas y partes sustantivas falsas dentro de la proposición investigada, usa PARCIALMENTE VERDADERO y explica cuáles son. No cuentes como parte verdadera el simple hecho de que alguien pronunció, publicó o atribuyó la proposición falsa.",
 "No conviertas una generalización sobre un medio, gobierno, periodista o institución en un hecho probado sin evidencia suficiente.",
 "FORMATO:",
       "Devuelve únicamente JSON válido, sin Markdown ni texto adicional.",
@@ -597,6 +624,7 @@ if (
             "riesgo_confirmado", "riesgo_presentado", "extrapolaciones",
             "contexto_omitido", "titular_responsable", "explicacion_educativa",
             "fuentes_matriz", "replicas_no_independientes", "fuentes_independientes_reales",
+            "evidencia_coordinacion", "probabilidad_coordinacion", "confianza_deteccion_coordinacion",
             "evidencia_bots", "probabilidad_automatizacion", "confianza_deteccion_bots",
             "etiqueta_especial", "limitaciones"
           ],
@@ -613,12 +641,15 @@ if (
             fuentes_matriz: { type: "array", items: { type: "string" } },
             replicas_no_independientes: { type: "array", items: { type: "string" } },
             fuentes_independientes_reales: { type: "integer", minimum: 0 },
+            evidencia_coordinacion: { type: "array", items: { type: "string" } },
+            probabilidad_coordinacion: { type: "integer", minimum: 0, maximum: 100 },
+            confianza_deteccion_coordinacion: { type: "integer", minimum: 0, maximum: 100 },
             evidencia_bots: { type: "array", items: { type: "string" } },
             probabilidad_automatizacion: { type: "integer", minimum: 0, maximum: 100 },
             confianza_deteccion_bots: { type: "integer", minimum: 0, maximum: 100 },
             etiqueta_especial: {
               type: "string",
-              enum: ["NINGUNA", "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA", "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS"]
+              enum: ["NINGUNA", "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA", "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA", "NADO SINCRONIZADO DE DESINFORMACIÓN", "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS", "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN"]
             },
             limitaciones: { type: "array", items: { type: "string" } }
           }
@@ -717,7 +748,7 @@ if (
         }],
         tool_choice: enlaceDetectado && !esPerfilSocial ? "required" : "auto",
         include: ["web_search_call.action.sources"],
-        max_output_tokens: modo === "profundo" ? 8000 : 5000
+        max_output_tokens: modo === "profundo" ? 20000 : 14000
       }),
       signal: openAIController.signal
       });
@@ -771,9 +802,9 @@ if (
       return res.status(502).json({
         error:
           razon === "max_output_tokens"
-            ? "La investigación agotó el límite de salida antes de terminar. Intenta una consulta más concreta o usa el análisis rápido."
+            ? "El informe fue demasiado extenso para completarse. Vuelve a intentarlo: el sistema ya está configurado para producir una respuesta más compacta."
             : "OpenAI devolvió una respuesta incompleta.",
-        detalle: razon
+        detalle: razon === "max_output_tokens" ? "Límite interno de extensión alcanzado." : razon
       });
     }
 
@@ -1036,13 +1067,19 @@ if (
       fuentes_matriz: limpiarLista(integridadBase.fuentes_matriz),
       replicas_no_independientes: limpiarLista(integridadBase.replicas_no_independientes),
       fuentes_independientes_reales: Math.max(0, Math.round(Number(integridadBase.fuentes_independientes_reales) || 0)),
+      evidencia_coordinacion: limpiarLista(integridadBase.evidencia_coordinacion),
+      probabilidad_coordinacion: limitarPorcentaje(integridadBase.probabilidad_coordinacion),
+      confianza_deteccion_coordinacion: limitarPorcentaje(integridadBase.confianza_deteccion_coordinacion),
       evidencia_bots: limpiarLista(integridadBase.evidencia_bots),
       probabilidad_automatizacion: limitarPorcentaje(integridadBase.probabilidad_automatizacion),
       confianza_deteccion_bots: limitarPorcentaje(integridadBase.confianza_deteccion_bots),
       etiqueta_especial: [
         "NINGUNA",
+        "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA",
         "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA",
-        "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS"
+        "NADO SINCRONIZADO DE DESINFORMACIÓN",
+        "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS",
+        "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN"
       ].includes(integridadBase.etiqueta_especial)
         ? integridadBase.etiqueta_especial
         : "NINGUNA",
@@ -1051,6 +1088,26 @@ if (
 
     // Salvaguarda: la etiqueta más grave exige evidencia y confianza altas.
     const ii = resultado.analisis_integridad_informativa;
+    if (
+      ii.etiqueta_especial === "NADO SINCRONIZADO DE DESINFORMACIÓN" &&
+      !(resultado.veredicto_final === "FALSA" && ii.fuentes_independientes_reales >= 3 && ii.probabilidad_coordinacion >= 70 && ii.confianza_deteccion_coordinacion >= 70 && ii.evidencia_coordinacion.length >= 3)
+    ) {
+      ii.etiqueta_especial = ii.evidencia_coordinacion.length
+        ? "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA"
+        : "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA";
+      ii.limitaciones.push("La evidencia disponible no alcanza el umbral para afirmar coordinación sincronizada con alta confianza.");
+    }
+
+    if (
+      ii.etiqueta_especial === "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN" &&
+      !(resultado.veredicto_final === "FALSA" && ii.probabilidad_automatizacion >= 70 && ii.confianza_deteccion_bots >= 70 && ii.evidencia_bots.length >= 3)
+    ) {
+      ii.etiqueta_especial = ii.evidencia_bots.length
+        ? "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA"
+        : "NINGUNA";
+      ii.limitaciones.push("La evidencia disponible no alcanza el umbral para afirmar una granja de bots con alta confianza.");
+    }
+
     if (
       ii.etiqueta_especial === "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS" &&
       !(ii.indice_amarillismo >= 61 && ii.probabilidad_automatizacion >= 70 && ii.confianza_deteccion_bots >= 70 && ii.evidencia_bots.length > 0)
