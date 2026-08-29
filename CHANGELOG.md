@@ -1,3 +1,11 @@
+# Versión 1.9.6 - Experiencia de verificación y resultados de coordinación (2026-08-29)
+
+- Ordena el flujo para elegir el tipo de análisis antes de aportar el contenido.
+- Añade accesos específicos para verificar afirmaciones, comparar cuentas y auditar perfiles.
+- Muestra en el informe las cuentas comparadas, publicaciones coincidentes, cronología y evidencia de automatización.
+- Activa automáticamente la investigación profunda al comparar cuentas.
+- Mejora las instrucciones móviles para aportar tres o más enlaces o capturas identificables.
+
 # Versión 1.9.5 - Auditoría comparativa de cuentas (2026-08-29)
 
 - Localiza publicaciones exactas, casi exactas y paráfrasis, y registra sus URLs y cronología.
