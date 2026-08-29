@@ -1,3 +1,11 @@
+# Versión 1.9.9 - Análisis efectivo de perfiles y videos (2026-08-29)
+
+- Impide que una auditoría de perfil reemplace el veredicto factual por un mensaje técnico.
+- Abre automáticamente hasta cinco videos públicos recuperados de un perfil de TikTok.
+- Solicita detalles y transcripción de cada video antes de analizar sus afirmaciones.
+- Conserva el veredicto, la credibilidad y la afirmación principal producidos por la investigación.
+- Utiliza descripciones, títulos, subtítulos, citas, copias y fuentes relacionadas cuando falta una transcripción.
+
 # Versión 1.9.8 - Verificación integral automática (2026-08-29)
 
 - Elimina los botones para escoger entre afirmación, cuentas y perfil.
