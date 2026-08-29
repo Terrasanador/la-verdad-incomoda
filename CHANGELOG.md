@@ -1,3 +1,11 @@
+# Versión 1.9.5 - Auditoría comparativa de cuentas (2026-08-29)
+
+- Localiza publicaciones exactas, casi exactas y paráfrasis, y registra sus URLs y cronología.
+- Audita cada cuenta por separado usando señales de actividad, repetición, temporalidad y automatización.
+- Distingue coordinación humana, comportamiento compatible con automatización y bots con alta confianza.
+- Impide identificar bots únicamente por nombres genéricos, anonimato, ideología o una sola coincidencia.
+- Exige al menos tres cuentas individualmente sustentadas para afirmar una granja de bots.
+
 # Versión 1.9.4 - Corrección del límite de respuesta (2026-08-27)
 
 - Aumenta el límite de salida de 5,000 a 14,000 tokens en análisis rápido y de 8,000 a 20,000 en investigación profunda.
