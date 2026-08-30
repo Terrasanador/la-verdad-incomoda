@@ -1105,6 +1105,7 @@ async function sampleVideoFrames(file) {
   }
 
   async function copySocialSummary(button) {
+    if (!lastAnalysisData || lastAnalysisData.estado === "sin_acceso" || lastAnalysisData.analizado === false) return;
     const text = socialSummary();
     if (!text) return;
     try {
@@ -1484,52 +1485,19 @@ async function sampleVideoFrames(file) {
   }
 
   function renderBlocked(data) {
-    lastAnalysisData = data;
+    lastAnalysisData = null;
     result.innerHTML = `
       ${reportSource()}
-      ${renderFinalVerdict(data)}
-      <h2 class="verdict">ACCESO LIMITADO</h2>
-
+      <h2 class="verdict">ANÁLISIS NO COMPLETADO</h2>
       <div class="grid">
-        ${textCard(
-          "Qué ocurrió",
-          data.mensaje ||
-          "No fue posible acceder directamente a todo el contenido.",
-          true
-        )}
-
-        ${listCard(
-          "Información disponible",
-          data.evidencia_a_favor ||
-          data.hechos_comprobados ||
-          data.elementos_disponibles,
-          true
-        )}
-
-        ${textCard(
-          "Conclusión",
-          data.conclusion ||
-          "El análisis se realizó únicamente con la información pública disponible.",
-          true
-        )}
-
-        ${listCard(
-          "Limitaciones",
-          data.limitaciones || data.instrucciones,
-          true
-        )}
-
-        ${renderLinkContext(data)}
-        ${renderSources(data.fuentes || [])}
+        ${textCard("Qué ocurrió", data.mensaje || "No se recuperó contenido suficiente para completar la verificación.", true)}
+        ${textCard("Sin veredicto", "Un fallo de acceso no demuestra que la información sea verdadera o falsa.", true)}
+        ${textCard("Enlace consultado", data.url_consultada || data.extraccion_enlace?.url_final || "", true)}
+        ${listCard("Diagnóstico de recuperación", data.limitaciones || [], true)}
       </div>
-
-      ${actions()}
     `;
-
     result.classList.add("visible");
-    result.scrollIntoView({ behavior: "smooth" });
-    maybeRequestContent(data);
-    setTimeout(speakResultIfNeeded, 150);
+    result.scrollIntoView({behavior:"smooth"});
   }
 
   function render(data) {
