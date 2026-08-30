@@ -1,3 +1,12 @@
+# Versión 1.9.11 - Conectores Facebook, Instagram y X (2026-08-30)
+
+- Añade rutas documentadas para publicaciones, páginas y grupos públicos de Facebook.
+- Integra detalles y transcripciones de Instagram, y texto y datos públicos de X.
+- El conector social continúa aunque falle la lectura directa; descarta redirecciones a login como destino del contenido.
+- Corrige la clasificación de enlaces cortos como perfiles y separa síntesis automáticas de transcripciones de voz.
+- Limita las muestras nuevas para controlar latencia y consumo de créditos.
+- No incorpora descarga/transcripción de audio propia para Facebook o X; el alcance depende del contenido devuelto por el proveedor.
+
 # Versión 1.9.10 - Resolución de enlaces cortos de video (2026-08-29)
 
 - Resuelve primero la redirección de enlaces cortos de TikTok.
