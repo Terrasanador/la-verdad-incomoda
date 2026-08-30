@@ -12,6 +12,9 @@ function platformFromUrl(rawUrl) {
     const host = new URL(rawUrl).hostname.toLowerCase().replace(/^www\./, "");
     if (host === "threads.com" || host === "threads.net") return "threads";
     if (host === "tiktok.com" || host.endsWith(".tiktok.com")) return "tiktok";
+    if (host === "facebook.com" || host.endsWith(".facebook.com") || host === "fb.watch") return "facebook";
+    if (host === "instagram.com" || host.endsWith(".instagram.com")) return "instagram";
+    if (["x.com", "twitter.com", "mobile.twitter.com", "mobile.x.com"].includes(host)) return "twitter";
     return "";
   } catch {
     return "";
@@ -25,6 +28,13 @@ function isProfileUrl(rawUrl, platform) {
     if (!parts.length) return false;
     if (platform === "threads") return parts.length === 1 && parts[0].startsWith("@");
     if (platform === "tiktok") return parts.length === 1 && parts[0].startsWith("@");
+    if (platform === "instagram") return parts.length === 1 && !["reel", "reels", "p", "stories", "share", "accounts", "explore"].includes(parts[0]);
+    if (platform === "twitter") return parts.length === 1 && !["home", "i", "search", "intent", "share", "login"].includes(parts[0]);
+    if (platform === "facebook") {
+      if (url.hostname === "fb.watch") return false;
+      if (parts[0] === "profile.php") return url.searchParams.has("id");
+      return parts.length === 1 && !["watch", "reel", "reels", "share", "groups", "login", "login.php", "story.php", "permalink.php", "photo.php", "photo", "videos"].includes(parts[0]);
+    }
     return false;
   } catch {
     return false;
@@ -49,6 +59,10 @@ function endpointRequests(platform, profile, rawUrl) {
     50
   );
 
+  if (platform === "facebook" && /^\/groups\/[^/]+\/?$/.test(new URL(rawUrl).pathname)) {
+    return [["facebook/group-posts", { limit: Math.min(profileLimit, 5) }]];
+  }
+
   if (profile) {
     const map = {
       threads: [
@@ -58,6 +72,18 @@ function endpointRequests(platform, profile, rawUrl) {
       tiktok: [
         ["tiktok/channel-details", {}],
         ["tiktok/channel-posts", { limit: profileLimit }]
+      ],
+      facebook: [
+        ["facebook/page-details", {}],
+        ["facebook/profile-posts", { limit: Math.min(profileLimit, 5) }]
+      ],
+      instagram: [
+        ["instagram/channel-details", {}],
+        ["instagram/channel-posts", { limit: Math.min(profileLimit, 5) }]
+      ],
+      twitter: [
+        ["twitter/profile", {}],
+        ["twitter/user-tweets", { limit: Math.min(profileLimit, 5) }]
       ]
     };
     return map[platform] || [];
@@ -69,6 +95,18 @@ function endpointRequests(platform, profile, rawUrl) {
       ["tiktok/video-details", {}],
       ["tiktok/comments", { limit: commentLimit }],
       ["tiktok/transcript", {}]
+    ],
+    facebook: [
+      ["facebook/details", {}],
+      ["facebook/comments", { limit: Math.min(commentLimit, 5) }],
+      ["facebook/summarize", {}]
+    ],
+    instagram: [
+      ["instagram/details", {}],
+      ["instagram/transcript", {}]
+    ],
+    twitter: [
+      ["twitter/tweet-details", {}]
     ]
   };
   return map[platform] || [];
@@ -84,7 +122,8 @@ async function callCaptapi(apiKey, path, rawUrl, extraParams = {}) {
   }
 
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeout = path.startsWith("facebook/") || path.endsWith("/transcript") ? 65000 : REQUEST_TIMEOUT_MS;
+  const timer = setTimeout(() => controller.abort(), timeout);
   try {
     const response = await fetch(`${API_BASE}/${path}?${query}`, {
       headers: {
@@ -147,7 +186,7 @@ function collectTikTokVideoUrls(value, output = new Set()) {
 export async function extractSocialPublicData(rawUrl) {
   const apiKey = process.env.CAPTAPI_API_KEY;
   const platform = platformFromUrl(rawUrl);
-  if (!apiKey || !["threads", "tiktok"].includes(platform)) return null;
+  if (!apiKey || !["threads", "tiktok", "facebook", "instagram", "twitter"].includes(platform)) return null;
 
   const profile = isProfileUrl(rawUrl, platform);
 
@@ -160,6 +199,8 @@ export async function extractSocialPublicData(rawUrl) {
 
   const recovered = [];
   const limitations = [];
+  if (platform === "facebook") limitations.push("Un resumen del proveedor es una síntesis automática, no una transcripción literal ni prueba de haber escuchado el audio. Contrastar con la publicación original y fuentes independientes.");
+  if (platform === "twitter") limitations.push("Los datos del post incluyen texto y referencias multimedia; no equivalen a transcripción del audio de un video adjunto. La muestra del perfil no garantiza orden cronológico.");
   settled.forEach((outcome, index) => {
     const path = requests[index][0];
     if (outcome.status === "fulfilled") {
