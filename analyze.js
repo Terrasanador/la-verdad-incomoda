@@ -59,8 +59,17 @@ const texto = tieneTexto
       try {
         // Resuelve primero los enlaces cortos. El conector social exige la URL
         // canónica del video y rechaza direcciones como vt.tiktok.com.
-        extraccionEnlace = await extractPublicLink(enlaceDetectado);
-        const enlaceCanonico = extraccionEnlace.url_final || enlaceDetectado;
+        extraccionEnlace = await extractPublicLink(enlaceDetectado).catch(() => ({
+          url_original: enlaceDetectado, url_final: enlaceDetectado,
+          acceso_directo: false, acceso_parcial: false,
+          limitaciones: ["La lectura directa falló; se intenta el conector social de forma independiente."]
+        }));
+        let enlaceCanonico = extraccionEnlace.url_final || enlaceDetectado;
+        // Las pantallas de inicio de sesión no son la publicación enviada.
+        const destino = new URL(enlaceCanonico);
+        if (/\/(?:login(?:\.php)?|checkpoint|accounts\/login)(?:\/|$)/i.test(destino.pathname)) {
+          enlaceCanonico = enlaceDetectado;
+        }
         const extraccionSocial = await extractSocialPublicData(enlaceCanonico).catch(error => ({
           proveedor: "Captapi",
           consultas_exitosas: 0,
@@ -70,6 +79,7 @@ const texto = tieneTexto
         }));
         if (extraccionSocial) {
           extraccionEnlace.datos_multiplataforma = extraccionSocial;
+          if (extraccionSocial.tipo_enlace) extraccionEnlace.tipo_enlace = extraccionSocial.tipo_enlace;
           extraccionEnlace.limitaciones = [
             ...(extraccionEnlace.limitaciones || []),
             ...(extraccionSocial.limitaciones || [])
@@ -110,6 +120,7 @@ const texto = tieneTexto
       "OBJETIVO:",
       "Investiga afirmaciones, noticias, rumores, enlaces, imágenes, publicaciones y preguntas mediante evidencia verificable.",
       "ANÁLISIS INTEGRAL OBLIGATORIO:",
+      "Distingue texto del post, descripción, transcripción de voz, síntesis automática del proveedor y fotogramas realmente examinados. Un resumen de Facebook no es una transcripción; el texto de un post de X no demuestra qué se dice en su video. No inventes citas literales, minutos, imágenes vistas ni audio escuchado.",
       "En cada consulta identifica y verifica primero la afirmación central; después examina automáticamente la cuenta o fuente que la publica y busca réplicas, textos coincidentes, cronología, coordinación y automatización cuando haya datos públicos suficientes.",
       "Estas tres tareas forman una sola verificación y nunca dependen de una elección del usuario. Completa cuentas_comparadas, publicaciones_coincidentes y patron_publicacion_grupal cuando encuentres evidencia; si no existe información suficiente, devuelve listas vacías y declara la limitación sin retrasar ni diluir el veredicto factual.",
       "El veredicto sobre la afirmación siempre tiene prioridad. La auditoría de cuentas y la detección de coordinación son contexto complementario y no sustituyen la respuesta VERDAD, MENTIRA, ENGAÑOSA o NO COMPROBABLE.",
