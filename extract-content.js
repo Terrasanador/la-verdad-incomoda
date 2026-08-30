@@ -169,7 +169,10 @@ export function isSocialProfileUrl(url, platform) {
   if (platform === "Threads") {
     return parts.length === 1 && /^@[^/]+$/i.test(parts[0]);
   }
-  if (platform === "Instagram" || platform === "TikTok") {
+  if (platform === "TikTok") {
+    return /^(?:www\.)?tiktok\.com$/i.test(url.hostname) && parts.length === 1 && /^@[^/]+$/.test(parts[0]);
+  }
+  if (platform === "Instagram") {
     return parts.length === 1 && !/^(?:p|reel|reels|video|stories)$/i.test(parts[0]);
   }
   if (platform === "X") {
@@ -269,16 +272,18 @@ async function assertSafeUrl(rawUrl) {
 
 async function safeFetch(rawUrl, options = {}) {
   let current = rawUrl;
+  const {onResolvedUrl, ...fetchOptions} = options;
 
   for (let redirectCount = 0; redirectCount <= MAX_REDIRECTS; redirectCount++) {
     const safeUrl = await assertSafeUrl(current);
+    onResolvedUrl?.(safeUrl);
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
     let response;
     try {
       response = await fetch(safeUrl, {
-        ...options,
+        ...fetchOptions,
         redirect: "manual",
         signal: controller.signal,
         headers: {
@@ -652,6 +657,14 @@ export async function extractPublicLink(rawUrl) {
 
   try {
     const response = await safeFetch(parsed.href, {
+      onResolvedUrl(url) {
+        result.url_final=url.href;
+        parsed=url;
+        plataforma=platformFromHostname(url.hostname);
+        esPerfil=isSocialProfileUrl(url,plataforma);
+        result.plataforma=plataforma;
+        result.tipo_enlace=esPerfil?'perfil':'publicacion_o_pagina';
+      },
       headers: { Accept: "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8" }
     });
     result.url_final = response.url || parsed.href;
@@ -715,6 +728,7 @@ export async function extractPublicLink(rawUrl) {
     ].filter(Boolean).join("\n\n").slice(0, MAX_TEXT_CHARS);
 
     const accessShell =
+      (plataforma === "TikTok" && /^TikTok\s*[-–|]\s*Make Your Day$/i.test(result.titulo.trim()) && !result.autor && !result.fecha_publicacion) ||
       (plataforma === "Threads" && esPerfil) ||
       result.texto_recuperado.length < 120 ||
       /(?:log in|sign up|iniciar sesi[oó]n|crear cuenta|enable javascript|javascript is disabled)/i.test(result.texto_recuperado);
