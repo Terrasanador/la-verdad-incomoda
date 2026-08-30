@@ -1268,8 +1268,7 @@ ${texto}${bloqueExtraccion}`
       archivo.type.startsWith("image/");
 
     const consultaEsEnlace =
-      tieneTexto &&
-      /^https?:\/\//i.test(texto.trim());
+      Boolean(enlaceDetectado);
 
     const esVideoYouTube = extraccionEnlace?.plataforma === "YouTube";
     const videoConMultiplesTemas = esVideoYouTube && resultado.temas_video.length > 1;
@@ -1284,10 +1283,9 @@ ${texto}${bloqueExtraccion}`
     const accesoRealmenteBloqueado =
       consultaEsEnlace &&
       !esImagen &&
-      !esPerfilSocial &&
       (
         resultado.estado === "sin_acceso" ||
-        pareceSinAcceso(textoDiagnostico)
+        (resultado.veredicto_final === 'NO VERIFICABLE' && pareceSinAcceso(textoDiagnostico))
       );
 
     if (accesoRealmenteBloqueado) {
@@ -1601,6 +1599,21 @@ ${texto}${bloqueExtraccion}`
 
     resultado.cobertura_archivos = coberturaArchivos;
     resultado.limitaciones = [...new Set([...(resultado.limitaciones || []), ...coberturaArchivos.flatMap(item => item.limitaciones)])];
+    if (accesoRealmenteBloqueado || resultado.estado === 'sin_acceso') {
+      // A technical failure is not a factual verdict. Return no generated sources,
+      // conclusions, profile guesses or social sharing payload.
+      return res.status(200).json({
+        estado:'sin_acceso', analizado:false, tipo_resultado:'error_recuperacion',
+        estado_tecnico:resultado.estado_tecnico==='OK'?'CONTENIDO_NO_RECUPERADO':resultado.estado_tecnico,
+        veredicto:null, veredicto_final:null, credibilidad:null, confianza:null,
+        mensaje:'Análisis no completado: no se recuperó suficiente contenido del enlace para comprobar sus afirmaciones. Esto no indica que sean verdaderas ni falsas.',
+        fuentes:[], compartir_habilitado:false,
+        url_consultada:extraccionEnlace?.url_final || enlaceDetectado,
+        limitaciones:extraccionEnlace?.limitaciones || ['No se obtuvo contenido suficiente para completar la verificación.'],
+        cobertura_archivos:coberturaArchivos,
+        acciones_disponibles:['REINTENTAR_MAS_TARDE'], reintentar:true
+      });
+    }
     return res.status(200).json(resultado);
   } catch (error) {
     console.error("Error interno:", error);
