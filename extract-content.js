@@ -1,5 +1,6 @@
 import dns from "node:dns/promises";
 import net from "node:net";
+import { mediaType } from "./media-input.js";
 
 const FETCH_TIMEOUT_MS = 12000;
 const MAX_HTML_BYTES = 2_000_000;
@@ -314,6 +315,28 @@ async function readLimitedText(response) {
     throw new Error("El contenido descargado excede el límite permitido.");
   }
   return text;
+}
+
+async function readMediaBytes(response, max=20_000_000) {
+  if (Number(response.headers.get('content-length')||0)>max) {
+    await response.body?.cancel();
+    throw new Error('El archivo enlazado excede 20 MB.');
+  }
+  const reader=response.body.getReader(); const chunks=[]; let size=0;
+  let timedOut=false;
+  const timer=setTimeout(()=>{timedOut=true;reader.cancel();},20000);
+  let complete=false;
+  try {
+    while(true) {
+      const item=await reader.read();
+      if(item.done){if(timedOut) throw new Error('La descarga del archivo agotó el tiempo disponible.');complete=true;break;}
+      size+=item.value.length;
+      if(size>max) throw new Error('El archivo enlazado excede 20 MB.');
+      chunks.push(Buffer.from(item.value));
+    }
+    if(!size) throw new Error('Archivo enlazado vacío.');
+    return Buffer.concat(chunks);
+  } finally { clearTimeout(timer); if(!complete) await reader.cancel(); }
 }
 
 function youtubeVideoId(rawUrl) {
@@ -639,6 +662,15 @@ export async function extractPublicLink(rawUrl) {
     }
 
     const contentType = response.headers.get("content-type") || "";
+    const mediaName=new URL(result.url_final || parsed.href).pathname.split('/').pop() || 'archivo';
+    const detectedType=mediaType(mediaName,contentType.split(';')[0]);
+    if (detectedType && !/text\/html/i.test(contentType)) {
+      const bytes=await readMediaBytes(response);
+      result.archivo_recuperado={name:mediaName,type:detectedType,data:bytes.toString('base64')};
+      result.acceso_directo=true;
+      result.tipo_enlace='archivo';
+      return result;
+    }
     const raw = await readLimitedText(response);
 
     if (/application\/json/i.test(contentType)) {
