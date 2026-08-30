@@ -826,7 +826,7 @@ async function sampleVideoFrames(file) {
         const sought=waitFor("seeked");video.currentTime=seconds;await sought;
         canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);
         const data=canvas.toDataURL("image/jpeg",0.55).split(",")[1];
-        if(data.length<=120000)frames.push({seconds,data});
+        if(data.length<=60000)frames.push({seconds,data});
       }
     } catch { /* Backend will explicitly label audio-only coverage. */ }
     finally {video.removeAttribute("src");video.load();URL.revokeObjectURL(objectUrl);}
