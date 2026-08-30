@@ -315,9 +315,9 @@
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
     <div class="drop-zone" id="dropZone">
       <h3>Arrastra un archivo aquí</h3>
-      <p>Imagen, audio, PDF, Word, Excel, PowerPoint o TXT. Límite: 3.5 MB.</p>
+      <p>Fotos, audio, video MP4/WebM, PDF, Word, Excel, PowerPoint y texto. Adjuntos: máximo 3 MB. Enlaces directos a archivos: hasta 20 MB. Video: audio y muestra de fotogramas; no cada escena.</p>
       <label class="file-button" for="fileInput">Seleccionar archivo</label>
-      <input id="fileInput" type="file" accept="image/*,audio/*,video/*,.pdf,.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+      <input id="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.flac,.ogg,.mp4,.webm,.pdf,.txt,.md,.csv,.tsv,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
       <div class="selected-file" id="selectedFile"><strong id="fileName"></strong><small id="fileDetails"></small><button id="removeFile" type="button">Quitar archivo</button></div>
     </div>
     <div class="mode-row">
@@ -788,8 +788,8 @@
       return;
     }
 
-    if (file.size > 3500000) {
-      alert("El archivo excede 3.5 MB.");
+    if (file.size > 3000000) {
+      alert("El adjunto excede 3 MB. Un enlace directo público permite archivos de hasta 20 MB.");
       fileInput.value = "";
       selectedFile = null;
       return;
@@ -800,6 +800,37 @@
       `${file.type || "Tipo desconocido"} · ${bytes(file.size)}`;
 
     selectedFileBox.classList.add("visible");
+  }
+
+async function sampleVideoFrames(file) {
+    const video=document.createElement("video");
+    const objectUrl=URL.createObjectURL(file);
+    video.muted=true; video.preload="auto"; video.playsInline=true;
+    const frames=[];
+    const waitFor=(event)=>new Promise((resolve,reject)=>{
+      const cleanup=()=>{clearTimeout(timer);video.removeEventListener(event,done);video.removeEventListener("error",bad);};
+      const done=()=>{cleanup();resolve();};
+      const bad=()=>{cleanup();reject(new Error("No se pudieron muestrear imágenes del video."));};
+      const timer=setTimeout(bad,8000);
+      video.addEventListener(event,done,{once:true}); video.addEventListener("error",bad,{once:true});
+    });
+    try {
+      const ready=waitFor("loadeddata");video.src=objectUrl;await ready;
+      if(!Number.isFinite(video.duration)||video.duration<=0) return [];
+      const canvas=document.createElement("canvas");
+      const scale=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
+      canvas.width=Math.max(1,Math.round(video.videoWidth*scale));
+      canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
+      for(const fraction of [0.02,0.25,0.5,0.75,0.98]){
+        const seconds=video.duration*fraction;
+        const sought=waitFor("seeked");video.currentTime=seconds;await sought;
+        canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);
+        const data=canvas.toDataURL("image/jpeg",0.55).split(",")[1];
+        if(data.length<=120000)frames.push({seconds,data});
+      }
+    } catch { /* Backend will explicitly label audio-only coverage. */ }
+    finally {video.removeAttribute("src");video.load();URL.revokeObjectURL(objectUrl);}
+    return frames;
   }
 
   function file64(file) {
@@ -1792,6 +1823,9 @@
           size: selectedFile.size,
           data: await file64(selectedFile)
         };
+        if (/video\//.test(selectedFile.type) || /\.(mp4|webm)$/i.test(selectedFile.name)) {
+          payload.file.frames = await sampleVideoFrames(selectedFile);
+        }
       }
 
       const response = await fetch("/api/analyze", {
