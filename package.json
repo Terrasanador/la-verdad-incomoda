@@ -1,10 +1,10 @@
 {
   "name": "la-verdad-incomoda-android",
-  "version": "1.9.13",
+  "version": "1.9.14",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test media-input.test.mjs access-regression.test.mjs",
+    "test": "node --test media-input.test.mjs access-regression.test.mjs threads-access.test.mjs",
     "check": "node --check analyze.js && node --check extract-content.js && node --check social-data.js && node --check content-api.js && node --check article-render.js && node --check health.js && node --check translate-ui.js"
   },
   "engines": {

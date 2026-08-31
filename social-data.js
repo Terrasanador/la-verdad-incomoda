@@ -1,5 +1,6 @@
 // Recuperación complementaria de contenido público en redes mediante Captapi.
 // La clave se lee exclusivamente desde Vercel y nunca se envía al navegador.
+import { threadsLinkType, threadsRetryRemaining, rememberThreadsRateLimit } from './threads-access.js';
 
 const API_BASE = "https://api.captapi.com/v1";
 const REQUEST_TIMEOUT_MS = 22000;
@@ -113,6 +114,10 @@ function endpointRequests(platform, profile, rawUrl) {
 }
 
 async function callCaptapi(apiKey, path, rawUrl, extraParams = {}) {
+  if(path.startsWith('threads/') && threadsRetryRemaining('provider')) {
+    const error=new Error('El proveedor de Threads sigue dentro de su periodo de espera.');
+    error.status=429;error.retryAfterSeconds=threadsRetryRemaining('provider');throw error;
+  }
   const query = new URLSearchParams({
     url: rawUrl,
     cache: "true"
@@ -133,6 +138,11 @@ async function callCaptapi(apiKey, path, rawUrl, extraParams = {}) {
       signal: controller.signal
     });
     const contentType = response.headers.get("content-type") || "";
+    if(response.status===429 && path.startsWith('threads/')) {
+      const error=new Error('El proveedor de Threads limitó temporalmente las solicitudes (HTTP 429).');
+      error.status=429;error.retryAfterSeconds=rememberThreadsRateLimit(response,'provider');
+      await response.body?.cancel();throw error;
+    }
     const raw = await response.text();
     let body = null;
     if (/application\/json/i.test(contentType) && raw) {
@@ -186,6 +196,11 @@ function collectTikTokVideoUrls(value, output = new Set()) {
 export async function extractSocialPublicData(rawUrl) {
   const apiKey = process.env.CAPTAPI_API_KEY;
   const platform = platformFromUrl(rawUrl);
+  if(platform==='threads' && !['post','profile'].includes(threadsLinkType(rawUrl))) {
+    return {proveedor:'Captapi',plataforma:platform,tipo_enlace:'compartido_no_resuelto',
+      consultas_exitosas:0,consultas_intentadas:0,contenido_json:'',
+      limitaciones:['No se consultó el proveedor: falta resolver el enlace de Threads a una publicación o perfil con dirección válida.']};
+  }
   if (!apiKey || !["threads", "tiktok", "facebook", "instagram", "twitter"].includes(platform)) return null;
 
   const profile = isProfileUrl(rawUrl, platform);
@@ -199,6 +214,7 @@ export async function extractSocialPublicData(rawUrl) {
 
   const recovered = [];
   const limitations = [];
+  const retryAfter=Math.max(0,...settled.map(item=>item.status==='rejected'?Number(item.reason?.retryAfterSeconds)||0:0));
   if (platform === "facebook") limitations.push("Un resumen del proveedor es una síntesis automática, no una transcripción literal ni prueba de haber escuchado el audio. Contrastar con la publicación original y fuentes independientes.");
   if (platform === "twitter") limitations.push("Los datos del post incluyen texto y referencias multimedia; no equivalen a transcripción del audio de un video adjunto. La muestra del perfil no garantiza orden cronológico.");
   settled.forEach((outcome, index) => {
@@ -240,6 +256,7 @@ export async function extractSocialPublicData(rawUrl) {
       consultas_exitosas: 0,
       consultas_intentadas: requests.length,
       contenido_json: "",
+      retry_after_seconds: retryAfter,
       limitaciones: limitations
     };
   }

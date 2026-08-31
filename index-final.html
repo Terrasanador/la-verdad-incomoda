@@ -454,6 +454,8 @@
 
 
   let selectedFile = null;
+  let threadsCooldownUntil = 0;
+  try { threadsCooldownUntil = Number(sessionStorage.getItem("lvi_threads_retry_at")) || 0; } catch {}
   let selectedMode = "rapido";
   let timer = null;
   let lastOriginalQuery = "";
@@ -1492,6 +1494,7 @@ async function sampleVideoFrames(file) {
       <div class="grid">
         ${textCard("Qué ocurrió", data.mensaje || "No se recuperó contenido suficiente para completar la verificación.", true)}
         ${textCard("Sin veredicto", "Un fallo de acceso no demuestra que la información sea verdadera o falsa.", true)}
+        ${Number(data.retry_after_seconds)>0 ? textCard("Espera antes de reintentar", `Al menos ${Math.ceil(Number(data.retry_after_seconds))} segundos. No se realizarán reintentos automáticos. La espera no garantiza que Threads permita el acceso después.`, true) : ""}
         ${textCard("Enlace consultado", data.url_consultada || data.extraccion_enlace?.url_final || "", true)}
         ${listCard("Diagnóstico de recuperación", data.limitaciones || [], true)}
       </div>
@@ -1748,6 +1751,11 @@ async function sampleVideoFrames(file) {
   }
 
   async function analyze(textOverride = "", isSupplement = false) {
+    const candidate = typeof textOverride === "string" && textOverride ? textOverride : newsInput.value;
+    if (/https?:\/\/(?:www\.)?threads\.(?:com|net)(?:\/|$)/i.test(candidate) && Date.now() < threadsCooldownUntil) {
+      renderBlocked({mensaje:"Threads sigue dentro del periodo de espera. No se envió otra solicitud.", retry_after_seconds:Math.ceil((threadsCooldownUntil-Date.now())/1000)});
+      return;
+    }
     const text =
       typeof textOverride === "string" && textOverride.trim()
         ? textOverride.trim()
@@ -1817,17 +1825,17 @@ async function sampleVideoFrames(file) {
         );
       }
 
-      if (!response.ok) {
-        if (data?.estado === "sin_acceso" || data?.analizado === false) {
-          endProgress(false);
-          trackUsage("verificacion_sin_acceso", {
-            codigo_http: response.status,
-            motivo: String(data?.estado_tecnico || "sin_acceso")
-          });
-          render(data);
-          return;
+      if (data?.estado === "sin_acceso" || data?.analizado === false) {
+        if (Number(data.retry_after_seconds)>0 && /https?:\/\/(?:www\.)?threads\.(?:com|net)(?:\/|$)/i.test(text)) {
+          threadsCooldownUntil=Math.max(threadsCooldownUntil,Date.now()+Number(data.retry_after_seconds)*1000);
+          try { sessionStorage.setItem("lvi_threads_retry_at",String(threadsCooldownUntil)); } catch {}
         }
-
+        endProgress(false);
+        trackUsage("verificacion_sin_acceso",{codigo_http:response.status,motivo:String(data.estado_tecnico||"sin_acceso")});
+        render(data);
+        return;
+      }
+      if (!response.ok) {
         const error =
           data.error ||
           data.detalle ||

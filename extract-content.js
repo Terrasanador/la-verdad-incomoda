@@ -1,6 +1,7 @@
 import dns from "node:dns/promises";
 import net from "node:net";
 import { mediaType } from "./media-input.js";
+import { isThreadsUrl, threadsLinkType, threadsCanonicalFromHtml, rememberThreadsRateLimit, threadsRetryRemaining } from "./threads-access.js";
 
 const FETCH_TIMEOUT_MS = 12000;
 const MAX_HTML_BYTES = 2_000_000;
@@ -277,6 +278,10 @@ async function safeFetch(rawUrl, options = {}) {
   for (let redirectCount = 0; redirectCount <= MAX_REDIRECTS; redirectCount++) {
     const safeUrl = await assertSafeUrl(current);
     onResolvedUrl?.(safeUrl);
+    if (isThreadsUrl(safeUrl.href) && threadsRetryRemaining()) {
+      const error=new Error('Threads sigue dentro del periodo de espera indicado tras HTTP 429.');
+      error.status=429;error.retryAfterSeconds=threadsRetryRemaining();throw error;
+    }
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
@@ -296,10 +301,18 @@ async function safeFetch(rawUrl, options = {}) {
       clearTimeout(timer);
     }
 
+    if (response.status===429 && isThreadsUrl(safeUrl.href)) {
+      const seconds=rememberThreadsRateLimit(response);
+      await response.body?.cancel();
+      const error=new Error(`Threads respondió HTTP 429. No se reintentará antes de ${seconds} segundos.`);
+      error.status=429;error.retryAfterSeconds=seconds;throw error;
+    }
+
     if ([301, 302, 303, 307, 308].includes(response.status)) {
       const location = response.headers.get("location");
       if (!location) return response;
       current = new URL(location, safeUrl).href;
+      await response.body?.cancel();
       continue;
     }
 
@@ -686,6 +699,21 @@ export async function extractPublicLink(rawUrl) {
     }
     const raw = await readLimitedText(response);
 
+    if (threadsLinkType(parsed.href)==='share') {
+      const canonical=threadsCanonicalFromHtml(raw,parsed.href);
+      if (!canonical) {
+        result.tipo_enlace='compartido_no_resuelto';
+        result.limitaciones.push('El enlace compartido de Threads no expuso una dirección canónica de publicación o perfil. No se envió a un endpoint incompatible.');
+        return result;
+      }
+      result.url_final=canonical;
+      result.tipo_enlace=threadsLinkType(canonical)==='profile'?'perfil':'publicacion_o_pagina';
+      result.resolucion_enlace='canonical_html';
+      // The share-page HTML is not evidence of the canonical post's contents.
+      result.limitaciones.push('Se identificó la dirección final en los metadatos de Threads; el contenido debe recuperarse desde esa dirección.');
+      return result;
+    }
+
     if (/application\/json/i.test(contentType)) {
       result.texto_recuperado = cleanText(raw);
       result.acceso_directo = result.texto_recuperado.length >= 80;
@@ -752,6 +780,9 @@ export async function extractPublicLink(rawUrl) {
       );
     }
   } catch (error) {
+    if (error.status===429) {
+      result.http_status=429;result.retry_after_seconds=error.retryAfterSeconds;
+    }
     result.limitaciones.push(
       error?.name === "AbortError"
         ? "La descarga directa agotó el tiempo de espera."

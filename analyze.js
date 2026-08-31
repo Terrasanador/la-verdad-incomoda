@@ -1,6 +1,7 @@
 import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
 import { extractSocialPublicData } from "./social-data.js";
 import { prepareFile, validateFile } from "./media-input.js";
+import { isThreadsUrl, threadsLinkType, threadsReferenceOnly, incompleteThreadsResult } from './threads-access.js';
 
 // La Verdad Incómoda — analyze.js v2.3
 // Perfiles sociales: auditoría parcial útil sin convertir metadatos públicos en un fallo total.
@@ -74,7 +75,7 @@ const texto = tieneTexto
         if (/\/(?:login(?:\.php)?|checkpoint|accounts\/login)(?:\/|$)/i.test(destino.pathname)) {
           enlaceCanonico = enlaceDetectado;
         }
-        const extraccionSocial = await extractSocialPublicData(enlaceCanonico).catch(error => ({
+        const extraccionSocial = extraccionEnlace.retry_after_seconds ? null : await extractSocialPublicData(enlaceCanonico).catch(error => ({
           proveedor: "Captapi",
           consultas_exitosas: 0,
           consultas_intentadas: 0,
@@ -82,6 +83,7 @@ const texto = tieneTexto
           limitaciones: [`Conector social: ${error?.message || "consulta no disponible"}`]
         }));
         if (extraccionSocial) {
+          if(extraccionSocial.retry_after_seconds) extraccionEnlace.retry_after_seconds=extraccionSocial.retry_after_seconds;
           extraccionEnlace.datos_multiplataforma = extraccionSocial;
           if (extraccionSocial.tipo_enlace) extraccionEnlace.tipo_enlace = extraccionSocial.tipo_enlace;
           extraccionEnlace.limitaciones = [
@@ -108,6 +110,13 @@ const texto = tieneTexto
           limitaciones: ["La extracción directa falló de forma inesperada."]
         };
       }
+    }
+
+    if (!archivo && isThreadsUrl(enlaceDetectado) && threadsReferenceOnly(texto,enlaceDetectado) &&
+      (extraccionEnlace?.retry_after_seconds || ['share','unsupported'].includes(threadsLinkType(extraccionEnlace?.url_final || enlaceDetectado)))) {
+      const pending=incompleteThreadsResult(extraccionEnlace);
+      if(pending.retry_after_seconds) res.setHeader('Retry-After',String(pending.retry_after_seconds));
+      return res.status(200).json(pending);
     }
 
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
@@ -464,7 +473,7 @@ const texto = tieneTexto
     if(enlacesAdicionales.length>2) contenidoUsuario.push({type:'input_text',text:'Solo se recuperaron directamente los primeros tres enlaces de la consulta; no presentes los demás como revisados.'});
     const adicionales=await Promise.all(enlacesAdicionales.slice(0,2).map(async url=>{
       const page=await extractPublicLink(url);
-      const social=await extractSocialPublicData(page.url_final||url).catch(()=>null);
+      const social=page.retry_after_seconds?null:await extractSocialPublicData(page.url_final||url).catch(()=>null);
       return {url,page,social};
     }));
     for(const {url,page,social} of adicionales) {
@@ -1608,6 +1617,7 @@ ${texto}${bloqueExtraccion}`
         veredicto:null, veredicto_final:null, credibilidad:null, confianza:null,
         mensaje:'Análisis no completado: no se recuperó suficiente contenido del enlace para comprobar sus afirmaciones. Esto no indica que sean verdaderas ni falsas.',
         fuentes:[], compartir_habilitado:false,
+        retry_after_seconds:extraccionEnlace?.retry_after_seconds||0,
         url_consultada:extraccionEnlace?.url_final || enlaceDetectado,
         limitaciones:extraccionEnlace?.limitaciones || ['No se obtuvo contenido suficiente para completar la verificación.'],
         cobertura_archivos:coberturaArchivos,
