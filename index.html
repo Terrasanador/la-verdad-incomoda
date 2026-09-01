@@ -959,6 +959,36 @@ async function sampleVideoFrames(file) {
     `;
   }
 
+  function renderJournalismAudit(items = []) {
+    const audits = Array.isArray(items) ? items.slice(0, 5) : [];
+    if (!audits.length) return "";
+
+    const rows = audits.map(item => {
+      const orientation = item.orientacion || "NO DETERMINADA";
+      const paymentProof = item.prueba_pago_para_mentir || "NO DOCUMENTADA";
+      return `<div class="account-row">
+        <div class="account-head">
+          <span class="account-name">${esc(item.medio_o_periodista || "Fuente no identificada")}</span>
+          <span class="account-label">Orientación: ${esc(orientation)}</span>
+        </div>
+        <p><strong>¿Hay prueba de pago para mentir?</strong> ${esc(paymentProof)}</p>
+        ${item.relacion_con_publicacion_actual ? `<p><strong>Relación con esta publicación:</strong> ${esc(item.relacion_con_publicacion_actual)}</p>` : ""}
+        ${list(item.fundamento_orientacion)}
+        ${list(item.propiedad_y_financiamiento)}
+        ${list(item.contratos_o_pagos_documentados)}
+        ${list(item.antecedentes_verificados)}
+        ${item.conclusion ? `<p>${esc(item.conclusion)}</p>` : ""}
+        ${Array.isArray(item.limitaciones) && item.limitaciones.length ? `<small>Limitaciones: ${esc(item.limitaciones.join(" "))}</small>` : ""}
+      </div>`;
+    }).join("");
+
+    return `<article class="card full">
+      <h3>Auditoría de medios y periodistas</h3>
+      <p>Separa orientación editorial, financiamiento, antecedentes y prueba de pago vinculada a la publicación concreta.</p>
+      <div class="account-audit">${rows}</div>
+    </article>`;
+  }
+
   function firstSpokenItem(...groups) {
     for (const group of groups) {
       if (!Array.isArray(group)) continue;
@@ -1707,6 +1737,8 @@ async function sampleVideoFrames(file) {
           data.contexto,
           true
         )}
+
+        ${renderJournalismAudit(data.auditoria_fuentes_periodisticas)}
 
         ${textCard(
           "Contraste de fuentes",

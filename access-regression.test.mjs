@@ -84,3 +84,36 @@ test('Journalistic repetition cannot manufacture a partially true verdict',async
     assert.deepEqual(res.value.fuentes,[]);
   } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
 });
+test('Journalistic claims require a source audit and direct proof of paid deception',async()=>{
+  const old=global.fetch, oldKey=process.env.OPENAI_API_KEY;
+  process.env.OPENAI_API_KEY='mock';
+  global.fetch=async(url,options)=>{
+    assert.equal(url,'https://api.openai.com/v1/responses');
+    const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
+    assert(body.text.format.schema.required.includes('auditoria_fuentes_periodisticas'));
+    result.estado='analizado';
+    result.veredicto='ENGAÑOSO';
+    result.veredicto_final='ENGAÑOSA';
+    result.confianza=92;
+    result.resumen='Informes periodísticos sostienen el señalamiento y el comunicador recibió dinero para inventar la nota.';
+    result.evaluacion_afirmaciones=[{
+      afirmacion:'El señalamiento está demostrado',estado:'NO DEMOSTRADA',relacion_con_afirmacion:'DIRECTA',sustento_directo:[],fuente_matriz:'Medio A',lo_que_no_demuestra:'El hecho subyacente'
+    }];
+    result.auditoria_sesgo_fuentes.obligacion_contradiccion_cumplida=true;
+    result.auditoria_fuentes_periodisticas=[{
+      medio_o_periodista:'Medio A',orientacion:'DERECHA',fundamento_orientacion:['Línea editorial documentada'],
+      propiedad_y_financiamiento:['Propietario identificado'],contratos_o_pagos_documentados:['Contrato de publicidad'],
+      antecedentes_verificados:['Corrección publicada'],relacion_con_publicacion_actual:'NO DEMOSTRADA',
+      prueba_pago_para_mentir:'NO DOCUMENTADA',conclusion:'El contrato no prueba compra de esta nota.',limitaciones:[]
+    }];
+    return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}]});
+  };
+  try {
+    const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+    await handler({method:'POST',body:{text:'Revisa si este medio cobró por publicar una mentira.'}},res);
+    assert.equal(res.code,200);
+    assert.equal(res.value.auditoria_fuentes_periodisticas[0].prueba_pago_para_mentir,'NO DOCUMENTADA');
+    assert(res.value.confianza<=49);
+    assert(res.value.limitaciones.some(item=>item.includes('No se documentó un vínculo directo')));
+  } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
+});

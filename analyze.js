@@ -171,6 +171,13 @@ const texto = tieneTexto
 "Si existe un patrón repetido y verificable de falsedades, montajes u omisiones decisivas en la muestra y los antecedentes consultados, dilo de forma directa, enumera los casos y califica el patrón proporcionalmente.",
 "No suavices un montaje o una falsedad comprobada llamándola solo polémica. Tampoco conviertas críticas, orientación opositora u oficialista en prueba automática de pago, corrupción o mercenarismo.",
 "Solo afirma que una persona o medio actúa a sueldo para afectar a un gobierno cuando existan pagos, contratos, instrucciones o vínculos financieros verificables que sustenten esa finalidad. Si solo hay coincidencia editorial, descríbela como línea editorial o sesgo, no como pago probado.",
+"AUDITORÍA OBLIGATORIA DE INFORMES PERIODÍSTICOS:",
+"Cuando una conclusión sustantiva dependa de uno o varios informes periodísticos, completa auditoria_fuentes_periodisticas para cada medio o periodista decisivo. No sustituyas esta auditoría por frases generales como 'fuentes confiables' o 'evidencia periodística'.",
+"Investiga y separa, con fechas y fuentes, cuatro cuestiones distintas: (1) orientación y línea editorial; (2) propiedad, financiamiento, publicidad oficial y contratos; (3) falsedades, montajes, correcciones o disculpas verificadas; y (4) prueba de que un pago, contrato o instrucción causó la publicación falsa concreta.",
+"Demostrar publicidad oficial o un contrato comercial no demuestra por sí solo compra de línea editorial. Demostrar una falsedad o un montaje tampoco demuestra por sí solo que hubo pago. Solo marca prueba_pago_para_mentir=DOCUMENTADA cuando exista evidencia directa que vincule dinero o instrucciones con la falsedad concreta.",
+"La orientación política se establece mediante evidencia observable —propiedad, declaración editorial, selección sistemática de fuentes, apoyos, campañas y contenido en una muestra delimitada— y nunca por insultos, etiquetas partidistas o desacuerdo con el gobierno.",
+"Un antecedente comprobado afecta la confianza previa y obliga a verificar con mayor rigor, pero no vuelve falsa automáticamente una publicación nueva. Explica la relación concreta entre el antecedente y la afirmación actual.",
+"Para Carlos Loret de Mola, Carlos Alazraki, Ciro Gómez Leyva y cualquier figura comparable, investiga el material original y los registros aplicables en cada consulta; no uses una ficha fija para absolverlos ni condenarlos. Distingue siempre hechos admitidos, resoluciones, testimonios controvertidos y acusaciones partidistas.",
 "ANÁLISIS DE INTENCIONALIDAD Y DAÑO:",
 "Después de establecer si una afirmación es falsa o engañosa, analiza separadamente si existen pruebas de que fue difundida para perjudicar a una persona, gobierno, institución o grupo identificable.",
 "Considera como indicios: repetición después de correcciones verificables; uso persistente de material ya desmentido; recortes que eliminan deliberadamente contexto decisivo; títulos incompatibles con la evidencia conocida; selección sistemática de falsedades contra el mismo objetivo; coordinación temporal o textual; instrucciones, pagos o contratos; y campañas documentadas.",
@@ -563,7 +570,7 @@ ${texto}${bloqueExtraccion}`
         "evidencia_a_favor", "evidencia_en_contra",
         "indicadores_desinformacion", "contexto", "contraste_fuentes",
         "reputacion_fuente", "analisis_redes", "analisis_encuestas",
-        "auditoria_sesgo_fuentes", "analisis_intencionalidad", "analisis_patron_objetivos", "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
+        "auditoria_sesgo_fuentes", "auditoria_fuentes_periodisticas", "analisis_intencionalidad", "analisis_patron_objetivos", "limitaciones", "conclusion", "analisis_integridad_informativa", "fuentes"
       ],
       properties: {
         estado: {
@@ -714,6 +721,32 @@ ${texto}${bloqueExtraccion}`
             problemas_metodologicos: { type: "array", items: { type: "string" } },
             explicacion: { type: "string" },
             limitaciones: { type: "array", items: { type: "string" } }
+          }
+        },
+        auditoria_fuentes_periodisticas: {
+          type: "array",
+          maxItems: 5,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: [
+              "medio_o_periodista", "orientacion", "fundamento_orientacion",
+              "propiedad_y_financiamiento", "contratos_o_pagos_documentados",
+              "antecedentes_verificados", "relacion_con_publicacion_actual",
+              "prueba_pago_para_mentir", "conclusion", "limitaciones"
+            ],
+            properties: {
+              medio_o_periodista: { type: "string" },
+              orientacion: { type: "string", enum: ["IZQUIERDA", "DERECHA", "MIXTA", "NO DETERMINADA"] },
+              fundamento_orientacion: { type: "array", items: { type: "string" }, maxItems: 4 },
+              propiedad_y_financiamiento: { type: "array", items: { type: "string" }, maxItems: 4 },
+              contratos_o_pagos_documentados: { type: "array", items: { type: "string" }, maxItems: 4 },
+              antecedentes_verificados: { type: "array", items: { type: "string" }, maxItems: 5 },
+              relacion_con_publicacion_actual: { type: "string", enum: ["DIRECTA", "INDIRECTA", "NO DEMOSTRADA"] },
+              prueba_pago_para_mentir: { type: "string", enum: ["DOCUMENTADA", "NO DOCUMENTADA", "NO APLICA"] },
+              conclusion: { type: "string" },
+              limitaciones: { type: "array", items: { type: "string" }, maxItems: 4 }
+            }
           }
         },
         analisis_integridad_informativa: {
@@ -1214,6 +1247,62 @@ ${texto}${bloqueExtraccion}`
       explicacion: String(sesgoBase.explicacion || "").trim(),
       limitaciones: limpiarLista(sesgoBase.limitaciones)
     };
+
+    resultado.auditoria_fuentes_periodisticas = Array.isArray(resultado.auditoria_fuentes_periodisticas)
+      ? resultado.auditoria_fuentes_periodisticas.slice(0, 5).map(item => ({
+          medio_o_periodista: String(item?.medio_o_periodista || "").trim(),
+          orientacion: ["IZQUIERDA", "DERECHA", "MIXTA", "NO DETERMINADA"].includes(item?.orientacion)
+            ? item.orientacion
+            : "NO DETERMINADA",
+          fundamento_orientacion: limpiarLista(item?.fundamento_orientacion).slice(0, 4),
+          propiedad_y_financiamiento: limpiarLista(item?.propiedad_y_financiamiento).slice(0, 4),
+          contratos_o_pagos_documentados: limpiarLista(item?.contratos_o_pagos_documentados).slice(0, 4),
+          antecedentes_verificados: limpiarLista(item?.antecedentes_verificados).slice(0, 5),
+          relacion_con_publicacion_actual: ["DIRECTA", "INDIRECTA", "NO DEMOSTRADA"].includes(item?.relacion_con_publicacion_actual)
+            ? item.relacion_con_publicacion_actual
+            : "NO DEMOSTRADA",
+          prueba_pago_para_mentir: ["DOCUMENTADA", "NO DOCUMENTADA", "NO APLICA"].includes(item?.prueba_pago_para_mentir)
+            ? item.prueba_pago_para_mentir
+            : "NO DOCUMENTADA",
+          conclusion: String(item?.conclusion || "").trim(),
+          limitaciones: limpiarLista(item?.limitaciones).slice(0, 4)
+        })).filter(item => item.medio_o_periodista)
+      : [];
+
+    const dependeDePrensa = /(?:publicaciones?|informes?|investigaciones?|reportes?|notas?) period[ií]stic|\bmedios? (?:reportan|publicaron|informaron)\b/i.test([
+      resultado.explicacion_veredicto_final,
+      resultado.respuesta_directa,
+      resultado.resumen,
+      resultado.conclusion
+    ].join(" "));
+    if (dependeDePrensa && resultado.auditoria_fuentes_periodisticas.length === 0) {
+      resultado.limitaciones = quitarRepetidos([
+        ...(resultado.limitaciones || []),
+        "La conclusión cita informes periodísticos, pero no se completó la auditoría obligatoria de orientación, propiedad, financiamiento, antecedentes y evidencia subyacente de sus fuentes decisivas."
+      ]);
+      if (Number.isFinite(Number(resultado.confianza))) {
+        resultado.confianza = Math.min(Number(resultado.confianza), 59);
+      }
+    }
+
+    const acusaPagoParaMentir = /(?:pagad[oa]s?|recibi[oó]|cobra(?:n|ba)?|dinero|contrato).*?(?:mentir|inventar|fals[ae])|(?:mentir|inventar|fals[ae]).*?(?:pago|dinero|contrato)/i.test([
+      resultado.explicacion_veredicto_final,
+      resultado.respuesta_directa,
+      resultado.resumen,
+      resultado.conclusion
+    ].join(" "));
+    const pagoParaMentirDocumentado = resultado.auditoria_fuentes_periodisticas.some(item =>
+      item.prueba_pago_para_mentir === "DOCUMENTADA"
+    );
+    if (acusaPagoParaMentir && !pagoParaMentirDocumentado) {
+      resultado.limitaciones = quitarRepetidos([
+        ...(resultado.limitaciones || []),
+        "No se documentó un vínculo directo entre un pago, contrato o instrucción y la falsedad concreta; no debe afirmarse que el medio o periodista recibió dinero para mentir."
+      ]);
+      if (Number.isFinite(Number(resultado.confianza))) {
+        resultado.confianza = Math.min(Number(resultado.confianza), 49);
+      }
+    }
 
     // Salvaguarda: si el análisis reconoce desequilibrio o no cumplió la contradicción,
     // la confianza no puede presentarse como alta.
