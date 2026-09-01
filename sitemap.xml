@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.laverdadincomoda.mx/</loc><lastmod>2026-08-19</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://www.laverdadincomoda.mx/articles.html</loc><lastmod>2026-08-19</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/</loc><lastmod>2026-09-01</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articles.html</loc><lastmod>2026-09-01</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/metodologia.html</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/politica-editorial.html</loc><lastmod>2026-08-13</lastmod><priority>0.8</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/correcciones.html</loc><lastmod>2026-08-13</lastmod><priority>0.7</priority></url>
@@ -26,4 +26,8 @@
   <url><loc>https://www.laverdadincomoda.mx/articulos/critica-campana-desinformacion-diferencias</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/articulos/verificar-promesas-politicas-resultados</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/articulos/protocolo-correccion-verificacion-publicada</loc><lastmod>2026-08-24</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/privacidad.html</loc><lastmod>2026-09-01</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/terminos.html</loc><lastmod>2026-09-01</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/contacto.html</loc><lastmod>2026-09-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.laverdadincomoda.mx/articulos/falso-rancho-san-cristobal-reynosa-vicente-fox</loc><lastmod>2026-09-01</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
 </urlset>
