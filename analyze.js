@@ -316,6 +316,8 @@ const texto = tieneTexto
       "Para afirmaciones sobre precios identifica producto, presentación, añada o modelo, fecha, tipo de precio (tienda, carta, promoción o factura) y moneda. Un rango comercial de productos semejantes no demuestra el precio exacto pagado en una ocasión concreta.",
       "Para generalizaciones como 'los hijos', 'todos', 'siempre' o 'viven de esta manera', comprueba el universo al que se refiere y no extrapoles a personas, fechas o conductas no documentadas.",
       "Solo usa PARCIALMENTE VERDADERO si existe al menos una proposición sustantiva demostrada y otra sustantiva contradicha o no demostrada. La existencia de notas, acusaciones, rumores, fotografías ambiguas o personas reunidas no constituye por sí sola la parte verdadera de una acusación distinta.",
+      "Antes de concluir que no existen fuentes sobre una acusación reciente, realiza búsquedas con la frase exacta y variantes de nombres, cifra, producto, lugar y fecha; localiza la publicación más antigua y diferencia esa fuente matriz de sus réplicas.",
+      "No incluyas como fuente una nota de contexto que no documente, contradiga ni examine materialmente la afirmación concreta. Que una nota trate sobre las mismas personas no la vuelve evidencia del hecho investigado.",
       "La ausencia de sentencia no vuelve falsa una afirmación, pero tampoco permite presentarla como hecho probado. Distingue evidencia factual, acusación, investigación abierta y responsabilidad judicial.",
       "En afirmaciones sobre aprobación, popularidad o respaldo político, revisa varias encuestas recientes, sus fechas, preguntas, muestras, patrocinadores y metodologías. No extrapoles una encuesta aislada ni mezcles aprobación presidencial con aceptación de un movimiento político distinto.",
       "Explica si el resultado podría estar condicionado por una selección desequilibrada de fuentes. Si no se logró pluralidad suficiente, no presentes una conclusión tajante de alta confianza.",
@@ -849,7 +851,7 @@ ${texto}${bloqueExtraccion}`
       body: JSON.stringify({
         model: "gpt-5-mini",
         reasoning: {
-          effort: modo === "profundo" ? "medium" : "low"
+          effort: modo === "profundo" ? "high" : "medium"
         },
         text: {
           verbosity: "low",
@@ -866,7 +868,7 @@ ${texto}${bloqueExtraccion}`
         input: [{ role: "user", content: contenidoUsuario }],
         tools: [{
           type: "web_search",
-          search_context_size: esPerfilSocial ? "medium" : (modo === "profundo" ? "high" : "medium"),
+          search_context_size: "high",
           user_location: {
             type: "approximate",
             country: "MX",
@@ -1447,6 +1449,13 @@ ${texto}${bloqueExtraccion}`
         return;
       }
 
+      const aporteFuente = String(
+        fuente.aporte || "Fuente utilizada durante la investigación."
+      ).trim();
+      if (/(?:sin referencia (?:directa )?al caso|no (?:documenta|confirma|aborda|aporta evidencia sobre|contiene referencia a) (?:la |el )?(?:afirmaci[oó]n|caso|hecho|vino|botella|compra))/i.test(aporteFuente)) {
+        return;
+      }
+
       let urlValida;
 
       try {
@@ -1473,9 +1482,7 @@ ${texto}${bloqueExtraccion}`
         titulo: String(fuente.titulo || fuente.title || urlValida).trim(),
         url: urlValida,
         tipo: String(fuente.tipo || "Fuente consultada").trim(),
-        aporte: String(
-          fuente.aporte || "Fuente utilizada durante la investigación."
-        ).trim()
+        aporte: aporteFuente
       });
     };
 

@@ -35,6 +35,8 @@ test('Bare and prefixed link failures return no verdict or sources',async()=>{
   global.fetch=async(url,options)=>{
     assert.equal(url,'https://api.openai.com/v1/responses');
     const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
+    assert.equal(body.reasoning.effort,'medium');
+    assert.equal(body.tools[0].search_context_size,'high');
     result.estado='sin_acceso';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';result.respuesta_directa='No fue posible acceder al video.';
     result.fuentes=[{titulo:'Irrelevant directory',url:'https://example.com',tipo:'Otra',aporte:'Metadata'}];
     return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}]});
@@ -61,7 +63,7 @@ test('Journalistic repetition cannot manufacture a partially true verdict',async
       afirmacion:'Se pagaron $30,000 por la botella',estado:'NO DEMOSTRADA',sustento_directo:[],
       fuente_matriz:'Una columna replicada por otros medios',lo_que_no_demuestra:'Quién ordenó o pagó la botella'
     }];
-    result.fuentes=[{titulo:'Nota que replica la columna',url:'https://example.com/replica',tipo:'Medio',aporte:'Repite la acusación'}];
+    result.fuentes=[{titulo:'Nota general sobre las mismas personas',url:'https://example.com/contexto',tipo:'Medio',aporte:'Contexto político; no documenta el caso del vino'}];
     return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}]});
   };
   try {
@@ -72,5 +74,6 @@ test('Journalistic repetition cannot manufacture a partially true verdict',async
     assert.equal(res.value.veredicto_final,'NO VERIFICABLE');
     assert.doesNotMatch(res.value.explicacion_veredicto_final,/evidencia period[ií]stica/i);
     assert.equal(res.value.evaluacion_afirmaciones[0].estado,'NO DEMOSTRADA');
+    assert.deepEqual(res.value.fuentes,[]);
   } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
 });
