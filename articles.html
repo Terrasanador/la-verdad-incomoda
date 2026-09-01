@@ -34,8 +34,41 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--border);
 <a class="card" href="/articulos/verificar-promesas-politicas-resultados"><div class="tag">Rendición de cuentas</div><h2>Cómo verificar una promesa política y sus resultados</h2><p>Una promesa debe convertirse en criterios observables antes de clasificarse como cumplida, parcial o incumplida.</p><small>Equipo editorial de La Verdad Incómoda · 2026-08-24</small></a>
 <a class="card" href="/articulos/protocolo-correccion-verificacion-publicada"><div class="tag">Ética editorial</div><h2>Protocolo para corregir una verificación publicada</h2><p>Corregir exige conservar el historial, explicar el cambio y revisar si la conclusión todavía se sostiene.</p><small>Equipo editorial de La Verdad Incómoda · 2026-08-24</small></a></div><p id="msg"></p><section style="margin-top:35px;padding:18px;border:1px solid #373740;border-radius:16px"><h2>Compromiso editorial</h2><p style="color:#b8b8c1;line-height:1.6">Las verificaciones resuelven afirmaciones concretas con evidencia enlazada; los artículos enseñan métodos que el lector puede repetir. Cada texto incluye autor, fecha y fuentes. Consulta también nuestras <a href="/correcciones.html" style="color:#8bbcff">correcciones</a> y la información sobre <a href="/autores.html" style="color:#8bbcff">autoría</a> y el <a href="/contacto.html" style="color:#8bbcff">canal editorial</a>.</p></section></main>
 <script>
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));let articles=[];
-function render(){const q=document.getElementById("search").value.toLowerCase();const list=articles.filter(a=>[a.title,a.category,a.author,a.summary].join(" ").toLowerCase().includes(q));document.getElementById("grid").innerHTML=list.map(a=>`<a class="card" href="/articulos/${encodeURIComponent(a.slug)}"><div class="tag">${esc(a.category)}</div><h2>${esc(a.title)}</h2><p>${esc(a.summary||"")}</p><small>${esc(a.author)} · ${new Date(a.publishedAt||a.updatedAt).toLocaleDateString("es-MX")}</small></a>`).join("");document.getElementById("msg").textContent=list.length?"":"Todavía no hay artículos publicados."}
-fetch("/api/content").then(r=>r.json()).then(d=>{articles=d.articles||[];render()}).catch(()=>document.getElementById("msg").textContent="No fue posible cargar los artículos.");
-document.getElementById("search").oninput=render;
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const grid=document.getElementById("grid");
+const search=document.getElementById("search");
+const msg=document.getElementById("msg");
+const staticCards=[...grid.querySelectorAll(".card")];
+let articles=[];
+
+function filterStatic(){
+  const q=search.value.trim().toLowerCase();
+  let visible=0;
+  staticCards.forEach(card=>{
+    const match=!q||card.textContent.toLowerCase().includes(q);
+    card.hidden=!match;
+    if(match) visible++;
+  });
+  msg.textContent=visible?"":"No hay publicaciones que coincidan con la búsqueda.";
+}
+
+function renderDynamic(){
+  const q=search.value.toLowerCase();
+  const list=articles.filter(a=>[a.title,a.category,a.author,a.summary].join(" ").toLowerCase().includes(q));
+  grid.innerHTML=list.map(a=>`<a class="card" href="/articulos/${encodeURIComponent(a.slug)}"><div class="tag">${esc(a.verdict?`${a.category} · ${a.verdict}`:a.category)}</div><h2>${esc(a.title)}</h2><p>${esc(a.summary||"")}</p><small>${esc(a.author)} · ${new Date(a.publishedAt||a.updatedAt).toLocaleDateString("es-MX")}</small></a>`).join("");
+  msg.textContent=list.length?"":"No hay publicaciones que coincidan con la búsqueda.";
+}
+
+search.addEventListener("input",()=>articles.length?renderDynamic():filterStatic());
+filterStatic();
+
+fetch("/api/content")
+  .then(response=>{if(!response.ok) throw new Error("API no disponible"); return response.json();})
+  .then(data=>{
+    const received=Array.isArray(data.articles)?data.articles:[];
+    if(!received.length) return;
+    articles=received;
+    renderDynamic();
+  })
+  .catch(()=>filterStatic());
 </script></body></html>

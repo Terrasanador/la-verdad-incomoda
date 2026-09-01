@@ -1,5 +1,6 @@
 import fs from "node:fs";
 
+const localContent = JSON.parse(fs.readFileSync(new URL("./content.json", import.meta.url), "utf8"));
 const editorialContent = JSON.parse(fs.readFileSync(new URL("./editorial-library.json", import.meta.url), "utf8"));
 const expansions = JSON.parse(fs.readFileSync(new URL("./editorial-expansions.json", import.meta.url), "utf8"));
 
@@ -111,20 +112,21 @@ export default async function handler(req, res) {
       return res.end();
     }
 
-    const { sha, data } = await readStore();
-
     if (req.method === "GET") {
-      const expandedBase = data.articles.map(article => ({
+      const expandedBase = (localContent.articles || []).map(article => ({
         ...article,
         content: expansions[article.slug] ? `${article.content}\n\n${expansions[article.slug]}` : article.content
       }));
-      const articles = isAdmin(req)
-        ? data.articles
-        : [...expandedBase.filter(article => article.status === "published"), ...(editorialContent.articles || []).filter(article => article.status === "published")];
+      const articles = [
+        ...expandedBase.filter(article => article.status === "published"),
+        ...(editorialContent.articles || []).filter(article => article.status === "published")
+      ];
       return send(res, 200, { articles });
     }
 
     if (!isAdmin(req)) return send(res, 401, { error: "Contraseña incorrecta." });
+
+    const { sha, data } = await readStore();
 
     if (req.method === "POST") {
       const article = normalizeArticle(req.body || {});
