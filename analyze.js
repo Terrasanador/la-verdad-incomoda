@@ -308,7 +308,14 @@ const texto = tieneTexto
       "Si más del 70 por ciento de las fuentes independientes con orientación identificable pertenecen a un solo lado y faltan fuentes primarias o contrarias suficientes, marca ADVERTENCIA DE DESEQUILIBRIO DE FUENTES y reduce la confianza del análisis.",
       "No uses agresiones, amenazas o asesinatos de periodistas como prueba de una política gubernamental de censura sin identificar al agresor, el vínculo institucional y evidencia específica de coordinación estatal.",
       "Las críticas, descalificaciones o confrontaciones verbales de un gobernante con periodistas no equivalen por sí solas a censura, prohibición de publicar, cierre de medios ni política sistemática para silenciar a la prensa.",
-      "Una investigación periodística sobre presuntos delitos es evidencia de que existe una acusación documentada, no prueba automática de que el delito ocurrió. Evalúa documentos, testimonios, corroboración independiente, refutaciones y estado procesal.",
+"Una investigación periodística sobre presuntos delitos es evidencia de que existe una acusación documentada, no prueba automática de que el delito ocurrió. Evalúa documentos, testimonios, corroboración independiente, refutaciones y estado procesal.",
+      "REGLA ESTRICTA SOBRE EVIDENCIA PERIODÍSTICA:",
+      "Nunca escribas 'hay evidencia periodística de que ocurrió X' cuando el único sustento sea que uno o varios medios publicaron X. Escribe 'uno o varios medios reportan X' e identifica la evidencia subyacente que esos medios muestran o citan.",
+      "Una nota que replica, comenta o atribuye otra nota conserva la misma fuente matriz. Diez réplicas de una sola columna, filtración, comunicado, fotografía o video cuentan como una sola cadena de publicación, no como diez corroboraciones.",
+      "Una fotografía o video demuestra únicamente lo que se observa de forma identificable. No demuestra por sí solo quién compró, ordenó o pagó un producto; su precio exacto; el origen del dinero; la finalidad de una reunión; una relación delictiva ni una conducta habitual.",
+      "Para afirmaciones sobre precios identifica producto, presentación, añada o modelo, fecha, tipo de precio (tienda, carta, promoción o factura) y moneda. Un rango comercial de productos semejantes no demuestra el precio exacto pagado en una ocasión concreta.",
+      "Para generalizaciones como 'los hijos', 'todos', 'siempre' o 'viven de esta manera', comprueba el universo al que se refiere y no extrapoles a personas, fechas o conductas no documentadas.",
+      "Solo usa PARCIALMENTE VERDADERO si existe al menos una proposición sustantiva demostrada y otra sustantiva contradicha o no demostrada. La existencia de notas, acusaciones, rumores, fotografías ambiguas o personas reunidas no constituye por sí sola la parte verdadera de una acusación distinta.",
       "La ausencia de sentencia no vuelve falsa una afirmación, pero tampoco permite presentarla como hecho probado. Distingue evidencia factual, acusación, investigación abierta y responsabilidad judicial.",
       "En afirmaciones sobre aprobación, popularidad o respaldo político, revisa varias encuestas recientes, sus fechas, preguntas, muestras, patrocinadores y metodologías. No extrapoles una encuesta aislada ni mezcles aprobación presidencial con aceptación de un movimiento político distinto.",
       "Explica si el resultado podría estar condicionado por una selección desequilibrada de fuentes. Si no se logró pluralidad suficiente, no presentes una conclusión tajante de alta confianza.",
@@ -547,7 +554,7 @@ ${texto}${bloqueExtraccion}`
       required: [
         "estado", "veredicto_final", "explicacion_veredicto_final",
         "veredicto", "credibilidad", "confianza", "afirmacion_principal",
-        "respuesta_directa", "resumen", "resumen_video", "temas_video", "hechos_comprobados",
+        "respuesta_directa", "resumen", "resumen_video", "temas_video", "evaluacion_afirmaciones", "hechos_comprobados",
         "evidencia_a_favor", "evidencia_en_contra",
         "indicadores_desinformacion", "contexto", "contraste_fuentes",
         "reputacion_fuente", "analisis_redes", "analisis_encuestas",
@@ -594,6 +601,22 @@ ${texto}${bloqueExtraccion}`
               veredicto: { type: "string" },
               contexto: { type: "string" },
               fuentes: { type: "array", items: { type: "string" } }
+            }
+          }
+        },
+        evaluacion_afirmaciones: {
+          type: "array",
+          maxItems: 5,
+          items: {
+            type: "object",
+            additionalProperties: false,
+            required: ["afirmacion", "estado", "sustento_directo", "fuente_matriz", "lo_que_no_demuestra"],
+            properties: {
+              afirmacion: { type: "string" },
+              estado: { type: "string", enum: ["CONFIRMADA", "CONTRADICHA", "NO DEMOSTRADA"] },
+              sustento_directo: { type: "array", items: { type: "string" }, maxItems: 3 },
+              fuente_matriz: { type: "string" },
+              lo_que_no_demuestra: { type: "string" }
             }
           }
         },
@@ -1061,6 +1084,45 @@ ${texto}${bloqueExtraccion}`
           fuentes: limpiarLista(tema?.fuentes)
         })).filter(tema => tema.tema || tema.resumen)
       : [];
+    resultado.evaluacion_afirmaciones = Array.isArray(resultado.evaluacion_afirmaciones)
+      ? resultado.evaluacion_afirmaciones.slice(0, 5).map(item => ({
+          afirmacion: String(item?.afirmacion || "").trim(),
+          estado: ["CONFIRMADA", "CONTRADICHA", "NO DEMOSTRADA"].includes(item?.estado)
+            ? item.estado
+            : "NO DEMOSTRADA",
+          sustento_directo: limpiarLista(item?.sustento_directo).slice(0, 3),
+          fuente_matriz: String(item?.fuente_matriz || "").trim(),
+          lo_que_no_demuestra: String(item?.lo_que_no_demuestra || "").trim()
+        })).filter(item => item.afirmacion)
+      : [];
+
+    const afirmacionesConfirmadas = resultado.evaluacion_afirmaciones.filter(item =>
+      item.estado === "CONFIRMADA" && item.sustento_directo.length > 0
+    );
+    const afirmacionesContradichas = resultado.evaluacion_afirmaciones.filter(item =>
+      item.estado === "CONTRADICHA"
+    );
+    const afirmacionesNoDemostradas = resultado.evaluacion_afirmaciones.filter(item =>
+      item.estado === "NO DEMOSTRADA"
+    );
+
+    if (resultado.veredicto === "PARCIALMENTE VERDADERO" &&
+        !(afirmacionesConfirmadas.length > 0 &&
+          (afirmacionesContradichas.length > 0 || afirmacionesNoDemostradas.length > 0))) {
+      if (afirmacionesContradichas.length > 0) {
+        resultado.veredicto = "FALSO";
+        resultado.veredicto_final = "FALSA";
+      } else {
+        resultado.veredicto = "INFORMACIÓN INSUFICIENTE";
+        resultado.veredicto_final = "NO VERIFICABLE";
+      }
+      resultado.explicacion_veredicto_final =
+        "Las publicaciones localizadas confirman que la afirmación circula, pero no aportan sustento directo suficiente para considerar demostrada una parte sustantiva del mensaje.";
+    }
+
+    resultado.explicacion_veredicto_final = resultado.explicacion_veredicto_final
+      .replace(/hay evidencia period[ií]stica(?: reciente)? (?:de|sobre)\s+/ig,
+        "hay publicaciones periodísticas que reportan ");
     const usadosEvidencia = new Set();
     resultado.hechos_comprobados = quitarRepetidos(
       resultado.hechos_comprobados,
