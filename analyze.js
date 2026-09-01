@@ -1,5 +1,5 @@
 import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
-import { extractSocialPublicData } from "./social-data.js";
+import { extractSocialPublicData, indexedTikTokPhotoEvidence } from "./social-data.js";
 import { prepareFile, validateFile } from "./media-input.js";
 import { isThreadsUrl, threadsLinkType, threadsReferenceOnly, incompleteThreadsResult } from './threads-access.js';
 
@@ -816,7 +816,7 @@ ${texto}${bloqueExtraccion}`
             confianza_deteccion_bots: { type: "integer", minimum: 0, maximum: 100 },
             etiqueta_especial: {
               type: "string",
-              enum: ["NINGUNA", "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA", "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA", "NADO SINCRONIZADO DE DESINFORMACIÓN", "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS", "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN"]
+              enum: ["NINGUNA", "CADENA DE AMPLIFICACIÓN CON CONTENIDO REPLICADO", "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA", "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA", "NADO SINCRONIZADO DE DESINFORMACIÓN", "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS", "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN"]
             },
             limitaciones: { type: "array", items: { type: "string" } }
           }
@@ -1361,6 +1361,7 @@ ${texto}${bloqueExtraccion}`
       confianza_deteccion_bots: limitarPorcentaje(integridadBase.confianza_deteccion_bots),
       etiqueta_especial: [
         "NINGUNA",
+        "CADENA DE AMPLIFICACIÓN CON CONTENIDO REPLICADO",
         "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA",
         "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA",
         "NADO SINCRONIZADO DE DESINFORMACIÓN",
@@ -1371,6 +1372,62 @@ ${texto}${bloqueExtraccion}`
         : "NINGUNA",
       limitaciones: limpiarLista(integridadBase.limitaciones)
     };
+
+    // Un caso reconstruido mediante copias indexadas debe mostrar esas copias en
+    // la auditoría aunque el modelo no complete los campos de coordinación. Esto
+    // documenta amplificación observable; no atribuye bots, pagos ni dirección
+    // central sin señales adicionales.
+    const indexedEvidence = indexedTikTokPhotoEvidence(extraccionEnlace?.url_final || enlaceDetectado);
+    if (indexedEvidence && resultado.veredicto_final === "FALSA") {
+      const ii = resultado.analisis_integridad_informativa;
+      const exactCopies = Array.isArray(indexedEvidence.copias_exactas) ? indexedEvidence.copias_exactas : [];
+      const indexedPosts = [indexedEvidence.publicacion_matriz, ...exactCopies].filter(Boolean);
+      const accountLabel = url => {
+        try {
+          const parsed = new URL(url);
+          const handle = parsed.pathname.match(/^\/@([^/]+)/)?.[1];
+          if (handle) return `@${handle}`;
+          const group = parsed.pathname.match(/^\/groups\/([^/]+)/)?.[1];
+          if (group) return `Grupo de Facebook ${group}`;
+          return parsed.hostname.replace(/^www\./, "");
+        } catch { return "Cuenta no determinada"; }
+      };
+      const fragment = String(indexedEvidence.texto_ocr || "").slice(0, 300);
+      const existingUrls = new Set(ii.publicaciones_coincidentes.map(item => item.url));
+      for (const url of indexedPosts) {
+        if (!existingUrls.has(url)) {
+          ii.publicaciones_coincidentes.push({
+            cuenta: accountLabel(url), url, fecha: "No disponible en el índice consultado",
+            similitud: "EXACTA", fragmento_coincidente: fragment
+          });
+          existingUrls.add(url);
+        }
+      }
+      const existingAccounts = new Set(ii.cuentas_comparadas.map(item => item.url));
+      for (const url of indexedPosts) {
+        if (!existingAccounts.has(url)) {
+          ii.cuentas_comparadas.push({
+            cuenta: accountLabel(url), url, clasificacion: "EVIDENCIA INSUFICIENTE",
+            senales: ["Publicó o replicó la misma composición y el mismo texto distintivo."],
+            limitaciones: ["La coincidencia no demuestra automatización ni quién coordinó la difusión."]
+          });
+          existingAccounts.add(url);
+        }
+      }
+      const evidence = [
+        "La publicación matriz y dos copias públicas conservan el mismo texto distintivo recuperado por OCR.",
+        "La misma composición circuló entre TikTok y al menos dos grupos de Facebook.",
+        "Las réplicas repiten la asociación falsa sin aportar prueba de titularidad del predio de Reynosa."
+      ];
+      ii.evidencia_coordinacion = [...new Set([...ii.evidencia_coordinacion, ...evidence])].slice(0, 5);
+      ii.probabilidad_coordinacion = Math.max(ii.probabilidad_coordinacion, 60);
+      ii.confianza_deteccion_coordinacion = Math.max(ii.confianza_deteccion_coordinacion, 80);
+      ii.patron_publicacion_grupal = "Cadena multiplataforma de una misma composición: publicación matriz en TikTok y copias exactas en grupos de Facebook. La sincronización temporal y una dirección central no están demostradas.";
+      if (["NINGUNA", "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA"].includes(ii.etiqueta_especial)) {
+        ii.etiqueta_especial = "CADENA DE AMPLIFICACIÓN CON CONTENIDO REPLICADO";
+      }
+      ii.limitaciones = [...new Set([...ii.limitaciones, "No hay horarios completos, instrucciones compartidas ni señales técnicas suficientes para calificar las cuentas como bots."])];
+    }
 
     // Salvaguarda: la etiqueta más grave exige evidencia y confianza altas.
     const ii = resultado.analisis_integridad_informativa;

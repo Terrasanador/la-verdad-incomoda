@@ -16,9 +16,11 @@ const INDEXED_SOCIAL_EXAMPLES = {
     texto_ocr: "¿CON RAZÓN VICENTE FOX ESTABA TAN METIDO EN EL DEBATE DEL HUACHICOL? RANCHO SAN CRISTÓBAL · CENTRO FOX",
     afirmacion_a_verificar: "La composición vincula o identifica el Rancho San Cristóbal cateado por combustible en Reynosa con el rancho de Vicente Fox y Centro Fox.",
     publicacion_matriz: "https://www.tiktok.com/@raytorresmax/photo/7680293712575941895",
-    copias_publicas: [
+    copias_exactas: [
       "https://www.facebook.com/groups/1099945933506382/posts/3573842642783353/",
-      "https://www.facebook.com/groups/383904412584500/posts/1980611549580437/",
+      "https://www.facebook.com/groups/383904412584500/posts/1980611549580437/"
+    ],
+    publicaciones_relacionadas: [
       "https://www.facebook.com/GildoGarzaPeriodista/posts/-reynosa-rancho-san-crist%C3%B3bal-el-punto-que-ya-exist%C3%ADa-y-que-nadie-quiso-tocarcua/1558042042991139/",
       "https://www.facebook.com/valorxtamaulipasoficial/posts/reynosa-rancho-san-crist%C3%B3bal-empresas-combustible-y-cuatro-a%C3%B1os-de-silencio-ofic/1331132292381873/"
     ],
@@ -34,6 +36,15 @@ const INDEXED_SOCIAL_EXAMPLES = {
     ]
   }
 };
+
+export function indexedTikTokPhotoEvidence(rawUrl) {
+  try {
+    const match = new URL(rawUrl).pathname.match(/^\/@[^/]+\/photo\/(\d+)\/?$/i);
+    return match ? INDEXED_SOCIAL_EXAMPLES[match[1]] || null : null;
+  } catch {
+    return null;
+  }
+}
 
 function platformFromUrl(rawUrl) {
   try {
@@ -92,7 +103,7 @@ function tiktokPhotoReference(rawUrl) {
       url_canonica: `${url.origin}/@${match[1]}/photo/${match[2]}`,
       instruccion_recuperacion: "Buscar el identificador, la cuenta, el texto OCR y copias públicas indexadas; no tratar esta dirección como video ni como perfil."
     };
-    const indexed = INDEXED_SOCIAL_EXAMPLES[match[2]];
+    const indexed = indexedTikTokPhotoEvidence(rawUrl);
     return indexed ? { ...reference, evidencia_indexada: indexed } : reference;
   } catch {
     return null;

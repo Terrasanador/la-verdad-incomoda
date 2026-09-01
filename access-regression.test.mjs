@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import dns from 'node:dns/promises';
 import {isSocialProfileUrl,extractPublicLink} from './extract-content.js';
-import {isTikTokPhotoPost,extractSocialPublicData} from './social-data.js';
+import {isTikTokPhotoPost,extractSocialPublicData,indexedTikTokPhotoEvidence} from './social-data.js';
 import handler from './analyze.js';
 
 test('TikTok short codes are not usernames',()=>{
@@ -24,6 +24,7 @@ test('TikTok photo posts are recognized and never sent to video-only endpoints',
     assert.match(result.contenido_json,/7680293712575941895/);
     assert.match(result.contenido_json,/CON RAZÓN VICENTE FOX/);
     assert.match(result.contenido_json,/facebook\.com/);
+    assert.equal(indexedTikTokPhotoEvidence('https://www.tiktok.com/@raytorresmax/photo/7680293712575941895').copias_exactas.length,2);
   } finally {global.fetch=oldFetch;if(oldKey===undefined)delete process.env.CAPTAPI_API_KEY;else process.env.CAPTAPI_API_KEY=oldKey;}
 });
 test('Resolved URL survives destination failure; generic page is not content',async()=>{
@@ -100,6 +101,46 @@ test('Indexed replicas can identify and verify a blocked social publication',asy
     assert.equal(res.code,200);assert.equal(res.value.estado,'analizado');assert.equal(res.value.veredicto_final,'FALSA');
     assert.equal(res.value.fuentes.length,2);assert.notEqual(res.value.tipo_resultado,'error_recuperacion');
   } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
+});
+test('Known false TikTok photo case surfaces replicated amplification without inventing bots',async()=>{
+  const oldFetch=global.fetch, oldLookup=dns.lookup;
+  const oldOpenAI=process.env.OPENAI_API_KEY, oldCaptapi=process.env.CAPTAPI_API_KEY;
+  process.env.OPENAI_API_KEY='mock';process.env.CAPTAPI_API_KEY='mock';dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
+  global.fetch=async(url,options)=>{
+    if(String(url).startsWith('https://www.tiktok.com/')) {
+      return new Response('<title>TikTok - Make Your Day</title><body>'+('Generic navigation '.repeat(30))+'</body>',{headers:{'content-type':'text/html'}});
+    }
+    assert.equal(url,'https://api.openai.com/v1/responses');
+    const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
+    result.estado='analizado';result.veredicto='FALSO';result.veredicto_final='FALSA';
+    result.afirmacion_principal='El predio cateado en Reynosa es el rancho de Vicente Fox.';
+    result.respuesta_directa='Son predios homónimos en estados distintos.';result.resumen=result.respuesta_directa;result.conclusion=result.respuesta_directa;
+    result.hechos_comprobados=['El cateo ocurrió en Reynosa.'];result.evidencia_en_contra=['Centro Fox está en Guanajuato.'];
+    result.fuentes=[
+      {titulo:'Centro Fox',url:'https://www.centrofox.org.mx/aviso-de-privacidad/',tipo:'Oficial',aporte:'Ubica Centro Fox en Guanajuato.'},
+      {titulo:'Operativo',url:'https://expreso.press/2026/04/01/parque-industrial-bajo-sospecha/',tipo:'Periodística',aporte:'Ubica el operativo en Reynosa.'}
+    ];
+    return Response.json({output:[
+      {type:'web_search_call',action:{sources:[
+        {url:'https://www.centrofox.org.mx/aviso-de-privacidad/',title:'Centro Fox'},
+        {url:'https://expreso.press/2026/04/01/parque-industrial-bajo-sospecha/',title:'Operativo'}
+      ]}},
+      {type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}
+    ]});
+  };
+  try {
+    const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+    await handler({method:'POST',body:{text:'https://www.tiktok.com/@raytorresmax/photo/7680293712575941895'}},res);
+    const integrity=res.value.analisis_integridad_informativa;
+    assert.equal(res.value.veredicto_final,'FALSA');
+    assert.equal(integrity.etiqueta_especial,'CADENA DE AMPLIFICACIÓN CON CONTENIDO REPLICADO');
+    assert.equal(integrity.publicaciones_coincidentes.length,3);assert.equal(integrity.cuentas_comparadas.length,3);
+    assert.equal(integrity.evidencia_bots.length,0);assert.equal(integrity.probabilidad_automatizacion,0);
+  } finally {
+    global.fetch=oldFetch;dns.lookup=oldLookup;
+    if(oldOpenAI===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldOpenAI;
+    if(oldCaptapi===undefined)delete process.env.CAPTAPI_API_KEY;else process.env.CAPTAPI_API_KEY=oldCaptapi;
+  }
 });
 test('Journalistic repetition cannot manufacture a partially true verdict',async()=>{
   const old=global.fetch, oldKey=process.env.OPENAI_API_KEY;
