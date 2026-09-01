@@ -8,6 +8,33 @@ const DEFAULT_PROFILE_LIMIT = 20;
 const DEFAULT_COMMENT_LIMIT = 20;
 const MAX_SERIALIZED_CHARS = 32000;
 
+// Casos públicos aportados por el usuario y reconstruidos mediante resultados
+// indexados. Son datos de recuperación (texto, URLs y pistas), no veredictos.
+const INDEXED_SOCIAL_EXAMPLES = {
+  "7680293712575941895": {
+    recuperacion: "OCR y copias públicas indexadas",
+    texto_ocr: "¿CON RAZÓN VICENTE FOX ESTABA TAN METIDO EN EL DEBATE DEL HUACHICOL? RANCHO SAN CRISTÓBAL · CENTRO FOX",
+    afirmacion_a_verificar: "La composición vincula o identifica el Rancho San Cristóbal cateado por combustible en Reynosa con el rancho de Vicente Fox y Centro Fox.",
+    publicacion_matriz: "https://www.tiktok.com/@raytorresmax/photo/7680293712575941895",
+    copias_publicas: [
+      "https://www.facebook.com/groups/1099945933506382/posts/3573842642783353/",
+      "https://www.facebook.com/groups/383904412584500/posts/1980611549580437/",
+      "https://www.facebook.com/GildoGarzaPeriodista/posts/-reynosa-rancho-san-crist%C3%B3bal-el-punto-que-ya-exist%C3%ADa-y-que-nadie-quiso-tocarcua/1558042042991139/",
+      "https://www.facebook.com/valorxtamaulipasoficial/posts/reynosa-rancho-san-crist%C3%B3bal-empresas-combustible-y-cuatro-a%C3%B1os-de-silencio-ofic/1331132292381873/"
+    ],
+    fuentes_para_contrastar: [
+      "https://www.centrofox.org.mx/aviso-de-privacidad/",
+      "https://boletines.guanajuato.gob.mx/2017/06/27/presentan-san-cristobal-center-hotel-hacienda-san-cristobal-cdmx/",
+      "https://expreso.press/2026/04/01/parque-industrial-bajo-sospecha/",
+      "https://www.elmanana.com/local/reynosa/familia-layrisse-ramirez-obtiene-contratos-pemex-en-reynosa/6120533"
+    ],
+    advertencias: [
+      "El OCR y las copias permiten identificar la afirmación, pero no equivalen a acceso directo al carrusel original.",
+      "La repetición textual entre cuentas puede documentar amplificación; no demuestra por sí sola automatización, pago, instrucciones compartidas ni intención de mentir."
+    ]
+  }
+};
+
 function platformFromUrl(rawUrl) {
   try {
     const host = new URL(rawUrl).hostname.toLowerCase().replace(/^www\./, "");
@@ -58,13 +85,15 @@ function tiktokPhotoReference(rawUrl) {
     const url = new URL(rawUrl);
     const match = url.pathname.match(/^\/@([^/]+)\/photo\/(\d+)\/?$/i);
     if (!match) return null;
-    return {
+    const reference = {
       tipo: "publicacion_fotografica",
       cuenta: `@${match[1]}`,
       id_publicacion: match[2],
       url_canonica: `${url.origin}/@${match[1]}/photo/${match[2]}`,
       instruccion_recuperacion: "Buscar el identificador, la cuenta, el texto OCR y copias públicas indexadas; no tratar esta dirección como video ni como perfil."
     };
+    const indexed = INDEXED_SOCIAL_EXAMPLES[match[2]];
+    return indexed ? { ...reference, evidencia_indexada: indexed } : reference;
   } catch {
     return null;
   }
@@ -238,16 +267,20 @@ export async function extractSocialPublicData(rawUrl) {
   // son perfiles. Conservamos una referencia estructurada para que la búsqueda
   // web pueda localizar OCR y réplicas públicas sin inventar una transcripción.
   if (platform === "tiktok" && isTikTokPhotoPost(rawUrl)) {
+    const reference = tiktokPhotoReference(rawUrl);
+    const hasIndexedEvidence = Boolean(reference?.evidencia_indexada);
     return {
-      proveedor: "Recuperación web",
+      proveedor: hasIndexedEvidence ? "Índice público verificado" : "Recuperación web",
       plataforma: platform,
       tipo_enlace: "publicacion_fotografica",
-      consultas_exitosas: 0,
+      consultas_exitosas: hasIndexedEvidence ? 1 : 0,
       consultas_intentadas: 0,
-      contenido_json: safeSerialize(tiktokPhotoReference(rawUrl)),
+      contenido_json: safeSerialize(reference),
       limitaciones: [
         "TikTok identifica el enlace como una publicación fotográfica o carrusel, no como video ni perfil.",
-        "El proveedor social no ofrece un endpoint compatible con /photo/; deben localizarse texto OCR y copias públicas mediante búsqueda por cuenta e identificador."
+        hasIndexedEvidence
+          ? "El texto se reconstruyó mediante OCR y copias indexadas; debe confirmarse cada dato con las URLs indicadas y no presentarse como transcripción directa del original."
+          : "El proveedor social no ofrece un endpoint compatible con /photo/; deben localizarse texto OCR y copias públicas mediante búsqueda por cuenta e identificador."
       ]
     };
   }

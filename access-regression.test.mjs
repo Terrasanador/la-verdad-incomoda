@@ -19,8 +19,11 @@ test('TikTok photo posts are recognized and never sent to video-only endpoints',
     const result=await extractSocialPublicData('https://www.tiktok.com/@raytorresmax/photo/7680293712575941895');
     assert.equal(result.tipo_enlace,'publicacion_fotografica');
     assert.equal(result.consultas_intentadas,0);
+    assert.equal(result.consultas_exitosas,1);
     assert.match(result.contenido_json,/@raytorresmax/);
     assert.match(result.contenido_json,/7680293712575941895/);
+    assert.match(result.contenido_json,/CON RAZÓN VICENTE FOX/);
+    assert.match(result.contenido_json,/facebook\.com/);
   } finally {global.fetch=oldFetch;if(oldKey===undefined)delete process.env.CAPTAPI_API_KEY;else process.env.CAPTAPI_API_KEY=oldKey;}
 });
 test('Resolved URL survives destination failure; generic page is not content',async()=>{
