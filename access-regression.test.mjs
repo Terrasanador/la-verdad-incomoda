@@ -2,11 +2,26 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import dns from 'node:dns/promises';
 import {isSocialProfileUrl,extractPublicLink} from './extract-content.js';
+import {isTikTokPhotoPost,extractSocialPublicData} from './social-data.js';
 import handler from './analyze.js';
 
 test('TikTok short codes are not usernames',()=>{
   for(const host of ['vt.tiktok.com','vm.tiktok.com']) assert.equal(isSocialProfileUrl(new URL(`https://${host}/ZSVvAup4u/`),'TikTok'),false);
   assert.equal(isSocialProfileUrl(new URL('https://www.tiktok.com/@joan'),'TikTok'),true);
+});
+test('TikTok photo posts are recognized and never sent to video-only endpoints',async()=>{
+  assert.equal(isTikTokPhotoPost(new URL('https://www.tiktok.com/@raytorresmax/photo/7680293712575941895').href),true);
+  assert.equal(isTikTokPhotoPost('https://www.tiktok.com/@raytorresmax/video/7680293712575941895'),false);
+  const oldFetch=global.fetch, oldKey=process.env.CAPTAPI_API_KEY;
+  process.env.CAPTAPI_API_KEY='mock';
+  global.fetch=async()=>{throw new Error('A photo post must not call a video endpoint');};
+  try {
+    const result=await extractSocialPublicData('https://www.tiktok.com/@raytorresmax/photo/7680293712575941895');
+    assert.equal(result.tipo_enlace,'publicacion_fotografica');
+    assert.equal(result.consultas_intentadas,0);
+    assert.match(result.contenido_json,/@raytorresmax/);
+    assert.match(result.contenido_json,/7680293712575941895/);
+  } finally {global.fetch=oldFetch;if(oldKey===undefined)delete process.env.CAPTAPI_API_KEY;else process.env.CAPTAPI_API_KEY=oldKey;}
 });
 test('Resolved URL survives destination failure; generic page is not content',async()=>{
   const oldFetch=global.fetch, oldLookup=dns.lookup;
@@ -50,6 +65,37 @@ test('Bare and prefixed link failures return no verdict or sources',async()=>{
       await handler({method:'POST',body:{text}},res);
       assert.equal(res.code,200);assert.equal(res.value.analizado,false);assert.equal(res.value.veredicto_final,null);assert.deepEqual(res.value.fuentes,[]);assert.equal(res.value.compartir_habilitado,false);
     }
+  } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
+});
+test('Indexed replicas can identify and verify a blocked social publication',async()=>{
+  const old=global.fetch, oldKey=process.env.OPENAI_API_KEY;
+  process.env.OPENAI_API_KEY='mock';
+  global.fetch=async(url,options)=>{
+    assert.equal(url,'https://api.openai.com/v1/responses');
+    const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
+    result.estado='analizado';result.veredicto='FALSO';result.veredicto_final='FALSA';
+    result.afirmacion_principal='La publicación atribuye el aseguramiento de Reynosa al rancho de Vicente Fox.';
+    result.respuesta_directa='La asociación es falsa: son predios distintos en estados distintos.';
+    result.resumen=result.respuesta_directa;result.conclusion=result.respuesta_directa;
+    result.hechos_comprobados=['El aseguramiento ocurrió en Reynosa, Tamaulipas.'];
+    result.evidencia_en_contra=['Centro Fox se ubica en San Francisco del Rincón, Guanajuato.'];
+    result.fuentes=[
+      {titulo:'Operativo',url:'https://example.com/operativo',tipo:'Primaria',aporte:'Ubica el operativo en Reynosa.'},
+      {titulo:'Domicilio',url:'https://example.org/domicilio',tipo:'Oficial',aporte:'Ubica Centro Fox en Guanajuato.'}
+    ];
+    return Response.json({output:[
+      {type:'web_search_call',action:{sources:[
+        {url:'https://example.com/operativo',title:'Operativo'},
+        {url:'https://example.org/domicilio',title:'Domicilio'}
+      ]}},
+      {type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}
+    ]});
+  };
+  try {
+    const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+    await handler({method:'POST',body:{text:'http://127.0.0.1/publicacion'}},res);
+    assert.equal(res.code,200);assert.equal(res.value.estado,'analizado');assert.equal(res.value.veredicto_final,'FALSA');
+    assert.equal(res.value.fuentes.length,2);assert.notEqual(res.value.tipo_resultado,'error_recuperacion');
   } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
 });
 test('Journalistic repetition cannot manufacture a partially true verdict',async()=>{

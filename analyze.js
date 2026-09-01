@@ -223,6 +223,8 @@ const texto = tieneTexto
       "",
       "REDES SOCIALES Y ENLACES:",
       "Para TikTok, Facebook, Instagram, YouTube, X, Threads y otras plataformas, intenta consultar el contenido público.",
+      "En TikTok distingue /video/ de /photo/: /photo/ es una publicación fotográfica o carrusel. Busca por la URL canónica, identificador, cuenta, texto OCR y copias indexadas; no la diagnostiques como perfil ni exijas una transcripción de video.",
+      "Cuando una copia pública conserve texto distintivo, imágenes o marca de agua que la vinculen inequívocamente con la publicación consultada, úsala para identificar la afirmación, pero declara que proviene de una réplica indexada y no del acceso directo.",
       "Revisa autor, fecha, texto, título, descripción, transcripción, subtítulos, metadatos y copias disponibles.",
       "Cuando se recupere una muestra real de comentarios, úsala para comprender qué interpretan, cuestionan o aportan los usuarios, no como votación de verdad.",
       "Distingue siempre el contenido de la publicación, los comentarios del público y la evidencia externa; no atribuyas al autor lo dicho por comentaristas.",
@@ -1459,7 +1461,37 @@ ${texto}${bloqueExtraccion}`
           String(extraccionEnlace.datos_multiplataforma?.contenido_json || "").trim().length >= 20)
       )
     );
-    if (contenidoEnlaceRecuperado && resultado.estado === "sin_acceso") {
+    const urlsWebConsultadas = new Set();
+    for (const item of data.output || []) {
+      if (item.type === "web_search_call") {
+        for (const source of item.action?.sources || []) {
+          if (source?.url) urlsWebConsultadas.add(String(source.url));
+        }
+      }
+      if (item.type === "message") {
+        for (const part of item.content || []) {
+          for (const annotation of part.annotations || []) {
+            if (annotation.type === "url_citation" && annotation.url) {
+              urlsWebConsultadas.add(String(annotation.url));
+            }
+          }
+        }
+      }
+    }
+    const fuentesModeloConsultadas = (Array.isArray(resultado.fuentes) ? resultado.fuentes : [])
+      .filter(fuente => fuente?.url && urlsWebConsultadas.has(String(fuente.url)));
+    const contenidoIdentificadoPorBusqueda = Boolean(
+      resultado.estado === "analizado" &&
+      !["", "NO VERIFICABLE"].includes(String(resultado.veredicto_final || "").toUpperCase()) &&
+      String(resultado.afirmacion_principal || "").trim().length >= 20 &&
+      fuentesModeloConsultadas.length >= 2 &&
+      (
+        (resultado.hechos_comprobados || []).length > 0 ||
+        (resultado.evidencia_a_favor || []).length > 0 ||
+        (resultado.evidencia_en_contra || []).length > 0
+      )
+    );
+    if ((contenidoEnlaceRecuperado || contenidoIdentificadoPorBusqueda) && resultado.estado === "sin_acceso") {
       resultado.estado = "analizado";
     }
 
@@ -1467,6 +1499,7 @@ ${texto}${bloqueExtraccion}`
       consultaEsEnlace &&
       !esImagen &&
       !contenidoEnlaceRecuperado &&
+      !contenidoIdentificadoPorBusqueda &&
       (
         resultado.estado === "sin_acceso" ||
         (resultado.veredicto_final === 'NO VERIFICABLE' && pareceSinAcceso(textoDiagnostico))

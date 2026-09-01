@@ -42,6 +42,34 @@ function isProfileUrl(rawUrl, platform) {
   }
 }
 
+export function isTikTokPhotoPost(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    return (host === "tiktok.com" || host.endsWith(".tiktok.com")) &&
+      /^\/@[^/]+\/photo\/\d+\/?$/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
+function tiktokPhotoReference(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    const match = url.pathname.match(/^\/@([^/]+)\/photo\/(\d+)\/?$/i);
+    if (!match) return null;
+    return {
+      tipo: "publicacion_fotografica",
+      cuenta: `@${match[1]}`,
+      id_publicacion: match[2],
+      url_canonica: `${url.origin}/@${match[1]}/photo/${match[2]}`,
+      instruccion_recuperacion: "Buscar el identificador, la cuenta, el texto OCR y copias públicas indexadas; no tratar esta dirección como video ni como perfil."
+    };
+  } catch {
+    return null;
+  }
+}
+
 function boundedInteger(value, fallback, maximum) {
   const number = Number.parseInt(value, 10);
   if (!Number.isFinite(number)) return fallback;
@@ -204,6 +232,25 @@ export async function extractSocialPublicData(rawUrl) {
   if (!apiKey || !["threads", "tiktok", "facebook", "instagram", "twitter"].includes(platform)) return null;
 
   const profile = isProfileUrl(rawUrl, platform);
+
+  // Captapi expone endpoints de video, pero no uno equivalente para carruseles
+  // /photo/. Enviar esas URL a video-details genera el falso diagnóstico de que
+  // son perfiles. Conservamos una referencia estructurada para que la búsqueda
+  // web pueda localizar OCR y réplicas públicas sin inventar una transcripción.
+  if (platform === "tiktok" && isTikTokPhotoPost(rawUrl)) {
+    return {
+      proveedor: "Recuperación web",
+      plataforma: platform,
+      tipo_enlace: "publicacion_fotografica",
+      consultas_exitosas: 0,
+      consultas_intentadas: 0,
+      contenido_json: safeSerialize(tiktokPhotoReference(rawUrl)),
+      limitaciones: [
+        "TikTok identifica el enlace como una publicación fotográfica o carrusel, no como video ni perfil.",
+        "El proveedor social no ofrece un endpoint compatible con /photo/; deben localizarse texto OCR y copias públicas mediante búsqueda por cuenta e identificador."
+      ]
+    };
+  }
 
   const requests = endpointRequests(platform, profile, rawUrl);
   if (!requests.length) return null;
