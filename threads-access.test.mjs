@@ -10,6 +10,15 @@ import handler from './analyze.js';
 
 const share='https://www.threads.com/share/example/';
 const post='https://www.threads.com/@usuario/post/ABC_123';
+function emptySchema(schema){
+  if(schema.type==='object')return Object.fromEntries(Object.entries(schema.properties).map(([key,value])=>[key,emptySchema(value)]));
+  if(schema.type==='array')return [];
+  if(schema.enum)return schema.enum[0];
+  if(schema.type==='boolean')return false;
+  if(schema.type==='number'||schema.type==='integer')return 0;
+  if(Array.isArray(schema.type))return schema.type.includes('null')?null:'';
+  return '';
+}
 async function withMocks(run) {
   const oldFetch=global.fetch, oldLookup=dns.lookup, apiKey=process.env.CAPTAPI_API_KEY, openai=process.env.OPENAI_API_KEY;
   process.env.CAPTAPI_API_KEY='test-key';process.env.OPENAI_API_KEY='test-key';
@@ -70,6 +79,25 @@ test('Handler bypasses model and provider on unresolved or rate-limited share',(
     assert.equal(n,1);assert.equal(res.code,200);assert.equal(res.value.analizado,false);assert.equal(res.value.veredicto_final,null);assert.deepEqual(res.value.fuentes,[]);
     if(limited)assert.equal(headers['Retry-After'],'120');
   }
+}));
+test('Recovered Threads description overrides an erroneous model access failure',()=>withMocks(async()=>{
+  let step=0;
+  global.fetch=async(url,options={})=>{
+    const target=new URL(url);
+    if(target.hostname==='www.threads.com' && step++===0) return new Response('',{status:302,headers:{location:post}});
+    if(target.hostname==='www.threads.com') return new Response(`<head><meta property="og:title" content="Publicación de usuario"><meta property="og:description" content="Esta es una afirmación pública suficientemente extensa para ser identificada y verificada por el sistema."></head><body>Threads requiere JavaScript</body>`,{headers:{'content-type':'text/html'}});
+    if(target.hostname==='api.captapi.com') return Response.json({text:'Esta es una afirmación pública suficientemente extensa para verificar.'});
+    assert.equal(target.hostname,'api.openai.com');
+    const request=JSON.parse(options.body);const result=emptySchema(request.text.format.schema);
+    result.estado='sin_acceso';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';
+    result.afirmacion_principal='Esta es una afirmación pública';result.respuesta_directa='No pude acceder';result.resumen='No pude acceder';result.conclusion='No pude acceder';
+    result.evaluacion_afirmaciones=[{afirmacion:'Esta es una afirmación pública',estado:'NO DEMOSTRADA',relacion_con_afirmacion:'DIRECTA',sustento_directo:[],fuente_matriz:'Publicación original',lo_que_no_demuestra:'Su veracidad'}];
+    return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}]});
+  };
+  const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+  await handler({method:'POST',body:{text:share}},res);
+  assert.equal(res.code,200);assert.equal(res.value.estado,'analizado');assert.notEqual(res.value.analizado,false);
+  assert.equal(res.value.extraccion_enlace.conector_multiplataforma.consultas_exitosas,1);
 }));
 test('Both frontends persist cooldown, suppress repeat fetch and do not count failure as success',async()=>{
   const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');

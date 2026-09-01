@@ -63,7 +63,7 @@ test('Journalistic repetition cannot manufacture a partially true verdict',async
     result.veredicto_final='PARCIALMENTE CIERTA';
     result.explicacion_veredicto_final='Hay evidencia periodística reciente sobre una botella de $30,000.';
     result.evaluacion_afirmaciones=[{
-      afirmacion:'Se pagaron $30,000 por la botella',estado:'NO DEMOSTRADA',sustento_directo:[],
+      afirmacion:'Se pagaron $30,000 por la botella',estado:'NO DEMOSTRADA',relacion_con_afirmacion:'DIRECTA',sustento_directo:[],
       fuente_matriz:'Una columna replicada por otros medios',lo_que_no_demuestra:'Quién ordenó o pagó la botella'
     }];
     result.fuentes=[{titulo:'Nota general sobre las mismas personas',url:'https://example.com/contexto',tipo:'Medio',aporte:'Contexto político; no documenta el caso del vino'}];
@@ -80,6 +80,7 @@ test('Journalistic repetition cannot manufacture a partially true verdict',async
     assert.equal(res.value.veredicto_final,'NO VERIFICABLE');
     assert.doesNotMatch(res.value.explicacion_veredicto_final,/evidencia period[ií]stica/i);
     assert.equal(res.value.evaluacion_afirmaciones[0].estado,'NO DEMOSTRADA');
+    assert.equal(res.value.evaluacion_afirmaciones[0].relacion_con_afirmacion,'DIRECTA');
     assert.deepEqual(res.value.fuentes,[]);
   } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
 });

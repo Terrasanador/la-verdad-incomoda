@@ -318,6 +318,9 @@ const texto = tieneTexto
       "Solo usa PARCIALMENTE VERDADERO si existe al menos una proposición sustantiva demostrada y otra sustantiva contradicha o no demostrada. La existencia de notas, acusaciones, rumores, fotografías ambiguas o personas reunidas no constituye por sí sola la parte verdadera de una acusación distinta.",
       "Antes de concluir que no existen fuentes sobre una acusación reciente, realiza búsquedas con la frase exacta y variantes de nombres, cifra, producto, lugar y fecha; localiza la publicación más antigua y diferencia esa fuente matriz de sus réplicas.",
       "No incluyas como fuente una nota de contexto que no documente, contradiga ni examine materialmente la afirmación concreta. Que una nota trate sobre las mismas personas no la vuelve evidencia del hecho investigado.",
+      "Un antecedente de gasto, viaje o conducta ocurrido en otra fecha, lugar o evento es evidencia circunstancial o ajena; no convierte en parcialmente cierta una acusación nueva sobre una botella, reunión, pago o persona diferente.",
+      "Expresiones retóricas como 'viven como reyes' no quedan demostradas por localizar un episodio distinto de gasto. Verifica los ejemplos concretos que acompañan la expresión y no permitas que un antecedente colateral sustituya la prueba del hecho consultado.",
+      "Si el bloque CONTENIDO RECUPERADO DEL ENLACE incluye descripción, texto o datos del conector social, el contenido sí está disponible para análisis. No establezcas estado=sin_acceso: identifica sus afirmaciones y verifícalas con fuentes externas.",
       "La ausencia de sentencia no vuelve falsa una afirmación, pero tampoco permite presentarla como hecho probado. Distingue evidencia factual, acusación, investigación abierta y responsabilidad judicial.",
       "En afirmaciones sobre aprobación, popularidad o respaldo político, revisa varias encuestas recientes, sus fechas, preguntas, muestras, patrocinadores y metodologías. No extrapoles una encuesta aislada ni mezcles aprobación presidencial con aceptación de un movimiento político distinto.",
       "Explica si el resultado podría estar condicionado por una selección desequilibrada de fuentes. Si no se logró pluralidad suficiente, no presentes una conclusión tajante de alta confianza.",
@@ -613,10 +616,11 @@ ${texto}${bloqueExtraccion}`
           items: {
             type: "object",
             additionalProperties: false,
-            required: ["afirmacion", "estado", "sustento_directo", "fuente_matriz", "lo_que_no_demuestra"],
+            required: ["afirmacion", "estado", "relacion_con_afirmacion", "sustento_directo", "fuente_matriz", "lo_que_no_demuestra"],
             properties: {
               afirmacion: { type: "string" },
               estado: { type: "string", enum: ["CONFIRMADA", "CONTRADICHA", "NO DEMOSTRADA"] },
+              relacion_con_afirmacion: { type: "string", enum: ["DIRECTA", "CIRCUNSTANCIAL", "AJENA"] },
               sustento_directo: { type: "array", items: { type: "string" }, maxItems: 3 },
               fuente_matriz: { type: "string" },
               lo_que_no_demuestra: { type: "string" }
@@ -1093,6 +1097,9 @@ ${texto}${bloqueExtraccion}`
           estado: ["CONFIRMADA", "CONTRADICHA", "NO DEMOSTRADA"].includes(item?.estado)
             ? item.estado
             : "NO DEMOSTRADA",
+          relacion_con_afirmacion: ["DIRECTA", "CIRCUNSTANCIAL", "AJENA"].includes(item?.relacion_con_afirmacion)
+            ? item.relacion_con_afirmacion
+            : "AJENA",
           sustento_directo: limpiarLista(item?.sustento_directo).slice(0, 3),
           fuente_matriz: String(item?.fuente_matriz || "").trim(),
           lo_que_no_demuestra: String(item?.lo_que_no_demuestra || "").trim()
@@ -1100,7 +1107,7 @@ ${texto}${bloqueExtraccion}`
       : [];
 
     const afirmacionesConfirmadas = resultado.evaluacion_afirmaciones.filter(item =>
-      item.estado === "CONFIRMADA" && item.sustento_directo.length > 0
+      item.estado === "CONFIRMADA" && item.relacion_con_afirmacion === "DIRECTA" && item.sustento_directo.length > 0
     );
     const afirmacionesContradichas = resultado.evaluacion_afirmaciones.filter(item =>
       item.estado === "CONTRADICHA"
@@ -1354,9 +1361,23 @@ ${texto}${bloqueExtraccion}`
 
     // Un enlace bloqueado puede producir texto explicativo generado por el modelo.
     // Por eso no se usa la mera existencia de resumen/respuesta como prueba de acceso.
+    const contenidoEnlaceRecuperado = Boolean(
+      extraccionEnlace && (
+        String(extraccionEnlace.descripcion || "").trim().length >= 40 ||
+        String(extraccionEnlace.texto_recuperado || "").trim().length >= 80 ||
+        String(extraccionEnlace.transcripcion || "").trim().length >= 40 ||
+        (extraccionEnlace.datos_multiplataforma?.consultas_exitosas > 0 &&
+          String(extraccionEnlace.datos_multiplataforma?.contenido_json || "").trim().length >= 20)
+      )
+    );
+    if (contenidoEnlaceRecuperado && resultado.estado === "sin_acceso") {
+      resultado.estado = "analizado";
+    }
+
     const accesoRealmenteBloqueado =
       consultaEsEnlace &&
       !esImagen &&
+      !contenidoEnlaceRecuperado &&
       (
         resultado.estado === "sin_acceso" ||
         (resultado.veredicto_final === 'NO VERIFICABLE' && pareceSinAcceso(textoDiagnostico))
@@ -1380,7 +1401,7 @@ ${texto}${bloqueExtraccion}`
           : "La plataforma restringió el acceso y no fue posible recuperar suficiente contenido para evaluar la afirmación.";
 
       resultado.respuesta_directa =
-        "El contenido aún no fue evaluado. Sube una captura legible, pega el texto completo o reintenta después del tiempo de espera.";
+        "El contenido aún no fue evaluado porque no se recuperó una afirmación identificable del enlace.";
 
       resultado.resumen =
         "El análisis quedó pendiente por una restricción técnica de acceso. Esto no implica que la publicación sea verdadera ni falsa.";

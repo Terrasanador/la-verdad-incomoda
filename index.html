@@ -1548,7 +1548,8 @@ async function sampleVideoFrames(file) {
             : " Sin sustento directo identificado.";
           const matrix = item.fuente_matriz ? ` Fuente matriz: ${item.fuente_matriz}.` : "";
           const limit = item.lo_que_no_demuestra ? ` No demuestra: ${item.lo_que_no_demuestra}.` : "";
-          return `${item.estado || "NO DEMOSTRADA"}: ${item.afirmacion || ""}.${support}${matrix}${limit}`;
+          const relation = item.relacion_con_afirmacion ? ` Relación: ${item.relacion_con_afirmacion}.` : "";
+          return `${item.estado || "NO DEMOSTRADA"}: ${item.afirmacion || ""}.${relation}${support}${matrix}${limit}`;
         })
       : [];
 
