@@ -608,6 +608,7 @@ ${texto}${bloqueExtraccion}`
         },
         evaluacion_afirmaciones: {
           type: "array",
+          minItems: 1,
           maxItems: 5,
           items: {
             type: "object",
@@ -1452,7 +1453,8 @@ ${texto}${bloqueExtraccion}`
       const aporteFuente = String(
         fuente.aporte || "Fuente utilizada durante la investigación."
       ).trim();
-      if (/(?:sin referencia (?:directa )?al caso|no (?:documenta|confirma|aborda|aporta evidencia sobre|contiene referencia a) (?:la |el )?(?:afirmaci[oó]n|caso|hecho|vino|botella|compra))/i.test(aporteFuente)) {
+      if (/(?:sin referencia (?:directa )?al caso|no (?:documenta|confirma|aborda|aporta evidencia sobre|contiene referencia a|est[aá] vinculado a) (?:la |el |los |las )?(?:afirmaci[oó]n|caso|hecho|vino|botella|compra|persona))/i.test(aporteFuente) ||
+          (/\bcontexto\b/i.test(aporteFuente) && !/documento|registro|factura|recibo|video completo|fotograf[ií]a original|dato oficial|precio verificad/i.test(aporteFuente))) {
         return;
       }
 
@@ -1487,10 +1489,8 @@ ${texto}${bloqueExtraccion}`
     };
 
     (Array.isArray(resultado.fuentes) ? resultado.fuentes : []).forEach(agregarFuente);
-    citas.forEach(agregarFuente);
-    // Las fuentes completas de una búsqueda pueden incluir resultados exploratorios
-    // descartados por irrelevantes. Solo se muestran fuentes seleccionadas por el
-    // análisis estructurado o citadas expresamente en la respuesta.
+    // Las anotaciones de búsqueda pueden contener resultados exploratorios. Solo se
+    // muestran fuentes seleccionadas explícitamente en el análisis estructurado.
 
     const puntuarFuente = fuente => {
       const textoFuente = `${fuente.tipo} ${fuente.titulo} ${fuente.aporte}`;

@@ -39,7 +39,10 @@ test('Bare and prefixed link failures return no verdict or sources',async()=>{
     assert.equal(body.tools[0].search_context_size,'high');
     result.estado='sin_acceso';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';result.respuesta_directa='No fue posible acceder al video.';
     result.fuentes=[{titulo:'Irrelevant directory',url:'https://example.com',tipo:'Otra',aporte:'Metadata'}];
-    return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}]});
+    return Response.json({output:[{type:'message',content:[{
+      type:'output_text',text:JSON.stringify(result),
+      annotations:[{type:'url_citation',url:'https://example.com/exploratorio',title:'Resultado exploratorio'}]
+    }]}]});
   };
   try {
     for(const text of ['http://127.0.0.1/video','Verifica este video http://127.0.0.1/video']){
@@ -64,7 +67,10 @@ test('Journalistic repetition cannot manufacture a partially true verdict',async
       fuente_matriz:'Una columna replicada por otros medios',lo_que_no_demuestra:'Quién ordenó o pagó la botella'
     }];
     result.fuentes=[{titulo:'Nota general sobre las mismas personas',url:'https://example.com/contexto',tipo:'Medio',aporte:'Contexto político; no documenta el caso del vino'}];
-    return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}]});
+    return Response.json({output:[{type:'message',content:[{
+      type:'output_text',text:JSON.stringify(result),
+      annotations:[{type:'url_citation',url:'https://example.com/exploratorio-2',title:'Otra búsqueda exploratoria'}]
+    }]}]});
   };
   try {
     const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
