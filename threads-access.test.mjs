@@ -70,14 +70,30 @@ test('Provider 429 exposes wait and does not retry',()=>withMocks(async()=>{
   const first=await extractSocialPublicData(post);assert.equal(first.retry_after_seconds,90);
   const second=await extractSocialPublicData(post);assert.equal(n,1);assert(second.retry_after_seconds>0);
 }));
-test('Handler bypasses model and provider on unresolved or rate-limited share',()=>withMocks(async()=>{
+test('Handler continues to web search on unresolved or rate-limited Threads share',()=>withMocks(async()=>{
   for(const limited of [false,true]) {
-    resetThreadsCooldownsForTest();let n=0;
-    global.fetch=async(url)=>{n++;assert.equal(new URL(url).hostname,'www.threads.com');return limited?new Response('',{status:429,headers:{'retry-after':'120'}}):new Response('<title>Threads</title>',{headers:{'content-type':'text/html'}});};
-    const headers={};const res={setHeader(k,v){headers[k]=v;},status(n){this.code=n;return this;},json(v){this.value=v;return this;}};
+    resetThreadsCooldownsForTest();let directCalls=0,modelCalls=0;
+    global.fetch=async(url,options={})=>{
+      const target=new URL(url);
+      if(target.hostname==='www.threads.com') {
+        directCalls++;
+        return limited
+          ? new Response('',{status:429,headers:{'retry-after':'120'}})
+          : new Response('<title>Threads</title>',{headers:{'content-type':'text/html'}});
+      }
+      assert.equal(target.hostname,'api.openai.com');modelCalls++;
+      const request=JSON.parse(options.body);const result=emptySchema(request.text.format.schema);
+      result.estado='sin_acceso';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';
+      result.afirmacion_principal='';result.respuesta_directa='No se identificó el contenido';result.resumen='Sin contenido recuperado';result.conclusion='Sin conclusión factual';
+      return Response.json({output:[
+        {type:'web_search_call',action:{sources:[]}},
+        {type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}
+      ]});
+    };
+    const res={setHeader(){},status(n){this.code=n;return this;},json(v){this.value=v;return this;}};
     await handler({method:'POST',body:{text:'Verifica este video '+share}},res);
-    assert.equal(n,1);assert.equal(res.code,200);assert.equal(res.value.analizado,false);assert.equal(res.value.veredicto_final,null);assert.deepEqual(res.value.fuentes,[]);
-    if(limited)assert.equal(headers['Retry-After'],'120');
+    assert.equal(directCalls,1);assert.equal(modelCalls,1);assert.equal(res.code,200);
+    assert.equal(res.value.analizado,false);assert.equal(res.value.veredicto_final,null);
   }
 }));
 test('Recovered Threads description overrides an erroneous model access failure',()=>withMocks(async()=>{

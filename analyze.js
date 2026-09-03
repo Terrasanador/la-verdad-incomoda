@@ -1,9 +1,9 @@
 import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
 import { extractSocialPublicData, indexedTikTokPhotoEvidence } from "./social-data.js";
 import { prepareFile, validateFile } from "./media-input.js";
-import { isThreadsUrl, threadsLinkType, threadsReferenceOnly, incompleteThreadsResult } from './threads-access.js';
+import { isThreadsUrl, threadsLinkType } from './threads-access.js';
 
-// La Verdad Incómoda — analyze.js v2.3
+// La Verdad Incómoda — analyze.js v2.4
 // Perfiles sociales: auditoría parcial útil sin convertir metadatos públicos en un fallo total.
 
 export const config = { maxDuration: 300 };
@@ -75,7 +75,9 @@ const texto = tieneTexto
         if (/\/(?:login(?:\.php)?|checkpoint|accounts\/login)(?:\/|$)/i.test(destino.pathname)) {
           enlaceCanonico = enlaceDetectado;
         }
-        const extraccionSocial = extraccionEnlace.retry_after_seconds ? null : await extractSocialPublicData(enlaceCanonico).catch(error => ({
+        // Un límite de la lectura directa no debe impedir que el proveedor independiente
+        // o la búsqueda web intenten recuperar la misma publicación.
+        const extraccionSocial = await extractSocialPublicData(enlaceCanonico).catch(error => ({
           proveedor: "Captapi",
           consultas_exitosas: 0,
           consultas_intentadas: 0,
@@ -112,13 +114,6 @@ const texto = tieneTexto
       }
     }
 
-    if (!archivo && isThreadsUrl(enlaceDetectado) && threadsReferenceOnly(texto,enlaceDetectado) &&
-      (extraccionEnlace?.retry_after_seconds || ['share','unsupported'].includes(threadsLinkType(extraccionEnlace?.url_final || enlaceDetectado)))) {
-      const pending=incompleteThreadsResult(extraccionEnlace);
-      if(pending.retry_after_seconds) res.setHeader('Retry-After',String(pending.retry_after_seconds));
-      return res.status(200).json(pending);
-    }
-
     const modo = body.mode === "profundo" ? "profundo" : "rapido";
     const idiomaSalida = String(body.language || body.idioma || "auto").trim() || "auto";
     const esPerfilSocial = Boolean(
@@ -138,6 +133,9 @@ const texto = tieneTexto
       "Estas tres tareas forman una sola verificación y nunca dependen de una elección del usuario. Completa cuentas_comparadas, publicaciones_coincidentes y patron_publicacion_grupal cuando encuentres evidencia; si no existe información suficiente, devuelve listas vacías y declara la limitación sin retrasar ni diluir el veredicto factual.",
       "El veredicto sobre la afirmación siempre tiene prioridad. La auditoría de cuentas y la detección de coordinación son contexto complementario y no sustituyen la respuesta VERDAD, MENTIRA, ENGAÑOSA o NO COMPROBABLE.",
       "Debes usar búsqueda web antes de emitir un veredicto.",
+      "Si Threads u otra red responde HTTP 429, exige inicio de sesión o no resuelve un enlace compartido, NO detengas el análisis: busca primero la URL exacta, después su identificador o código, la cuenta autora y copias públicas indexadas.",
+      "Cuando el enlace sea /share/CODIGO, usa el CODIGO como término de búsqueda y localiza la URL canónica /@cuenta/post/CODIGO o cualquier resultado público que reproduzca el texto; distingue siempre lo recuperado directamente de lo reconstruido mediante índices.",
+      "Un 429 solo limita una vía de acceso. Solo declara sin acceso después de agotar búsqueda por URL, identificador, cuenta y fragmentos recuperados; nunca inventes el contenido si ninguna vía lo identifica.",
       `IDIOMA DE SALIDA: ${idiomaSalida}.`,
       "Escribe todos los campos narrativos en el idioma solicitado por el usuario.",
       "Conserva exactamente en español los valores técnicos enumerados del esquema: estado, veredicto_final y veredicto.",
@@ -1538,7 +1536,6 @@ ${texto}${bloqueExtraccion}`
     const fuentesModeloConsultadas = (Array.isArray(resultado.fuentes) ? resultado.fuentes : [])
       .filter(fuente => fuente?.url && urlsWebConsultadas.has(String(fuente.url)));
     const contenidoIdentificadoPorBusqueda = Boolean(
-      resultado.estado === "analizado" &&
       !["", "NO VERIFICABLE"].includes(String(resultado.veredicto_final || "").toUpperCase()) &&
       String(resultado.afirmacion_principal || "").trim().length >= 20 &&
       fuentesModeloConsultadas.length >= 2 &&
