@@ -110,6 +110,10 @@ function tiktokPhotoReference(rawUrl) {
   }
 }
 
+function profileLimitForFallback() {
+  return boundedInteger(process.env.SOCIAL_PROFILE_POST_LIMIT, DEFAULT_PROFILE_LIMIT, 50);
+}
+
 function boundedInteger(value, fallback, maximum) {
   const number = Number.parseInt(value, 10);
   if (!Number.isFinite(number)) return fallback;
@@ -337,6 +341,29 @@ export async function extractSocialPublicData(rawUrl) {
       }
     });
     requests.push(...detailRequests.map(item => [item.path, { url: item.url }]));
+  }
+
+  if (!recovered.length && platform === "tiktok" && !profile) {
+    try {
+      const parsed = new URL(rawUrl);
+      const match = parsed.pathname.match(/^\/@([^/]+)\/video\/(\d+)\/?$/i);
+      if (match) {
+        const profileUrl = `${parsed.origin}/@${match[1]}`;
+        const profilePosts = await callCaptapi(apiKey, "tiktok/channel-posts", profileUrl, {
+          limit: Math.min(profileLimitForFallback(), 20)
+        });
+        recovered.push({
+          endpoint: "tiktok/channel-posts",
+          url_analizada: profileUrl,
+          id_objetivo: match[2],
+          respuesta: profilePosts
+        });
+        requests.push(["tiktok/channel-posts", { url: profileUrl, id_objetivo: match[2] }]);
+        limitations.push("El detalle individual no estuvo disponible; se consultó la muestra pública reciente de la cuenta para localizar el identificador exacto del video.");
+      }
+    } catch (error) {
+      limitations.push(`tiktok/channel-posts (recuperación por cuenta): ${error?.message || "consulta no disponible"}`);
+    }
   }
 
   if (!recovered.length) {

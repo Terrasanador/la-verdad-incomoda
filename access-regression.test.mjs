@@ -68,6 +68,28 @@ test('TikTok official oEmbed recovers a blocked video description and author',as
   } finally {global.fetch=oldFetch;dns.lookup=oldLookup;}
 });
 
+test('TikTok player recovers metadata when oEmbed rejects the video',async()=>{
+  const oldFetch=global.fetch, oldLookup=dns.lookup;
+  dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
+  const video='https://www.tiktok.com/@rolando.la.nota.r/video/7680322066490445057';
+  global.fetch=async url=>{
+    const target=new URL(url);
+    if(target.pathname==='/oembed') return new Response('',{status:400});
+    if(target.pathname.startsWith('/player/v1/')) {
+      return new Response(`<script>{"item":{"id":"7680322066490445057","desc":"Afirmación pública recuperada desde el reproductor oficial de TikTok para su verificación.","author":{"nickname":"Rolando La Nota","uniqueId":"rolando.la.nota.r"},"video":{"duration":42}}}</script>`,{headers:{'content-type':'text/html'}});
+    }
+    return new Response('<title>TikTok - Make Your Day</title><body>JavaScript is disabled</body>',{headers:{'content-type':'text/html'}});
+  };
+  try {
+    const result=await extractPublicLink(video);
+    assert.equal(result.recuperacion_player,true);
+    assert.equal(result.acceso_parcial,true);
+    assert.equal(result.autor,'Rolando La Nota');
+    assert.equal(result.duracion_segundos,42);
+    assert.match(result.texto_recuperado,/reproductor oficial/);
+  } finally {global.fetch=oldFetch;dns.lookup=oldLookup;}
+});
+
 function empty(schema){
   if(schema.type==='object')return Object.fromEntries(Object.entries(schema.properties).map(([k,v])=>[k,empty(v)]));
   if(schema.type==='array')return [];

@@ -671,6 +671,95 @@ async function enrichTikTokFromOEmbed(result, rawUrl) {
   return result;
 }
 
+function tiktokPlayerData(html, expectedId) {
+  const found = { titulo: "", autor: "", usuario: "", fecha: "", duracion: null, media_url: "" };
+  for (const match of String(html).matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/gi)) {
+    const source = decodeHtml(match[1] || "").trim();
+    if (!source.startsWith("{") || source.length > MAX_HTML_BYTES) continue;
+    let root;
+    try { root = JSON.parse(source); } catch { continue; }
+    visitJson(root, node => {
+      const id = String(node.id || node.itemId || node.aweme_id || "");
+      const video = node.video && typeof node.video === "object" ? node.video : null;
+      if ((!id || id !== expectedId) && !(video && String(video.id || "") === expectedId)) return;
+      found.titulo ||= cleanText(node.desc || node.description || node.title || "", 4000);
+      found.autor ||= cleanText(node.author?.nickname || node.author?.name || node.nickname || "", 1000);
+      found.usuario ||= cleanText(node.author?.uniqueId || node.uniqueId || "", 500);
+      found.fecha ||= cleanText(node.createTime || node.create_time || "", 100);
+      found.duracion ||= Number(video?.duration || node.duration || 0) || null;
+      found.media_url ||= String(video?.playAddr || video?.downloadAddr || node.playAddr || node.downloadAddr || "");
+    });
+    if (found.titulo && found.media_url) break;
+  }
+  return found;
+}
+
+async function enrichTikTokFromPlayer(result, rawUrl) {
+  if (!isTikTokVideoUrl(rawUrl) || result.archivo_recuperado) return result;
+  const input = new URL(rawUrl);
+  const id = input.pathname.match(/\/video\/(\d+)/i)?.[1] || "";
+  if (!id) return result;
+  try {
+    const playerUrl = `https://www.tiktok.com/player/v1/${id}?description=1&music_info=1&autoplay=0`;
+    const response = await safeFetch(playerUrl, {
+      headers: { Accept: "text/html,application/xhtml+xml" }
+    });
+    if (!response.ok) {
+      result.limitaciones.push(`El reproductor oficial de TikTok respondió HTTP ${response.status}.`);
+      return result;
+    }
+    const html = await readLimitedText(response);
+    const structured = structuredPageData(html);
+    const player = tiktokPlayerData(html, id);
+    const titulo = player.titulo ||
+      extractMeta(html, "og:description") ||
+      extractMeta(html, "twitter:description") ||
+      structured.descripcion ||
+      structured.titulo;
+    const autor = player.autor || structured.autor;
+    result.descripcion = titulo || result.descripcion;
+    result.titulo = titulo || result.titulo;
+    result.autor = autor || result.autor;
+    result.fecha_publicacion = player.fecha || structured.fecha_publicacion || result.fecha_publicacion;
+    result.duracion_segundos = player.duracion || result.duracion_segundos || null;
+    if (titulo || autor) {
+      result.acceso_parcial = true;
+      result.recuperacion_player = true;
+      result.texto_recuperado = [
+        titulo && `Descripción recuperada del reproductor de TikTok: ${titulo}`,
+        autor && `Autor: ${autor}`,
+        player.usuario && `Cuenta: @${player.usuario}`,
+        `Identificador del video: ${id}`
+      ].filter(Boolean).join("\n\n").slice(0, MAX_TEXT_CHARS);
+    }
+    if (player.media_url) {
+      try {
+        const mediaResponse = await safeFetch(player.media_url, {
+          headers: { Accept: "video/mp4,video/*;q=0.9,*/*;q=0.5", Referer: "https://www.tiktok.com/" }
+        });
+        if (mediaResponse.ok) {
+          const bytes = await readMediaBytes(mediaResponse, 20_000_000);
+          result.archivo_recuperado = {
+            name: `tiktok-${id}.mp4`,
+            type: mediaType(`tiktok-${id}.mp4`, mediaResponse.headers.get("content-type") || "video/mp4") || "video/mp4",
+            data: bytes.toString("base64")
+          };
+          result.acceso_directo = true;
+          result.tipo_enlace = "archivo";
+        }
+      } catch (error) {
+        result.limitaciones.push(`El reproductor identificó el video, pero no se pudo descargar el archivo: ${error.message}`);
+      }
+    }
+    if (result.recuperacion_player) {
+      result.limitaciones.push("Se utilizó el reproductor oficial de TikTok como segunda vía de recuperación.");
+    }
+  } catch (error) {
+    result.limitaciones.push(`El reproductor oficial de TikTok no estuvo disponible: ${error.message}`);
+  }
+  return result;
+}
+
 export async function extractPublicLink(rawUrl) {
   let parsed;
   let plataforma = "Desconocida";
@@ -747,6 +836,9 @@ export async function extractPublicLink(rawUrl) {
       result.limitaciones.push(`El servidor respondió HTTP ${response.status}.`);
       if (plataforma === "TikTok" && isTikTokVideoUrl(result.url_final || parsed.href)) {
         await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
+        if (!result.recuperacion_oembed) {
+          await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
+        }
       }
       return result;
     }
@@ -857,6 +949,9 @@ export async function extractPublicLink(rawUrl) {
   if (plataforma === "TikTok" && isTikTokVideoUrl(result.url_final || parsed.href) &&
       (!result.acceso_directo || String(result.texto_recuperado || "").trim().length < 80)) {
     await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
+    if (!result.recuperacion_oembed) {
+      await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
+    }
   }
 
   return result;
