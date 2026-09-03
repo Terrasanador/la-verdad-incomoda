@@ -1,3 +1,9 @@
+# Versión 1.12.0 - Verificación del tráfico del AIFA (2026-09-03)
+
+- Publica una verificación original sobre la cifra de 3.6 millones de pasajeros en el primer semestre de 2026.
+- Contrasta el dato con AFAC y DataTur y separa la medición observada de la comparación con una meta no identificada.
+- Actualiza la biblioteca a veintiuna publicaciones, el sitemap, los datos estructurados y la versión del servicio.
+
 # Versión 1.9.11 - Conectores Facebook, Instagram y X (2026-08-30)
 
 - Añade rutas documentadas para publicaciones, páginas y grupos públicos de Facebook.
