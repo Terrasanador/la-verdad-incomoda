@@ -3,7 +3,7 @@ import { extractSocialPublicData, indexedTikTokPhotoEvidence } from "./social-da
 import { prepareFile, validateFile } from "./media-input.js";
 import { isThreadsUrl, threadsLinkType } from './threads-access.js';
 
-// La Verdad Incómoda — analyze.js v2.4
+// La Verdad Incómoda — analyze.js v2.5
 // Perfiles sociales: auditoría parcial útil sin convertir metadatos públicos en un fallo total.
 
 export const config = { maxDuration: 300 };
@@ -1013,6 +1013,27 @@ ${texto}${bloqueExtraccion}`
         respuesta: textoLimpio
       });
     }
+
+    // Algunos modelos pueden devolver un carácter NUL seguido del código
+    // hexadecimal de una letra latina (por ejemplo, NUL + "f3" por "ó").
+    // Repara esas secuencias antes de enviar el informe al navegador.
+    const repararCodificacion = valor => {
+      if (typeof valor === "string") {
+        const acentos = { a: "á", e: "é", i: "í", o: "ó", u: "ú", A: "Á", E: "É", I: "Í", O: "Ó", U: "Ú" };
+        return valor
+          .replace(/\u0000([0-9a-fA-F]{2})/g, (_, hex) => String.fromCharCode(Number.parseInt(hex, 16)))
+          .replace(/\u0000([aeiouAEIOU])/g, (_, vocal) => acentos[vocal] || vocal)
+          .replace(/\u0000/g, "");
+      }
+      if (Array.isArray(valor)) return valor.map(repararCodificacion);
+      if (valor && typeof valor === "object") {
+        for (const [clave, contenido] of Object.entries(valor)) {
+          valor[clave] = repararCodificacion(contenido);
+        }
+      }
+      return valor;
+    };
+    resultado = repararCodificacion(resultado);
 
     const limitarPorcentaje = valor => {
       if (valor === null || valor === undefined || valor === "") return null;
