@@ -760,6 +760,89 @@ async function enrichTikTokFromPlayer(result, rawUrl) {
   return result;
 }
 
+async function enrichTikTokFromPublicMirror(result, rawUrl) {
+  if (!isTikTokVideoUrl(rawUrl) || result.archivo_recuperado) return result;
+  const input = new URL(rawUrl);
+  input.search = "";
+  input.hash = "";
+  const expectedId = input.pathname.match(/\/video\/(\d+)/i)?.[1] || "";
+  if (!expectedId) return result;
+  try {
+    const endpoint = new URL("https://www.tikwm.com/api/");
+    endpoint.searchParams.set("url", input.href.replace(/\/$/, ""));
+    endpoint.searchParams.set("hd", "1");
+    const response = await safeFetch(endpoint.href, {
+      headers: { Accept: "application/json" }
+    });
+    if (!response.ok) {
+      result.limitaciones.push(`La recuperación pública complementaria respondió HTTP ${response.status}.`);
+      return result;
+    }
+    const payload = JSON.parse(await readLimitedText(response));
+    const data = payload?.data && typeof payload.data === "object" ? payload.data : null;
+    if (!data || Number(payload.code) !== 0) {
+      result.limitaciones.push("La recuperación pública complementaria no devolvió datos utilizables.");
+      return result;
+    }
+    const returnedId = String(data.id || data.aweme_id || "");
+    if (returnedId && returnedId !== expectedId) {
+      result.limitaciones.push("La recuperación complementaria devolvió un identificador diferente y fue descartada.");
+      return result;
+    }
+    const titulo = cleanText(data.title || data.desc || "", 4000);
+    const autor = cleanText(data.author?.nickname || data.author?.unique_id || data.author || "", 1000);
+    const usuario = cleanText(data.author?.unique_id || data.author?.uniqueId || "", 500);
+    result.descripcion = titulo || result.descripcion;
+    result.titulo = titulo || result.titulo;
+    result.autor = autor || result.autor;
+    result.duracion_segundos = Number(data.duration || 0) || result.duracion_segundos || null;
+    result.estadisticas = {
+      ...(result.estadisticas || {}),
+      vistas: Number(data.play_count || 0) || undefined,
+      me_gusta: Number(data.digg_count || 0) || undefined,
+      comentarios: Number(data.comment_count || 0) || undefined,
+      compartidos: Number(data.share_count || 0) || undefined
+    };
+    if (titulo || autor) {
+      result.acceso_parcial = true;
+      result.recuperacion_complementaria = true;
+      result.texto_recuperado = [
+        titulo && `Descripción recuperada: ${titulo}`,
+        autor && `Autor: ${autor}`,
+        usuario && `Cuenta: @${usuario}`,
+        `Identificador del video validado: ${expectedId}`,
+        Object.keys(result.estadisticas).length && `Estadísticas públicas: ${JSON.stringify(result.estadisticas)}`
+      ].filter(Boolean).join("\n\n").slice(0, MAX_TEXT_CHARS);
+    }
+    const mediaUrl = String(data.hdplay || data.play || data.wmplay || "");
+    if (mediaUrl) {
+      try {
+        const mediaResponse = await safeFetch(mediaUrl, {
+          headers: { Accept: "video/mp4,video/*;q=0.9,*/*;q=0.5", Referer: "https://www.tiktok.com/" }
+        });
+        if (mediaResponse.ok) {
+          const bytes = await readMediaBytes(mediaResponse, 20_000_000);
+          result.archivo_recuperado = {
+            name: `tiktok-${expectedId}.mp4`,
+            type: mediaType(`tiktok-${expectedId}.mp4`, mediaResponse.headers.get("content-type") || "video/mp4") || "video/mp4",
+            data: bytes.toString("base64")
+          };
+          result.acceso_directo = true;
+          result.tipo_enlace = "archivo";
+        }
+      } catch (error) {
+        result.limitaciones.push(`Se identificó la publicación, pero no se pudo descargar el video: ${error.message}`);
+      }
+    }
+    if (result.recuperacion_complementaria) {
+      result.limitaciones.push("Se usó una recuperación pública complementaria y se validó que el identificador coincidiera exactamente con el enlace solicitado.");
+    }
+  } catch (error) {
+    result.limitaciones.push(`La recuperación pública complementaria no estuvo disponible: ${error.message}`);
+  }
+  return result;
+}
+
 export async function extractPublicLink(rawUrl) {
   let parsed;
   let plataforma = "Desconocida";
@@ -838,6 +921,9 @@ export async function extractPublicLink(rawUrl) {
         await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
         if (!result.recuperacion_oembed) {
           await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
+        }
+        if (!result.recuperacion_oembed && !result.recuperacion_player) {
+          await enrichTikTokFromPublicMirror(result, result.url_final || parsed.href);
         }
       }
       return result;
@@ -951,6 +1037,9 @@ export async function extractPublicLink(rawUrl) {
     await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
     if (!result.recuperacion_oembed) {
       await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
+    }
+    if (!result.recuperacion_oembed && !result.recuperacion_player) {
+      await enrichTikTokFromPublicMirror(result, result.url_final || parsed.href);
     }
   }
 
