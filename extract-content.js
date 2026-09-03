@@ -624,8 +624,12 @@ function isTikTokVideoUrl(rawUrl) {
 async function enrichTikTokFromOEmbed(result, rawUrl) {
   if (!isTikTokVideoUrl(rawUrl) || result.recuperacion_oembed) return result;
   try {
+    const canonicalInput = new URL(rawUrl);
+    canonicalInput.search = "";
+    canonicalInput.hash = "";
+    const canonicalInputUrl = canonicalInput.href.replace(/\/$/, "");
     const endpoint = new URL("https://www.tiktok.com/oembed");
-    endpoint.searchParams.set("url", rawUrl);
+    endpoint.searchParams.set("url", canonicalInputUrl);
     const response = await safeFetch(endpoint.href, {
       headers: { Accept: "application/json" }
     });
@@ -642,7 +646,7 @@ async function enrichTikTokFromOEmbed(result, rawUrl) {
     const autor = cleanText(payload.author_name || "", 1000);
     const autorUrl = String(payload.author_url || "").trim();
     const cite = String(payload.html || "").match(/\bcite=["']([^"']+)["']/i)?.[1] || "";
-    const canonical = isTikTokVideoUrl(cite) ? cite : rawUrl;
+    const canonical = isTikTokVideoUrl(cite) ? cite : canonicalInputUrl;
     result.url_final = canonical;
     result.titulo = titulo || result.titulo;
     result.descripcion = titulo || result.descripcion;

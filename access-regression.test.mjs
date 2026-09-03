@@ -43,6 +43,7 @@ test('TikTok official oEmbed recovers a blocked video description and author',as
   const oldFetch=global.fetch, oldLookup=dns.lookup;
   dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
   const video='https://www.tiktok.com/@rolando.la.nota.r/video/7680322066490445057';
+  const tracked=video+'?_r=1&_t=ZS-99OVNxd0Tki';
   global.fetch=async url=>{
     const target=new URL(url);
     if(target.pathname==='/oembed') {
@@ -58,7 +59,7 @@ test('TikTok official oEmbed recovers a blocked video description and author',as
     return new Response('<title>TikTok - Make Your Day</title><body>JavaScript is disabled</body>',{headers:{'content-type':'text/html'}});
   };
   try {
-    const result=await extractPublicLink(video);
+    const result=await extractPublicLink(tracked);
     assert.equal(result.recuperacion_oembed,true);
     assert.equal(result.acceso_parcial,true);
     assert.equal(result.autor,'Rolando La Nota');
