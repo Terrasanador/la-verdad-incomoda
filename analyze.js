@@ -3,7 +3,7 @@ import { extractSocialPublicData, indexedTikTokPhotoEvidence } from "./social-da
 import { prepareFile, validateFile } from "./media-input.js";
 import { isThreadsUrl, threadsLinkType } from './threads-access.js';
 
-// La Verdad Incómoda — analyze.js v2.5
+// La Verdad Incómoda — analyze.js v2.6
 // Perfiles sociales: auditoría parcial útil sin convertir metadatos públicos en un fallo total.
 
 export const config = { maxDuration: 300 };
@@ -136,6 +136,7 @@ const texto = tieneTexto
       "Si Threads u otra red responde HTTP 429, exige inicio de sesión o no resuelve un enlace compartido, NO detengas el análisis: busca primero la URL exacta, después su identificador o código, la cuenta autora y copias públicas indexadas.",
       "Cuando el enlace sea /share/CODIGO, usa el CODIGO como término de búsqueda y localiza la URL canónica /@cuenta/post/CODIGO o cualquier resultado público que reproduzca el texto; distingue siempre lo recuperado directamente de lo reconstruido mediante índices.",
       "Un 429 solo limita una vía de acceso. Solo declara sin acceso después de agotar búsqueda por URL, identificador, cuenta y fragmentos recuperados; nunca inventes el contenido si ninguna vía lo identifica.",
+      "Para videos de TikTok, usa la descripción, autoría e identificador recuperados por el servicio oficial oEmbed como punto de partida; busca el identificador exacto y la cuenta para localizar réplicas, transcripciones o referencias públicas antes de declarar que no se identificó el contenido.",
       `IDIOMA DE SALIDA: ${idiomaSalida}.`,
       "Escribe todos los campos narrativos en el idioma solicitado por el usuario.",
       "Conserva exactamente en español los valores técnicos enumerados del esquema: estado, veredicto_final y veredicto.",

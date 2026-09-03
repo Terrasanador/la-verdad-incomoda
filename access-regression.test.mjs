@@ -39,6 +39,34 @@ test('Resolved URL survives destination failure; generic page is not content',as
     const shell=await extractPublicLink('https://www.tiktok.com/@joan/video/123');assert.equal(shell.acceso_directo,false);
   } finally {global.fetch=oldFetch;dns.lookup=oldLookup;}
 });
+test('TikTok official oEmbed recovers a blocked video description and author',async()=>{
+  const oldFetch=global.fetch, oldLookup=dns.lookup;
+  dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
+  const video='https://www.tiktok.com/@rolando.la.nota.r/video/7680322066490445057';
+  global.fetch=async url=>{
+    const target=new URL(url);
+    if(target.pathname==='/oembed') {
+      assert.equal(target.searchParams.get('url'),video);
+      return Response.json({
+        version:'1.0',type:'video',provider_name:'TikTok',
+        title:'Descripción pública suficientemente extensa para identificar la afirmación del video y contrastarla.',
+        author_name:'Rolando La Nota',author_url:'https://www.tiktok.com/@rolando.la.nota.r',
+        html:`<blockquote cite="${video}"></blockquote>`,
+        thumbnail_url:'https://p16.example.test/cover.jpg'
+      });
+    }
+    return new Response('<title>TikTok - Make Your Day</title><body>JavaScript is disabled</body>',{headers:{'content-type':'text/html'}});
+  };
+  try {
+    const result=await extractPublicLink(video);
+    assert.equal(result.recuperacion_oembed,true);
+    assert.equal(result.acceso_parcial,true);
+    assert.equal(result.autor,'Rolando La Nota');
+    assert.match(result.descripcion,/identificar la afirmación/);
+    assert.match(result.texto_recuperado,/7680322066490445057/);
+  } finally {global.fetch=oldFetch;dns.lookup=oldLookup;}
+});
+
 function empty(schema){
   if(schema.type==='object')return Object.fromEntries(Object.entries(schema.properties).map(([k,v])=>[k,empty(v)]));
   if(schema.type==='array')return [];

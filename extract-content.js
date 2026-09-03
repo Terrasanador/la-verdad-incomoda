@@ -610,6 +610,63 @@ export function findFirstPublicUrl(value = "") {
   return match ? match[0].replace(/[),.;!?]+$/, "") : "";
 }
 
+function isTikTokVideoUrl(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    return (host === "tiktok.com" || host.endsWith(".tiktok.com")) &&
+      /^\/@[^/]+\/video\/\d+\/?$/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
+async function enrichTikTokFromOEmbed(result, rawUrl) {
+  if (!isTikTokVideoUrl(rawUrl) || result.recuperacion_oembed) return result;
+  try {
+    const endpoint = new URL("https://www.tiktok.com/oembed");
+    endpoint.searchParams.set("url", rawUrl);
+    const response = await safeFetch(endpoint.href, {
+      headers: { Accept: "application/json" }
+    });
+    if (!response.ok) {
+      result.limitaciones.push(`TikTok oEmbed respondió HTTP ${response.status}.`);
+      return result;
+    }
+    const payload = JSON.parse(await readLimitedText(response));
+    if (String(payload.provider_name || "").toLowerCase() !== "tiktok") {
+      result.limitaciones.push("TikTok oEmbed no devolvió una respuesta atribuible a TikTok.");
+      return result;
+    }
+    const titulo = cleanText(payload.title || "", 4000);
+    const autor = cleanText(payload.author_name || "", 1000);
+    const autorUrl = String(payload.author_url || "").trim();
+    const cite = String(payload.html || "").match(/\bcite=["']([^"']+)["']/i)?.[1] || "";
+    const canonical = isTikTokVideoUrl(cite) ? cite : rawUrl;
+    result.url_final = canonical;
+    result.titulo = titulo || result.titulo;
+    result.descripcion = titulo || result.descripcion;
+    result.autor = autor || result.autor;
+    result.thumbnail_url = String(payload.thumbnail_url || "").trim();
+    result.texto_recuperado = [
+      titulo && `Descripción publicada en TikTok: ${titulo}`,
+      autor && `Autor o cuenta: ${autor}`,
+      autorUrl && `Perfil público: ${autorUrl}`,
+      `Identificador del video: ${new URL(canonical).pathname.match(/\/video\/(\d+)/i)?.[1] || ""}`
+    ].filter(Boolean).join("\n\n").slice(0, MAX_TEXT_CHARS);
+    result.acceso_parcial = Boolean(titulo || autor);
+    result.recuperacion_oembed = Boolean(titulo || autor);
+    if (result.recuperacion_oembed) {
+      result.limitaciones.push(
+        "Se recuperaron la descripción, autoría y referencia del video mediante el servicio oficial oEmbed de TikTok; esto identifica la publicación, pero no equivale por sí solo a una transcripción del audio."
+      );
+    }
+  } catch (error) {
+    result.limitaciones.push(`TikTok oEmbed no estuvo disponible: ${error.message}`);
+  }
+  return result;
+}
+
 export async function extractPublicLink(rawUrl) {
   let parsed;
   let plataforma = "Desconocida";
@@ -684,6 +741,9 @@ export async function extractPublicLink(rawUrl) {
 
     if (!response.ok) {
       result.limitaciones.push(`El servidor respondió HTTP ${response.status}.`);
+      if (plataforma === "TikTok" && isTikTokVideoUrl(result.url_final || parsed.href)) {
+        await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
+      }
       return result;
     }
 
@@ -788,6 +848,11 @@ export async function extractPublicLink(rawUrl) {
         ? "La descarga directa agotó el tiempo de espera."
         : `No se pudo descargar directamente el enlace: ${error.message}`
     );
+  }
+
+  if (plataforma === "TikTok" && isTikTokVideoUrl(result.url_final || parsed.href) &&
+      (!result.acceso_directo || String(result.texto_recuperado || "").trim().length < 80)) {
+    await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
   }
 
   return result;
