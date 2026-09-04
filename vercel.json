@@ -1,85 +1,32 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "analyze.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "health.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "content-api.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "article-render.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.json",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.xml",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.txt",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "*.svg",
-      "use": "@vercel/static"
-    }
+    { "src": "analyze-v3.js", "use": "@vercel/node" },
+    { "src": "analyze.js", "use": "@vercel/node" },
+    { "src": "health.js", "use": "@vercel/node" },
+    { "src": "content-api.js", "use": "@vercel/node" },
+    { "src": "article-render.js", "use": "@vercel/node" },
+    { "src": "*.html", "use": "@vercel/static" },
+    { "src": "*.css", "use": "@vercel/static" },
+    { "src": "*.json", "use": "@vercel/static" },
+    { "src": "*.xml", "use": "@vercel/static" },
+    { "src": "*.txt", "use": "@vercel/static" },
+    { "src": "*.svg", "use": "@vercel/static" }
   ],
   "routes": [
-    {
-      "src": "/api/analyze",
-      "dest": "/analyze.js"
-    },
-    {
-      "src": "/api/health",
-      "dest": "/health.js"
-    },
-    {
-      "src": "/api/content",
-      "dest": "/content-api.js"
-    },
-    {
-      "src": "/article.html",
-      "dest": "/article-render.js"
-    },
-    {
-      "src": "/articulos/(.*)",
-      "dest": "/article-render.js?slug=$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+    { "src": "/api/analyze", "dest": "/analyze-v3.js" },
+    { "src": "/api/health", "dest": "/health.js" },
+    { "src": "/api/content", "dest": "/content-api.js" },
+    { "src": "/article.html", "dest": "/article-render.js" },
+    { "src": "/articulos/(.*)", "dest": "/article-render.js?slug=$1" },
+    { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [
     {
       "source": "/admin.html",
       "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
-        }
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
+        { "key": "Cache-Control", "value": "no-store" }
       ]
     }
   ]
