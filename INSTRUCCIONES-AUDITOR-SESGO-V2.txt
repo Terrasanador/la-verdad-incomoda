@@ -1,27 +1,52 @@
-LA VERDAD INCÓMODA — AUDITOR DE SESGO Y PLURALIDAD V2
+LA VERDAD INCÓMODA — AUDITOR DE SESGO Y PLURALIDAD V3
 
 CAMBIOS PRINCIPALES
-- Obligación de buscar evidencia favorable, contraria y primaria.
-- Clasificación política simplificada: IZQUIERDA, DERECHA, MIXTO o NO DETERMINADO.
-- La orientación de una fuente nunca decide si la afirmación es cierta o falsa.
-- Deduplicación de medios de una misma cadena, agencia, grupo o fuente matriz.
+- Obligación de identificar primero la TESIS CENTRAL que el contenido intenta instalar en el lector.
+- Los hechos accesorios o de dominio público no pueden convertir una acusación central falsa o no demostrada en PARCIALMENTE CIERTA.
+- Ejemplo: que una persona ocupe realmente un cargo público NO demuestra que haya sido colocada allí para proteger a un grupo, encubrir delitos o impedir investigaciones.
+- PARCIALMENTE CIERTA solo procede cuando existen dos o más proposiciones SUSTANTIVAS de la tesis central y al menos una está demostrada mientras otra está contradicha o no demostrada. Nombres, cargos, fechas, lugares o relaciones periféricas no cuentan como la parte verdadera si no prueban la acusación central.
+- Si la tesis central está contradicha por evidencia suficiente, el veredicto debe ser FALSA aunque contenga datos periféricos correctos.
+- Si la tesis central atribuye órdenes secretas, intenciones, protección, encubrimiento, conspiración o causalidad y no existe evidencia suficiente para probarla o refutarla, usar NO VERIFICABLE / acusación no demostrada; no premiarla con verdad parcial por hechos accesorios.
+
+AUDITORÍA OBLIGATORIA DEL EMISOR
+- Identificar quién origina la acusación y distinguirlo de quienes solamente la replican.
+- Examinar antecedentes públicos relevantes del autor, medio o cuenta.
+- Revisar una muestra verificable de publicaciones anteriores para detectar línea editorial recurrente, objetivos frecuentes, ataques o apoyos sistemáticos y uso repetido de narrativas falsas, engañosas o no demostradas.
+- Clasificar orientación política únicamente como IZQUIERDA, DERECHA, MIXTA o NO DETERMINADA y solo cuando exista evidencia pública acumulada suficiente. Nunca inferirla de una sola publicación.
+- Registrar cuántas publicaciones fueron realmente revisadas y qué periodo cubre la muestra. No presentar una muestra como historial completo.
+- Distinguir crítica legítima, opinión adversa, cobertura negativa recurrente, campaña de descrédito y ataque sistemático con desinformación.
+- La tendencia política, oposición o apoyo al gobierno NO decide por sí sola si una afirmación es verdadera o falsa. Sirve para contextualizar posibles sesgos y orientar la búsqueda de evidencia.
+- Buscar conflictos de interés, propiedad, financiamiento, vínculos declarados, contratos o pagos únicamente cuando estén documentados. No insinuar pagos o coordinación sin pruebas.
+
+ANÁLISIS DE PROPAGACIÓN
+- Localizar la fuente matriz y separar copias, paráfrasis y corroboraciones independientes.
+- Varias notas que repiten una misma acusación no constituyen varias pruebas.
+- Buscar coincidencias textuales, visuales y temporales para detectar posible difusión coordinada.
+- No llamar bot a una cuenta por ideología, anonimato, volumen de publicaciones o repetición aislada.
+- NADO SINCRONIZADO DE DESINFORMACIÓN exige falsedad comprobada más evidencia observable suficiente de coordinación entre varios emisores.
+
+AUDITORÍA DE EVIDENCIA
+- Buscar evidencia favorable, contraria y primaria.
+- Priorizar documentos originales, resoluciones, registros, bases de datos, estadísticas con metodología, videos completos y declaraciones originales.
+- Una investigación periodística demuestra que existe una investigación o acusación publicada; no convierte automáticamente su conclusión en un hecho probado.
+- Deduplicar medios de una misma cadena, agencia, grupo o fuente matriz.
 - Advertencia automática cuando más del 70 % de las fuentes orientadas proviene de un solo lado y falta contraste suficiente.
 - La confianza queda limitada cuando no se cumple la obligación de contradicción o existe desequilibrio de fuentes.
-- Separación obligatoria de afirmaciones compuestas.
-- No se confunden agresiones criminales contra periodistas con censura gubernamental sin evidencia específica de autoría o coordinación estatal.
-- Una confrontación verbal con periodistas no equivale por sí sola a censura o cierre de medios.
-- Las investigaciones periodísticas se presentan como investigaciones, no como condenas ni hechos judicialmente establecidos.
-- Veredicto final coherente: CIERTA, FALSA, PARCIALMENTE CIERTA, ENGAÑOSA o NO VERIFICABLE.
+
+REGLA DE VEREDICTO
+Antes de emitir el resultado final, responder internamente estas cuatro preguntas:
+1. ¿Cuál es exactamente la acusación o tesis central?
+2. ¿Qué evidencia DIRECTA demuestra o contradice esa tesis?
+3. ¿Qué datos son solamente periféricos y no demuestran la tesis?
+4. ¿Quién origina la acusación y qué patrón verificable muestra su historial público?
+
+Veredicto final coherente: CIERTA, FALSA, PARCIALMENTE CIERTA, ENGAÑOSA o NO VERIFICABLE.
 
 INSTALACIÓN DESDE ANDROID
-1. Descomprime el ZIP.
-2. Abre la carpeta resultante.
-3. Selecciona todos los archivos internos.
-4. Súbelos a la raíz del repositorio de GitHub.
-5. Autoriza reemplazar los archivos existentes.
-6. Pulsa Commit changes.
-7. Espera a que Vercel muestre Ready.
-8. Prueba de nuevo la misma afirmación.
+1. El repositorio ya contiene esta actualización metodológica.
+2. Para que el motor de producción aplique estas reglas, las mismas reglas deben permanecer sincronizadas con las instrucciones activas de api/analyze.js/analyze.js en cada actualización del motor.
+3. Espera a que Vercel muestre Ready después de cualquier cambio del motor.
+4. Repite como prueba la misma afirmación que produjo el error y confirma que los hechos periféricos no elevan el veredicto.
 
 NO CAMBIES NI PUBLIQUES
 - OPENAI_API_KEY
