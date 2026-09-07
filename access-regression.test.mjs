@@ -254,6 +254,67 @@ test('Journalistic repetition cannot manufacture a partially true verdict',async
     assert.deepEqual(res.value.fuentes,[]);
   } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
 });
+test('Reports cannot assign crowd chants to a speaker without direct audiovisual evidence',async()=>{
+  const old=global.fetch, oldKey=process.env.OPENAI_API_KEY;
+  process.env.OPENAI_API_KEY='mock';
+  global.fetch=async(url,options)=>{
+    assert.equal(url,'https://api.openai.com/v1/responses');
+    const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
+    assert.match(body.instructions,/ATRIBUCIÓN DE GRITOS, ABUCHEOS Y REACCIONES DE UNA MULTITUD/);
+    result.estado='analizado';result.veredicto='VERDADERO';result.veredicto_final='CIERTA';result.credibilidad=95;
+    result.afirmacion_principal='La multitud abucheó a la presidenta y le gritó fuera.';
+    result.explicacion_veredicto_final='Múltiples reportes periodísticos independientes lo corroboran.';
+    result.respuesta_directa='Sí, hubo gritos de fuera dirigidos contra la presidenta.';
+    result.resumen=result.respuesta_directa;result.conclusion=result.respuesta_directa;
+    result.evaluacion_afirmaciones=[{afirmacion:'Hubo gritos de fuera contra la presidenta.',estado:'CONFIRMADA',relacion_con_afirmacion:'DIRECTA',sustento_directo:['Dos crónicas lo afirman.'],fuente_matriz:'Nota A',lo_que_no_demuestra:''}];
+    result.hechos_comprobados=['Dos medios reportaron gritos durante el discurso.'];
+    result.fuentes=[
+      {titulo:'Nota A',url:'https://example.com/nota-a',tipo:'Periodística',aporte:'Reporta abucheos.'},
+      {titulo:'Nota B',url:'https://example.org/nota-b',tipo:'Periodística',aporte:'Repite que hubo gritos.'}
+    ];
+    return Response.json({output:[
+      {type:'web_search_call',action:{sources:[{url:'https://example.com/nota-a',title:'Nota A'},{url:'https://example.org/nota-b',title:'Nota B'}]}},
+      {type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}
+    ]});
+  };
+  try {
+    const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+    await handler({method:'POST',body:{text:'¿La multitud le gritó fuera a la presidenta?'}},res);
+    assert.equal(res.value.veredicto,'INFORMACIÓN INSUFICIENTE');
+    assert.equal(res.value.veredicto_final,'NO VERIFICABLE');
+    assert.equal(res.value.evaluacion_afirmaciones[0].estado,'NO DEMOSTRADA');
+    assert.match(res.value.explicacion_veredicto_final,/no demuestran por sí solas a quién/i);
+  } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
+});
+test('Corrected Colima case separates protest, chant target and fainting',async()=>{
+  const old=global.fetch, oldKey=process.env.OPENAI_API_KEY;
+  process.env.OPENAI_API_KEY='mock';
+  const post='https://www.threads.com/@latinus_us/post/Dc_frsTDsPy';
+  global.fetch=async(url,options)=>{
+    if(String(url)===post) return new Response('<title>Latinus en Threads</title><body>'+('Publicación pública '.repeat(40))+'</body>',{headers:{'content-type':'text/html'}});
+    assert.equal(url,'https://api.openai.com/v1/responses');
+    const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
+    result.estado='analizado';result.veredicto='VERDADERO';result.veredicto_final='CIERTA';result.credibilidad=95;
+    result.afirmacion_principal='Sheinbaum fue abucheada y le gritaron fuera en Colima.';
+    result.respuesta_directa='Sí, lo reportaron varios medios.';result.resumen=result.respuesta_directa;result.conclusion=result.respuesta_directa;
+    result.hechos_comprobados=['Hubo interrupciones.'];
+    result.fuentes=[{titulo:'Cobertura',url:'https://example.com/cobertura',tipo:'Periodística',aporte:'Reporta abucheos.'}];
+    return Response.json({output:[
+      {type:'web_search_call',action:{sources:[{url:'https://example.com/cobertura',title:'Cobertura'}]}},
+      {type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}
+    ]});
+  };
+  try {
+    const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+    await handler({method:'POST',body:{text:post}},res);
+    assert.equal(res.value.veredicto,'FALSO');assert.equal(res.value.veredicto_final,'FALSA');
+    assert.match(res.value.explicacion_veredicto_final,/segundo ángulo/i);
+    assert.equal(res.value.evaluacion_afirmaciones.find(item=>/multitud gritó/i.test(item.afirmacion)).estado,'CONTRADICHA');
+    assert.equal(res.value.evaluacion_afirmaciones.find(item=>/desvanecimiento/i.test(item.afirmacion)).relacion_con_afirmacion,'AJENA');
+    assert(res.value.fuentes.some(item=>item.url.includes('ZvAOhMs6Xjg')));
+    assert(res.value.fuentes.some(item=>item.url.includes('Dc9xLeuCT0A')));
+  } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
+});
 test('Journalistic claims require a source audit and direct proof of paid deception',async()=>{
   const old=global.fetch, oldKey=process.env.OPENAI_API_KEY;
   process.env.OPENAI_API_KEY='mock';

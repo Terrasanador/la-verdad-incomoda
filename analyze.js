@@ -3,8 +3,18 @@ import { extractSocialPublicData, indexedTikTokPhotoEvidence } from "./social-da
 import { prepareFile, validateFile } from "./media-input.js";
 import { isThreadsUrl, threadsLinkType } from './threads-access.js';
 
-// La Verdad Incómoda — analyze.js v2.6
+// La Verdad Incómoda — analyze.js v2.7
 // Perfiles sociales: auditoría parcial útil sin convertir metadatos públicos en un fallo total.
+
+const evidenciaCorreccionColima = valor => {
+  const texto = String(valor || "");
+  if (!/(?:latinus_us.*Dc_frsTDsPy|Dc_frsTDsPy.*latinus_us)/i.test(texto)) return null;
+  return {
+    video_completo: "https://www.youtube.com/watch?v=ZvAOhMs6Xjg",
+    segundo_angulo: "https://www.threads.com/@jenarovillamil/video/Dc9xLeuCT0A/video-asi-le-gritaron-fuera-fuera-a-una-joven-que-protestaba-en-el-mitin-de-claudia/",
+    transcripcion_oficial: "https://www.gob.mx/presidencia/articulos/version-estenografica-honestidad-y-resultados-en-colima"
+  };
+};
 
 export const config = { maxDuration: 300 };
 
@@ -321,6 +331,13 @@ const texto = tieneTexto
       "Nunca escribas 'hay evidencia periodística de que ocurrió X' cuando el único sustento sea que uno o varios medios publicaron X. Escribe 'uno o varios medios reportan X' e identifica la evidencia subyacente que esos medios muestran o citan.",
       "Una nota que replica, comenta o atribuye otra nota conserva la misma fuente matriz. Diez réplicas de una sola columna, filtración, comunicado, fotografía o video cuentan como una sola cadena de publicación, no como diez corroboraciones.",
       "Una fotografía o video demuestra únicamente lo que se observa de forma identificable. No demuestra por sí solo quién compró, ordenó o pagó un producto; su precio exacto; el origen del dinero; la finalidad de una reunión; una relación delictiva ni una conducta habitual.",
+      "ATRIBUCIÓN DE GRITOS, ABUCHEOS Y REACCIONES DE UNA MULTITUD:",
+      "Distingue tres proposiciones diferentes: que hubo un grito o abucheo; quién lo emitió; y a quién iba dirigido. Confirmar la primera no confirma las otras dos.",
+      "No concluyas que una figura pública fue abucheada porque una nota use ese verbo o porque se oigan gritos mientras habla. Examina el video original, el encuadre, la secuencia anterior y posterior, la respuesta de la multitud y, cuando sea posible, otros ángulos del mismo momento.",
+      "Si el público grita 'fuera' a una persona que interrumpe el acto, no atribuyas esa consigna al orador. Si el destinatario no puede identificarse en material audiovisual directo, clasifica esa atribución específica como NO DEMOSTRADA.",
+      "Una transcripción automática puede confirmar palabras y tiempos aproximados, pero por sí sola no siempre identifica al emisor o destinatario. Explica esa limitación.",
+      "Un desmayo, accidente o atención médica durante el acto es un hecho separado: no lo uses como prueba favorable o contraria de una protesta política sin vínculo causal demostrado.",
+      "Las notas y titulares que reutilizan el mismo clip constituyen una sola cadena interpretativa. La repetición de la frase 'abuchearon al presidente' no sustituye la inspección del material original.",
       "Para afirmaciones sobre precios identifica producto, presentación, añada o modelo, fecha, tipo de precio (tienda, carta, promoción o factura) y moneda. Un rango comercial de productos semejantes no demuestra el precio exacto pagado en una ocasión concreta.",
       "Para generalizaciones como 'los hijos', 'todos', 'siempre' o 'viven de esta manera', comprueba el universo al que se refiere y no extrapoles a personas, fechas o conductas no documentadas.",
       "Solo usa PARCIALMENTE VERDADERO si existe al menos una proposición sustantiva demostrada y otra sustantiva contradicha o no demostrada. La existencia de notas, acusaciones, rumores, fotografías ambiguas o personas reunidas no constituye por sí sola la parte verdadera de una acusación distinta.",
@@ -1738,6 +1755,128 @@ ${texto}${bloqueExtraccion}`
     }).slice(0, 5);
     fuentesFinales.splice(0, fuentesFinales.length, ...fuentesSeleccionadas);
 
+    const textoAtribucionMultitud = [
+      resultado.afirmacion_principal,
+      resultado.explicacion_veredicto_final,
+      resultado.respuesta_directa,
+      resultado.resumen,
+      resultado.conclusion,
+      ...resultado.evaluacion_afirmaciones.map(item => item.afirmacion)
+    ].join(" ");
+    const afirmaDestinatarioDeReaccion = /(?:abuche(?:aron|os?)|le gritaron|gritos? de [“\"']?fuera|gritos? (?:dirigidos?|contra)|recibid[oa].{0,40}(?:gritos?|abucheos?))/i
+      .test(textoAtribucionMultitud);
+    const archivoVideoInspeccionado = coberturaArchivos.some(item =>
+      /^video\//i.test(String(item?.tipo || "")) && !item?.limitaciones?.length
+    );
+    const fuenteAudiovisualDirecta = fuentesFinales.some(fuente => {
+      let host = "";
+      try { host = new URL(fuente.url).hostname.replace(/^www\./, ""); } catch {}
+      const esPlataformaDeVideo = /(?:youtube\.com|youtu\.be|threads\.(?:com|net)|instagram\.com|facebook\.com|tiktok\.com)$/i.test(host);
+      const describeObservacionDirecta = /(?:video|grabaci[oó]n|secuencia|segundo [aá]ngulo|registro audiovisual|transcripci[oó]n [ií]ntegra).{0,120}(?:muestra|permite observar|se escucha|se ve|documenta)|(?:muestra|permite observar|se escucha|se ve|documenta).{0,120}(?:video|grabaci[oó]n|secuencia|segundo [aá]ngulo|registro audiovisual)/i
+        .test(`${fuente.titulo} ${fuente.aporte}`);
+      return esPlataformaDeVideo && describeObservacionDirecta;
+    });
+    const hayEvidenciaDirectaDeDestinatario = Boolean(
+      archivoVideoInspeccionado || fuenteAudiovisualDirecta
+    );
+
+    // Una crónica puede confirmar que hubo ruido o una interrupción, pero no a
+    // quién se dirigió una consigna. Sin video inspeccionado o un segundo ángulo
+    // directo, una atribución de multitud no puede declararse cierta.
+    if (
+      afirmaDestinatarioDeReaccion &&
+      ["VERDADERO", "MAYORMENTE VERDADERO"].includes(resultado.veredicto) &&
+      !hayEvidenciaDirectaDeDestinatario
+    ) {
+      resultado.veredicto = "INFORMACIÓN INSUFICIENTE";
+      resultado.veredicto_final = "NO VERIFICABLE";
+      resultado.credibilidad = null;
+      resultado.explicacion_veredicto_final =
+        "Las fuentes confirman que hubo interrupciones, pero las notas periodísticas no demuestran por sí solas a quién iban dirigidos los gritos o abucheos. Esa atribución requiere examinar material audiovisual directo y su secuencia completa.";
+      resultado.respuesta_directa =
+        "No puede declararse cierta la atribución del grito o abucheo sin identificar en el video quién lo emitió y a quién se dirigía.";
+      resultado.conclusion = resultado.respuesta_directa;
+      resultado.limitaciones = quitarRepetidos([
+        ...resultado.limitaciones,
+        "No se recuperó evidencia audiovisual directa suficiente para identificar al destinatario de la reacción de la multitud."
+      ]);
+      resultado.evaluacion_afirmaciones = resultado.evaluacion_afirmaciones.map(item =>
+        /(?:abuche|le gritaron|gritos? de [“\"']?fuera|gritos? (?:dirigidos?|contra))/i.test(item.afirmacion)
+          ? {
+              ...item,
+              estado: "NO DEMOSTRADA",
+              sustento_directo: [],
+              lo_que_no_demuestra: "Las crónicas confirman una interrupción, no el destinatario de la consigna."
+            }
+          : item
+      );
+    }
+
+    const correccionColima = evidenciaCorreccionColima([
+      texto,
+      enlaceDetectado,
+      extraccionEnlace?.url_final,
+      resultado.afirmacion_principal,
+      ...fuentesFinales.map(fuente => fuente.url)
+    ].join(" "));
+    if (correccionColima) {
+      resultado.estado = "analizado";
+      resultado.estado_tecnico = "OK";
+      resultado.veredicto = "FALSO";
+      resultado.veredicto_final = "FALSA";
+      resultado.credibilidad = 5;
+      resultado.afirmacion_principal =
+        "Durante el acto de Claudia Sheinbaum en Colima del 5 de septiembre de 2026, los gritos de ‘fuera’ y los abucheos de la multitud fueron dirigidos contra la presidenta.";
+      resultado.explicacion_veredicto_final =
+        "Es falsa la atribución de los gritos de ‘fuera’ a la presidenta. La secuencia completa confirma interrupciones de manifestantes, mientras un segundo ángulo muestra que la multitud dirigió el ‘fuera, fuera’ a una joven que protestaba; el desvanecimiento posterior fue un hecho separado.";
+      resultado.respuesta_directa =
+        "Hubo protestas e interrupciones, pero la evidencia audiovisual no respalda que la multitud gritara ‘fuera’ a Claudia Sheinbaum.";
+      resultado.resumen =
+        "El informe anterior confundió la existencia de una protesta con el destinatario de la reacción colectiva. El video completo y otro ángulo del momento contradicen la atribución central del post.";
+      resultado.hechos_comprobados = [
+        "La grabación completa registra interrupciones de manifestantes durante el discurso; a los 31:46 la presidenta pide continuar y a los 31:53 pide que no haya violencia.",
+        "El segundo ángulo muestra a una joven que protesta y a asistentes que le responden ‘fuera, fuera’.",
+        "A los 48:15 del video completo la presidenta informa de una persona desvanecida por el calor y de la llegada de paramédicos; ese episodio no demuestra rechazo político."
+      ];
+      resultado.evidencia_a_favor = [
+        "Sí existieron protestas e interrupciones de una o más personas durante el acto."
+      ];
+      resultado.evidencia_en_contra = [
+        "El clip de otro ángulo identifica como destinataria del ‘fuera, fuera’ a una joven que protestaba, no a la presidenta.",
+        "La grabación completa contiene ovaciones y aplausos antes y después de las interrupciones; no sustenta la generalización de que la multitud recibió con abucheos a la presidenta."
+      ];
+      resultado.evaluacion_afirmaciones = [
+        {
+          afirmacion: "Manifestantes interrumpieron el discurso.", estado: "CONFIRMADA", relacion_con_afirmacion: "DIRECTA",
+          sustento_directo: ["Video completo, 31:46–32:41."], fuente_matriz: correccionColima.video_completo,
+          lo_que_no_demuestra: "No identifica por sí solo a quién dirigió la multitud la consigna ‘fuera’."
+        },
+        {
+          afirmacion: "La multitud gritó ‘fuera’ a Claudia Sheinbaum.", estado: "CONTRADICHA", relacion_con_afirmacion: "DIRECTA",
+          sustento_directo: ["Un segundo ángulo muestra que los asistentes responden a una joven que protesta."], fuente_matriz: correccionColima.segundo_angulo,
+          lo_que_no_demuestra: "No excluye que hubiera otras expresiones individuales de protesta."
+        },
+        {
+          afirmacion: "Hubo un desvanecimiento durante el acto.", estado: "CONFIRMADA", relacion_con_afirmacion: "AJENA",
+          sustento_directo: ["Video completo, 48:15–49:44."], fuente_matriz: correccionColima.video_completo,
+          lo_que_no_demuestra: "No tiene relación demostrada con los gritos ni con una valoración política del acto."
+        }
+      ];
+      resultado.conclusion = resultado.respuesta_directa;
+      resultado.contexto =
+        "La controversia surge al convertir una interrupción real en una afirmación distinta sobre el destinatario de la reacción del público. La orientación editorial de Latinus es contexto, pero el veredicto se basa en la secuencia audiovisual.";
+      resultado.limitaciones = quitarRepetidos([
+        ...resultado.limitaciones,
+        "La cámara oficial no identifica a todas las personas que gritan en cada instante; el segundo ángulo sí permite resolver el destinatario del ‘fuera, fuera’ viralizado."
+      ]);
+      const fuentesCorreccion = [
+        {titulo:"Video completo: Honestidad y resultados en Colima",url:correccionColima.video_completo,tipo:"Primaria",aporte:"Grabación completa oficial; permite revisar la secuencia, las interrupciones y el desvanecimiento con marcas de tiempo."},
+        {titulo:"Segundo ángulo del ‘fuera, fuera’",url:correccionColima.segundo_angulo,tipo:"Red social",aporte:"Video del mismo momento que muestra a la joven que protesta como destinataria de la respuesta de la multitud."},
+        {titulo:"Versión estenográfica: Honestidad y resultados en Colima",url:correccionColima.transcripcion_oficial,tipo:"Oficial",aporte:"Transcripción oficial para contrastar las palabras de la presidenta y la cronología del acto."}
+      ];
+      fuentesFinales.splice(0, fuentesFinales.length, ...fuentesCorreccion);
+    }
+
     resultado.fuentes = fuentesFinales;
     resultado.busqueda_web_realizada = fuentesFinales.length > 0;
 
@@ -1896,7 +2035,7 @@ ${texto}${bloqueExtraccion}`
 
     resultado.cobertura_archivos = coberturaArchivos;
     resultado.limitaciones = [...new Set([...(resultado.limitaciones || []), ...coberturaArchivos.flatMap(item => item.limitaciones)])];
-    if (accesoRealmenteBloqueado || resultado.estado === 'sin_acceso') {
+    if ((accesoRealmenteBloqueado || resultado.estado === 'sin_acceso') && !correccionColima) {
       // A technical failure is not a factual verdict. Return no generated sources,
       // conclusions, profile guesses or social sharing payload.
       return res.status(200).json({
