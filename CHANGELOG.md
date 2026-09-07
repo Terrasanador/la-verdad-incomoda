@@ -1,3 +1,10 @@
+# Versión 1.13.0 - Verificación de homicidios dolosos (2026-09-07)
+
+- Publica una verificación original del descenso de 86.9 a 42.5 víctimas diarias entre septiembre de 2024 y julio de 2026.
+- Recalcula la reducción de 51.1 por ciento y distingue tendencia, redondeo, provisionalidad y causalidad.
+- Contrasta la serie del SESNSP con la estadística de defunciones del INEGI.
+- Actualiza biblioteca, portada, sitemap y versión del servicio a veintidós publicaciones.
+
 # Versión 1.12.1 - Conteo editorial consistente (2026-09-07)
 
 - Corrige en la portada el acceso a la biblioteca: de 19 a 21 publicaciones.
