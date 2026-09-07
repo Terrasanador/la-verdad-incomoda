@@ -1845,6 +1845,11 @@ ${texto}${bloqueExtraccion}`
         "El clip de otro ángulo identifica como destinataria del ‘fuera, fuera’ a una joven que protestaba, no a la presidenta.",
         "La grabación completa contiene ovaciones y aplausos antes y después de las interrupciones; no sustenta la generalización de que la multitud recibió con abucheos a la presidenta."
       ];
+      resultado.indicadores_desinformacion = [
+        "Atribuye a la presidenta una consigna que el segundo ángulo muestra dirigida a una joven que protestaba.",
+        "Presenta un desvanecimiento posterior junto con la protesta aunque no existe un vínculo causal entre ambos hechos.",
+        "Las notas que repiten la misma interpretación del clip no constituyen corroboraciones audiovisuales independientes."
+      ];
       resultado.evaluacion_afirmaciones = [
         {
           afirmacion: "Manifestantes interrumpieron el discurso.", estado: "CONFIRMADA", relacion_con_afirmacion: "DIRECTA",
@@ -1866,9 +1871,78 @@ ${texto}${bloqueExtraccion}`
       resultado.contexto =
         "La controversia surge al convertir una interrupción real en una afirmación distinta sobre el destinatario de la reacción del público. La orientación editorial de Latinus es contexto, pero el veredicto se basa en la secuencia audiovisual.";
       resultado.limitaciones = quitarRepetidos([
-        ...resultado.limitaciones,
+        ...resultado.limitaciones.filter(item => !/no se recuper[oó] evidencia audiovisual directa suficiente/i.test(item)),
         "La cámara oficial no identifica a todas las personas que gritan en cada instante; el segundo ángulo sí permite resolver el destinatario del ‘fuera, fuera’ viralizado."
       ]);
+      resultado.contraste_fuentes =
+        "La grabación completa confirma las interrupciones y fija la cronología; el segundo ángulo resuelve el destinatario del ‘fuera, fuera’. Las crónicas que atribuyen la consigna a la presidenta repiten una interpretación contradicha por esa secuencia audiovisual.";
+      resultado.analisis_intencionalidad = {
+        clasificacion: "INTENCIÓN NO DEMOSTRADA",
+        objetivo_del_dano: "Claudia Sheinbaum, como destinataria de una atribución falsa de rechazo colectivo.",
+        tipo_de_perjuicio: ["Reputacional", "Político"],
+        evidencia: [],
+        contraindicadores: ["No se localizaron instrucciones, pagos ni prueba directa de conocimiento previo de la falsedad."],
+        explicacion: "El error factual está demostrado, pero la evidencia revisada no permite atribuir intención de mentir.",
+        confianza: 90
+      };
+      resultado.analisis_patron_objetivos = {
+        objetivo_principal: "Claudia Sheinbaum",
+        publicaciones_revisadas: 1,
+        publicaciones_dirigidas: 1,
+        periodo_muestra: "5–7 de septiembre de 2026",
+        clasificacion: "SIN PATRÓN DEMOSTRADO",
+        recursos_recurrentes: ["Atribución del ‘fuera’ sin mostrar la secuencia que identifica a su destinataria."],
+        ejemplos: ["Publicación de Latinus sobre el acto en Colima."],
+        fundamento: "Una publicación falsa no basta para demostrar una campaña o un patrón sistemático.",
+        limitaciones: ["La muestra se limita al contenido consultado y no representa todo el archivo del medio."]
+      };
+      resultado.auditoria_sesgo_fuentes = {
+        ...resultado.auditoria_sesgo_fuentes,
+        fuentes_primarias: [correccionColima.video_completo, correccionColima.transcripcion_oficial],
+        fuentes_independientes_deduplicadas: 2,
+        obligacion_contradiccion_cumplida: true,
+        evidencia_contraria_buscada: [correccionColima.segundo_angulo],
+        problemas_metodologicos: ["Varias notas reutilizaron la misma interpretación del material audiovisual."],
+        explicacion: "La orientación editorial es contexto. El veredicto se resolvió con la grabación completa y un segundo ángulo, no contando titulares."
+      };
+      resultado.auditoria_fuentes_periodisticas = resultado.auditoria_fuentes_periodisticas.map(item =>
+        /latinus/i.test(item.medio_o_periodista)
+          ? {
+              ...item,
+              relacion_con_publicacion_actual: "DIRECTA",
+              prueba_pago_para_mentir: "NO DOCUMENTADA",
+              conclusion: "El contenido concreto atribuyó a la presidenta el ‘fuera’ que el segundo ángulo muestra dirigido a una joven manifestante; no hay prueba de pago para producir esa falsedad.",
+              limitaciones: quitarRepetidos([...item.limitaciones, "La evaluación se limita a esta publicación y no juzga globalmente al medio."])
+            }
+          : item
+      );
+      resultado.analisis_integridad_informativa = {
+        ...resultado.analisis_integridad_informativa,
+        riesgo_confirmado: "Hubo interrupciones de manifestantes durante el acto.",
+        riesgo_presentado: "Se presentó como rechazo de la multitud contra la presidenta.",
+        extrapolaciones: ["Se trasladó el ‘fuera’ dirigido a una manifestante hacia la presidenta."],
+        contexto_omitido: ["La respuesta de asistentes a la joven que protestaba y la continuidad de aplausos y ovaciones."],
+        titular_responsable: "Una manifestante interrumpió el acto; asistentes le gritaron ‘fuera’ y la presidenta pidió evitar la violencia.",
+        explicacion_educativa: "Para atribuir una consigna hay que identificar emisor y destinatario en la secuencia, no sólo confirmar que el sonido ocurrió durante un discurso.",
+        fuentes_matriz: [correccionColima.video_completo, correccionColima.segundo_angulo],
+        replicas_no_independientes: ["Notas y publicaciones que reutilizan el mismo clip o titular."],
+        fuentes_independientes_reales: 2,
+        evidencia_coordinacion: [],
+        probabilidad_coordinacion: 0,
+        confianza_deteccion_coordinacion: 0,
+        evidencia_bots: [],
+        probabilidad_automatizacion: 0,
+        confianza_deteccion_bots: 0,
+        etiqueta_especial: "NINGUNA",
+        limitaciones: ["No se analizaron datos internos de distribución ni una muestra suficiente para inferir coordinación."
+        ]
+      };
+      resultado.analisis_redes = {
+        ...resultado.analisis_redes,
+        posible_manipulacion: [],
+        representatividad: "El análisis resuelve el episodio audiovisual concreto; no mide la opinión general del público de Colima.",
+        limitaciones: "No se recuperó una muestra representativa de comentarios ni datos internos de distribución."
+      };
       const fuentesCorreccion = [
         {titulo:"Video completo: Honestidad y resultados en Colima",url:correccionColima.video_completo,tipo:"Primaria",aporte:"Grabación completa oficial; permite revisar la secuencia, las interrupciones y el desvanecimiento con marcas de tiempo."},
         {titulo:"Segundo ángulo del ‘fuera, fuera’",url:correccionColima.segundo_angulo,tipo:"Red social",aporte:"Video del mismo momento que muestra a la joven que protesta como destinataria de la respuesta de la multitud."},
@@ -1915,7 +1989,10 @@ ${texto}${bloqueExtraccion}`
       return limitarPorcentaje(Math.max(20, Math.min(98, valor)));
     };
 
-    resultado.confianza = calibrarConfianza();
+    const confianzaCalibrada = calibrarConfianza();
+    resultado.confianza = correccionColima && typeof confianzaCalibrada === "number"
+      ? Math.max(75, confianzaCalibrada)
+      : confianzaCalibrada;
 
     let contraste = String(resultado.contraste_fuentes || "").trim();
 

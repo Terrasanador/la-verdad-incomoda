@@ -313,6 +313,11 @@ test('Corrected Colima case separates protest, chant target and fainting',async(
     assert.equal(res.value.evaluacion_afirmaciones.find(item=>/desvanecimiento/i.test(item.afirmacion)).relacion_con_afirmacion,'AJENA');
     assert(res.value.fuentes.some(item=>item.url.includes('ZvAOhMs6Xjg')));
     assert(res.value.fuentes.some(item=>item.url.includes('Dc9xLeuCT0A')));
+    assert.equal(res.value.analisis_intencionalidad.clasificacion,'INTENCIÓN NO DEMOSTRADA');
+    assert.match(res.value.analisis_intencionalidad.explicacion,/no permite atribuir intención/i);
+    assert.equal(res.value.analisis_patron_objetivos.clasificacion,'SIN PATRÓN DEMOSTRADO');
+    assert(!res.value.limitaciones.some(item=>/no se recuperó evidencia audiovisual directa suficiente/i.test(item)));
+    assert(res.value.confianza>=75);
   } finally {global.fetch=old;if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;}
 });
 test('Journalistic claims require a source audit and direct proof of paid deception',async()=>{
