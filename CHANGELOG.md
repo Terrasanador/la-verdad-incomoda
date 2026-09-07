@@ -1,3 +1,8 @@
+# Versión 1.12.1 - Conteo editorial consistente (2026-09-07)
+
+- Corrige en la portada el acceso a la biblioteca: de 19 a 21 publicaciones.
+- Mantiene sincronizadas las dos variantes de la página principal.
+
 # Versión 1.12.0 - Verificación del tráfico del AIFA (2026-09-03)
 
 - Publica una verificación original sobre la cifra de 3.6 millones de pasajeros en el primer semestre de 2026.
