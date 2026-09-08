@@ -16,6 +16,37 @@ const evidenciaCorreccionColima = valor => {
   };
 };
 
+const contieneTesisTextual = valor => {
+  const limpio = String(valor || "")
+    .replace(/https?:\/\/\S+/gi, " ")
+    .replace(/(?:^|\s)[#@][\p{L}\p{N}_.-]+/gu, " ")
+    .replace(/\b(?:descripci[oó]n|autor|cuenta|perfil p[uú]blico|identificador del video|estad[ií]sticas p[uú]blicas)\b\s*:?/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const palabras = limpio.match(/[\p{L}\p{N}]{2,}/gu) || [];
+  return limpio.length >= 15 && palabras.length >= 3;
+};
+
+const jsonContieneTesisTextual = valor => {
+  try {
+    const textos = [];
+    const visitar = (nodo, clave = "", profundidad = 0) => {
+      if (profundidad > 10 || textos.length >= 20) return;
+      if (typeof nodo === "string" && /(?:title|desc|caption|text|transcri|content)/i.test(clave)) {
+        textos.push(nodo);
+      } else if (Array.isArray(nodo)) {
+        nodo.slice(0, 20).forEach(item => visitar(item, clave, profundidad + 1));
+      } else if (nodo && typeof nodo === "object") {
+        Object.entries(nodo).forEach(([k, v]) => visitar(v, k, profundidad + 1));
+      }
+    };
+    visitar(JSON.parse(String(valor || "")));
+    return textos.some(contieneTesisTextual);
+  } catch {
+    return false;
+  }
+};
+
 export const config = { maxDuration: 300 };
 
 export default async function handler(req, res) {
@@ -1546,13 +1577,28 @@ ${texto}${bloqueExtraccion}`
 
     // Un enlace bloqueado puede producir texto explicativo generado por el modelo.
     // Por eso no se usa la mera existencia de resumen/respuesta como prueba de acceso.
+    const esVideoTikTok = extraccionEnlace?.plataforma === "TikTok" &&
+      /\/video\/\d+/i.test(String(extraccionEnlace?.url_final || enlaceDetectado));
+    const medioAudiovisualPreparado = Boolean(
+      extraccionEnlace?.archivo_recuperado ||
+      archivosRemotos.length > 0 ||
+      coberturaArchivos.length > 0
+    );
+    const textoTikTokSustantivo = contieneTesisTextual(extraccionEnlace?.titulo) ||
+      contieneTesisTextual(extraccionEnlace?.descripcion) ||
+      jsonContieneTesisTextual(extraccionEnlace?.datos_multiplataforma?.contenido_json);
     const contenidoEnlaceRecuperado = Boolean(
       extraccionEnlace && (
-        String(extraccionEnlace.descripcion || "").trim().length >= 40 ||
-        String(extraccionEnlace.texto_recuperado || "").trim().length >= 80 ||
+        medioAudiovisualPreparado ||
         String(extraccionEnlace.transcripcion || "").trim().length >= 40 ||
-        (extraccionEnlace.datos_multiplataforma?.consultas_exitosas > 0 &&
-          String(extraccionEnlace.datos_multiplataforma?.contenido_json || "").trim().length >= 20)
+        (esVideoTikTok
+          ? textoTikTokSustantivo
+          : (
+              String(extraccionEnlace.descripcion || "").trim().length >= 40 ||
+              String(extraccionEnlace.texto_recuperado || "").trim().length >= 80 ||
+              (extraccionEnlace.datos_multiplataforma?.consultas_exitosas > 0 &&
+                String(extraccionEnlace.datos_multiplataforma?.contenido_json || "").trim().length >= 20)
+            ))
       )
     );
     const urlsWebConsultadas = new Set();

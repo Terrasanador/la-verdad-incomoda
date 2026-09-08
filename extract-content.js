@@ -919,12 +919,11 @@ export async function extractPublicLink(rawUrl) {
       result.limitaciones.push(`El servidor respondió HTTP ${response.status}.`);
       if (plataforma === "TikTok" && isTikTokVideoUrl(result.url_final || parsed.href)) {
         await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
-        if (!result.recuperacion_oembed) {
-          await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
-        }
-        if (!result.recuperacion_oembed && !result.recuperacion_player) {
-          await enrichTikTokFromPublicMirror(result, result.url_final || parsed.href);
-        }
+        // oEmbed identifies the publication, but it does not contain the audio or
+        // frames. Keep trying the player and the validated media fallback until
+        // the actual video has been recovered.
+        await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
+        await enrichTikTokFromPublicMirror(result, result.url_final || parsed.href);
       }
       return result;
     }
@@ -1033,14 +1032,10 @@ export async function extractPublicLink(rawUrl) {
   }
 
   if (plataforma === "TikTok" && isTikTokVideoUrl(result.url_final || parsed.href) &&
-      (!result.acceso_directo || String(result.texto_recuperado || "").trim().length < 80)) {
+      !result.archivo_recuperado) {
     await enrichTikTokFromOEmbed(result, result.url_final || parsed.href);
-    if (!result.recuperacion_oembed) {
-      await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
-    }
-    if (!result.recuperacion_oembed && !result.recuperacion_player) {
-      await enrichTikTokFromPublicMirror(result, result.url_final || parsed.href);
-    }
+    await enrichTikTokFromPlayer(result, result.url_final || parsed.href);
+    await enrichTikTokFromPublicMirror(result, result.url_final || parsed.href);
   }
 
   return result;

@@ -68,6 +68,81 @@ test('TikTok official oEmbed recovers a blocked video description and author',as
   } finally {global.fetch=oldFetch;dns.lookup=oldLookup;}
 });
 
+test('TikTok keeps recovering the actual video after oEmbed returns metadata',async()=>{
+  const oldFetch=global.fetch, oldLookup=dns.lookup;
+  dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
+  const id='7676568732566703381';
+  const video=`https://www.tiktok.com/@atypicalteve/video/${id}`;
+  const media='https://media.example.test/video.mp4';
+  global.fetch=async url=>{
+    const target=new URL(url);
+    if(target.pathname==='/oembed') return Response.json({
+      version:'1.0',type:'video',provider_name:'TikTok',title:'#Atypical #política #ÚltimaHora #urgente #ClaudiaSheinbaum',
+      author_name:'Atypical Te Ve',author_url:'https://www.tiktok.com/@atypicalteve',
+      html:`<blockquote cite="${video}"></blockquote>`
+    });
+    if(target.pathname.startsWith('/player/v1/')) return new Response(
+      `<script>{"item":{"id":"${id}","author":{"nickname":"Atypical Te Ve"},"video":{"duration":31}}}</script>`,
+      {headers:{'content-type':'text/html'}}
+    );
+    if(target.hostname==='www.tikwm.com') return Response.json({code:0,data:{
+      id,title:'#Atypical #política #ÚltimaHora #urgente #ClaudiaSheinbaum',duration:31,
+      author:{nickname:'Atypical Te Ve',unique_id:'atypicalteve'},play:media
+    }});
+    if(target.href===media) return new Response(Buffer.from('mock-video-bytes'),{headers:{'content-type':'video/mp4'}});
+    return new Response('<title>TikTok - Make Your Day</title><body>JavaScript is disabled</body>',{headers:{'content-type':'text/html'}});
+  };
+  try {
+    const result=await extractPublicLink(video);
+    assert.equal(result.recuperacion_oembed,true);
+    assert.equal(result.recuperacion_player,true);
+    assert.equal(result.recuperacion_complementaria,true);
+    assert.equal(result.archivo_recuperado?.name,`tiktok-${id}.mp4`);
+    assert.equal(Buffer.from(result.archivo_recuperado.data,'base64').toString(),'mock-video-bytes');
+  } finally {global.fetch=oldFetch;dns.lookup=oldLookup;}
+});
+
+test('TikTok hashtags and account metadata alone do not become a factual report',async()=>{
+  const oldFetch=global.fetch, oldLookup=dns.lookup, oldKey=process.env.OPENAI_API_KEY;
+  process.env.OPENAI_API_KEY='mock';
+  dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
+  const id='7676568732566703381';
+  const video=`https://www.tiktok.com/@atypicalteve/video/${id}`;
+  global.fetch=async(url,options)=>{
+    const target=new URL(url);
+    if(target.href==='https://api.openai.com/v1/responses') {
+      const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
+      result.estado='analizado';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';result.confianza=63;
+      result.afirmacion_principal='No se pudo identificar la tesis central del video.';
+      result.respuesta_directa='No fue posible acceder al contenido del video.';
+      result.resumen=result.respuesta_directa;result.conclusion=result.respuesta_directa;
+      return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}]});
+    }
+    if(target.pathname==='/oembed') return Response.json({
+      version:'1.0',type:'video',provider_name:'TikTok',title:'#Atypical #política #ÚltimaHora #urgente #ClaudiaSheinbaum',
+      author_name:'Atypical Te Ve',author_url:'https://www.tiktok.com/@atypicalteve',
+      html:`<blockquote cite="${video}"></blockquote>`
+    });
+    if(target.pathname.startsWith('/player/v1/')) return new Response('<title>TikTok</title>',{headers:{'content-type':'text/html'}});
+    if(target.hostname==='www.tikwm.com') return Response.json({code:-1,msg:'Video not found'});
+    return new Response('<title>TikTok - Make Your Day</title><body>JavaScript is disabled</body>',{headers:{'content-type':'text/html'}});
+  };
+  try {
+    const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+    await handler({method:'POST',body:{text:video}},res);
+    assert.equal(res.code,200);
+    assert.equal(res.value.estado,'sin_acceso');
+    assert.equal(res.value.analizado,false);
+    assert.equal(res.value.veredicto_final,null);
+    assert.equal(res.value.confianza,null);
+    assert.equal(res.value.tipo_resultado,'error_recuperacion');
+    assert.equal(res.value.compartir_habilitado,false);
+  } finally {
+    global.fetch=oldFetch;dns.lookup=oldLookup;
+    if(oldKey===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldKey;
+  }
+});
+
 test('TikTok player recovers metadata when oEmbed rejects the video',async()=>{
   const oldFetch=global.fetch, oldLookup=dns.lookup;
   dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
