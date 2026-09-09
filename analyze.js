@@ -927,47 +927,53 @@ ${texto}${bloqueExtraccion}`
     const remainingMs = 280000 - (Date.now() - startedAt);
     if (remainingMs < 15000) return res.status(504).json({error:'La recuperación agotó el tiempo disponible; no se emitió un veredicto.'});
     const openAITimer = setTimeout(() => openAIController.abort(), Math.min(240000, remainingMs));
-    let openAIResponse;
-    try {
-      openAIResponse = await fetch("https://api.openai.com/v1/responses", {
+    const openAIRequestBody = JSON.stringify({
+      model: "gpt-5-mini",
+      reasoning: { effort: modo === "profundo" ? "high" : "medium" },
+      text: {
+        verbosity: "low",
+        format: {
+          type: "json_schema",
+          name: "resultado_verificacion",
+          description: "Resultado estructurado de una investigación y verificación de hechos.",
+          strict: true,
+          schema: esquemaResultado
+        }
+      },
+      instructions: instrucciones,
+      input: [{ role: "user", content: contenidoUsuario }],
+      tools: [{
+        type: "web_search",
+        search_context_size: "high",
+        user_location: { type: "approximate", country: "MX", timezone: "America/Mexico_City" }
+      }],
+      tool_choice: "required",
+      include: ["web_search_call.action.sources"],
+      max_output_tokens: modo === "profundo" ? 20000 : 14000
+    });
+    const requestOpenAI = () => fetch("https://api.openai.com/v1/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
       },
-      body: JSON.stringify({
-        model: "gpt-5-mini",
-        reasoning: {
-          effort: modo === "profundo" ? "high" : "medium"
-        },
-        text: {
-          verbosity: "low",
-          format: {
-            type: "json_schema",
-            name: "resultado_verificacion",
-            description:
-              "Resultado estructurado de una investigación y verificación de hechos.",
-            strict: true,
-            schema: esquemaResultado
-          }
-        },
-        instructions: instrucciones,
-        input: [{ role: "user", content: contenidoUsuario }],
-        tools: [{
-          type: "web_search",
-          search_context_size: "high",
-          user_location: {
-            type: "approximate",
-            country: "MX",
-            timezone: "America/Mexico_City"
-          }
-        }],
-        tool_choice: "required",
-        include: ["web_search_call.action.sources"],
-        max_output_tokens: modo === "profundo" ? 20000 : 14000
-      }),
+      body: openAIRequestBody,
       signal: openAIController.signal
-      });
+    });
+    let openAIResponse;
+    try {
+      openAIResponse = await requestOpenAI();
+
+      // Un 429 puede ser una ráfaga transitoria. Reintenta una sola vez y
+      // respeta Retry-After dentro de un límite corto.
+      if (openAIResponse.status === 429) {
+        const retryHeader = Number(openAIResponse.headers.get("retry-after"));
+        const waitMs = Number.isFinite(retryHeader)
+          ? Math.min(8000, Math.max(1000, retryHeader * 1000))
+          : 2500;
+        await new Promise(resolve => setTimeout(resolve, waitMs));
+        openAIResponse = await requestOpenAI();
+      }
     } catch (error) {
       if (error?.name === "AbortError") {
         return res.status(504).json({
@@ -988,6 +994,7 @@ ${texto}${bloqueExtraccion}`
       if (openAIResponse.status === 429) {
         const retryAfter = openAIResponse.headers.get("retry-after");
         if (retryAfter) res.setHeader("Retry-After", retryAfter);
+        const retryAfterSeconds = Number(retryAfter);
 
         return res.status(429).json({
           estado: "sin_acceso",
@@ -996,9 +1003,10 @@ ${texto}${bloqueExtraccion}`
           veredicto: "NO VERIFICABLE",
           credibilidad: null,
           confianza: null,
-          mensaje: "El servicio alcanzó temporalmente su límite de solicitudes. Reintenta más tarde.",
+          mensaje: "El servicio alcanzó temporalmente su límite incluso después de un reintento controlado. Espera un momento y vuelve a intentarlo.",
           acciones_disponibles: ["REINTENTAR_MAS_TARDE"],
-          reintentar: true
+          reintentar: true,
+          retry_after_seconds: Number.isFinite(retryAfterSeconds) ? retryAfterSeconds : 30
         });
       }
 
