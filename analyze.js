@@ -967,12 +967,18 @@ ${texto}${bloqueExtraccion}`
       // Un 429 puede ser una ráfaga transitoria. Reintenta una sola vez y
       // respeta Retry-After dentro de un límite corto.
       if (openAIResponse.status === 429) {
-        const retryHeader = Number(openAIResponse.headers.get("retry-after"));
-        const waitMs = Number.isFinite(retryHeader)
+        const firstRateLimit = await openAIResponse.clone().json().catch(() => ({}));
+        const firstCode = String(firstRateLimit?.error?.code || firstRateLimit?.error?.type || "");
+        const quotaBlocked = /(?:insufficient_quota|billing|quota_exceeded)/i.test(firstCode);
+        const retryHeaderRaw = openAIResponse.headers.get("retry-after");
+        const retryHeader = retryHeaderRaw ? Number(retryHeaderRaw) : NaN;
+        const waitMs = Number.isFinite(retryHeader) && retryHeader > 0
           ? Math.min(8000, Math.max(1000, retryHeader * 1000))
           : 2500;
-        await new Promise(resolve => setTimeout(resolve, waitMs));
-        openAIResponse = await requestOpenAI();
+        if (!quotaBlocked) {
+          await new Promise(resolve => setTimeout(resolve, waitMs));
+          openAIResponse = await requestOpenAI();
+        }
       }
     } catch (error) {
       if (error?.name === "AbortError") {
@@ -995,6 +1001,8 @@ ${texto}${bloqueExtraccion}`
         const retryAfter = openAIResponse.headers.get("retry-after");
         if (retryAfter) res.setHeader("Retry-After", retryAfter);
         const retryAfterSeconds = Number(retryAfter);
+        const providerCode = String(data?.error?.code || data?.error?.type || "rate_limit_exceeded");
+        const quotaBlocked = /(?:insufficient_quota|billing|quota_exceeded)/i.test(providerCode);
 
         return res.status(429).json({
           estado: "sin_acceso",
@@ -1003,10 +1011,13 @@ ${texto}${bloqueExtraccion}`
           veredicto: "NO VERIFICABLE",
           credibilidad: null,
           confianza: null,
-          mensaje: "El servicio alcanzó temporalmente su límite incluso después de un reintento controlado. Espera un momento y vuelve a intentarlo.",
-          acciones_disponibles: ["REINTENTAR_MAS_TARDE"],
-          reintentar: true,
-          retry_after_seconds: Number.isFinite(retryAfterSeconds) ? retryAfterSeconds : 30
+          mensaje: quotaBlocked
+            ? "El servicio de inteligencia artificial agotó su cuota disponible. El administrador debe revisar la facturación o los límites de la cuenta antes de que puedan completarse nuevos análisis."
+            : "El servicio alcanzó temporalmente su límite incluso después de un reintento controlado. Espera un momento y vuelve a intentarlo.",
+          estado_proveedor: providerCode,
+          acciones_disponibles: quotaBlocked ? ["REVISAR_CUOTA_DEL_PROVEEDOR"] : ["REINTENTAR_MAS_TARDE"],
+          reintentar: !quotaBlocked,
+          retry_after_seconds: Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0 ? retryAfterSeconds : 30
         });
       }
 
