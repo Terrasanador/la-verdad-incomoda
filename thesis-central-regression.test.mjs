@@ -58,3 +58,16 @@ const imposible = normalize({
 });
 assert.equal(imposible.veredicto_final,'NO VERIFICABLE');
 assert.equal(imposible.credibilidad,null);
+
+// Un ejemplo de reacción no confirma la palabra absoluta "solo".
+const absoluta = {
+  estado:'CONFIRMADA',
+  afirmacion:'La presidenta solo ofreció explicaciones.',
+  lo_que_no_demuestra:'La palabra solo es interpretativa; no prueba que no haya otras acciones.'
+};
+if (
+  absoluta.estado === 'CONFIRMADA' &&
+  /\b(?:solo|sólo|únicamente|nunca|siempre|todos?|ningun[oa]s?)\b/i.test(absoluta.afirmacion) &&
+  /(?:no (?:prueba|demuestra)|interpretativ|no permite afirmar|alcance total)/i.test(absoluta.lo_que_no_demuestra)
+) absoluta.estado='NO DEMOSTRADA';
+assert.equal(absoluta.estado,'NO DEMOSTRADA');
