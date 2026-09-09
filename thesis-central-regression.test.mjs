@@ -2,6 +2,21 @@ import assert from 'node:assert/strict';
 
 function normalize(result) {
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
+  const finalPorTecnico = {
+    VERDADERO:'CIERTA', CIERTO:'CIERTA', FALSO:'FALSA',
+    'PARCIALMENTE VERDADERO':'PARCIALMENTE CIERTA',
+    'PARCIALMENTE CIERTO':'PARCIALMENTE CIERTA',
+    ENGAÑOSO:'ENGAÑOSA',
+    'INFORMACIÓN INSUFICIENTE':'NO VERIFICABLE',
+    'NO VERIFICABLE':'NO VERIFICABLE', 'NO COMPROBABLE':'NO VERIFICABLE'
+  };
+  if (finalPorTecnico[result.veredicto]) result.veredicto_final=finalPorTecnico[result.veredicto];
+  if (Array.isArray(result.fuentes)) for (const fuente of result.fuentes) {
+    try {
+      const host=new URL(fuente.url).hostname.toLowerCase();
+      if (host==='oecd.org'||host.endsWith('.oecd.org')||host==='gob.mx'||host.endsWith('.gob.mx')) fuente.tipo='Oficial';
+    } catch {}
+  }
   const directas = evaluaciones.filter(e => e?.relacion_con_afirmacion === 'DIRECTA');
   const confirmadas = directas.filter(e => e?.estado === 'CONFIRMADA');
   const contradichas = directas.filter(e => e?.estado === 'CONTRADICHA');
@@ -71,3 +86,11 @@ if (
   /(?:no (?:prueba|demuestra)|interpretativ|no permite afirmar|alcance total)/i.test(absoluta.lo_que_no_demuestra)
 ) absoluta.estado='NO DEMOSTRADA';
 assert.equal(absoluta.estado,'NO DEMOSTRADA');
+
+// El encabezado no puede decir FALSA si la clasificación técnica dice ENGAÑOSO.
+const inconsistente=normalize({
+  veredicto_final:'FALSA', veredicto:'ENGAÑOSO', evaluacion_afirmaciones:[],
+  fuentes:[{url:'https://www.oecd.org/en/publications/pisa-2025-results/mexico.html',tipo:'Periodística'}]
+});
+assert.equal(inconsistente.veredicto_final,'ENGAÑOSA');
+assert.equal(inconsistente.fuentes[0].tipo,'Oficial');

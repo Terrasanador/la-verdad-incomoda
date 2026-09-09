@@ -19,6 +19,36 @@ function normalize(result) {
   if (!result || typeof result !== 'object') return result;
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
 
+  // El encabezado y la clasificación técnica expresan el mismo veredicto.
+  // Ante una respuesta incompatible, conserva la categoría técnica más
+  // matizada y refleja su equivalente editorial en el encabezado.
+  const finalPorTecnico = {
+    VERDADERO: 'CIERTA',
+    CIERTO: 'CIERTA',
+    FALSO: 'FALSA',
+    'PARCIALMENTE VERDADERO': 'PARCIALMENTE CIERTA',
+    'PARCIALMENTE CIERTO': 'PARCIALMENTE CIERTA',
+    ENGAÑOSO: 'ENGAÑOSA',
+    'INFORMACIÓN INSUFICIENTE': 'NO VERIFICABLE',
+    'NO VERIFICABLE': 'NO VERIFICABLE',
+    'NO COMPROBABLE': 'NO VERIFICABLE'
+  };
+  const tecnicoInicial = String(result.veredicto || '').toUpperCase().trim();
+  if (finalPorTecnico[tecnicoInicial]) result.veredicto_final = finalPorTecnico[tecnicoInicial];
+
+  // Una URL institucional no debe mostrarse como fuente periodística por un
+  // error de clasificación del modelo.
+  if (Array.isArray(result.fuentes)) {
+    for (const fuente of result.fuentes) {
+      try {
+        const host = new URL(String(fuente?.url || '')).hostname.toLowerCase();
+        if (host === 'oecd.org' || host.endsWith('.oecd.org') || host === 'gob.mx' || host.endsWith('.gob.mx')) {
+          fuente.tipo = 'Oficial';
+        }
+      } catch {}
+    }
+  }
+
   // Una evidencia parcial no confirma términos absolutos. Si el propio campo
   // "lo que no demuestra" reconoce esa carencia, corrige el estado antes de
   // reconciliar el veredicto.
