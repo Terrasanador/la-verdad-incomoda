@@ -1,3 +1,10 @@
+# Versión 1.18.0 - Verificación de inversión extranjera directa (2026-09-10)
+
+- Publica una verificación original sobre el récord de IED del primer semestre de 2026.
+- Confirma el total de 34,968 millones de dólares y contextualiza que 88.5% correspondió a reinversión de utilidades.
+- Distingue el máximo total del descenso del componente de nuevas inversiones.
+- Actualiza biblioteca, portada, sitemap, datos estructurados y versión del servicio.
+
 # Versión 1.17.0 - Profundidad editorial y preparación para AdSense (2026-09-10)
 
 - Amplía las dieciocho guías metodológicas con ejemplos, controles y procedimientos únicos.
