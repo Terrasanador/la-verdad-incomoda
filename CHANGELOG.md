@@ -1,3 +1,12 @@
+# Versión 1.17.0 - Profundidad editorial y preparación para AdSense (2026-09-10)
+
+- Amplía las dieciocho guías metodológicas con ejemplos, controles y procedimientos únicos.
+- Refuerza la portada para destacar verificaciones originales y explicar el estándar de evidencia.
+- Publica una página integral de estándares editoriales, independencia, inteligencia artificial y correcciones.
+- Añade AdSense, canonical, fecha de actualización, autoría y conteo de fuentes a las páginas de artículos.
+- Retira de indexación dos páginas heredadas duplicadas y sincroniza el sitemap.
+- Incorpora pruebas automáticas de extensión mínima, fuentes, autoría y señales de monetización.
+
 # Versión 1.13.0 - Verificación de homicidios dolosos (2026-09-07)
 
 - Publica una verificación original del descenso de 86.9 a 42.5 víctimas diarias entre septiembre de 2024 y julio de 2026.

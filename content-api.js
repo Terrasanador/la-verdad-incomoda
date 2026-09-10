@@ -3,6 +3,8 @@ import fs from "node:fs";
 const localContent = JSON.parse(fs.readFileSync(new URL("./content.json", import.meta.url), "utf8"));
 const editorialContent = JSON.parse(fs.readFileSync(new URL("./editorial-library.json", import.meta.url), "utf8"));
 const expansions = JSON.parse(fs.readFileSync(new URL("./editorial-expansions.json", import.meta.url), "utf8"));
+const deepening = JSON.parse(fs.readFileSync(new URL("./editorial-deepening.json", import.meta.url), "utf8"));
+const DEEPENING_UPDATED_AT = "2026-09-10T01:45:00.000Z";
 
 const OWNER = process.env.GITHUB_OWNER || "Terrasanador";
 const REPO = process.env.GITHUB_REPO || "la-verdad-incomoda";
@@ -115,11 +117,17 @@ export default async function handler(req, res) {
     if (req.method === "GET") {
       const expandedBase = (localContent.articles || []).map(article => ({
         ...article,
-        content: expansions[article.slug] ? `${article.content}\n\n${expansions[article.slug]}` : article.content
+        updatedAt: deepening[article.slug] ? DEEPENING_UPDATED_AT : article.updatedAt,
+        content: [article.content, expansions[article.slug], deepening[article.slug]].filter(Boolean).join("\n\n")
+      }));
+      const expandedEditorial = (editorialContent.articles || []).map(article => ({
+        ...article,
+        updatedAt: deepening[article.slug] ? DEEPENING_UPDATED_AT : article.updatedAt,
+        content: [article.content, expansions[article.slug], deepening[article.slug]].filter(Boolean).join("\n\n")
       }));
       const articles = [
         ...expandedBase.filter(article => article.status === "published"),
-        ...(editorialContent.articles || []).filter(article => article.status === "published")
+        ...expandedEditorial.filter(article => article.status === "published")
       ];
       return send(res, 200, { articles });
     }

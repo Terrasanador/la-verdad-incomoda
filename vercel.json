@@ -14,6 +14,7 @@
     { "src": "*.svg", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/index-final\\.html", "status": 308, "headers": { "Location": "/" } },
     { "src": "/api/analyze", "dest": "/analyze-v3.js" },
     { "src": "/api/health", "dest": "/health.js" },
     { "src": "/api/content", "dest": "/content-api.js" },
