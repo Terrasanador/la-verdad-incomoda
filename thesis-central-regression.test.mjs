@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { applyPisaPandemicFramingGuard } from './analyze-v3.js';
 
 function normalize(result) {
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
@@ -94,3 +95,26 @@ const inconsistente=normalize({
 });
 assert.equal(inconsistente.veredicto_final,'ENGAÑOSA');
 assert.equal(inconsistente.fuentes[0].tipo,'Oficial');
+
+// Citar declaraciones oficiales no confirma el encuadre acusatorio de que la
+// pandemia es una excusa inventada. PISA exige contraste internacional.
+const culpaPisa = applyPisaPandemicFramingGuard({
+  veredicto_final:'CIERTA',
+  veredicto:'VERDADERO',
+  credibilidad:75,
+  afirmacion_principal:'Morena culpa al pasado y usa el COVID como excusa por PISA.',
+  fuentes:[],
+  evaluacion_afirmaciones:[]
+}, 'La 4T culpa al pasado y al COVID-19 por el fracaso en PISA.');
+assert.equal(culpaPisa.veredicto_final,'ENGAÑOSA');
+assert.equal(culpaPisa.veredicto,'ENGAÑOSO');
+assert.equal(culpaPisa.credibilidad,45);
+assert.equal(culpaPisa.evaluacion_afirmaciones[1].estado,'CONTRADICHA');
+assert.match(culpaPisa.fuentes[1].url,/oecdedutoday\.com/);
+
+// Una pregunta neutral sobre si hubo una declaración conserva su resultado.
+const citaNeutral = applyPisaPandemicFramingGuard({
+  veredicto_final:'CIERTA', veredicto:'VERDADERO',
+  afirmacion_principal:'La presidenta mencionó la pandemia al comentar PISA.'
+}, '¿La presidenta mencionó la pandemia al comentar PISA?');
+assert.equal(citaNeutral.veredicto_final,'CIERTA');

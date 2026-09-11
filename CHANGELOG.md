@@ -1,3 +1,10 @@
+# Versión 1.18.1 - Corrección de encuadres sobre PISA y COVID-19 (2026-09-11)
+
+- Corrige la clasificación de afirmaciones que mezclan PISA, COVID-19 y un encuadre de “culpa” o “excusa”.
+- Distingue entre comprobar que una autoridad hizo una declaración y demostrar la acusación editorial implícita en esa declaración.
+- Incorpora como contraste obligatorio los comentarios directos de Andreas Schleicher, la nota de país de México y el lanzamiento internacional de PISA 2025.
+- Evita declarar `CIERTA` una explicación única cuando la OCDE documenta causas concurrentes y tendencias previas a 2020.
+
 # Versión 1.18.0 - Verificación de inversión extranjera directa (2026-09-10)
 
 - Publica una verificación original sobre el récord de IED del primer semestre de 2026.
