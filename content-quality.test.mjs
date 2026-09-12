@@ -12,7 +12,7 @@ const published = [...base, ...editorial].filter(article => article.status === "
 const words = value => (String(value || "").match(/[\p{L}\p{N}]+/gu) || []).length;
 
 test("every published article has substantive, sourced editorial content", () => {
-  assert.equal(published.length, 25);
+  assert.equal(published.length, 26);
   for (const article of published) {
     const full = [article.content, expansions[article.slug], deepening[article.slug]].filter(Boolean).join("\n\n");
     assert.ok(words(full) >= 500, `${article.slug} has fewer than 500 words`);

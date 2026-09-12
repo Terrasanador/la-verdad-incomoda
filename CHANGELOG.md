@@ -1,3 +1,9 @@
+# Versión 1.19.0 - Verificación sobre robo de vehículos en Chiapas (2026-09-12)
+
+- Publica una verificación original del descenso de 68% reportado en robo de vehículos.
+- Distingue comparación mensual, registros administrativos, cifra oculta y causalidad.
+- Actualiza portada, biblioteca, sitemap, versión y pruebas de calidad editorial.
+
 # Versión 1.18.1 - Corrección de encuadres sobre PISA y COVID-19 (2026-09-11)
 
 - Corrige la clasificación de afirmaciones que mezclan PISA, COVID-19 y un encuadre de “culpa” o “excusa”.
