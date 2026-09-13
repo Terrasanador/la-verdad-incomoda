@@ -4,14 +4,16 @@ import analyzeHandler from './analyze.js';
 // Este adaptador refuerza el motor existente sin duplicar sus 120 KB de lógica.
 const POLICY = `\n\nREGLAS V3 OBLIGATORIAS PARA ESTA VERIFICACIÓN:\n1) Identifica primero la TESIS CENTRAL o acusación que el contenido intenta instalar.\n2) Separa hechos SUSTANTIVOS que prueban esa tesis de datos PERIFÉRICOS (nombre, cargo, fecha, parentesco, lugar, que alguien publicó la acusación, etc.). Un dato periférico verdadero NO convierte una acusación central falsa o no demostrada en PARCIALMENTE CIERTA.\n3) PARCIALMENTE CIERTA/PARCIALMENTE VERDADERO solo procede cuando al menos una proposición SUSTANTIVA de la tesis central está demostrada y otra proposición SUSTANTIVA está contradicha o no demostrada.\n4) Si la tesis central está materialmente contradicha por evidencia suficiente, usa FALSA/FALSO aunque contenga datos periféricos correctos.\n5) Si la tesis central atribuye órdenes secretas, encubrimiento, protección, conspiración, intención o causalidad y no existe evidencia suficiente para confirmarla o refutarla, usa NO VERIFICABLE/INFORMACIÓN INSUFICIENTE; no la premies con verdad parcial por hechos accesorios.\n6) AUDITA AL EMISOR: identifica la fuente matriz; revisa antecedentes públicos relevantes y una muestra verificable de publicaciones anteriores; registra patrón editorial, objetivos recurrentes, falsedades o correcciones documentadas, propiedad/financiamiento/conflictos solo si están sustentados, y orientación IZQUIERDA/DERECHA/MIXTA/NO DETERMINADA únicamente con evidencia acumulada. La orientación jamás decide la verdad.\n7) Distingue crítica legítima, opinión adversa, cobertura negativa recurrente, campaña de descrédito y ataque sistemático con desinformación. No atribuyas pago, coordinación o intención sin evidencia.\n8) Deduplica réplicas: varias notas que copian la misma fuente matriz cuentan como una sola cadena, no como corroboraciones independientes.\n9) Antes del veredicto responde internamente: ¿cuál es la tesis central?, ¿qué evidencia DIRECTA la prueba o contradice?, ¿qué datos son periféricos?, ¿quién origina la acusación y qué patrón verificable muestra su historial?\n10) Mantén presunción de inocencia y separa hechos procesales de culpabilidad.\n11) INVESTIGA EL ENTORNO COMPLETO antes de clasificar: localiza la fuente primaria, metodología, anexos o tablas, periodo comparable, alcance, limitaciones, reacciones oficiales y críticas técnicas pertinentes. No te limites a confirmar cómo circula el titular ni a resumir el texto proporcionado por el usuario.\n12) Para pruebas, índices, encuestas y estadísticas internacionales consulta obligatoriamente: nota del país o ficha oficial, informe y guía metodológica, significancia estadística, tamaño y cobertura de la muestra, cambios de población o elegibilidad y declaraciones públicas de quienes dirigen o elaboran la medición. Distingue una diferencia numérica de un cambio estadísticamente significativo.\n13) Verifica la exposición temporal: antes de atribuir un resultado a una reforma, gobierno, plan educativo o política, comprueba cuándo se aplicó, cuánto tiempo estuvieron expuestas las personas evaluadas y si la fuente primaria hace esa atribución causal.\n14) Evalúa por separado todo término fuerte del titular —por ejemplo "fracaso", "colapso", "milagro", "causó" o "demuestra"—. La existencia del titular o su repetición es CIRCUNSTANCIAL, no prueba directa de su verdad.\n15) NO VERIFICABLE se reserva para casos en los que, después de agotar la búsqueda, ninguna parte factual sustantiva de la tesis puede resolverse. Si hay componentes sustantivos confirmados y otros contradichos o no demostrados, usa PARCIALMENTE CIERTA; si los datos son reales pero el encuadre altera su significado, usa ENGAÑOSA.\n16) Un resultado NO VERIFICABLE debe tener credibilidad nula/no aplicable; nunca muestres simultáneamente "información insuficiente" y una credibilidad numérica alta.\n17) Si se solicitan comentarios de quienes dirigen, coordinan o elaboran una prueba, prioriza su intervención directa: presentación oficial, transcripción, video completo, artículo firmado o comunicado de la institución. Una nota periodística o un comunicado gubernamental que resuma sus palabras es evidencia secundaria y debe identificarse como tal; no inventes ni confirmes una cita que no recuperaste.\n18) Las palabras absolutas —"solo", "únicamente", "nunca", "siempre", "todos" o "ninguno"— requieren prueba del alcance total. Si la evidencia solo confirma algunos ejemplos o una reacción, no marques el absoluto como CONFIRMADO.\n19) No confundas dos preguntas: comprobar que una autoridad DIJO o ATRIBUYÓ algo no demuestra que la acusación editorial de que "culpa", "se excusa" o "busca un pretexto" sea cierta. Esas palabras atribuyen una estrategia o intención y requieren evidencia propia.\n20) En afirmaciones sobre PISA y COVID-19 contrasta obligatoriamente las intervenciones directas de la OCDE: la pandemia no puede ignorarse, pero no existe una relación simple entre cierres y tendencias, y parte del deterioro internacional empezó antes de 2020. No conviertas uno de esos matices en causa única.\n21) Si una frase mezcla una declaración comprobada con un encuadre acusatorio que omite causas concurrentes reconocidas por la fuente primaria, la categoría adecuada es ENGAÑOSA; usa FALSA solo cuando la tesis central esté contradicha de manera material.\n`;
 
+const ATTRIBUTION_POLICY = `\nREGLAS DE ACUSACIONES Y ATRIBUCIÓN:\n22) Una fuente anónima es una atribución que debe evaluarse, no corroboración independiente. En acusaciones sobre salud, consumo de sustancias, delitos, vida privada o conducta actual de una persona, exige evidencia directa, pertinente e independientemente corroborada. La repetición de la acusación por portales o cuentas no satisface ese estándar.\n23) Si únicamente está confirmado que alguien DIJO, PUBLICÓ o REPITIÓ X, mientras X aparece como NO DEMOSTRADA o el propio informe reconoce que no hay pruebas verificables, nunca cierres con CIERTA ni PARCIALMENTE CIERTA. Usa NO VERIFICABLE si X no puede confirmarse ni refutarse; usa FALSA solo si evidencia suficiente contradice materialmente X.\n24) El historial de un emisor modifica cuánto contraste necesita su contenido, pero no decide el veredicto. Aplica el mismo método a Anabel Hernández, Atypical TV, Carlos Salinas Pliego, Chumel Torres, Luisito Comunica, Adela Micha, Latinus, cuentas oficialistas, autoridades y cualquier otra fuente. Documenta errores, correcciones y conflictos concretos; no uses etiquetas políticas como sustituto de pruebas.\n25) Cuando la fuente original califique su propia versión como supuesto, rumor, testimonio anónimo o no comprobado, conserva esa incertidumbre. No transformes ese lenguaje en un hecho confirmado.\n`;
+
 function addPolicy(req) {
   const body = req.body || {};
   const keys = ['consulta','pregunta','question','query','text','input','content'];
   const key = keys.find(k => typeof body[k] === 'string' && body[k].trim());
   if (key) {
-    req.body = { ...body, [key]: `${body[key]}${POLICY}` };
+    req.body = { ...body, [key]: `${body[key]}${POLICY}${ATTRIBUTION_POLICY}` };
   } else if (typeof body.url === 'string' && body.url.trim()) {
-    req.body = { ...body, consulta: `${body.url}${POLICY}` };
+    req.body = { ...body, consulta: `${body.url}${POLICY}${ATTRIBUTION_POLICY}` };
   }
 }
 
@@ -109,7 +111,113 @@ export function applyPisaPandemicFramingGuard(result, input) {
   return result;
 }
 
-function normalize(result, input = '') {
+function normalizarTexto(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function consultaSoloAtribucion(input) {
+  const original = String(input || '').trim();
+  if (!original || /^https?:\/\/\S+$/i.test(original)) return false;
+  const texto = normalizarTexto(original);
+  if (/\blo que\s+(?:dijo|afirmo|declaro|publico|aseguro|sostuvo)\b/.test(texto)) return false;
+  const verbo = '(?:dijo|afirmo|declaro|publico|escribio|difundio|aseguro|sostuvo|acuso)';
+  return new RegExp(`^(?:¿\\s*)?(?:es cierto|es verdad|confirma|confirme|verifica|verifique|comprueba|compruebe|puedes confirmar|puede confirmar)\\s+(?:que|si)\\s+.{1,140}\\b${verbo}\\b`, 'i').test(texto) ||
+    new RegExp(`^(?:¿\\s*)?[^?]{1,100}\\b${verbo}\\b[^?]{0,180}\\?\\s*$`, 'i').test(texto);
+}
+
+function esAtribucionOPeriferica(item) {
+  const afirmacion = normalizarTexto(item?.afirmacion);
+  const limite = normalizarTexto(item?.lo_que_no_demuestra);
+  const atribucion = /\b(?:dijo|afirmo|declaro|publico|escribio|difundio|aseguro|sostuvo|acuso|reporto|compartio|emitio|reprodujo)\b/.test(afirmacion) ||
+    /\b(?:publicacion|episodio|post|video|titular|acusacion|version|rumor)\b.{0,80}\b(?:existe|circula|aparecio|fue publicado|se difundio)\b/.test(afirmacion);
+  const reconoceLimite = /\bno (?:demuestra|prueba|confirma|acredita)\b.{0,160}\b(?:tesis|afirmacion|acusacion|hecho|contenido|consumo|sea cierto|verdad)\b/.test(limite) ||
+    /\bsolo (?:confirma|demuestra|prueba)\b.{0,100}\b(?:autoria|autor|publicacion|que .* (?:dijo|publico))\b/.test(limite);
+  return item?.relacion_con_afirmacion === 'AJENA' ||
+    item?.relacion_con_afirmacion === 'CIRCUNSTANCIAL' ||
+    (atribucion && reconoceLimite);
+}
+
+/**
+ * Impide que la existencia de una acusación se use como prueba de su contenido.
+ * La regla es agnóstica respecto de la orientación política del emisor.
+ */
+export function applyEmbeddedAllegationGuard(result, input = '') {
+  if (!result || typeof result !== 'object' || consultaSoloAtribucion(input)) return result;
+
+  const final = normalizarTexto(result.veredicto_final);
+  const tecnico = normalizarTexto(result.veredicto);
+  const esAfirmativo = ['cierta', 'parcialmente cierta'].includes(final) ||
+    ['verdadero', 'cierto', 'mayormente verdadero', 'parcialmente verdadero', 'parcialmente cierto'].includes(tecnico);
+  if (!esAfirmativo) return result;
+
+  const evaluaciones = Array.isArray(result.evaluacion_afirmaciones)
+    ? result.evaluacion_afirmaciones
+    : [];
+  const confirmadas = evaluaciones.filter(item => item?.estado === 'CONFIRMADA');
+  const noDemostradas = evaluaciones.filter(item => item?.estado === 'NO DEMOSTRADA');
+  const contradichas = evaluaciones.filter(item => item?.estado === 'CONTRADICHA');
+  const confirmacionSustantiva = confirmadas.filter(item => !esAtribucionOPeriferica(item));
+  const pendienteSustantiva = noDemostradas.filter(item =>
+    !/\b(?:dijo|afirmo|declaro|publico|difundio)\b/.test(normalizarTexto(item?.afirmacion))
+  );
+  const contradiccionSustantiva = contradichas.filter(item => !esAtribucionOPeriferica(item));
+  const diagnostico = normalizarTexto([
+    result.explicacion_veredicto_final,
+    result.respuesta_directa,
+    result.resumen,
+    result.conclusion,
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : [])
+  ].join(' '));
+  const reconoceFaltaDePrueba = /(?:no (?:presento|aporto|hay|existen|se hallo|se encontro).{0,90}(?:prueba|evidencia|corroboracion)|carece de (?:prueba|evidencia|sustento)|sin (?:prueba|evidencia|corroboracion)|fuentes? anonimas?.{0,120}(?:sin|no).{0,60}(?:corrobor|confirm|verific)|no (?:puede|pudo) confirmarse)/.test(diagnostico);
+  const soloSeConfirmoLaDifusion = confirmadas.length > 0 && confirmacionSustantiva.length === 0;
+  const hayTesisPendiente = pendienteSustantiva.length > 0 || reconoceFaltaDePrueba;
+
+  if (!hayTesisPendiente || (!soloSeConfirmoLaDifusion && confirmacionSustantiva.length > 0)) return result;
+
+  const refutada = contradiccionSustantiva.length > 0;
+  result.veredicto = refutada ? 'FALSO' : 'INFORMACIÓN INSUFICIENTE';
+  result.veredicto_final = refutada ? 'FALSA' : 'NO VERIFICABLE';
+  result.credibilidad = refutada
+    ? Math.min(Number.isFinite(result.credibilidad) ? result.credibilidad : 20, 20)
+    : null;
+  result.explicacion_veredicto_final = refutada
+    ? 'Se comprobó que la acusación fue publicada, pero ese hecho no prueba su contenido. La afirmación sustantiva está contradicha por evidencia directa suficiente; por eso el veredicto corresponde a la acusación y es FALSA.'
+    : 'Se comprobó que la acusación fue publicada, no que el hecho alegado haya ocurrido. Una fuente anónima y las notas o cuentas que repiten la misma versión no constituyen corroboraciones independientes. Sin evidencia directa suficiente que confirme o contradiga la afirmación sustantiva, el veredicto es NO VERIFICABLE.';
+  result.respuesta_directa = refutada
+    ? 'No. Está documentada la publicación de la acusación, pero la evidencia directa disponible contradice su contenido.'
+    : 'No se puede afirmar que sea cierta. Está documentado que alguien difundió la acusación, pero no hay evidencia pública e independiente suficiente que demuestre el hecho alegado.';
+  result.resumen = result.respuesta_directa;
+  result.conclusion = result.respuesta_directa;
+
+  for (const item of evaluaciones) {
+    if (item?.estado === 'CONFIRMADA' && esAtribucionOPeriferica(item)) {
+      item.relacion_con_afirmacion = 'CIRCUNSTANCIAL';
+      if (!String(item.lo_que_no_demuestra || '').trim()) {
+        item.lo_que_no_demuestra = 'La existencia o autoría de la acusación no demuestra que su contenido sea verdadero.';
+      }
+    }
+    if (item?.estado === 'NO DEMOSTRADA' &&
+        !/\b(?:dijo|afirmo|declaro|publico|difundio)\b/.test(normalizarTexto(item?.afirmacion))) {
+      item.relacion_con_afirmacion = 'DIRECTA';
+    }
+  }
+
+  result.evidencia_a_favor = [];
+  const limites = Array.isArray(result.limitaciones) ? result.limitaciones : [];
+  result.limitaciones = [...new Set([
+    ...limites,
+    'La existencia de la publicación y sus réplicas solo acredita que la acusación circuló; no acredita el hecho alegado.',
+    'La ausencia de evidencia pública suficiente tampoco demuestra automáticamente la afirmación contraria.'
+  ])];
+  return result;
+}
+
+export function normalize(result, input = '') {
   if (!result || typeof result !== 'object') return result;
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
 
@@ -202,7 +310,7 @@ function normalize(result, input = '') {
       if (result.veredicto === 'PARCIALMENTE VERDADERO') result.veredicto = 'VERDADERO';
     }
   }
-  return applyPisaPandemicFramingGuard(result, input);
+  return applyPisaPandemicFramingGuard(applyEmbeddedAllegationGuard(result, input), input);
 }
 
 export const config = { maxDuration: 300 };

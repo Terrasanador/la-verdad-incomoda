@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { applyPisaPandemicFramingGuard } from './analyze-v3.js';
+import { applyPisaPandemicFramingGuard, normalize as normalizeProduction } from './analyze-v3.js';
 
 function normalize(result) {
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
@@ -118,3 +118,48 @@ const citaNeutral = applyPisaPandemicFramingGuard({
   afirmacion_principal:'La presidenta mencionó la pandemia al comentar PISA.'
 }, '¿La presidenta mencionó la pandemia al comentar PISA?');
 assert.equal(citaNeutral.veredicto_final,'CIERTA');
+
+// Confirmar la autoría de una acusación no confirma la acusación incrustada.
+const acusacionAnonima = normalizeProduction({
+  veredicto_final:'CIERTA',
+  veredicto:'VERDADERO',
+  credibilidad:null,
+  confianza:63,
+  afirmacion_principal:'Que la presidenta Claudia Sheinbaum consume marihuana actualmente, según lo afirmado por Anabel Hernández.',
+  explicacion_veredicto_final:'Anabel Hernández sí difundió la versión, pero no presentó pruebas verificables públicas que confirmen el consumo actual.',
+  respuesta_directa:'La periodista lo dijo, pero la afirmación carece de evidencia pública verificable.',
+  evaluacion_afirmaciones:[
+    {
+      afirmacion:'Anabel Hernández afirmó que miembros del gobierno le dijeron que Sheinbaum consume marihuana.',
+      estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:['Registro y transcripción del episodio.'],
+      lo_que_no_demuestra:'No demuestra que el consumo sea cierto.'
+    },
+    {
+      afirmacion:'Claudia Sheinbaum consume marihuana actualmente.',
+      estado:'NO DEMOSTRADA', relacion_con_afirmacion:'CIRCUNSTANCIAL',
+      sustento_directo:[], lo_que_no_demuestra:'No existen pruebas médicas ni testimonios identificables.'
+    }
+  ],
+  evidencia_a_favor:['El episodio reproduce la versión de fuentes anónimas.'],
+  limitaciones:[]
+}, 'https://podcasts.apple.com/episodio/111');
+assert.equal(acusacionAnonima.veredicto_final,'NO VERIFICABLE');
+assert.equal(acusacionAnonima.veredicto,'INFORMACIÓN INSUFICIENTE');
+assert.equal(acusacionAnonima.credibilidad,null);
+assert.equal(acusacionAnonima.evaluacion_afirmaciones[0].relacion_con_afirmacion,'CIRCUNSTANCIAL');
+assert.equal(acusacionAnonima.evaluacion_afirmaciones[1].relacion_con_afirmacion,'DIRECTA');
+assert.deepEqual(acusacionAnonima.evidencia_a_favor,[]);
+
+// Si la consulta pregunta expresamente por la declaración, la autoría sí es la
+// tesis central y puede verificarse sin afirmar que el contenido sea verdadero.
+const preguntaDeAtribucion = normalizeProduction({
+  veredicto_final:'CIERTA', veredicto:'VERDADERO',
+  afirmacion_principal:'Anabel Hernández afirmó que la presidenta consume marihuana.',
+  explicacion_veredicto_final:'La declaración aparece en el episodio, pero no prueba el consumo.',
+  evaluacion_afirmaciones:[
+    {afirmacion:'Anabel Hernández hizo esa declaración.',estado:'CONFIRMADA',relacion_con_afirmacion:'DIRECTA'},
+    {afirmacion:'La presidenta consume marihuana.',estado:'NO DEMOSTRADA',relacion_con_afirmacion:'CIRCUNSTANCIAL'}
+  ]
+}, '¿Es cierto que Anabel Hernández afirmó que la presidenta consume marihuana?');
+assert.equal(preguntaDeAtribucion.veredicto_final,'CIERTA');

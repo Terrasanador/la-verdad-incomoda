@@ -1,3 +1,11 @@
+# Versión 1.20.1 - Atribución no equivale a veracidad (2026-09-13)
+
+- Impide que confirmar quién publicó una acusación convierta la acusación incrustada en CIERTA o PARCIALMENTE CIERTA.
+- Exige corroboración independiente para afirmaciones sobre salud, consumo de sustancias, delitos, vida privada y conductas actuales.
+- Conserva como NO VERIFICABLE una acusación no corroborada y reserva FALSA para tesis contradichas por evidencia suficiente.
+- Audita antecedentes de cualquier emisor sin usar orientación política o etiquetas como sustituto de pruebas.
+- Añade una prueba de regresión basada en una acusación sustentada únicamente en fuentes anónimas.
+
 # Versión 1.20.0 - Verificación del presupuesto por hectárea de la Conanp (2026-09-13)
 
 - Publica una verificación original sobre el indicador de 16.2 pesos por hectárea.
