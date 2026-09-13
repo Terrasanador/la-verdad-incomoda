@@ -1669,9 +1669,17 @@ ${texto}${bloqueExtraccion}`
         (resultado.veredicto_final === 'NO VERIFICABLE' && pareceSinAcceso(textoDiagnostico))
       );
 
+    const enlaceCompartidoThreadsNoResuelto = Boolean(
+      threadsLinkType(enlaceDetectado) === 'share' &&
+      !contenidoEnlaceRecuperado &&
+      !contenidoIdentificadoPorBusqueda
+    );
+
     if (accesoRealmenteBloqueado) {
       resultado.estado = "sin_acceso";
-      resultado.estado_tecnico = /(?:\b429\b|too many requests)/i.test(textoDiagnostico)
+      resultado.estado_tecnico = enlaceCompartidoThreadsNoResuelto
+        ? "ENLACE_COMPARTIDO_NO_RESUELTO"
+        : /(?:\b429\b|too many requests)/i.test(textoDiagnostico)
         ? "HTTP_429"
         : "ACCESO_RESTRINGIDO";
       resultado.veredicto = "NO VERIFICABLE";
@@ -1682,7 +1690,9 @@ ${texto}${bloqueExtraccion}`
       resultado.confianza = null;
 
       resultado.explicacion_veredicto_final =
-        resultado.estado_tecnico === "HTTP_429"
+        resultado.estado_tecnico === "ENLACE_COMPARTIDO_NO_RESUELTO"
+          ? "Threads no proporcionó la dirección de una publicación detrás del enlace compartido; no se emitió un veredicto factual."
+          : resultado.estado_tecnico === "HTTP_429"
           ? "Threads limitó temporalmente las solicitudes (HTTP 429). No se evaluó la veracidad de la publicación."
           : "La plataforma restringió el acceso y no fue posible recuperar suficiente contenido para evaluar la afirmación.";
 
@@ -1702,7 +1712,7 @@ ${texto}${bloqueExtraccion}`
       resultado.mensaje =
         "Acceso limitado temporalmente. La credibilidad y la confianza permanecen pendientes de evaluación.";
       resultado.acciones_disponibles = [
-        "REINTENTAR_MAS_TARDE",
+        ...(enlaceCompartidoThreadsNoResuelto ? ["PEGAR_URL_CANONICA"] : ["REINTENTAR_MAS_TARDE"]),
         "SUBIR_CAPTURA",
         "PEGAR_TEXTO"
       ];
@@ -2186,17 +2196,31 @@ ${texto}${bloqueExtraccion}`
     if ((accesoRealmenteBloqueado || resultado.estado === 'sin_acceso') && !correccionColima) {
       // A technical failure is not a factual verdict. Return no generated sources,
       // conclusions, profile guesses or social sharing payload.
+      const enlaceCompartidoNoResuelto=threadsLinkType(enlaceDetectado)==='share' &&
+        !contenidoEnlaceRecuperado && !contenidoIdentificadoPorBusqueda;
       return res.status(200).json({
         estado:'sin_acceso', analizado:false, tipo_resultado:'error_recuperacion',
-        estado_tecnico:resultado.estado_tecnico==='OK'?'CONTENIDO_NO_RECUPERADO':resultado.estado_tecnico,
+        estado_tecnico:enlaceCompartidoNoResuelto
+          ? 'ENLACE_COMPARTIDO_NO_RESUELTO'
+          : resultado.estado_tecnico==='OK'?'CONTENIDO_NO_RECUPERADO':resultado.estado_tecnico,
         veredicto:null, veredicto_final:null, credibilidad:null, confianza:null,
-        mensaje:'Análisis no completado: no se recuperó suficiente contenido del enlace para comprobar sus afirmaciones. Esto no indica que sean verdaderas ni falsas.',
+        mensaje:enlaceCompartidoNoResuelto
+          ? 'Este enlace compartido de Threads no conduce a una publicación pública identificable. Puede estar incompleto, haber caducado o corresponder a contenido privado o eliminado.'
+          : 'Análisis no completado: no se recuperó suficiente contenido del enlace para comprobar sus afirmaciones. Esto no indica que sean verdaderas ni falsas.',
         fuentes:[], compartir_habilitado:false,
-        retry_after_seconds:extraccionEnlace?.retry_after_seconds||0,
+        retry_after_seconds:enlaceCompartidoNoResuelto?0:extraccionEnlace?.retry_after_seconds||0,
         url_consultada:extraccionEnlace?.url_final || enlaceDetectado,
-        limitaciones:extraccionEnlace?.limitaciones || ['No se obtuvo contenido suficiente para completar la verificación.'],
+        limitaciones:enlaceCompartidoNoResuelto
+          ? [
+              'Threads no expuso una URL canónica con formato /@cuenta/post/… o /@cuenta/video/… .',
+              'Abra la publicación original y use “Copiar enlace”; si Threads vuelve a entregar /share/…, pegue el texto o adjunte una captura.'
+            ]
+          : extraccionEnlace?.limitaciones || ['No se obtuvo contenido suficiente para completar la verificación.'],
         cobertura_archivos:coberturaArchivos,
-        acciones_disponibles:['REINTENTAR_MAS_TARDE'], reintentar:true
+        acciones_disponibles:enlaceCompartidoNoResuelto
+          ? ['PEGAR_URL_CANONICA','SUBIR_CAPTURA','PEGAR_TEXTO']
+          : ['REINTENTAR_MAS_TARDE','SUBIR_CAPTURA','PEGAR_TEXTO'],
+        reintentar:!enlaceCompartidoNoResuelto
       });
     }
     return res.status(200).json(resultado);

@@ -1,3 +1,10 @@
+# Versión 1.20.2 - Recuperación clara de enlaces compartidos de Threads (2026-09-13)
+
+- Distingue un enlace `/share/…` no resuelto de un límite temporal HTTP 429 y elimina la recomendación inútil de esperar.
+- Acepta URLs canónicas de Threads con `/post/` o `/video/`, incluidos los enlaces que agregan un slug descriptivo.
+- Indica cómo continuar con la URL canónica, el texto de la publicación o una captura cuando Threads no identifica el contenido.
+- Añade pruebas de regresión para enlaces compartidos no resueltos y formatos canónicos actuales.
+
 # Versión 1.20.1 - Atribución no equivale a veracidad (2026-09-13)
 
 - Impide que confirmar quién publicó una acusación convierta la acusación incrustada en CIERTA o PARCIALMENTE CIERTA.

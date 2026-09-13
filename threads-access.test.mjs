@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import dns from 'node:dns/promises';
 import fs from 'node:fs';
 import vm from 'node:vm';
-import {threadsLinkType,threadsCanonicalFromHtml,retryAfterSeconds,threadsRetryRemaining,resetThreadsCooldownsForTest,threadsReferenceOnly} from './threads-access.js';
+import {threadsLinkType,threadsCanonicalFromHtml,retryAfterSeconds,threadsRetryRemaining,resetThreadsCooldownsForTest,threadsReferenceOnly,incompleteThreadsResult} from './threads-access.js';
 import {extractPublicLink} from './extract-content.js';
 import {extractSocialPublicData} from './social-data.js';
 import handler from './analyze.js';
@@ -29,10 +29,23 @@ async function withMocks(run) {
 }
 test('Threads URL types and command-only detection',()=>{
   assert.equal(threadsLinkType(share),'share');assert.equal(threadsLinkType(post),'post');
+  assert.equal(threadsLinkType('https://www.threads.com/@usuario/post/ABC_123/texto-descriptivo/'),'post');
+  assert.equal(threadsLinkType('https://www.threads.com/@usuario/video/ABC_123/video-descriptivo/'),'post');
   assert.equal(threadsLinkType('https://www.threads.com/@usuario'),'profile');
   assert.equal(threadsLinkType('https://threads.com.evil.test/@u/post/ID'),'');
   assert(threadsReferenceOnly('Verifica este video '+share,share));
   assert(!threadsReferenceOnly('La capital de Francia es París '+share,share));
+});
+test('Unresolved shared links do not recommend a pointless timed retry',()=>{
+  const result=incompleteThreadsResult({
+    url_original:share,url_final:share,tipo_enlace:'compartido_no_resuelto',
+    retry_after_seconds:120,limitaciones:['No canonical URL']
+  });
+  assert.equal(result.estado_tecnico,'ENLACE_COMPARTIDO_NO_RESUELTO');
+  assert.equal(result.retry_after_seconds,0);
+  assert.equal(result.reintentar,false);
+  assert(result.acciones_disponibles.includes('PEGAR_URL_CANONICA'));
+  assert(result.acciones_disponibles.includes('SUBIR_CAPTURA'));
 });
 test('Canonical metadata, og:url and refresh resolve only valid Threads targets',()=>{
   for(const html of [`<link rel="canonical" href="${post}?x=1">`,`<meta content="${post}" property="og:url">`,`<meta http-equiv="refresh" content="0;url=${post}">`]) assert.equal(threadsCanonicalFromHtml(html,share),post);
@@ -94,6 +107,10 @@ test('Handler continues to web search on unresolved or rate-limited Threads shar
     await handler({method:'POST',body:{text:'Verifica este video '+share}},res);
     assert.equal(directCalls,1);assert.equal(modelCalls,1);assert.equal(res.code,200);
     assert.equal(res.value.analizado,false);assert.equal(res.value.veredicto_final,null);
+    assert.equal(res.value.estado_tecnico,'ENLACE_COMPARTIDO_NO_RESUELTO');
+    assert.equal(res.value.retry_after_seconds,0);
+    assert.equal(res.value.reintentar,false);
+    assert(res.value.acciones_disponibles.includes('PEGAR_URL_CANONICA'));
   }
 }));
 test('Recovered Threads description overrides an erroneous model access failure',()=>withMocks(async()=>{

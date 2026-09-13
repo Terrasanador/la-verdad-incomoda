@@ -1526,6 +1526,7 @@ async function sampleVideoFrames(file) {
         ${textCard("Qué ocurrió", data.mensaje || "No se recuperó contenido suficiente para completar la verificación.", true)}
         ${textCard("Sin veredicto", "Un fallo de acceso no demuestra que la información sea verdadera o falsa.", true)}
         ${Number(data.retry_after_seconds)>0 ? textCard("Espera antes de reintentar", `Al menos ${Math.ceil(Number(data.retry_after_seconds))} segundos. No se realizarán reintentos automáticos. La espera no garantiza que Threads permita el acceso después.`, true) : ""}
+        ${data.estado_tecnico === "ENLACE_COMPARTIDO_NO_RESUELTO" ? textCard("Cómo continuar", "Abre la publicación original en Threads y elige “Copiar enlace”. Pega aquí la dirección que incluya /@cuenta/post/… o /@cuenta/video/… . Si Threads vuelve a entregar un enlace /share/…, pega el texto o adjunta una captura.", true) : ""}
         ${textCard("Enlace consultado", data.url_consultada || data.extraccion_enlace?.url_final || "", true)}
         ${listCard("Diagnóstico de recuperación", data.limitaciones || [], true)}
       </div>
