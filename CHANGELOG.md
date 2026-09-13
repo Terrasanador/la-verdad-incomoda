@@ -1,3 +1,9 @@
+# Versión 1.20.0 - Verificación del presupuesto por hectárea de la Conanp (2026-09-13)
+
+- Publica una verificación original sobre el indicador de 16.2 pesos por hectárea.
+- Distingue el cociente agregado de una asignación presupuestaria territorial uniforme.
+- Actualiza biblioteca, portada, sitemap, versión y pruebas editoriales.
+
 # Versión 1.19.0 - Verificación sobre robo de vehículos en Chiapas (2026-09-12)
 
 - Publica una verificación original del descenso de 68% reportado en robo de vehículos.
