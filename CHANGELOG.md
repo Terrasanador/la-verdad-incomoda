@@ -1,3 +1,9 @@
+# Versión 1.20.8 - Botón verde para compartir (2026-09-14)
+
+- Convierte la franja superior de la portada en un botón verde y accesible para compartir la página.
+- Abre el menú nativo de compartir en dispositivos compatibles y copia el enlace como alternativa.
+- Destaca también en verde la acción de compartir incluida en los informes.
+
 # Versión 1.20.7 - Limitaciones fieles a la consulta (2026-09-14)
 
 - Elimina atribuciones automáticas a una supuesta instrucción del usuario cuando la consulta no pidió omitir imágenes o fotogramas.
