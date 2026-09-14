@@ -36,6 +36,8 @@ export async function prepareFile(file,{maxBytes=MAX_UPLOAD_BYTES,fetchImpl=fetc
     content.push({type:'input_image',image_url:`data:${type};base64,${file.data}`,detail:'high'});
     note('Lee el texto visible y contrasta sus afirmaciones. No inventes texto ilegible ni declares autenticidad o autoría solo por apariencia.');
   } else if (/^(audio|video)\//.test(type)) {
+    const isVideo=type.startsWith('video/');
+    let audioCoverage='transcribed';
     const form=new FormData();
     form.append('file',new Blob([bytes],{type}),name);
     form.append('model','gpt-4o-mini-transcribe');
@@ -47,14 +49,23 @@ export async function prepareFile(file,{maxBytes=MAX_UPLOAD_BYTES,fetchImpl=fetc
       });
       if (!response.ok) fail(`No se pudo transcribir el audio (servicio HTTP ${response.status}). No se emitió un veredicto sobre contenido no escuchado.`,502);
       const data=await response.json();
-      if (!String(data.text||'').trim()) fail('No se recuperó habla inteligible del archivo.');
-      note(`TRANSCRIPCIÓN AUTOMÁTICA (puede contener errores en nombres y cifras):\n${String(data.text).slice(0,80000)}`);
-      if (String(data.text).length>80000) limitations.push('Transcripción limitada a los primeros 80 000 caracteres.');
+      const transcript=String(data.text||'').trim();
+      if (!transcript) {
+        if (!isVideo) fail('No se recuperó habla inteligible del archivo.');
+        audioCoverage='no_speech';
+        note('La pista de audio del video no contiene habla inteligible. No infieras diálogo ni declaraciones; continúa únicamente con los fotogramas, metadatos, texto visible y fuentes externas que sí estén disponibles.');
+        limitations.push('No se detectó habla inteligible en la pista de audio del video.');
+      } else {
+        note(`TRANSCRIPCIÓN AUTOMÁTICA (puede contener errores en nombres y cifras):\n${transcript.slice(0,80000)}`);
+        if (transcript.length>80000) limitations.push('Transcripción limitada a los primeros 80 000 caracteres.');
+      }
     } catch(error) {
-      if (!type.startsWith('video/') || !file.frames?.length) throw error;
-      limitations.push('No se recuperó audio inteligible; se revisan únicamente los fotogramas adjuntos.');
+      if (!isVideo) throw error;
+      audioCoverage='unavailable';
+      note('La transcripción de la pista de audio del video no estuvo disponible. No infieras diálogo ni declaraciones; continúa únicamente con los fotogramas, metadatos, texto visible y fuentes externas que sí estén disponibles.');
+      limitations.push('No se pudo obtener una transcripción de la pista de audio del video; el análisis continuó con las demás evidencias disponibles.');
     }
-    if (type.startsWith('video/')) {
+    if (isVideo) {
       const frames=Array.isArray(file.frames)?file.frames.slice(0,5):[];
       for (const frame of frames) {
         const image=validateFile({name:'frame.jpg',type:'image/jpeg',data:frame.data},100000);
@@ -63,7 +74,11 @@ export async function prepareFile(file,{maxBytes=MAX_UPLOAD_BYTES,fetchImpl=fetc
         note(`Fotograma muestreado a ${Number.isFinite(seconds)?seconds.toFixed(2):'tiempo desconocido'} segundos.`);
         content.push({type:'input_image',image_url:`data:image/jpeg;base64,${frame.data}`,detail:'high'});
       }
-      limitations.push(frames.length?`Solo se inspeccionaron ${frames.length} fotogramas muestreados; no cada escena del video.`:'Se procesó la pista de audio; no se inspeccionaron las imágenes del video.');
+      limitations.push(frames.length
+        ? `Solo se inspeccionaron ${frames.length} fotogramas muestreados; no cada escena del video.`
+        : audioCoverage==='transcribed'
+          ? 'Se procesó la pista de audio; no se inspeccionaron las imágenes del video.'
+          : 'No se inspeccionaron las imágenes del video; cualquier conclusión debe basarse únicamente en metadatos, texto recuperado y fuentes externas.');
     }
   } else if (type.startsWith('text/')) {
     const text=bytes.toString('utf8');

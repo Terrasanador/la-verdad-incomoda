@@ -513,6 +513,23 @@ const texto = tieneTexto
     const contenidoUsuario = [];
     const coberturaArchivos = [];
     const archivosRemotos = [];
+    // Un TikTok puede comunicar su afirmación mediante texto en pantalla y no
+    // contener diálogo. Si oEmbed expone una miniatura oficial, úsala como
+    // evidencia visual parcial en vez de depender únicamente del audio.
+    if (extraccionEnlace?.thumbnail_url) {
+      try {
+        const thumbnail=await extractPublicLink(extraccionEnlace.thumbnail_url);
+        const image=thumbnail?.archivo_recuperado;
+        if(image?.type?.startsWith('image/')) {
+          const prepared=await prepareFile(image,{maxBytes:3_000_000});
+          contenidoUsuario.push(...prepared.content);
+          coberturaArchivos.push(prepared.coverage);
+          extraccionEnlace.limitaciones.push('Se inspeccionó la miniatura pública del video como una sola imagen; no representa todas sus escenas.');
+        }
+      } catch {
+        extraccionEnlace.limitaciones.push('La miniatura pública del video no pudo recuperarse; el análisis continúa con las demás evidencias disponibles.');
+      }
+    }
     // Follow explicit media playback/download fields only, never arbitrary URLs from captions.
     if (extraccionEnlace?.datos_multiplataforma?.contenido_json && !extraccionEnlace.transcripcion) {
       const candidates=[];
@@ -530,11 +547,16 @@ const texto = tieneTexto
         else extraccionEnlace.limitaciones.push('No se pudo descargar el medio enlazado por el proveedor; no se inspeccionó su audio directamente.');
       }
     }
-    for (const [file, maxBytes] of [[archivo, 3_000_000], [extraccionEnlace?.archivo_recuperado, 20_000_000]]) {
+    for (const [file, maxBytes, remote] of [[archivo, 3_000_000, false], [extraccionEnlace?.archivo_recuperado, 20_000_000, true]]) {
       if (!file) continue;
-      const prepared = await prepareFile(file, {maxBytes});
-      contenidoUsuario.push(...prepared.content);
-      coberturaArchivos.push(prepared.coverage);
+      try {
+        const prepared = await prepareFile(file, {maxBytes});
+        contenidoUsuario.push(...prepared.content);
+        coberturaArchivos.push(prepared.coverage);
+      } catch(error) {
+        if(!remote) throw error;
+        extraccionEnlace.limitaciones.push('No se pudo procesar la pista del video descargado; el análisis continuó con metadatos, texto recuperado, miniatura y búsqueda web, sin inventar su contenido audiovisual.');
+      }
     }
     for(const file of archivosRemotos) {
       try {
@@ -574,6 +596,7 @@ Acceso parcial a metadatos: ${extraccionEnlace.acceso_parcial ? "sí" : "no"}
 Título recuperado: ${extraccionEnlace.titulo || "No disponible"}
 Autor o cuenta: ${extraccionEnlace.autor || "No disponible"}
 Descripción: ${extraccionEnlace.descripcion || "No disponible"}
+Miniatura pública: ${extraccionEnlace.thumbnail_url || "No disponible"}
 Ficha pública del perfil: ${extraccionEnlace.perfil ? JSON.stringify(extraccionEnlace.perfil) : "No aplica o no disponible"}
 Datos públicos adicionales recuperados mediante el conector multiplataforma:
 ${extraccionEnlace.datos_multiplataforma?.contenido_json || "No disponibles o conector no configurado para esta plataforma."}

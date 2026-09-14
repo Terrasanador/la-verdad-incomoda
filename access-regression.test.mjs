@@ -102,6 +102,42 @@ test('TikTok keeps recovering the actual video after oEmbed returns metadata',as
   } finally {global.fetch=oldFetch;dns.lookup=oldLookup;}
 });
 
+test('TikTok video without intelligible speech returns a structured result instead of an error',async()=>{
+  const oldFetch=global.fetch, oldLookup=dns.lookup;
+  const oldOpenAI=process.env.OPENAI_API_KEY, oldCaptapi=process.env.CAPTAPI_API_KEY;
+  process.env.OPENAI_API_KEY='mock';delete process.env.CAPTAPI_API_KEY;
+  dns.lookup=async()=>[{address:'8.8.8.8',family:4}];
+  const video='https://www.tiktok.com/@example/video/7676568732566703381';
+  let responsesCalled=false;
+  global.fetch=async(url,options)=>{
+    if(String(url)===video) return new Response(Buffer.from('silent-video'),{headers:{'content-type':'video/mp4'}});
+    if(String(url)==='https://api.openai.com/v1/audio/transcriptions') return Response.json({text:'   '});
+    if(String(url)==='https://api.openai.com/v1/responses') {
+      responsesCalled=true;
+      const body=JSON.parse(options.body);
+      assert(body.input[0].content.some(item=>item.text?.includes('no contiene habla inteligible')));
+      const result=empty(body.text.format.schema);
+      result.estado='sin_acceso';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';
+      result.respuesta_directa='El video no aportó habla y no se recuperaron imágenes suficientes.';
+      result.resumen=result.respuesta_directa;result.conclusion=result.respuesta_directa;
+      return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}]});
+    }
+    throw new Error(`Solicitud inesperada: ${url}`);
+  };
+  try {
+    const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+    await handler({method:'POST',body:{text:video}},res);
+    assert.equal(res.code,200);
+    assert.equal(responsesCalled,true);
+    assert.equal(res.value.error,undefined);
+    assert(res.value.cobertura_archivos.some(item=>item.limitaciones.some(limit=>limit.includes('No se detectó habla inteligible'))));
+  } finally {
+    global.fetch=oldFetch;dns.lookup=oldLookup;
+    if(oldOpenAI===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldOpenAI;
+    if(oldCaptapi===undefined)delete process.env.CAPTAPI_API_KEY;else process.env.CAPTAPI_API_KEY=oldCaptapi;
+  }
+});
+
 test('TikTok hashtags and account metadata alone do not become a factual report',async()=>{
   const oldFetch=global.fetch, oldLookup=dns.lookup, oldKey=process.env.OPENAI_API_KEY;
   process.env.OPENAI_API_KEY='mock';

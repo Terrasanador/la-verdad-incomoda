@@ -34,6 +34,17 @@ test('Video audio alone does not claim visual inspection',async()=>{
   const r=await prepareFile(file('clip.mp4','video'),{fetchImpl:async()=>Response.json({text:'Hola'})});
   assert(r.coverage.limitaciones.some(x=>x.includes('no se inspeccionaron')));
 });
+test('Video without intelligible speech continues with other available evidence',async()=>{
+  const r=await prepareFile(file('silent.mp4','video'),{fetchImpl:async()=>Response.json({text:'   '})});
+  assert(r.content.some(x=>x.text?.includes('no contiene habla inteligible')));
+  assert(r.coverage.limitaciones.some(x=>x.includes('No se detectó habla inteligible')));
+  assert(r.coverage.limitaciones.some(x=>x.includes('No se inspeccionaron las imágenes')));
+});
+test('Video transcription service errors are nonfatal',async()=>{
+  const r=await prepareFile(file('clip.mp4','video'),{fetchImpl:async()=>new Response('',{status:429})});
+  assert(r.content.some(x=>x.text?.includes('no estuvo disponible')));
+  assert(r.coverage.limitaciones.some(x=>x.includes('continuó con las demás evidencias')));
+});
 test('Sampled frames have explicit partial coverage',async()=>{
   const f=file('clip.mp4','video');f.frames=[{seconds:1,data:Buffer.from([255,216,255,217]).toString('base64')}];
   const r=await prepareFile(f,{fetchImpl:async()=>Response.json({text:'Hola'})});

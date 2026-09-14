@@ -1,3 +1,9 @@
+# Versión 1.20.6 - Videos sin diálogo no detienen el análisis (2026-09-14)
+
+- Evita que una transcripción vacía o temporalmente no disponible convierta un video de TikTok en un error fatal.
+- Continúa con descripción, metadatos, miniatura pública, texto recuperado y búsqueda web, sin atribuir diálogo ni escenas no inspeccionadas.
+- Añade una salvaguarda específica para medios descargados y pruebas de regresión para videos sin habla y fallos del transcriptor.
+
 # Versión 1.20.5 - Detección de metapreguntas sin tesis (2026-09-14)
 
 - Reconoce cuando el analizador formula como tesis la pregunta técnica de si un post contiene una afirmación verificable.
