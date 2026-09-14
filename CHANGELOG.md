@@ -1,3 +1,11 @@
+# Versión 1.20.9 - La cita no sustituye al contexto político (2026-09-14)
+
+- Hace que el veredicto recaiga sobre la tesis factual contenida en una cita política, salvo que el usuario pregunte expresamente por su autoría.
+- Separa declaración, decisión institucional, consecuencia alegada y atribución al gobierno o partido.
+- Corrige el caso de las boletas sin doblez con el Acuerdo INE/CG542/2026: la reserva y revisión individual no equivalen a un conteo automático ni prueban fraude gubernamental.
+- Conserva el contexto legítimo —la falta de doblez puede ser una anomalía— y evita atribuir intención, pago o coordinación sin evidencia.
+- Añade regresiones para la salida defectuosa de Ricardo Anaya y para una pregunta neutral sobre si realizó la declaración.
+
 # Versión 1.20.8 - Botón verde para compartir (2026-09-14)
 
 - Convierte la franja superior de la portada en un botón verde y accesible para compartir la página.

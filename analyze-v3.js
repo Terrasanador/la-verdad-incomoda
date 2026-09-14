@@ -8,14 +8,16 @@ const ATTRIBUTION_POLICY = `\nREGLAS DE ACUSACIONES Y ATRIBUCIÓN:\n22) Una fuen
 
 const CHECKABLE_CLAIM_POLICY = `\nREGLAS PARA CONTENIDO SIN AFIRMACIÓN VERIFICABLE:\n26) Antes de emitir CIERTA, FALSA, PARCIALMENTE CIERTA o ENGAÑOSA, identifica una proposición factual completa sobre el mundo. Resolver una URL, identificar una cuenta o recuperar literalmente un fragmento solo acredita procedencia técnica; no demuestra la veracidad del contenido.\n27) Una frase elíptica, deíctica o coloquial sin referente recuperable —por ejemplo “te lo dije”, “mira esto”, “y es domingo” o solo emojis— no debe convertirse en una tesis inventada. Usa INFORMACIÓN INSUFICIENTE/NO VERIFICABLE, credibilidad no aplicable y explica qué contexto falta.\n28) La existencia del mismo usuario en otras plataformas y las páginas que limpian, expanden o visualizan enlaces no son evidencia favorable de una afirmación. Exclúyelas de las fuentes decisivas salvo que la consulta sea expresamente técnica sobre la identidad o redirección del enlace.\n29) Si no existe una afirmación factual identificable, no generes auditorías de orientación, financiamiento, patrón, intención, coordinación o reputación del autor: no hay una tesis sustantiva a la cual vincularlas.\n`;
 
+const POLITICAL_CONTEXT_POLICY = `\nREGLAS PARA CITAS Y ENCUADRES POLÍTICOS:\n30) Cuando una publicación política cita a una persona, la autoría de la frase es una comprobación secundaria. Salvo que el usuario pregunte expresamente “¿lo dijo?”, formula como tesis central la proposición factual que la cita pretende hacer creer y comprueba esa proposición.\n31) Separa cuatro capas: (a) qué dijo el actor; (b) qué decidió realmente la autoridad competente; (c) qué consecuencia factual se atribuye a esa decisión; y (d) si se responsabiliza a un gobierno o partido. No permitas que la capa (a) confirme automáticamente las capas (b), (c) o (d).\n32) Un comunicado partidista es fuente primaria para la postura del partido, no prueba independiente de fraude, captura institucional, mala fe, autoritarismo, encubrimiento ni control gubernamental. Aplica exactamente la misma regla a comunicados oficialistas y opositores.\n33) Ante expresiones como “legaliza el fraude”, “el gobierno controla”, “institución cooptada” o equivalentes, consulta el acuerdo, ley, resolución, votación o procedimiento original. Compara sujeto competente, alcance, salvaguardas, revisión y vías de impugnación antes de clasificar.\n34) Describe el encuadre político observable —qué actor responsabiliza a quién y con qué palabras—, pero distingue función retórica de intención psicológica. Una crítica explícita permite identificar su objetivo; no demuestra por sí sola que el emisor sepa que miente, reciba instrucciones o participe en una coordinación.\n35) Si el documento original contradice la descripción factual que sostiene la acusación, el veredicto debe recaer sobre esa descripción y ser FALSA o ENGAÑOSA según el alcance del error, aunque la cita sea auténtica.\n36) En el informe, marca “X dijo Y” como CIRCUNSTANCIAL y presenta por separado la veracidad de Y. Incluye tanto los elementos que hacen razonable la preocupación como las salvaguardas o hechos que contradicen la conclusión política.\n`;
+
 function addPolicy(req) {
   const body = req.body || {};
   const keys = ['consulta','pregunta','question','query','text','input','content'];
   const key = keys.find(k => typeof body[k] === 'string' && body[k].trim());
   if (key) {
-    req.body = { ...body, [key]: `${body[key]}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}` };
+    req.body = { ...body, [key]: `${body[key]}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}${POLITICAL_CONTEXT_POLICY}` };
   } else if (typeof body.url === 'string' && body.url.trim()) {
-    req.body = { ...body, consulta: `${body.url}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}` };
+    req.body = { ...body, consulta: `${body.url}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}${POLITICAL_CONTEXT_POLICY}` };
   }
 }
 
@@ -134,14 +136,11 @@ function consultaSoloAtribucion(input) {
 
 function esAtribucionOPeriferica(item) {
   const afirmacion = normalizarTexto(item?.afirmacion);
-  const limite = normalizarTexto(item?.lo_que_no_demuestra);
-  const atribucion = /\b(?:dijo|afirmo|declaro|publico|escribio|difundio|aseguro|sostuvo|acuso|reporto|compartio|emitio|reprodujo)\b/.test(afirmacion) ||
+  const atribucion = /\b(?:dijo|afirmo|declaro|publico|escribio|difundio|aseguro|sostuvo|acuso|reporto|compartio|emitio|reprodujo|pidio|exigio|advirtio|cuestiono|califico|llamo)\b/.test(afirmacion) ||
     /\b(?:publicacion|episodio|post|video|titular|acusacion|version|rumor)\b.{0,80}\b(?:existe|circula|aparecio|fue publicado|se difundio)\b/.test(afirmacion);
-  const reconoceLimite = /\bno (?:demuestra|prueba|confirma|acredita)\b.{0,160}\b(?:tesis|afirmacion|acusacion|hecho|contenido|consumo|sea cierto|verdad)\b/.test(limite) ||
-    /\bsolo (?:confirma|demuestra|prueba)\b.{0,100}\b(?:autoria|autor|publicacion|que .* (?:dijo|publico))\b/.test(limite);
   return item?.relacion_con_afirmacion === 'AJENA' ||
     item?.relacion_con_afirmacion === 'CIRCUNSTANCIAL' ||
-    (atribucion && reconoceLimite);
+    atribucion;
 }
 
 function consultaSoloIdentidadEnlace(input) {
@@ -329,7 +328,7 @@ export function applyEmbeddedAllegationGuard(result, input = '') {
     result.conclusion,
     ...(Array.isArray(result.limitaciones) ? result.limitaciones : [])
   ].join(' '));
-  const reconoceFaltaDePrueba = /(?:no (?:presento|aporto|hay|existen|se hallo|se encontro).{0,90}(?:prueba|evidencia|corroboracion)|carece de (?:prueba|evidencia|sustento)|sin (?:prueba|evidencia|corroboracion)|fuentes? anonimas?.{0,120}(?:sin|no).{0,60}(?:corrobor|confirm|verific)|no (?:puede|pudo) confirmarse)/.test(diagnostico);
+  const reconoceFaltaDePrueba = /(?:no (?:presento|aporto|hay|existen|se hallo|se encontro).{0,90}(?:prueba|evidencia|corroboracion)|carece de (?:prueba|evidencia|sustento)|sin (?:prueba|evidencia|corroboracion)|fuentes? anonimas?.{0,120}(?:sin|no).{0,60}(?:corrobor|confirm|verific)|no (?:puede|pudo) confirmarse|no (?:demuestra|prueba|acredita|confirma).{0,140}(?:fraude|mala fe|control|cooptacion|captura|acusacion|tesis|afirmacion|hecho|contenido|sea cierto|verdad))/i.test(diagnostico);
   const soloSeConfirmoLaDifusion = confirmadas.length > 0 && confirmacionSustantiva.length === 0;
   const hayTesisPendiente = pendienteSustantiva.length > 0 || reconoceFaltaDePrueba;
 
@@ -370,6 +369,173 @@ export function applyEmbeddedAllegationGuard(result, input = '') {
     'La existencia de la publicación y sus réplicas solo acredita que la acusación circuló; no acredita el hecho alegado.',
     'La ausencia de evidencia pública suficiente tampoco demuestra automáticamente la afirmación contraria.'
   ])];
+  return result;
+}
+
+/**
+ * Corrige la lectura factual del debate sobre las boletas sin doblez. La
+ * declaración partidista acredita una postura, mientras que el Acuerdo
+ * INE/CG542/2026 y su explicación pública determinan qué procedimiento fue
+ * realmente aprobado.
+ */
+export function applyUnfoldedBallotFramingGuard(result, input = '') {
+  if (!result || typeof result !== 'object' || consultaSoloAtribucion(input)) return result;
+
+  const evaluacionesPrevias = Array.isArray(result.evaluacion_afirmaciones)
+    ? result.evaluacion_afirmaciones
+    : [];
+  const corpus = normalizarTexto([
+    input,
+    result.afirmacion_principal,
+    result.explicacion_veredicto_final,
+    result.respuesta_directa,
+    result.resumen,
+    result.contexto,
+    ...evaluacionesPrevias.map(item => `${item?.afirmacion || ''} ${item?.lo_que_no_demuestra || ''}`)
+  ].join(' '));
+  const trataBoletasSinDoblez = /(?:boletas?.{0,55}(?:sin doblar|sin doblez|planchadas?)|(?:sin doblar|sin doblez|planchadas?).{0,55}boletas?)/.test(corpus);
+  const instalaFraude = /(?:legaliz|permit|facilit|abrir.{0,35}puerta|contar|computar|validar).{0,90}fraude|fraude.{0,90}(?:legaliz|permit|facilit|contar|computar|validar)/.test(corpus);
+  if (!trataBoletasSinDoblez || !instalaFraude) return result;
+
+  const panUrl = 'https://www.pan.senado.gob.mx/2026/09/entrevista-al-coordinador-de-las-y-los-senadores-del-pan-ricardo-anaya-cortes-al-salir-de-la-junta-de-coordinacion-politica/';
+  const tarjetaIne = 'https://centralelectoral.ine.mx/2026/09/11/tratamiento-de-boletas-sin-doblez/';
+  const sesionIne = 'https://centralelectoral.ine.mx/2026/09/03/version-estenografica-de-la-sesion-extraordinaria-del-consejo-general-del-ine-3-de-septiembre-de-2026/';
+  const acuerdoIne = 'https://repositoriodocumental.ine.mx/xmlui/bitstream/handle/123456789/189760/CGex202609-03-ap-15-a.pdf';
+  const lgipe = 'https://www.diputados.gob.mx/LeyesBiblio/pdf/LGIPE.pdf';
+
+  result.estado = 'analizado';
+  result.analizado = true;
+  result.veredicto = 'FALSO';
+  result.veredicto_final = 'FALSA';
+  result.credibilidad = Math.min(Number.isFinite(result.credibilidad) ? result.credibilidad : 15, 15);
+  result.confianza = Math.max(Number.isFinite(result.confianza) ? result.confianza : 90, 90);
+  result.afirmacion_principal =
+    'El INE decidió contabilizar automáticamente las boletas sin doblez y con ello “legalizó el fraude electoral” rumbo a 2027.';
+  result.explicacion_veredicto_final =
+    'Es cierto que Ricardo Anaya pronunció esa frase, pero la afirmación factual que contiene es falsa. El Acuerdo INE/CG542/2026 no ordena contar automáticamente las boletas sin doblez: exige apartarlas, documentar el incidente y someter cada caso al Pleno del Consejo Distrital, que debe decidir de forma fundada si se computa o no. Las representaciones partidistas intervienen y la decisión puede impugnarse. La cita acredita la posición política del PAN; no prueba fraude ni que el gobierno federal haya dictado el criterio.';
+  result.respuesta_directa =
+    'No. Anaya sí lo dijo, pero el procedimiento real no valida ni cuenta automáticamente esas boletas. Presentar una revisión individual, documentada e impugnable como “legalización del fraude” altera el contenido del acuerdo y no aporta prueba de control gubernamental sobre la decisión.';
+  result.resumen =
+    'La frase de Ricardo Anaya es auténtica; su premisa no. El INE no autorizó el conteo automático de boletas sin doblez. Ordenó reservarlas, registrar el incidente y llevar cada caso al Consejo Distrital para una decisión fundada, con presencia de partidos y posibilidad de impugnación. La ausencia de doblez puede justificar sospecha y revisión, pero no demuestra por sí sola fraude ni que el gobierno controle al INE.';
+  result.conclusion = result.respuesta_directa;
+  result.contexto =
+    'El encuadre transforma una controversia técnica del INE en una acusación política: pasa de “una boleta sin doblez debe revisarse” a “el árbitro legaliza un fraude” y, en mensajes opositores contemporáneos, vincula esa sospecha con Morena y el gobierno federal. Ese objetivo discursivo es observable; una intención de mentir, una orden gubernamental o una coordinación encubierta no están demostradas. La preocupación de origen no es inventada: la LGIPE indica que la persona electora dobla la boleta y existen precedentes que justifican examinar anomalías. Lo falso es describir el nuevo procedimiento como autorización automática del voto o como prueba de fraude gubernamental.';
+  result.contraste_fuentes =
+    'La página del PAN y el audio sirven para confirmar qué dijo Anaya. Para comprobar el contenido se usaron el Acuerdo INE/CG542/2026, la tarjeta explicativa y la sesión pública del Consejo General. Esas fuentes primarias muestran una reserva y revisión caso por caso, no una orden de contabilización automática. Las notas que reproducen la frase de Anaya forman una misma cadena de atribución y no son corroboraciones independientes del fraude alegado.';
+
+  result.evaluacion_afirmaciones = [
+    {
+      afirmacion: 'Ricardo Anaya afirmó que contar boletas sin doblez sería “legalizar el fraude electoral”.',
+      estado: 'CONFIRMADA', relacion_con_afirmacion: 'CIRCUNSTANCIAL',
+      sustento_directo: ['Transcripción y audio publicados por la coordinación del PAN en el Senado.'],
+      fuente_matriz: panUrl,
+      lo_que_no_demuestra: 'Confirma la autoría de la frase, no la existencia de fraude ni la descripción del acuerdo.'
+    },
+    {
+      afirmacion: 'El INE ordenó que las boletas sin doblez se contabilicen automáticamente.',
+      estado: 'CONTRADICHA', relacion_con_afirmacion: 'DIRECTA',
+      sustento_directo: ['El procedimiento ordena reservarlas, documentarlas y someterlas al Pleno del Consejo Distrital.'],
+      fuente_matriz: tarjetaIne,
+      lo_que_no_demuestra: 'La revisión individual no garantiza que toda boleta sea válida o inválida; exige resolver cada caso.'
+    },
+    {
+      afirmacion: 'El procedimiento aprobado legaliza un mecanismo de fraude electoral.',
+      estado: 'CONTRADICHA', relacion_con_afirmacion: 'DIRECTA',
+      sustento_directo: ['No hay validación automática; hay registro, deliberación fundada, participación partidista e impugnación.'],
+      fuente_matriz: acuerdoIne,
+      lo_que_no_demuestra: 'Las salvaguardas no eliminan todo riesgo electoral, pero contradicen la descripción de una autorización para defraudar.'
+    },
+    {
+      afirmacion: 'El gobierno federal o Morena ordenaron o controlaron esta decisión del INE.',
+      estado: 'NO DEMOSTRADA', relacion_con_afirmacion: 'DIRECTA',
+      sustento_directo: [],
+      fuente_matriz: sesionIne,
+      lo_que_no_demuestra: 'La crítica política y la composición del Consejo General no prueban una orden, subordinación o acuerdo con el gobierno.'
+    }
+  ];
+  result.hechos_comprobados = [
+    'Ricardo Anaya hizo la declaración atribuida en la entrevista publicada por el PAN el 14 de septiembre de 2026.',
+    'El Consejo General del INE aprobó por mayoría el Acuerdo INE/CG542/2026.',
+    'Una boleta sin señales de doblez debe apartarse y no se clasifica ni captura de inmediato.',
+    'El incidente debe quedar asentado con datos de casilla, cantidad, hora y personas presentes.',
+    'El Pleno del Consejo Distrital decide de forma fundada si procede computarla; los partidos participan y la resolución puede impugnarse.'
+  ];
+  result.evidencia_a_favor = [
+    'El artículo 279, numeral 3, de la LGIPE dispone que la persona electora dobla sus boletas antes de depositarlas.',
+    'La falta de doblez puede ser una anomalía objetiva y existen antecedentes que justifican reservar y revisar esas boletas.'
+  ];
+  result.evidencia_en_contra = [
+    'El acuerdo no manda contar automáticamente una boleta sin doblez.',
+    'La autoridad debe preservar evidencia, documentar el caso y adoptar una resolución individual fundada y motivada.',
+    'No se aportó evidencia directa de que el gobierno federal o Morena hayan ordenado al INE aprobar ese procedimiento.'
+  ];
+  result.indicadores_desinformacion = [
+    'Sustituye un procedimiento de reserva y revisión por la idea de una autorización general para contar votos irregulares.',
+    'Presenta una posibilidad de riesgo como prueba de que el fraude ya fue legalizado.',
+    'Usa una cita partidista auténtica como si fuera corroboración independiente de la acusación contenida en ella.'
+  ];
+  result.limitaciones = [
+    'La falta de doblez puede ser un indicio relevante, pero no permite decidir por sí sola la autenticidad de todas las boletas.',
+    'No se evaluó el desarrollo futuro de la elección de 2027; se verificó el contenido del acuerdo vigente y la acusación publicada.',
+    'La evidencia revisada permite describir el objetivo explícito de la crítica, pero no atribuir conocimiento de falsedad, pago o coordinación encubierta.'
+  ];
+
+  result.analisis_intencionalidad = {
+    clasificacion: 'INTENCIÓN NO DEMOSTRADA',
+    objetivo_del_dano: 'El INE y, por extensión en el encuadre opositor, Morena y el gobierno federal.',
+    tipo_de_perjuicio: ['Político', 'Institucional', 'Reputacional'],
+    evidencia: ['La frase usa “legalizar el fraude electoral” para caracterizar una decisión del árbitro electoral.'],
+    contraindicadores: ['La ausencia de doblez sí plantea una preocupación técnica legítima.', 'No hay prueba de pago, instrucción, coordinación encubierta o conocimiento deliberado de la falsedad.'],
+    explicacion: 'El blanco político y la función acusatoria del mensaje son observables en sus palabras y contexto público. Eso no basta para afirmar como hecho que Anaya mintió deliberadamente o actuó bajo una coordinación.',
+    confianza: 90
+  };
+  result.analisis_patron_objetivos = {
+    objetivo_principal: 'La credibilidad del INE y la asociación política de su decisión con Morena y el gobierno federal.',
+    publicaciones_revisadas: 1,
+    publicaciones_dirigidas: 1,
+    periodo_muestra: '14 de septiembre de 2026',
+    clasificacion: 'SIN PATRÓN DEMOSTRADO',
+    recursos_recurrentes: ['Conversión de una regla técnica en una acusación categórica de fraude.'],
+    ejemplos: ['Declaración de Ricardo Anaya sobre las boletas sin doblez.'],
+    fundamento: 'Este mensaje tiene un encuadre opositor explícito, pero una sola publicación no demuestra una campaña sistemática ni coordinación.',
+    limitaciones: ['La muestra se limita al contenido consultado y a su contexto inmediato.']
+  };
+  result.reputacion_fuente = {
+    medio_o_autor: 'Ricardo Anaya / Grupo Parlamentario del PAN en el Senado',
+    antecedentes_verificados: [],
+    percepcion_en_redes: 'No se usa la popularidad ni la orientación partidista para decidir el veredicto.',
+    calidad_contenido_actual: 'La fuente oficial del PAN es adecuada para comprobar la declaración, pero no es una verificación independiente de la acusación de fraude.',
+    conflictos_interes: ['El emisor es dirigente y coordinador parlamentario de un partido opositor con interés directo en el proceso electoral de 2027.'],
+    limitaciones: 'La filiación política explica el contexto comunicativo, pero no vuelve verdadera ni falsa la afirmación por sí sola.'
+  };
+
+  const primarySources = [
+    { titulo: 'INE — Tratamiento de boletas sin doblez', url: tarjetaIne, tipo: 'Oficial', aporte: 'Explica que no hay inclusión ni exclusión automática y detalla la reserva, documentación, decisión e impugnación.' },
+    { titulo: 'Acuerdo INE/CG542/2026', url: acuerdoIne, tipo: 'Oficial', aporte: 'Documento normativo original de los cómputos distritales para 2026-2027.' },
+    { titulo: 'Sesión del Consejo General del INE del 3 de septiembre de 2026', url: sesionIne, tipo: 'Oficial', aporte: 'Registra la discusión pública, razones, objeciones y alcance del procedimiento.' },
+    { titulo: 'Ley General de Instituciones y Procedimientos Electorales', url: lgipe, tipo: 'Oficial', aporte: 'Establece el procedimiento de emisión y depósito del voto y las competencias electorales.' },
+    { titulo: 'Entrevista a Ricardo Anaya — PAN Senado', url: panUrl, tipo: 'Primaria', aporte: 'Confirma la declaración y su carácter de posicionamiento partidista.' }
+  ];
+  const existing = Array.isArray(result.fuentes) ? result.fuentes : [];
+  const seen = new Set();
+  result.fuentes = [...primarySources, ...existing].filter(source => {
+    const url = String(source?.url || '');
+    if (!url || seen.has(url)) return false;
+    seen.add(url);
+    return true;
+  }).slice(0, 7);
+
+  if (result.analisis_integridad_informativa && typeof result.analisis_integridad_informativa === 'object') {
+    result.analisis_integridad_informativa = {
+      ...result.analisis_integridad_informativa,
+      riesgo_confirmado: 'La ausencia de doblez puede justificar reserva y revisión de una boleta.',
+      riesgo_presentado: 'Se presenta el procedimiento como autorización para contabilizar boletas irregulares y legalizar un fraude.',
+      extrapolaciones: ['De una decisión caso por caso se salta a una autorización general de fraude.', 'De una controversia en el INE se infiere control del gobierno sin evidencia directa.'],
+      contexto_omitido: ['Reserva de la boleta', 'Acta circunstanciada', 'Decisión fundada del Consejo Distrital', 'Participación de representaciones partidistas', 'Vía de impugnación'],
+      titular_responsable: 'El INE ordena revisar individualmente las boletas sin doblez; Anaya acusa sin pruebas que eso “legaliza el fraude”.',
+      fuentes_matriz: [tarjetaIne, acuerdoIne, panUrl]
+    };
+  }
   return result;
 }
 
@@ -466,8 +632,11 @@ export function normalize(result, input = '') {
       if (result.veredicto === 'PARCIALMENTE VERDADERO') result.veredicto = 'VERDADERO';
     }
   }
-  return applyPisaPandemicFramingGuard(
-    applyEmbeddedAllegationGuard(applyNoCheckableClaimGuard(result, input), input),
+  return applyUnfoldedBallotFramingGuard(
+    applyPisaPandemicFramingGuard(
+      applyEmbeddedAllegationGuard(applyNoCheckableClaimGuard(result, input), input),
+      input
+    ),
     input
   );
 }

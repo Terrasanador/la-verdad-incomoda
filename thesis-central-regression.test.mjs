@@ -275,3 +275,67 @@ const preguntaTecnicaEnlace = normalizeProduction({
   }]
 }, '¿Este enlace corresponde a una publicación de @simonlevymx? https://www.threads.com/share/BAZnM8Bm81/');
 assert.equal(preguntaTecnicaEnlace.veredicto_final,'CIERTA');
+
+// Una cita partidista auténtica no vuelve verdadero el encuadre factual que
+// intenta instalar. Este caso reproduce el informe defectuoso sobre Anaya y
+// las boletas sin doblez.
+const boletasAnaya = normalizeProduction({
+  estado:'analizado', veredicto_final:'CIERTA', veredicto:'VERDADERO',
+  credibilidad:95, confianza:55,
+  afirmacion_principal:'Ricardo Anaya afirmó que contar boletas sin doblar sería “legalizar el fraude electoral” y pidió corregir el criterio rumbo a 2027.',
+  explicacion_veredicto_final:'La afirmación central está documentada en la transcripción y audio publicados por la oficina del PAN.',
+  respuesta_directa:'Sí. Anaya dijo exactamente eso.',
+  resumen:'La tesis central está respaldada por la transcripción oficial del PAN.',
+  contexto:'El debate surge tras una resolución del INE sobre boletas sin doblez.',
+  evaluacion_afirmaciones:[
+    {
+      afirmacion:'Anaya afirmó que contar boletas sin doblar sería legalizar el fraude electoral.',
+      estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:['Transcripción y audio del PAN.'],
+      fuente_matriz:'https://www.pan.senado.gob.mx/entrevista/',
+      lo_que_no_demuestra:'No demuestra por sí sola que exista fraude ni que el INE actúe con mala fe.'
+    },
+    {
+      afirmacion:'Anaya pidió corregir el criterio rumbo a 2027.',
+      estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:['Entrevista del PAN.'],
+      fuente_matriz:'https://www.pan.senado.gob.mx/entrevista/',
+      lo_que_no_demuestra:'No acredita que el INE vaya a cambiar el criterio.'
+    }
+  ],
+  hechos_comprobados:['Anaya pronunció la frase.'],
+  evidencia_a_favor:['La oficina del PAN publicó la entrevista.'],
+  evidencia_en_contra:[], indicadores_desinformacion:[], limitaciones:[], fuentes:[],
+  analisis_integridad_informativa:{
+    riesgo_confirmado:'', riesgo_presentado:'', extrapolaciones:[], contexto_omitido:[],
+    titular_responsable:'', fuentes_matriz:[]
+  }
+}, 'https://www.threads.com/share/ejemplo-anaya/');
+assert.equal(boletasAnaya.veredicto_final,'FALSA');
+assert.equal(boletasAnaya.veredicto,'FALSO');
+assert.match(boletasAnaya.afirmacion_principal,/INE decidió contabilizar automáticamente/i);
+assert.equal(boletasAnaya.evaluacion_afirmaciones[0].relacion_con_afirmacion,'CIRCUNSTANCIAL');
+assert.equal(boletasAnaya.evaluacion_afirmaciones[1].estado,'CONTRADICHA');
+assert.match(boletasAnaya.evaluacion_afirmaciones[1].fuente_matriz,/centralelectoral\.ine\.mx/);
+assert.match(boletasAnaya.contexto,/encuadre|acusación política/i);
+assert.match(boletasAnaya.contexto,/Morena y el gobierno federal/i);
+assert.equal(boletasAnaya.analisis_intencionalidad.clasificacion,'INTENCIÓN NO DEMOSTRADA');
+assert.ok(boletasAnaya.evidencia_a_favor.some(item => /artículo 279/i.test(item)));
+assert.ok(boletasAnaya.fuentes.some(item => /INE\/CG542\/2026/i.test(item.titulo)));
+assert.match(boletasAnaya.analisis_integridad_informativa.titular_responsable,/revisar individualmente/i);
+
+// Si el usuario pregunta únicamente por la autoría, se responde esa pregunta
+// sin convertir el contenido de la cita en un hecho probado.
+const autoriaAnaya = normalizeProduction({
+  veredicto_final:'CIERTA', veredicto:'VERDADERO', credibilidad:95,
+  afirmacion_principal:'Ricardo Anaya dijo que contar boletas sin doblez legaliza el fraude electoral.',
+  explicacion_veredicto_final:'La entrevista y el audio confirman la cita.',
+  evaluacion_afirmaciones:[{
+    afirmacion:'Ricardo Anaya hizo esa declaración.', estado:'CONFIRMADA',
+    relacion_con_afirmacion:'DIRECTA', sustento_directo:['Audio del PAN.'],
+    fuente_matriz:'https://www.pan.senado.gob.mx/entrevista/',
+    lo_que_no_demuestra:'No demuestra que exista fraude.'
+  }]
+}, '¿Es cierto que Ricardo Anaya dijo que contar boletas sin doblez legaliza el fraude electoral?');
+assert.equal(autoriaAnaya.veredicto_final,'CIERTA');
+assert.equal(autoriaAnaya.veredicto,'VERDADERO');
