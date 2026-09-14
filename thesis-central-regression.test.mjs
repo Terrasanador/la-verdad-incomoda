@@ -163,3 +163,70 @@ const preguntaDeAtribucion = normalizeProduction({
   ]
 }, '¿Es cierto que Anabel Hernández afirmó que la presidenta consume marihuana?');
 assert.equal(preguntaDeAtribucion.veredicto_final,'CIERTA');
+
+// Resolver un enlace y recuperar una frase elíptica no equivale a comprobar
+// una afirmación. Este caso reproduce la salida defectuosa observada en Threads.
+const fragmentoSinAfirmacion = normalizeProduction({
+  estado:'analizado',
+  veredicto_final:'CIERTA',
+  veredicto:'VERDADERO',
+  credibilidad:90,
+  confianza:63,
+  afirmacion_principal:'El enlace corresponde a una publicación de @simonlevymx en Threads con el texto indicado.',
+  explicacion_veredicto_final:'El enlace compartido se expande a una publicación pública atribuida al usuario @simonlevymx.',
+  resumen:'La vista previa muestra “… y es domingo. Te lo dije papi.”',
+  respuesta_directa:'Sí. El share link apunta a una publicación de @simonlevymx.',
+  contexto:'Se trata de una publicación de tono coloquial y breve; no contiene afirmaciones verificables ni acusaciones.',
+  conclusion:'El post es de tono personal y no contiene afirmaciones verificables.',
+  evaluacion_afirmaciones:[{
+    afirmacion:'El enlace apunta a una publicación de @simonlevymx en Threads con el texto visible.',
+    estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+    sustento_directo:['Redirección y metadatos del conector.'],
+    fuente_matriz:'https://www.threads.com/@simonlevymx/post/DdOzRkmjn6i',
+    lo_que_no_demuestra:'No demuestra fecha exacta ni contexto adicional.'
+  }],
+  hechos_comprobados:[
+    'El share link redirige a https://www.threads.com/@simonlevymx/post/DdOzRkmjn6i.',
+    'La vista previa recuperada muestra el texto “… y es domingo. Te lo dije papi.”',
+    'Simón Levy usa el mismo identificador en otras plataformas.'
+  ],
+  evidencia_a_favor:['ThreadLook confirma que existen visores anónimos de Threads.'],
+  evidencia_en_contra:[],
+  limitaciones:['No se recuperaron el hilo completo, la multimedia ni los comentarios.'],
+  auditoria_fuentes_periodisticas:[{medio_o_periodista:'ThreadReaderApp'}],
+  fuentes:[
+    {titulo:'Threads',url:'https://www.threads.com/@simonlevymx/post/DdOzRkmjn6i',tipo:'Red social',aporte:'Vista previa.'},
+    {titulo:'Telegram',url:'https://t.me/SimonLevyMx',tipo:'Red social',aporte:'Mismo usuario.'},
+    {titulo:'Clean Links',url:'https://example.com/clean-links',tipo:'Otra',aporte:'Expansión técnica.'}
+  ],
+  extraccion_enlace:{
+    plataforma:'Threads',
+    url_original:'https://www.threads.com/share/BAZnM8Bm81/',
+    url_final:'https://www.threads.com/@simonlevymx/post/DdOzRkmjn6i',
+    descripcion:'… y es domingo. Te lo dije papi.'
+  }
+}, 'https://www.threads.com/share/BAZnM8Bm81/');
+assert.equal(fragmentoSinAfirmacion.veredicto_final,'NO VERIFICABLE');
+assert.equal(fragmentoSinAfirmacion.veredicto,'INFORMACIÓN INSUFICIENTE');
+assert.equal(fragmentoSinAfirmacion.tipo_resultado,'sin_afirmacion_verificable');
+assert.equal(fragmentoSinAfirmacion.estado_tecnico,'SIN_AFIRMACION_VERIFICABLE');
+assert.equal(fragmentoSinAfirmacion.credibilidad,null);
+assert.equal(fragmentoSinAfirmacion.confianza,null);
+assert.deepEqual(fragmentoSinAfirmacion.evidencia_a_favor,[]);
+assert.deepEqual(fragmentoSinAfirmacion.auditoria_fuentes_periodisticas,[]);
+assert.equal(fragmentoSinAfirmacion.fuentes.length,1);
+assert.match(fragmentoSinAfirmacion.fuentes[0].url,/threads\.com\/@simonlevymx\/post\//);
+assert.equal(fragmentoSinAfirmacion.hechos_comprobados.length,2);
+
+// Si la pregunta del usuario es expresamente técnica, la identidad del enlace
+// sí puede ser la proposición principal y no se fuerza un veredicto factual.
+const preguntaTecnicaEnlace = normalizeProduction({
+  veredicto_final:'CIERTA', veredicto:'VERDADERO', credibilidad:95,
+  afirmacion_principal:'El enlace corresponde a una publicación de @simonlevymx.',
+  contexto:'La frase visible no contiene afirmaciones verificables.',
+  evaluacion_afirmaciones:[{
+    afirmacion:'El enlace apunta a una publicación de @simonlevymx.',
+    estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA', sustento_directo:['Redirección observada.']
+  }]
+}, '¿Este enlace corresponde a una publicación de @simonlevymx? https://www.threads.com/share/BAZnM8Bm81/');
+assert.equal(preguntaTecnicaEnlace.veredicto_final,'CIERTA');

@@ -6,14 +6,16 @@ const POLICY = `\n\nREGLAS V3 OBLIGATORIAS PARA ESTA VERIFICACIÓN:\n1) Identifi
 
 const ATTRIBUTION_POLICY = `\nREGLAS DE ACUSACIONES Y ATRIBUCIÓN:\n22) Una fuente anónima es una atribución que debe evaluarse, no corroboración independiente. En acusaciones sobre salud, consumo de sustancias, delitos, vida privada o conducta actual de una persona, exige evidencia directa, pertinente e independientemente corroborada. La repetición de la acusación por portales o cuentas no satisface ese estándar.\n23) Si únicamente está confirmado que alguien DIJO, PUBLICÓ o REPITIÓ X, mientras X aparece como NO DEMOSTRADA o el propio informe reconoce que no hay pruebas verificables, nunca cierres con CIERTA ni PARCIALMENTE CIERTA. Usa NO VERIFICABLE si X no puede confirmarse ni refutarse; usa FALSA solo si evidencia suficiente contradice materialmente X.\n24) El historial de un emisor modifica cuánto contraste necesita su contenido, pero no decide el veredicto. Aplica el mismo método a Anabel Hernández, Atypical TV, Carlos Salinas Pliego, Chumel Torres, Luisito Comunica, Adela Micha, Latinus, cuentas oficialistas, autoridades y cualquier otra fuente. Documenta errores, correcciones y conflictos concretos; no uses etiquetas políticas como sustituto de pruebas.\n25) Cuando la fuente original califique su propia versión como supuesto, rumor, testimonio anónimo o no comprobado, conserva esa incertidumbre. No transformes ese lenguaje en un hecho confirmado.\n`;
 
+const CHECKABLE_CLAIM_POLICY = `\nREGLAS PARA CONTENIDO SIN AFIRMACIÓN VERIFICABLE:\n26) Antes de emitir CIERTA, FALSA, PARCIALMENTE CIERTA o ENGAÑOSA, identifica una proposición factual completa sobre el mundo. Resolver una URL, identificar una cuenta o recuperar literalmente un fragmento solo acredita procedencia técnica; no demuestra la veracidad del contenido.\n27) Una frase elíptica, deíctica o coloquial sin referente recuperable —por ejemplo “te lo dije”, “mira esto”, “y es domingo” o solo emojis— no debe convertirse en una tesis inventada. Usa INFORMACIÓN INSUFICIENTE/NO VERIFICABLE, credibilidad no aplicable y explica qué contexto falta.\n28) La existencia del mismo usuario en otras plataformas y las páginas que limpian, expanden o visualizan enlaces no son evidencia favorable de una afirmación. Exclúyelas de las fuentes decisivas salvo que la consulta sea expresamente técnica sobre la identidad o redirección del enlace.\n29) Si no existe una afirmación factual identificable, no generes auditorías de orientación, financiamiento, patrón, intención, coordinación o reputación del autor: no hay una tesis sustantiva a la cual vincularlas.\n`;
+
 function addPolicy(req) {
   const body = req.body || {};
   const keys = ['consulta','pregunta','question','query','text','input','content'];
   const key = keys.find(k => typeof body[k] === 'string' && body[k].trim());
   if (key) {
-    req.body = { ...body, [key]: `${body[key]}${POLICY}${ATTRIBUTION_POLICY}` };
+    req.body = { ...body, [key]: `${body[key]}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}` };
   } else if (typeof body.url === 'string' && body.url.trim()) {
-    req.body = { ...body, consulta: `${body.url}${POLICY}${ATTRIBUTION_POLICY}` };
+    req.body = { ...body, consulta: `${body.url}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}` };
   }
 }
 
@@ -140,6 +142,156 @@ function esAtribucionOPeriferica(item) {
   return item?.relacion_con_afirmacion === 'AJENA' ||
     item?.relacion_con_afirmacion === 'CIRCUNSTANCIAL' ||
     (atribucion && reconoceLimite);
+}
+
+function consultaSoloIdentidadEnlace(input) {
+  const original = String(input || '').trim();
+  if (!original || /^https?:\/\/\S+$/i.test(original)) return false;
+  const texto = normalizarTexto(original.replace(/https?:\/\/\S+/gi, ' '));
+  return /\b(?:enlace|link|url|publicacion|post)\b.{0,100}\b(?:apunta|redirige|corresponde|pertenece|lleva|es de)\b/.test(texto) ||
+    /\b(?:quien|que cuenta|que usuario)\b.{0,100}\b(?:publico|escribio|subio|compartio)\b/.test(texto);
+}
+
+function esHechoTecnicoDeRecuperacion(value) {
+  const texto = normalizarTexto(typeof value === 'string' ? value : value?.afirmacion);
+  if (!texto) return false;
+  return /\b(?:enlace|link|url)\b.{0,120}\b(?:apunta|redirige|corresponde|expande|resuelve|lleva)\b/.test(texto) ||
+    /\b(?:apunta|redirige|corresponde|expande|resuelve|lleva)\b.{0,120}\b(?:enlace|link|url|publicacion|post)\b/.test(texto) ||
+    /\b(?:vista previa|metadatos|conector)\b.{0,140}\b(?:muestra|recupera|identifica|contiene)\b/.test(texto) ||
+    /\b(?:texto|fragmento)\b.{0,100}\b(?:visible|recuperado|indicado)\b/.test(texto);
+}
+
+function fuenteEsThreads(value) {
+  try {
+    const url = new URL(String(value || ''));
+    return /(^|\.)threads\.(?:com|net)$/i.test(url.hostname);
+  } catch {
+    return false;
+  }
+}
+
+function fuenteOriginalThreads(result, input) {
+  const candidatas = [
+    result?.extraccion_enlace?.url_final,
+    result?.extraccion_enlace?.url_original,
+    ...(Array.isArray(result?.fuentes) ? result.fuentes.map(fuente => fuente?.url) : []),
+    String(input || '').match(/https?:\/\/[^\s]+/i)?.[0]
+  ].filter(fuenteEsThreads);
+  const url = candidatas.find(item => /\/@[^/]+\/(?:post|video)\//i.test(String(item))) || candidatas[0];
+  if (!url) return [];
+  return [{
+    titulo: 'Publicación original en Threads',
+    url: String(url),
+    tipo: 'Red social',
+    aporte: 'Permite identificar la procedencia y el fragmento visible; no aporta por sí sola el contexto necesario para un veredicto factual.'
+  }];
+}
+
+/**
+ * Evita presentar la resolución técnica de un enlace como verificación factual.
+ * Solo actúa cuando el propio informe reconoce que no existe una tesis concreta
+ * y los únicos elementos confirmados describen URL, cuenta o texto recuperado.
+ */
+export function applyNoCheckableClaimGuard(result, input = '') {
+  if (!result || typeof result !== 'object' || consultaSoloIdentidadEnlace(input)) return result;
+
+  const diagnostico = normalizarTexto([
+    result.explicacion_veredicto_final,
+    result.resumen,
+    result.respuesta_directa,
+    result.contexto,
+    result.conclusion,
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : [])
+  ].join(' '));
+  const reconoceAusenciaDeTesis = /(?:no (?:contiene|incluye|presenta|plantea|formula|permite identificar)|sin)\s+(?:una |ninguna )?(?:afirmacion(?:es)?|tesis|proposicion(?:es)?)(?:\s+(?:factual(?:es)?|concreta(?:s)?|verificable(?:s)?))?/.test(diagnostico) ||
+    /no (?:hay|existe|se identifico|fue posible identificar).{0,45}(?:afirmacion|tesis).{0,45}(?:factual|concreta|verificable)/.test(diagnostico);
+
+  const textoRecuperado = normalizarTexto([
+    result?.extraccion_enlace?.titulo,
+    result?.extraccion_enlace?.descripcion
+  ].join(' '));
+  const fragmentoSinReferente = textoRecuperado.length > 0 && textoRecuperado.length < 120 &&
+    /\b(?:te lo dije|se los dije|ya lo sabia|mira esto|mira eso|y es domingo)\b/.test(textoRecuperado);
+  const evaluaciones = Array.isArray(result.evaluacion_afirmaciones)
+    ? result.evaluacion_afirmaciones
+    : [];
+  const confirmadas = evaluaciones.filter(item => item?.estado === 'CONFIRMADA');
+  const principalTecnica = esHechoTecnicoDeRecuperacion(result.afirmacion_principal);
+  const soloConfirmacionesTecnicas = confirmadas.length > 0 &&
+    confirmadas.every(esHechoTecnicoDeRecuperacion);
+
+  if (!(reconoceAusenciaDeTesis || fragmentoSinReferente) ||
+      !(principalTecnica || soloConfirmacionesTecnicas)) return result;
+
+  const hechosTecnicos = [
+    ...(Array.isArray(result.hechos_comprobados) ? result.hechos_comprobados : []),
+    ...confirmadas.map(item => item.afirmacion)
+  ].filter(esHechoTecnicoDeRecuperacion).filter((item, index, list) =>
+    list.findIndex(other => normalizarTexto(other) === normalizarTexto(item)) === index
+  ).slice(0, 2);
+
+  result.estado = 'analizado';
+  result.analizado = true;
+  result.estado_tecnico = 'SIN_AFIRMACION_VERIFICABLE';
+  result.tipo_resultado = 'sin_afirmacion_verificable';
+  result.veredicto = 'INFORMACIÓN INSUFICIENTE';
+  result.veredicto_final = 'NO VERIFICABLE';
+  result.credibilidad = null;
+  result.confianza = null;
+  result.explicacion_veredicto_final =
+    'Se identificaron la procedencia del enlace y un fragmento visible, pero eso no constituye una afirmación factual completa. Sin el referente de la frase ni el contexto de la publicación, no corresponde declararla cierta o falsa.';
+  result.afirmacion_principal =
+    'No se identificó una afirmación factual completa y verificable en el fragmento recuperado.';
+  result.respuesta_directa =
+    'No corresponde asignar un veredicto de verdad. El fragmento es coloquial y depende de un contexto que no fue recuperado.';
+  result.resumen =
+    'El enlace y su autoría pudieron identificarse, pero el texto visible no formula por sí solo una proposición comprobable. Hace falta el contenido anterior, la multimedia o el hilo completo para saber qué se está afirmando.';
+  result.conclusion = result.respuesta_directa;
+  result.contexto =
+    'La expresión recuperada usa referencias implícitas —como “te lo dije”— sin indicar qué hecho, predicción o acontecimiento menciona.';
+  result.contraste_fuentes =
+    'La búsqueda no localizó una copia pública independiente que restituyera el referente, la multimedia o el hilo completo. Las herramientas de expansión de enlaces solo confirman navegación, no veracidad.';
+  result.evaluacion_afirmaciones = [];
+  result.hechos_comprobados = hechosTecnicos;
+  result.evidencia_a_favor = [];
+  result.evidencia_en_contra = [];
+  result.indicadores_desinformacion = [];
+  result.limitaciones = [
+    'El fragmento visible no identifica a qué se refiere “te lo dije”.',
+    'No se recuperaron el hilo completo, la multimedia ni una copia archivada con contexto verificable.'
+  ];
+  result.fuentes = fuenteOriginalThreads(result, input);
+  result.auditoria_fuentes_periodisticas = [];
+  result.analisis_encuestas = [];
+  result.reputacion_fuente = {
+    medio_o_autor: '', antecedentes_verificados: [], percepcion_en_redes: '',
+    calidad_contenido_actual: '', conflictos_interes: [],
+    limitaciones: 'No aplica: no se identificó una afirmación factual que justificara auditar al emisor.'
+  };
+  result.analisis_redes = {
+    plataformas_consultadas: [], tendencias_observadas: [], posible_manipulacion: [],
+    representatividad: '', limitaciones: ''
+  };
+  result.analisis_intencionalidad = {
+    clasificacion: 'NO APLICA', objetivo_del_dano: '', tipo_de_perjuicio: [],
+    evidencia: [], contraindicadores: [],
+    explicacion: 'No se identificó una afirmación sustantiva cuyo propósito o daño pueda evaluarse.',
+    confianza: 0
+  };
+  result.analisis_patron_objetivos = {
+    objetivo_principal: '', publicaciones_revisadas: 0, publicaciones_dirigidas: 0,
+    periodo_muestra: '', clasificacion: 'SIN PATRÓN DEMOSTRADO',
+    recursos_recurrentes: [], ejemplos: [], fundamento: '', limitaciones: []
+  };
+  if (result.analisis_integridad_informativa && typeof result.analisis_integridad_informativa === 'object') {
+    result.analisis_integridad_informativa = {
+      ...result.analisis_integridad_informativa,
+      cuentas_comparadas: [], publicaciones_coincidentes: [],
+      evidencia_coordinacion: [], evidencia_bots: [],
+      patron_publicacion_grupal: '', etiqueta_especial: 'NINGUNA'
+    };
+  }
+  return result;
 }
 
 /**
@@ -310,7 +462,10 @@ export function normalize(result, input = '') {
       if (result.veredicto === 'PARCIALMENTE VERDADERO') result.veredicto = 'VERDADERO';
     }
   }
-  return applyPisaPandemicFramingGuard(applyEmbeddedAllegationGuard(result, input), input);
+  return applyPisaPandemicFramingGuard(
+    applyEmbeddedAllegationGuard(applyNoCheckableClaimGuard(result, input), input),
+    input
+  );
 }
 
 export const config = { maxDuration: 300 };

@@ -1,3 +1,10 @@
+# Versión 1.20.3 - Enlaces sin afirmación verificable (2026-09-14)
+
+- Separa la identificación técnica de una URL, su autoría y su vista previa de la verificación factual de su contenido.
+- Clasifica como `NO VERIFICABLE` los fragmentos elípticos o coloquiales que no permiten formular una proposición completa.
+- Elimina porcentajes de credibilidad, auditorías del autor y fuentes técnicas irrelevantes cuando no existe una afirmación que comprobar.
+- Añade una prueba de regresión basada en el enlace de Threads de @simonlevymx y conserva las consultas explícitas sobre identidad de enlaces.
+
 # Versión 1.20.2 - Recuperación clara de enlaces compartidos de Threads (2026-09-13)
 
 - Distingue un enlace `/share/…` no resuelto de un límite temporal HTTP 429 y elimina la recomendación inútil de esperar.

@@ -1535,12 +1535,46 @@ async function sampleVideoFrames(file) {
     result.scrollIntoView({behavior:"smooth"});
   }
 
+  function renderNoCheckableClaim(data) {
+    lastAnalysisData = data;
+    const sources = Array.isArray(data.fuentes) ? data.fuentes : [];
+    const facts = unique(data.hechos_comprobados || []);
+    const limitations = unique(data.limitaciones || []);
+    result.innerHTML = `
+      ${reportSource()}
+      ${renderFinalVerdict(data, "NO VERIFICABLE")}
+      <h2 class="verdict">Clasificación técnica: SIN AFIRMACIÓN VERIFICABLE</h2>
+      <div class="metrics">
+        <span class="metric">Credibilidad de la afirmación: No aplica</span>
+        <span class="metric">Confianza del análisis: No calculada</span>
+        ${data.busqueda_web_realizada === true ? `<span class="metric">Búsqueda web: realizada</span>` : ""}
+      </div>
+      <div class="grid">
+        ${textCard("Qué se recuperó", data.resumen, true)}
+        ${textCard("Por qué no hay un veredicto factual", data.respuesta_directa, true)}
+        ${listCard("Datos técnicos confirmados", facts, true)}
+        ${textCard("Contexto necesario", data.contexto, true)}
+        ${listCard("Qué falta para verificar", limitations, true)}
+        ${renderLinkContext(data)}
+        ${renderSources(sources)}
+      </div>
+      ${actions()}
+    `;
+    result.classList.add("visible");
+    result.scrollIntoView({ behavior: "smooth" });
+    setTimeout(speakResultIfNeeded, 150);
+  }
+
   function render(data) {
     lastAnalysisData = data;
     if (
       data.estado === "sin_acceso" || data.analizado === false
     ) {
       renderBlocked(data);
+      return;
+    }
+    if (data.tipo_resultado === "sin_afirmacion_verificable") {
+      renderNoCheckableClaim(data);
       return;
     }
 
