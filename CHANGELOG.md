@@ -1,3 +1,8 @@
+# Versión 1.20.7 - Limitaciones fieles a la consulta (2026-09-14)
+
+- Elimina atribuciones automáticas a una supuesta instrucción del usuario cuando la consulta no pidió omitir imágenes o fotogramas.
+- Mantiene explícita la cobertura visual real sin inventar decisiones del usuario.
+
 # Versión 1.20.6 - Videos sin diálogo no detienen el análisis (2026-09-14)
 
 - Evita que una transcripción vacía o temporalmente no disponible convierta un video de TikTok en un error fatal.

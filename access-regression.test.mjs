@@ -120,6 +120,7 @@ test('TikTok video without intelligible speech returns a structured result inste
       result.estado='sin_acceso';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';
       result.respuesta_directa='El video no aportó habla y no se recuperaron imágenes suficientes.';
       result.resumen=result.respuesta_directa;result.conclusion=result.respuesta_directa;
+      result.limitaciones=['No se inspeccionaron los fotogramas del video (instrucción del usuario); se usaron otras evidencias.'];
       return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result),annotations:[]}]}]});
     }
     throw new Error(`Solicitud inesperada: ${url}`);
@@ -131,6 +132,8 @@ test('TikTok video without intelligible speech returns a structured result inste
     assert.equal(responsesCalled,true);
     assert.equal(res.value.error,undefined);
     assert(res.value.cobertura_archivos.some(item=>item.limitaciones.some(limit=>limit.includes('No se detectó habla inteligible'))));
+    assert(res.value.limitaciones.some(limit=>limit.includes('se usaron otras evidencias')));
+    assert(!res.value.limitaciones.some(limit=>/instrucci[oó]n del usuario/i.test(limit)));
   } finally {
     global.fetch=oldFetch;dns.lookup=oldLookup;
     if(oldOpenAI===undefined)delete process.env.OPENAI_API_KEY;else process.env.OPENAI_API_KEY=oldOpenAI;

@@ -2218,6 +2218,12 @@ ${texto}${bloqueExtraccion}`
       }
     }
 
+    const usuarioPidioOmitirImagenes = /(?:no\s+(?:analices|revises|inspecciones|veas)|sin\s+(?:analizar|revisar|inspeccionar|ver)).{0,80}(?:video|fotogramas?|im[aá]genes)/i.test(texto);
+    if (!usuarioPidioOmitirImagenes) {
+      resultado.limitaciones = (resultado.limitaciones || []).map(item =>
+        String(item).replace(/\s*\((?:por\s+)?instrucci[oó]n del usuario\)/gi, "")
+      );
+    }
     resultado.cobertura_archivos = coberturaArchivos;
     resultado.limitaciones = [...new Set([...(resultado.limitaciones || []), ...coberturaArchivos.flatMap(item => item.limitaciones)])];
     if ((accesoRealmenteBloqueado || resultado.estado === 'sin_acceso') && !correccionColima) {
