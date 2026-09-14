@@ -1,3 +1,9 @@
+# Versión 1.20.5 - Detección de metapreguntas sin tesis (2026-09-14)
+
+- Reconoce cuando el analizador formula como tesis la pregunta técnica de si un post contiene una afirmación verificable.
+- Si la propia respuesta concluye que el fragmento carece de una proposición factual, activa la misma salida breve y elimina fuentes auxiliares.
+- Añade una prueba de regresión con la forma exacta observada en la validación pública.
+
 # Versión 1.20.4 - Limpieza completa de resultados sin tesis (2026-09-14)
 
 - Aplica la salida breve también cuando el modelo ya reconoce que no existe una afirmación factual identificable.

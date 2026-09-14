@@ -243,6 +243,26 @@ assert.equal(ausenciaReconocida.confianza,null);
 assert.deepEqual(ausenciaReconocida.auditoria_fuentes_periodisticas,[]);
 assert.equal(ausenciaReconocida.fuentes.length,1);
 
+// La pregunta meta “¿el post contiene una afirmación?” tampoco debe conservar
+// perfiles o fuentes auxiliares cuando la respuesta concluye que no la hay.
+const ausenciaComoMetaPregunta = normalizeProduction({
+  estado:'analizado', veredicto_final:'NO VERIFICABLE', veredicto:'NO VERIFICABLE',
+  credibilidad:null, confianza:63,
+  afirmacion_principal:'La publicación contiene una acusación factual verificable.',
+  respuesta_directa:'No. El post visible es un comentario breve sin proposición factual verificable.',
+  contexto:'No fue posible identificar una tesis concreta en el fragmento.',
+  evaluacion_afirmaciones:[], hechos_comprobados:[],
+  fuentes:[{titulo:'Clean Links',url:'https://cleanlinks.app/',tipo:'Otra',aporte:'Redirección.'}],
+  extraccion_enlace:{
+    plataforma:'Threads',
+    url_final:'https://www.threads.com/@simonlevymx/post/DdOzRkmjn6i',
+    descripcion:'… y es domingo. Te lo dije papi.'
+  }
+}, 'https://www.threads.com/share/BAZnM8Bm81/');
+assert.equal(ausenciaComoMetaPregunta.tipo_resultado,'sin_afirmacion_verificable');
+assert.equal(ausenciaComoMetaPregunta.confianza,null);
+assert.match(ausenciaComoMetaPregunta.fuentes[0].url,/threads\.com/);
+
 // Si la pregunta del usuario es expresamente técnica, la identidad del enlace
 // sí puede ser la proposición principal y no se fuerza un veredicto factual.
 const preguntaTecnicaEnlace = normalizeProduction({

@@ -219,11 +219,13 @@ export function applyNoCheckableClaimGuard(result, input = '') {
   const principalTecnica = esHechoTecnicoDeRecuperacion(result.afirmacion_principal);
   const principalDeclaraAusenciaDeTesis = /(?:ninguna|no (?:se )?(?:identifico|identifica|hay|existe)).{0,60}(?:afirmacion|tesis|proposicion).{0,40}(?:factual|concreta|verificable)/
     .test(normalizarTexto(result.afirmacion_principal));
+  const principalEsMetaPreguntaSobreLaTesis = /(?:publicacion|post|fragmento|texto).{0,90}(?:contiene|incluye|presenta|formula|carece).{0,50}(?:afirmacion|acusacion|tesis|proposicion).{0,40}(?:factual|concreta|verificable)/
+    .test(normalizarTexto(result.afirmacion_principal));
   const soloConfirmacionesTecnicas = confirmadas.length > 0 &&
     confirmadas.every(esHechoTecnicoDeRecuperacion);
 
   if (!(reconoceAusenciaDeTesis || fragmentoSinReferente) ||
-      !(principalTecnica || principalDeclaraAusenciaDeTesis || soloConfirmacionesTecnicas)) return result;
+      !(principalTecnica || principalDeclaraAusenciaDeTesis || principalEsMetaPreguntaSobreLaTesis || soloConfirmacionesTecnicas)) return result;
 
   const hechosTecnicos = [
     ...(Array.isArray(result.hechos_comprobados) ? result.hechos_comprobados : []),
