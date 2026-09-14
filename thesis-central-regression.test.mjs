@@ -218,6 +218,31 @@ assert.equal(fragmentoSinAfirmacion.fuentes.length,1);
 assert.match(fragmentoSinAfirmacion.fuentes[0].url,/threads\.com\/@simonlevymx\/post\//);
 assert.equal(fragmentoSinAfirmacion.hechos_comprobados.length,2);
 
+// La limpieza también debe aplicarse cuando el modelo ya reconoce que no hay
+// tesis, aunque no formule una confirmación técnica separada.
+const ausenciaReconocida = normalizeProduction({
+  estado:'analizado', veredicto_final:'NO VERIFICABLE',
+  veredicto:'INFORMACIÓN INSUFICIENTE', credibilidad:null, confianza:68,
+  afirmacion_principal:'Ninguna afirmación factual identificable: el texto es un comentario coloquial.',
+  respuesta_directa:'No hay una tesis verificable en la publicación.',
+  contexto:'El fragmento no contiene una afirmación verificable.',
+  evaluacion_afirmaciones:[], hechos_comprobados:[],
+  fuentes:[
+    {titulo:'Perfil del autor',url:'https://x.com/SimonLevyMx',tipo:'Red social',aporte:'Perfil.'},
+    {titulo:'Threads',url:'https://www.threads.com/@simonlevymx/post/DdOzRkmjn6i',tipo:'Red social',aporte:'Original.'}
+  ],
+  auditoria_fuentes_periodisticas:[{medio_o_periodista:'Simón Levy'}],
+  extraccion_enlace:{
+    plataforma:'Threads',
+    url_final:'https://www.threads.com/@simonlevymx/post/DdOzRkmjn6i',
+    descripcion:'… y es domingo. Te lo dije papi.'
+  }
+}, 'https://www.threads.com/share/BAZnM8Bm81/');
+assert.equal(ausenciaReconocida.tipo_resultado,'sin_afirmacion_verificable');
+assert.equal(ausenciaReconocida.confianza,null);
+assert.deepEqual(ausenciaReconocida.auditoria_fuentes_periodisticas,[]);
+assert.equal(ausenciaReconocida.fuentes.length,1);
+
 // Si la pregunta del usuario es expresamente técnica, la identidad del enlace
 // sí puede ser la proposición principal y no se fuerza un veredicto factual.
 const preguntaTecnicaEnlace = normalizeProduction({

@@ -1,3 +1,9 @@
+# Versión 1.20.4 - Limpieza completa de resultados sin tesis (2026-09-14)
+
+- Aplica la salida breve también cuando el modelo ya reconoce que no existe una afirmación factual identificable.
+- Retira en ese caso la confianza numérica, perfiles auxiliares, auditorías y cualquier fuente que no sea la publicación original.
+- Añade una segunda prueba de regresión basada en la respuesta observada en producción.
+
 # Versión 1.20.3 - Enlaces sin afirmación verificable (2026-09-14)
 
 - Separa la identificación técnica de una URL, su autoría y su vista previa de la verificación factual de su contenido.
