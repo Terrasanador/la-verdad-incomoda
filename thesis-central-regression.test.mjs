@@ -404,6 +404,11 @@ assert.match(pactoCriminal2018.contexto,/confrontación partidista explícita/i)
 assert.equal(pactoCriminal2018.analisis_intencionalidad.clasificacion,'INTENCIÓN NO DEMOSTRADA');
 assert.equal(pactoCriminal2018.analisis_patron_objetivos.clasificacion,'CRÍTICA RECURRENTE');
 assert.deepEqual(pactoCriminal2018.evidencia_a_favor,[]);
+assert.deepEqual(pactoCriminal2018.analisis_redes.posible_manipulacion,[]);
+assert.match(pactoCriminal2018.analisis_redes.limitaciones,/no se infiere coordinación/i);
+assert.equal(pactoCriminal2018.auditoria_sesgo_fuentes.predominio,'NO DETERMINADO');
+assert.deepEqual(pactoCriminal2018.analisis_integridad_informativa.evidencia_coordinacion,[]);
+assert.equal(pactoCriminal2018.analisis_integridad_informativa.confianza_deteccion_coordinacion,0);
 assert.ok(pactoCriminal2018.fuentes.some(item => /pri\.org\.mx/.test(item.url)));
 
 // Incluso si el modelo omite separar la acusación sustantiva, confirmar solo

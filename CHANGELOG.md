@@ -1,3 +1,9 @@
+# Versión 1.20.11 - Informe completo sin inferencias de coordinación (2026-09-15)
+
+- Elimina de la corrección del supuesto pacto cualquier insinuación residual de coordinación, automatización o bots sin evidencia específica.
+- Evita que etiquetas ideológicas automáticas de medios sustituyan la evaluación de las fuentes primarias y la evidencia independiente.
+- Mantiene explícito el contexto partidista y la crítica recurrente sin atribuir intención deliberada de engañar.
+
 # Versión 1.20.10 - Una acusación auténtica no prueba el delito (2026-09-15)
 
 - Corrige el caso que declaraba cierta una acusación de Alejandro Moreno únicamente porque él la había pronunciado.

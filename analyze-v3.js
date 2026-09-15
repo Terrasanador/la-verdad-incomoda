@@ -514,6 +514,30 @@ export function applyCriminalPact2018Guard(result, input = '') {
     conflictos_interes: ['Alejandro Moreno dirige un partido opositor y el mensaje busca desacreditar a un adversario electoral directo.'],
     limitaciones: 'El interés partidista exige contraste reforzado, pero no vuelve falsa una afirmación por sí mismo.'
   };
+  result.analisis_redes = {
+    plataformas_consultadas: ['Threads', 'Sitio institucional del PRI'],
+    tendencias_observadas: ['La acusación fue reproducida por distintas notas a partir de la misma fuente partidista.'],
+    posible_manipulacion: [],
+    representatividad: 'La muestra permite rastrear la procedencia del argumento, no medir la opinión pública ni toda su difusión.',
+    limitaciones: 'No se analizaron métricas internas, comentarios completos, automatización ni relaciones entre cuentas; no se infiere coordinación.'
+  };
+  result.auditoria_sesgo_fuentes = {
+    fuentes_izquierda: [],
+    fuentes_derecha: [],
+    fuentes_mixtas: [],
+    fuentes_no_determinadas: ['PRI / Alejandro Moreno'],
+    fuentes_primarias: [discursoPri, respuestaPresidencia],
+    fuentes_independientes_deduplicadas: 1,
+    predominio: 'NO DETERMINADO',
+    porcentaje_predominio: 0,
+    confianza_clasificacion: 90,
+    advertencia_desequilibrio: false,
+    obligacion_contradiccion_cumplida: true,
+    evidencia_contraria_buscada: ['Respuesta pública de Presidencia', 'Análisis independiente del entorno de seguridad desde 2018'],
+    problemas_metodologicos: ['Varias notas reproducen la declaración partidista y no aportan una cadena probatoria independiente.'],
+    explicacion: 'No se asigna una etiqueta ideológica a cada medio para decidir el resultado. Se distingue la fuente partidista de la evidencia independiente y se contrasta la acusación con su texto íntegro y el entorno documentado.',
+    limitaciones: ['La ausencia de un expediente público no permite descartar investigaciones reservadas; sí impide tratarlas como prueba disponible.']
+  };
   result.auditoria_fuentes_periodisticas = [{
     medio_o_periodista: 'PRI / Alejandro Moreno',
     orientacion: 'NO DETERMINADA',
@@ -547,8 +571,13 @@ export function applyCriminalPact2018Guard(result, input = '') {
     fuentes_independientes_reales: 1,
     evidencia_coordinacion: [],
     probabilidad_coordinacion: 0,
+    confianza_deteccion_coordinacion: 0,
+    cuentas_comparadas: [],
+    publicaciones_coincidentes: [],
+    patron_publicacion_grupal: '',
     evidencia_bots: [],
     probabilidad_automatizacion: 0,
+    confianza_deteccion_bots: 0,
     etiqueta_especial: 'NINGUNA',
     limitaciones: ['No se analizaron datos internos de distribución ni todos los mensajes de las cuentas que replicaron la acusación.']
   };
