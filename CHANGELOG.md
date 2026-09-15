@@ -1,3 +1,10 @@
+# Versión 1.21.2 - Sinopsis y reseñas no prueban una acusación (2026-09-15)
+
+- Corrige el caso que declaró cierta una afirmación totalizante sobre infiltración criminal basándose en la tesis de un libro, su ficha editorial y reseñas.
+- Separa la existencia y promoción de una obra de la comprobación independiente de sus acusaciones.
+- Impide usar un libro anterior para validar automáticamente otro contenido y exige pasaje, documentos y contraste específicos.
+- Añade una regresión para el TikTok `7685735210251537696`: la afirmación categórica ya no puede recibir un veredicto afirmativo por repetición editorial.
+
 # Versión 1.21.1 - Recuperación guiada de enlaces rotos de Threads (2026-09-15)
 
 - Mantiene el principio de no emitir un veredicto cuando Threads no expone la publicación asociada a un enlace `/share/`.

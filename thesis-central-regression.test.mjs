@@ -442,3 +442,44 @@ const autoriaMoreno = normalizeProduction({
 }, '¿Es cierto que Alejandro Moreno dijo que López Obrador inició en 2018 un pacto con el crimen organizado?');
 assert.equal(autoriaMoreno.veredicto_final,'CIERTA');
 assert.equal(autoriaMoreno.veredicto,'VERDADERO');
+
+// Una sinopsis comercial y varias reseñas confirman qué sostiene un libro,
+// pero no convierten su tesis totalizante en un hecho comprobado.
+const libroAnabel = normalizeProduction({
+  estado:'analizado', veredicto_final:'CIERTA', veredicto:'VERDADERO',
+  credibilidad:90, confianza:58,
+  afirmacion_principal:'El libro de Anabel Hernández muestra cómo el crimen organizado se infiltró en las instituciones hasta convertirse en el sistema mismo y que las instituciones ocultan esa realidad.',
+  explicacion_veredicto_final:'La miniatura y la descripción resumen la tesis central del libro, cuya investigación documenta redes de complicidad e infiltración.',
+  respuesta_directa:'Sí: la investigación documenta múltiples casos y redes de impunidad.',
+  resumen:'El TikTok resume la tesis central de la obra periodística.',
+  contexto:'La verificación se basa en libros, editoriales y cobertura periodística; no se recuperó la transcripción del video.',
+  evaluacion_afirmaciones:[
+    {
+      afirmacion:'El libro es un mapa de cómo el crimen organizado se convirtió en el sistema mismo.',
+      estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:['La contraportada y reseñas describen esa tesis.'],
+      fuente_matriz:'https://www.penguinrandomhouse.com/books/249662/los-senores-del-narco--narcoland-by-anabel-hernandez/',
+      lo_que_no_demuestra:'La frase sistema mismo es una formulación editorial.'
+    },
+    {
+      afirmacion:'Las instituciones ocultan lo que el libro expone.',
+      estado:'NO DEMOSTRADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:[], fuente_matriz:'Reseñas del libro',
+      lo_que_no_demuestra:'No prueba una política unificada de ocultamiento.'
+    }
+  ],
+  evidencia_a_favor:['Ficha editorial y reseñas.'], evidencia_en_contra:[],
+  limitaciones:['No fue posible descargar ni transcribir el video completo.','No se examinó el texto íntegro del libro.'],
+  fuentes:[
+    {titulo:'Ficha editorial de Los señores del narco',url:'https://www.penguinrandomhouse.com/books/249662/los-senores-del-narco--narcoland-by-anabel-hernandez/',tipo:'Editorial',aporte:'Sinopsis de la obra.'},
+    {titulo:'Los señores del narco',url:'https://books.google.com/books/about/Los_se%C3%B1ores_del_narco.html?id=oVLXjMuUrTgC',tipo:'Bibliográfica',aporte:'Ficha y extractos.'},
+    {titulo:'Reseña',url:'https://www.lecturalia.com/libro/67556/los-senores-del-narco',tipo:'Reseña',aporte:'Resume la tesis.'}
+  ]
+}, 'https://www.tiktok.com/@podcast_036/video/7685735210251537696');
+assert.equal(libroAnabel.veredicto_final,'FALSA');
+assert.equal(libroAnabel.veredicto,'FALSO');
+assert.equal(libroAnabel.credibilidad,10);
+assert.equal(libroAnabel.evaluacion_afirmaciones[0].relacion_con_afirmacion,'CIRCUNSTANCIAL');
+assert.equal(libroAnabel.evaluacion_afirmaciones[1].estado,'CONTRADICHA');
+assert.deepEqual(libroAnabel.evidencia_a_favor,[]);
+assert.match(libroAnabel.explicacion_veredicto_final,/sinopsis y reseñas citadas solo confirman qué sostiene el libro/i);

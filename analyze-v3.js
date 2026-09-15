@@ -10,14 +10,16 @@ const CHECKABLE_CLAIM_POLICY = `\nREGLAS PARA CONTENIDO SIN AFIRMACIÓN VERIFICA
 
 const POLITICAL_CONTEXT_POLICY = `\nREGLAS PARA CITAS Y ENCUADRES POLÍTICOS:\n30) Cuando una publicación política cita a una persona, la autoría de la frase es una comprobación secundaria. Salvo que el usuario pregunte expresamente “¿lo dijo?”, formula como tesis central la proposición factual que la cita pretende hacer creer y comprueba esa proposición.\n31) Separa cuatro capas: (a) qué dijo el actor; (b) qué decidió realmente la autoridad competente; (c) qué consecuencia factual se atribuye a esa decisión; y (d) si se responsabiliza a un gobierno o partido. No permitas que la capa (a) confirme automáticamente las capas (b), (c) o (d).\n32) Un comunicado partidista es fuente primaria para la postura del partido, no prueba independiente de fraude, captura institucional, mala fe, autoritarismo, encubrimiento ni control gubernamental. Aplica exactamente la misma regla a comunicados oficialistas y opositores.\n33) Ante expresiones como “legaliza el fraude”, “el gobierno controla”, “institución cooptada” o equivalentes, consulta el acuerdo, ley, resolución, votación o procedimiento original. Compara sujeto competente, alcance, salvaguardas, revisión y vías de impugnación antes de clasificar.\n34) Describe el encuadre político observable —qué actor responsabiliza a quién y con qué palabras—, pero distingue función retórica de intención psicológica. Una crítica explícita permite identificar su objetivo; no demuestra por sí sola que el emisor sepa que miente, reciba instrucciones o participe en una coordinación.\n35) Si el documento original contradice la descripción factual que sostiene la acusación, el veredicto debe recaer sobre esa descripción y ser FALSA o ENGAÑOSA según el alcance del error, aunque la cita sea auténtica.\n36) En el informe, marca “X dijo Y” como CIRCUNSTANCIAL y presenta por separado la veracidad de Y. Incluye tanto los elementos que hacen razonable la preocupación como las salvaguardas o hechos que contradicen la conclusión política.\n37) Una denuncia, queja o envío a una fiscalía confirma que se formuló una acusación; no confirma el delito denunciado, la participación de las personas señaladas ni la existencia de una organización inventada por el emisor. Exige resoluciones, expedientes accesibles, documentos, testimonios identificables o evidencia independiente que conecte sujeto, conducta y fecha.\n38) No unas frases separadas para fabricar una cronología. Una fecha solo sustenta el inicio de un hecho si la fuente la vincula expresamente con ese hecho; la proximidad de dos párrafos no autoriza esa inferencia.\n39) En acusaciones categóricas de pacto criminal, narcogobierno, encubrimiento o pertenencia a un cártel, los casos comprobados de terceros y los indicadores generales de violencia son contexto, no prueba automática de un acuerdo del presidente o del gobierno.\n40) Si una publicación presenta como hecho una acusación penal categórica y sus propias fuentes solo acreditan que un adversario la pronunció, o ni siquiera contienen la fecha o el vínculo atribuidos, clasifica la publicación como FALSA. Explica por separado que la tesis subyacente no quedó demostrada y que la ausencia de prueba pública no demuestra imposibilidad absoluta.\n`;
 
+const BOOK_EVIDENCE_POLICY = `\nREGLAS PARA LIBROS, SINOPSIS Y RESEÑAS:\n41) Una ficha editorial, contraportada, página de venta, Google Books, reseña, entrevista promocional o resumen confirma que una obra y su tesis existen; no demuestra que sus acusaciones sean verdaderas. Nunca las uses como corroboración independiente del contenido del libro.\n42) Para validar una acusación factual de un libro exige la evidencia subyacente pertinente: documentos identificables, expedientes, resoluciones, registros, testimonios corroborados y contraste independiente. La reputación, premios o historial crítico de la autora tampoco sustituyen esa prueba.\n43) No uses un libro anterior para validar automáticamente otro libro, video o acusación posterior. Comprueba título, edición, fecha, pasaje y evidencia específica.\n44) Si no recuperaste la transcripción del video ni examinaste el pasaje íntegro del libro, no atribuyas documentos o testimonios concretos ni afirmes que la obra “demuestra” la tesis. Declara la limitación.\n45) Expresiones absolutas o totalizantes como “el crimen organizado se convirtió en el sistema mismo” o “las instituciones ocultan la realidad” requieren evidencia de ese alcance. Casos particulares de corrupción o infiltración no prueban una sustitución total del Estado ni una política unificada de ocultamiento. Si la publicación presenta ese salto como hecho y solo aporta sinopsis, reseñas o la voz de la propia autora, clasifica la afirmación categórica como FALSA.\n`;
+
 function addPolicy(req) {
   const body = req.body || {};
   const keys = ['consulta','pregunta','question','query','text','input','content'];
   const key = keys.find(k => typeof body[k] === 'string' && body[k].trim());
   if (key) {
-    req.body = { ...body, [key]: `${body[key]}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}${POLITICAL_CONTEXT_POLICY}` };
+    req.body = { ...body, [key]: `${body[key]}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}${POLITICAL_CONTEXT_POLICY}${BOOK_EVIDENCE_POLICY}` };
   } else if (typeof body.url === 'string' && body.url.trim()) {
-    req.body = { ...body, consulta: `${body.url}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}${POLITICAL_CONTEXT_POLICY}` };
+    req.body = { ...body, consulta: `${body.url}${POLICY}${ATTRIBUTION_POLICY}${CHECKABLE_CLAIM_POLICY}${POLITICAL_CONTEXT_POLICY}${BOOK_EVIDENCE_POLICY}` };
   }
 }
 
@@ -372,6 +374,90 @@ export function applyEmbeddedAllegationGuard(result, input = '') {
     'La existencia de la publicación y sus réplicas solo acredita que la acusación circuló; no acredita el hecho alegado.',
     'La ausencia de evidencia pública suficiente tampoco demuestra automáticamente la afirmación contraria.'
   ])];
+  return result;
+}
+
+/**
+ * Evita convertir material promocional o reseñas de un libro en prueba de las
+ * acusaciones contenidas en la obra. En particular, corrige el salto entre
+ * casos de infiltración y la generalización de que el crimen sustituyó al
+ * sistema completo o que todas las instituciones encubren esa realidad.
+ */
+export function applyBookSynopsisEvidenceGuard(result, input = '') {
+  if (!result || typeof result !== 'object') return result;
+
+  const veredictoAfirmativo = ['CIERTA', 'PARCIALMENTE CIERTA'].includes(String(result.veredicto_final || '').toUpperCase()) ||
+    ['VERDADERO', 'MAYORMENTE VERDADERO', 'PARCIALMENTE VERDADERO'].includes(String(result.veredicto || '').toUpperCase());
+  if (!veredictoAfirmativo) return result;
+
+  const diagnostico = normalizarTexto([
+    input,
+    result.afirmacion_principal,
+    result.explicacion_veredicto_final,
+    result.respuesta_directa,
+    result.resumen,
+    result.contexto,
+    result.conclusion,
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : [])
+  ].join(' '));
+  const tesisTotalizante = /(?:crimen organizado|narco).{0,100}(?:sistema mismo|parte del sistema|convirtio en el sistema|infiltr|permeo)|instituciones?.{0,80}(?:ocultan|encubren)/.test(diagnostico);
+  const usaLibroComoPrueba = /(?:libro|obra|investigacion).{0,100}(?:documenta|demuestra|muestra|expone|tesis)|(?:sinopsis|contraportada|ficha editorial|resenas?)/.test(diagnostico);
+  const reconoceAccesoIncompleto = /(?:no (?:se )?(?:recupero|examino|leyo|accedio).{0,90}(?:transcripcion|video|texto integro|libro)|no fue posible.{0,90}(?:transcripcion|video|texto integro|libro))/.test(diagnostico);
+
+  const fuentes = Array.isArray(result.fuentes) ? result.fuentes : [];
+  const promocionales = fuentes.filter(fuente => {
+    const texto = normalizarTexto(`${fuente?.titulo || ''} ${fuente?.tipo || ''} ${fuente?.aporte || ''}`);
+    let host = '';
+    try { host = new URL(String(fuente?.url || '')).hostname.replace(/^www\./, '').toLowerCase(); } catch {}
+    return /(?:penguinrandomhouse|books\.google|amazon\.|lecturalia|eslite)/.test(host) ||
+      /(?:ficha editorial|sinopsis|contraportada|resena|bibliografica|pagina de venta)/.test(texto);
+  });
+  const evidenciaDirectaIndependiente = fuentes.some(fuente => {
+    const texto = normalizarTexto(`${fuente?.titulo || ''} ${fuente?.tipo || ''} ${fuente?.aporte || ''}`);
+    return /(?:sentencia|resolucion judicial|expediente|registro oficial|documento oficial|base de datos|peritaje)/.test(texto) &&
+      !/(?:sinopsis|resena|ficha editorial|menciona|contextualiza)/.test(texto);
+  });
+
+  if (!tesisTotalizante || !usaLibroComoPrueba || evidenciaDirectaIndependiente ||
+      !(promocionales.length > 0 || reconoceAccesoIncompleto)) return result;
+
+  result.veredicto = 'FALSO';
+  result.veredicto_final = 'FALSA';
+  result.credibilidad = Math.min(Number.isFinite(result.credibilidad) ? result.credibilidad : 10, 10);
+  result.explicacion_veredicto_final =
+    'La afirmación categórica es falsa tal como se presenta. Las fichas editoriales, sinopsis y reseñas citadas solo confirman qué sostiene el libro; no prueban que el crimen organizado se haya convertido en “el sistema mismo” ni que las instituciones oculten esa realidad de forma generalizada.';
+  result.respuesta_directa =
+    'No. Los materiales citados describen y promocionan la tesis de la autora, pero no aportan evidencia primaria e independiente suficiente para demostrar esa generalización.';
+  result.resumen =
+    'El análisis anterior confundió la existencia de una tesis editorial con su comprobación. Casos particulares de corrupción o infiltración pueden documentarse individualmente, pero no demuestran que todo el sistema haya sido sustituido por el crimen organizado ni una política unificada de ocultamiento institucional.';
+  result.conclusion = result.respuesta_directa;
+  result.evidencia_a_favor = [];
+  result.evidencia_en_contra = [
+    'Las fichas editoriales y reseñas dependen de la propia obra y no son corroboración independiente de sus acusaciones.',
+    'No se recuperó la transcripción completa del video ni se examinó el pasaje íntegro y su evidencia subyacente.',
+    'La existencia de casos concretos de corrupción no demuestra la afirmación totalizante de que el crimen organizado sea el sistema completo.'
+  ];
+  result.limitaciones = [...new Set([
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : []),
+    'No se verificaron documentos, expedientes o resoluciones que acrediten el alcance totalizante atribuido a la obra.',
+    'Este veredicto no niega casos particulares de corrupción o infiltración que deben evaluarse individualmente.'
+  ])];
+  result.evaluacion_afirmaciones = [
+    {
+      afirmacion: 'El libro y sus materiales promocionales sostienen una tesis sobre redes de complicidad con el crimen organizado.',
+      estado: 'CONFIRMADA', relacion_con_afirmacion: 'CIRCUNSTANCIAL',
+      sustento_directo: ['Fichas editoriales y reseñas de la obra.'],
+      fuente_matriz: promocionales[0]?.url || '',
+      lo_que_no_demuestra: 'Que la tesis sea verdadera ni que tenga el alcance totalizante de la publicación.'
+    },
+    {
+      afirmacion: 'El crimen organizado se convirtió en el sistema mismo y las instituciones ocultan esa realidad de manera generalizada.',
+      estado: 'CONTRADICHA', relacion_con_afirmacion: 'DIRECTA',
+      sustento_directo: ['Las fuentes citadas no aportan evidencia primaria independiente de ese alcance y solo reiteran la tesis editorial.'],
+      fuente_matriz: '',
+      lo_que_no_demuestra: 'No excluye la existencia de casos específicos de corrupción o infiltración.'
+    }
+  ];
   return result;
 }
 
@@ -874,7 +960,10 @@ export function normalize(result, input = '') {
   return applyCriminalPact2018Guard(
     applyUnfoldedBallotFramingGuard(
       applyPisaPandemicFramingGuard(
-        applyEmbeddedAllegationGuard(applyNoCheckableClaimGuard(result, input), input),
+        applyBookSynopsisEvidenceGuard(
+          applyEmbeddedAllegationGuard(applyNoCheckableClaimGuard(result, input), input),
+          input
+        ),
         input
       ),
       input
