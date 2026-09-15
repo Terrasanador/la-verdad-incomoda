@@ -1,3 +1,11 @@
+# Versión 1.20.10 - Una acusación auténtica no prueba el delito (2026-09-15)
+
+- Corrige el caso que declaraba cierta una acusación de Alejandro Moreno únicamente porque él la había pronunciado.
+- Separa el acto de habla de la tesis sustantiva sobre un supuesto pacto con el crimen organizado.
+- Comprueba que la transcripción del PRI no vincula el inicio del supuesto pacto con 2018 y evita unir pasajes distintos para fabricar esa cronología.
+- Clasifica como FALSA la publicación categórica, conserva como circunstancial la autoría de la acusación y documenta el contexto partidista sin atribuir pago, coordinación o intención de mentir.
+- Añade salvaguardas generales y regresiones para impedir que una lista compuesta solo por citas vuelva a producir un veredicto afirmativo.
+
 # Versión 1.20.9 - La cita no sustituye al contexto político (2026-09-14)
 
 - Hace que el veredicto recaiga sobre la tesis factual contenida en una cita política, salvo que el usuario pregunte expresamente por su autoría.

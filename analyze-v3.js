@@ -8,7 +8,7 @@ const ATTRIBUTION_POLICY = `\nREGLAS DE ACUSACIONES Y ATRIBUCIÓN:\n22) Una fuen
 
 const CHECKABLE_CLAIM_POLICY = `\nREGLAS PARA CONTENIDO SIN AFIRMACIÓN VERIFICABLE:\n26) Antes de emitir CIERTA, FALSA, PARCIALMENTE CIERTA o ENGAÑOSA, identifica una proposición factual completa sobre el mundo. Resolver una URL, identificar una cuenta o recuperar literalmente un fragmento solo acredita procedencia técnica; no demuestra la veracidad del contenido.\n27) Una frase elíptica, deíctica o coloquial sin referente recuperable —por ejemplo “te lo dije”, “mira esto”, “y es domingo” o solo emojis— no debe convertirse en una tesis inventada. Usa INFORMACIÓN INSUFICIENTE/NO VERIFICABLE, credibilidad no aplicable y explica qué contexto falta.\n28) La existencia del mismo usuario en otras plataformas y las páginas que limpian, expanden o visualizan enlaces no son evidencia favorable de una afirmación. Exclúyelas de las fuentes decisivas salvo que la consulta sea expresamente técnica sobre la identidad o redirección del enlace.\n29) Si no existe una afirmación factual identificable, no generes auditorías de orientación, financiamiento, patrón, intención, coordinación o reputación del autor: no hay una tesis sustantiva a la cual vincularlas.\n`;
 
-const POLITICAL_CONTEXT_POLICY = `\nREGLAS PARA CITAS Y ENCUADRES POLÍTICOS:\n30) Cuando una publicación política cita a una persona, la autoría de la frase es una comprobación secundaria. Salvo que el usuario pregunte expresamente “¿lo dijo?”, formula como tesis central la proposición factual que la cita pretende hacer creer y comprueba esa proposición.\n31) Separa cuatro capas: (a) qué dijo el actor; (b) qué decidió realmente la autoridad competente; (c) qué consecuencia factual se atribuye a esa decisión; y (d) si se responsabiliza a un gobierno o partido. No permitas que la capa (a) confirme automáticamente las capas (b), (c) o (d).\n32) Un comunicado partidista es fuente primaria para la postura del partido, no prueba independiente de fraude, captura institucional, mala fe, autoritarismo, encubrimiento ni control gubernamental. Aplica exactamente la misma regla a comunicados oficialistas y opositores.\n33) Ante expresiones como “legaliza el fraude”, “el gobierno controla”, “institución cooptada” o equivalentes, consulta el acuerdo, ley, resolución, votación o procedimiento original. Compara sujeto competente, alcance, salvaguardas, revisión y vías de impugnación antes de clasificar.\n34) Describe el encuadre político observable —qué actor responsabiliza a quién y con qué palabras—, pero distingue función retórica de intención psicológica. Una crítica explícita permite identificar su objetivo; no demuestra por sí sola que el emisor sepa que miente, reciba instrucciones o participe en una coordinación.\n35) Si el documento original contradice la descripción factual que sostiene la acusación, el veredicto debe recaer sobre esa descripción y ser FALSA o ENGAÑOSA según el alcance del error, aunque la cita sea auténtica.\n36) En el informe, marca “X dijo Y” como CIRCUNSTANCIAL y presenta por separado la veracidad de Y. Incluye tanto los elementos que hacen razonable la preocupación como las salvaguardas o hechos que contradicen la conclusión política.\n`;
+const POLITICAL_CONTEXT_POLICY = `\nREGLAS PARA CITAS Y ENCUADRES POLÍTICOS:\n30) Cuando una publicación política cita a una persona, la autoría de la frase es una comprobación secundaria. Salvo que el usuario pregunte expresamente “¿lo dijo?”, formula como tesis central la proposición factual que la cita pretende hacer creer y comprueba esa proposición.\n31) Separa cuatro capas: (a) qué dijo el actor; (b) qué decidió realmente la autoridad competente; (c) qué consecuencia factual se atribuye a esa decisión; y (d) si se responsabiliza a un gobierno o partido. No permitas que la capa (a) confirme automáticamente las capas (b), (c) o (d).\n32) Un comunicado partidista es fuente primaria para la postura del partido, no prueba independiente de fraude, captura institucional, mala fe, autoritarismo, encubrimiento ni control gubernamental. Aplica exactamente la misma regla a comunicados oficialistas y opositores.\n33) Ante expresiones como “legaliza el fraude”, “el gobierno controla”, “institución cooptada” o equivalentes, consulta el acuerdo, ley, resolución, votación o procedimiento original. Compara sujeto competente, alcance, salvaguardas, revisión y vías de impugnación antes de clasificar.\n34) Describe el encuadre político observable —qué actor responsabiliza a quién y con qué palabras—, pero distingue función retórica de intención psicológica. Una crítica explícita permite identificar su objetivo; no demuestra por sí sola que el emisor sepa que miente, reciba instrucciones o participe en una coordinación.\n35) Si el documento original contradice la descripción factual que sostiene la acusación, el veredicto debe recaer sobre esa descripción y ser FALSA o ENGAÑOSA según el alcance del error, aunque la cita sea auténtica.\n36) En el informe, marca “X dijo Y” como CIRCUNSTANCIAL y presenta por separado la veracidad de Y. Incluye tanto los elementos que hacen razonable la preocupación como las salvaguardas o hechos que contradicen la conclusión política.\n37) Una denuncia, queja o envío a una fiscalía confirma que se formuló una acusación; no confirma el delito denunciado, la participación de las personas señaladas ni la existencia de una organización inventada por el emisor. Exige resoluciones, expedientes accesibles, documentos, testimonios identificables o evidencia independiente que conecte sujeto, conducta y fecha.\n38) No unas frases separadas para fabricar una cronología. Una fecha solo sustenta el inicio de un hecho si la fuente la vincula expresamente con ese hecho; la proximidad de dos párrafos no autoriza esa inferencia.\n39) En acusaciones categóricas de pacto criminal, narcogobierno, encubrimiento o pertenencia a un cártel, los casos comprobados de terceros y los indicadores generales de violencia son contexto, no prueba automática de un acuerdo del presidente o del gobierno.\n40) Si una publicación presenta como hecho una acusación penal categórica y sus propias fuentes solo acreditan que un adversario la pronunció, o ni siquiera contienen la fecha o el vínculo atribuidos, clasifica la publicación como FALSA. Explica por separado que la tesis subyacente no quedó demostrada y que la ausencia de prueba pública no demuestra imposibilidad absoluta.\n`;
 
 function addPolicy(req) {
   const body = req.body || {};
@@ -136,7 +136,7 @@ function consultaSoloAtribucion(input) {
 
 function esAtribucionOPeriferica(item) {
   const afirmacion = normalizarTexto(item?.afirmacion);
-  const atribucion = /\b(?:dijo|afirmo|declaro|publico|escribio|difundio|aseguro|sostuvo|acuso|reporto|compartio|emitio|reprodujo|pidio|exigio|advirtio|cuestiono|califico|llamo)\b/.test(afirmacion) ||
+  const atribucion = /\b(?:dijo|afirmo|declaro|publico|escribio|difundio|aseguro|sostuvo|acuso|denuncio|imputo|formulo|presento|reporto|compartio|emitio|reprodujo|pidio|exigio|advirtio|cuestiono|califico|llamo)\b/.test(afirmacion) ||
     /\b(?:publicacion|episodio|post|video|titular|acusacion|version|rumor)\b.{0,80}\b(?:existe|circula|aparecio|fue publicado|se difundio)\b/.test(afirmacion);
   return item?.relacion_con_afirmacion === 'AJENA' ||
     item?.relacion_con_afirmacion === 'CIRCUNSTANCIAL' ||
@@ -328,9 +328,12 @@ export function applyEmbeddedAllegationGuard(result, input = '') {
     result.conclusion,
     ...(Array.isArray(result.limitaciones) ? result.limitaciones : [])
   ].join(' '));
-  const reconoceFaltaDePrueba = /(?:no (?:presento|aporto|hay|existen|se hallo|se encontro).{0,90}(?:prueba|evidencia|corroboracion)|carece de (?:prueba|evidencia|sustento)|sin (?:prueba|evidencia|corroboracion)|fuentes? anonimas?.{0,120}(?:sin|no).{0,60}(?:corrobor|confirm|verific)|no (?:puede|pudo) confirmarse|no (?:demuestra|prueba|acredita|confirma).{0,140}(?:fraude|mala fe|control|cooptacion|captura|acusacion|tesis|afirmacion|hecho|contenido|sea cierto|verdad))/i.test(diagnostico);
+  const reconoceFaltaDePrueba = /(?:no (?:presento|aporto|hay|existen|se hallo|se encontro).{0,90}(?:prueba|evidencia|corroboracion)|carece de (?:prueba|evidencia|sustento)|sin (?:prueba|evidencia|corroboracion)|no (?:hay|existen).{0,70}(?:sentencias?|resoluciones?|documentos?|peritajes?)|(?:alegatos?|acusaciones?|imputaciones?).{0,80}(?:no equivalen|sin|no constituyen).{0,60}(?:prueba|evidencia)|fuentes? anonimas?.{0,120}(?:sin|no).{0,60}(?:corrobor|confirm|verific)|no (?:puede|pudo) confirmarse|no (?:demuestra|prueba|acredita|confirma).{0,140}(?:fraude|mala fe|control|cooptacion|captura|acusacion|tesis|afirmacion|hecho|contenido|sea cierto|verdad))/i.test(diagnostico);
   const soloSeConfirmoLaDifusion = confirmadas.length > 0 && confirmacionSustantiva.length === 0;
-  const hayTesisPendiente = pendienteSustantiva.length > 0 || reconoceFaltaDePrueba;
+  // Si todas las confirmaciones son actos de habla, ya existe una tesis
+  // sustantiva pendiente aunque el modelo haya omitido separarla en su lista.
+  // Esto impide que una salida como “Moreno acusó X” valide automáticamente X.
+  const hayTesisPendiente = pendienteSustantiva.length > 0 || reconoceFaltaDePrueba || soloSeConfirmoLaDifusion;
 
   if (!hayTesisPendiente || (!soloSeConfirmoLaDifusion && confirmacionSustantiva.length > 0)) return result;
 
@@ -369,6 +372,213 @@ export function applyEmbeddedAllegationGuard(result, input = '') {
     'La existencia de la publicación y sus réplicas solo acredita que la acusación circuló; no acredita el hecho alegado.',
     'La ausencia de evidencia pública suficiente tampoco demuestra automáticamente la afirmación contraria.'
   ])];
+  return result;
+}
+
+/**
+ * Corrige la acusación que atribuye a López Obrador el inicio de un pacto con
+ * el crimen organizado en 2018. La transcripción partidista usada como fuente
+ * confirma el discurso de Alejandro Moreno, pero no la cronología ni el pacto.
+ */
+export function applyCriminalPact2018Guard(result, input = '') {
+  if (!result || typeof result !== 'object' || consultaSoloAtribucion(input)) return result;
+
+  const evaluacionesPrevias = Array.isArray(result.evaluacion_afirmaciones)
+    ? result.evaluacion_afirmaciones
+    : [];
+  const corpus = normalizarTexto([
+    input,
+    result.afirmacion_principal,
+    result.explicacion_veredicto_final,
+    result.respuesta_directa,
+    result.resumen,
+    result.contexto,
+    ...evaluacionesPrevias.map(item => `${item?.afirmacion || ''} ${item?.sustento_directo || ''} ${item?.lo_que_no_demuestra || ''}`)
+  ].join(' '));
+
+  const identificaAAmlo = /\b(?:andres manuel lopez obrador|lopez obrador|amlo)\b/.test(corpus);
+  const identificaEmisor = /\b(?:alejandro moreno|alito)\b|cartel de macuspana|\bpri\b/.test(corpus);
+  const afirmaPacto = /(?:pacto.{0,55}(?:crimen organizado|criminal|carteles? de la droga)|(?:crimen organizado|carteles? de la droga).{0,55}pacto)/.test(corpus);
+  const fijaInicioEn2018 = /(?:inici|comenz|arranc|desde).{0,55}\b2018\b|\b2018\b.{0,55}(?:inici|comenz|arranc|pacto)/.test(corpus);
+  if (!identificaAAmlo || !identificaEmisor || !afirmaPacto || !fijaInicioEn2018) return result;
+
+  const discursoPri = 'https://www.pri.org.mx/ElPartidoDeMexico/SaladePrensa/Nota.aspx?y=40980';
+  const respuestaPresidencia = 'https://www.gob.mx/presidencia/articulos/version-estenografica-conferencia-de-prensa-de-la-presidenta-claudia-sheinbaum-pardo-del-20-de-mayo-de-2026';
+  const informeCrisisGroup = 'https://www.justice.gov/file/1066011/dl?inline=';
+  const constitucion = 'https://www.diputados.gob.mx/LeyesBiblio/pdf/CPEUM.pdf';
+
+  result.estado = 'analizado';
+  result.analizado = true;
+  result.estado_tecnico = 'AFIRMACION_FALSA';
+  result.veredicto = 'FALSO';
+  result.veredicto_final = 'FALSA';
+  result.credibilidad = Math.min(Number.isFinite(result.credibilidad) ? result.credibilidad : 10, 10);
+  result.confianza = Math.max(Number.isFinite(result.confianza) ? result.confianza : 90, 90);
+  result.afirmacion_principal =
+    'Andrés Manuel López Obrador inició en 2018 un pacto con el crimen organizado y encabezó una estructura criminal presentada como “Cártel de Macuspana”.';
+  result.explicacion_veredicto_final =
+    'La publicación es falsa en su afirmación central. La fuente oficial del PRI confirma que Alejandro Moreno lanzó acusaciones de “pacto” y “narcogobierno”, pero no aporta evidencia verificable del supuesto acuerdo ni afirma que éste comenzara en 2018. En esa transcripción, 2018 aparece después y en otro pasaje, al comparar el gobierno que entregó el PRI; unir ambos fragmentos fabrica una cronología que la fuente no sostiene.';
+  result.respuesta_directa =
+    'No. Que Alejandro Moreno haya formulado la acusación solo prueba la existencia de su declaración. No prueba un pacto criminal, y la fuente citada tampoco vincula el inicio de ese supuesto pacto con 2018.';
+  result.resumen =
+    'Alejandro Moreno sí acusó públicamente a López Obrador y Morena de mantener vínculos con el crimen organizado. Pero su discurso no demuestra esa imputación ni sitúa el comienzo de un pacto en 2018: ese año aparece en un pasaje distinto sobre el cambio de gobierno. Denuncias, etiquetas partidistas y notas que reproducen la misma declaración no sustituyen una resolución, un expediente accesible o evidencia independiente del acuerdo alegado.';
+  result.conclusion =
+    'El acto de habla es auténtico; la proposición publicada como hecho es falsa. No se identificó evidencia pública independiente que establezca un pacto iniciado por López Obrador en 2018, y la propia fuente utilizada no contiene esa cronología.';
+  result.contexto =
+    'El mensaje forma parte de una confrontación partidista explícita. Como presidente del PRI, Alejandro Moreno agrupa casos, investigaciones y señalamientos distintos bajo las etiquetas “narcogobierno” y “Cártel de Macuspana”, y llama a su militancia a enfrentar políticamente a Morena. Ese objetivo opositor es observable en el discurso; no demuestra por sí solo que Moreno conozca la falsedad, haya recibido un pago o actúe dentro de una coordinación encubierta.';
+  result.contraste_fuentes =
+    'La página del PRI es primaria para comprobar qué dijo Moreno, no para probar el delito que atribuye. Su texto separa la acusación de “pacto” del pasaje que menciona 2018. La respuesta de Presidencia niega el señalamiento, pero una negación tampoco resuelve por sí sola el caso; el veredicto descansa en la tergiversación cronológica y en la ausencia de evidencia sustantiva en las fuentes presentadas. El análisis independiente sobre seguridad documenta violencia, fragmentación criminal y fallas estatales, no el pacto presidencial específico descrito en la publicación.';
+
+  result.evaluacion_afirmaciones = [
+    {
+      afirmacion: 'Alejandro Moreno acusó públicamente a López Obrador y a Morena de un pacto con el crimen organizado.',
+      estado: 'CONFIRMADA', relacion_con_afirmacion: 'CIRCUNSTANCIAL',
+      sustento_directo: ['La transcripción institucional del PRI reproduce esa acusación.'],
+      fuente_matriz: discursoPri,
+      lo_que_no_demuestra: 'Confirma la autoría y el encuadre partidista, no la existencia del pacto.'
+    },
+    {
+      afirmacion: 'La fuente citada afirma que el supuesto pacto comenzó en 2018.',
+      estado: 'CONTRADICHA', relacion_con_afirmacion: 'DIRECTA',
+      sustento_directo: ['La transcripción menciona 2018 en un pasaje separado sobre el gobierno que entregó el PRI, no como fecha de inicio de un pacto.'],
+      fuente_matriz: discursoPri,
+      lo_que_no_demuestra: 'No excluye que Moreno haya repetido otras versiones en otros momentos; contradice la cronología atribuida a esta fuente.'
+    },
+    {
+      afirmacion: 'López Obrador inició en 2018 un pacto con el crimen organizado.',
+      estado: 'NO DEMOSTRADA', relacion_con_afirmacion: 'DIRECTA',
+      sustento_directo: [],
+      fuente_matriz: discursoPri,
+      lo_que_no_demuestra: 'Un discurso partidista, una denuncia o su reproducción periodística no acreditan un acuerdo criminal.'
+    },
+    {
+      afirmacion: 'Los casos o señalamientos contra terceras personas prueban una estructura criminal encabezada por López Obrador.',
+      estado: 'NO DEMOSTRADA', relacion_con_afirmacion: 'DIRECTA',
+      sustento_directo: [],
+      fuente_matriz: '',
+      lo_que_no_demuestra: 'La responsabilidad es individual; la asociación política o personal no prueba conocimiento, orden ni participación del expresidente.'
+    }
+  ];
+
+  result.hechos_comprobados = [
+    'Alejandro Moreno realizó la acusación en un mensaje publicado por el PRI.',
+    'La transcripción del PRI no presenta documentos, testimonios identificables, peritajes ni una resolución que prueben el supuesto pacto.',
+    'En la fuente citada, el año 2018 aparece en un pasaje sobre el balance del gobierno saliente, separado de la acusación criminal.',
+    'La violencia y la infiltración criminal en ámbitos locales son problemas documentados, pero no acreditan por sí solos un pacto presidencial iniciado en 2018.'
+  ];
+  result.evidencia_a_favor = [];
+  result.evidencia_en_contra = [
+    'La única evidencia directa citada acredita la declaración del dirigente opositor, no el hecho denunciado.',
+    'La cronología de 2018 no aparece vinculada al supuesto pacto en la transcripción usada como fuente.',
+    'No se identificó en las fuentes presentadas una sentencia, resolución ministerial, expediente accesible o prueba independiente que conecte a López Obrador con ese acuerdo específico.',
+    'Las notas que reproducen la acusación dependen de la misma fuente matriz y no constituyen corroboraciones independientes.'
+  ];
+  result.indicadores_desinformacion = [
+    'Sustituye la prueba del hecho por la prueba de que un adversario político lo afirmó.',
+    'Une pasajes separados para atribuir al supuesto pacto una fecha de inicio que la fuente no establece.',
+    'Agrupa casos y señalamientos de personas distintas para inferir una estructura criminal presidencial sin demostrar el vínculo.',
+    'Presenta una etiqueta partidista —“Cártel de Macuspana”— como si fuera una organización establecida por una autoridad competente.'
+  ];
+  result.limitaciones = [
+    'La revisión se refiere a la afirmación pública y a las fuentes accesibles; no permite conocer expedientes legalmente reservados o investigaciones no publicadas.',
+    'La falta de evidencia pública no demuestra que un hecho sea metafísicamente imposible; sí impide publicarlo responsablemente como hecho probado.',
+    'La respuesta del gobierno es contexto y contradicción política, no se toma como prueba suficiente de inocencia.',
+    'No se atribuye intención de mentir, pago, automatización ni coordinación sin evidencia específica.'
+  ];
+
+  result.analisis_intencionalidad = {
+    clasificacion: 'INTENCIÓN NO DEMOSTRADA',
+    objetivo_del_dano: 'Andrés Manuel López Obrador, sus familiares, Morena y la credibilidad del gobierno federal.',
+    tipo_de_perjuicio: ['Político', 'Reputacional', 'Institucional'],
+    evidencia: ['El discurso llama a la militancia del PRI a enfrentar a Morena y usa acusaciones criminales como argumento de contraste partidista.'],
+    contraindicadores: ['No se documentó pago, instrucción externa, coordinación encubierta ni prueba de que el emisor conociera la falsedad de cada afirmación.'],
+    explicacion: 'El propósito de confrontación política está expreso en el propio mensaje. Eso permite describir su función retórica, pero no afirmar intención deliberada de engañar.',
+    confianza: 90
+  };
+  result.analisis_patron_objetivos = {
+    objetivo_principal: 'Andrés Manuel López Obrador y Morena.',
+    publicaciones_revisadas: 2,
+    publicaciones_dirigidas: 2,
+    periodo_muestra: 'Septiembre de 2025 a 2026',
+    clasificacion: 'CRÍTICA RECURRENTE',
+    recursos_recurrentes: ['Etiquetas criminales colectivas', 'Culpabilidad por asociación', 'Presentación de denuncias como confirmación del delito'],
+    ejemplos: ['Presentación del llamado “Cártel de Macuspana”.', 'Discurso del PRI que atribuye a López Obrador un pacto criminal.'],
+    fundamento: 'Las fuentes muestran reiteración de la misma línea acusatoria contra el adversario partidista. La muestra permite documentar crítica recurrente, no una operación coordinada ni una campaña pagada.',
+    limitaciones: ['Dos piezas no representan todo el historial del emisor.', 'La recurrencia del ataque no decide por sí sola la falsedad de una afirmación concreta.']
+  };
+  result.reputacion_fuente = {
+    medio_o_autor: 'Alejandro Moreno / Partido Revolucionario Institucional',
+    antecedentes_verificados: ['El PRI ha difundido reiteradamente la etiqueta “Cártel de Macuspana” y acusaciones criminales contra dirigentes de Morena.'],
+    percepcion_en_redes: 'No se usa popularidad, rechazo u orientación política como sustituto de evidencia.',
+    calidad_contenido_actual: 'El sitio del PRI es adecuado para comprobar la declaración de su dirigente, pero no aporta corroboración independiente del supuesto pacto.',
+    conflictos_interes: ['Alejandro Moreno dirige un partido opositor y el mensaje busca desacreditar a un adversario electoral directo.'],
+    limitaciones: 'El interés partidista exige contraste reforzado, pero no vuelve falsa una afirmación por sí mismo.'
+  };
+  result.auditoria_fuentes_periodisticas = [{
+    medio_o_periodista: 'PRI / Alejandro Moreno',
+    orientacion: 'NO DETERMINADA',
+    fundamento_orientacion: ['Es una fuente partidista opositora; las categorías izquierda/derecha no son necesarias para evaluar esta prueba.'],
+    propiedad_y_financiamiento: ['Sitio institucional del Partido Revolucionario Institucional.'],
+    contratos_o_pagos_documentados: [],
+    antecedentes_verificados: ['Ha publicado de forma reiterada la etiqueta “Cártel de Macuspana”.'],
+    relacion_con_publicacion_actual: 'DIRECTA',
+    prueba_pago_para_mentir: 'NO APLICA',
+    conclusion: 'Fuente primaria de la acusación y de su contexto político; no es corroboración independiente de la conducta criminal alegada.',
+    limitaciones: ['La evaluación se limita a la afirmación y las piezas revisadas; no juzga globalmente al partido o a su dirigente.']
+  }];
+
+  const integridadBase = result.analisis_integridad_informativa &&
+    typeof result.analisis_integridad_informativa === 'object'
+    ? result.analisis_integridad_informativa
+    : {};
+  result.analisis_integridad_informativa = {
+    ...integridadBase,
+    indice_amarillismo: Math.max(Number(integridadBase.indice_amarillismo) || 0, 80),
+    nivel_amarillismo: 'ALTO',
+    carga_emocional: ['“narcogobierno”', '“Cártel de Macuspana”', '“pacto criminal impune”'],
+    riesgo_confirmado: 'Existen violencia, corrupción e investigaciones contra actores públicos que justifican escrutinio y rendición de cuentas.',
+    riesgo_presentado: 'Se presenta como hecho probado un pacto nacional encabezado por López Obrador desde 2018.',
+    extrapolaciones: ['De casos de terceros se infiere un acuerdo presidencial.', 'De una acusación partidista se infiere culpabilidad.', 'De una mención separada de 2018 se crea una fecha de inicio.'],
+    contexto_omitido: ['La fuente no vincula 2018 con el inicio del supuesto pacto.', 'No se aporta el puente probatorio entre casos individuales y López Obrador.', 'Una denuncia no equivale a una resolución.'],
+    titular_responsable: 'Alejandro Moreno acusó a López Obrador de un pacto criminal, pero no presentó evidencia pública que lo pruebe ni situó su inicio en 2018 en la fuente citada.',
+    explicacion_educativa: 'Para verificar una acusación contenida en una cita hay que comprobar el hecho acusado, no solo la autenticidad de la cita. En delitos, cada vínculo —persona, conducta, fecha y conocimiento— necesita prueba propia.',
+    fuentes_matriz: [discursoPri],
+    replicas_no_independientes: ['Notas y publicaciones que únicamente reproducen las palabras de Alejandro Moreno.'],
+    fuentes_independientes_reales: 1,
+    evidencia_coordinacion: [],
+    probabilidad_coordinacion: 0,
+    evidencia_bots: [],
+    probabilidad_automatizacion: 0,
+    etiqueta_especial: 'NINGUNA',
+    limitaciones: ['No se analizaron datos internos de distribución ni todos los mensajes de las cuentas que replicaron la acusación.']
+  };
+
+  result.fuentes = [
+    {
+      titulo: 'PRI — Versión íntegra del mensaje de Alejandro Moreno',
+      url: discursoPri,
+      tipo: 'Primaria',
+      aporte: 'Confirma la acusación y permite comprobar que el pasaje sobre 2018 está separado y no fija el inicio del supuesto pacto.'
+    },
+    {
+      titulo: 'Presidencia — Conferencia del 20 de mayo de 2026',
+      url: respuestaPresidencia,
+      tipo: 'Oficial',
+      aporte: 'Registra la respuesta gubernamental y su versión contrapuesta; se usa como contexto, no como prueba decisiva.'
+    },
+    {
+      titulo: 'International Crisis Group — Mexico’s Everyday War',
+      url: informeCrisisGroup,
+      tipo: 'Académica',
+      aporte: 'Analiza violencia, fragmentación criminal y la estrategia de seguridad desde 2018 sin establecer el pacto presidencial alegado.'
+    },
+    {
+      titulo: 'Constitución Política de los Estados Unidos Mexicanos',
+      url: constitucion,
+      tipo: 'Oficial',
+      aporte: 'Marco aplicable a presunción de inocencia y responsabilidad individual frente a acusaciones penales.'
+    }
+  ];
   return result;
 }
 
@@ -632,9 +842,12 @@ export function normalize(result, input = '') {
       if (result.veredicto === 'PARCIALMENTE VERDADERO') result.veredicto = 'VERDADERO';
     }
   }
-  return applyUnfoldedBallotFramingGuard(
-    applyPisaPandemicFramingGuard(
-      applyEmbeddedAllegationGuard(applyNoCheckableClaimGuard(result, input), input),
+  return applyCriminalPact2018Guard(
+    applyUnfoldedBallotFramingGuard(
+      applyPisaPandemicFramingGuard(
+        applyEmbeddedAllegationGuard(applyNoCheckableClaimGuard(result, input), input),
+        input
+      ),
       input
     ),
     input

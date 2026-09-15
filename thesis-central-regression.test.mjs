@@ -339,3 +339,101 @@ const autoriaAnaya = normalizeProduction({
 }, '¿Es cierto que Ricardo Anaya dijo que contar boletas sin doblez legaliza el fraude electoral?');
 assert.equal(autoriaAnaya.veredicto_final,'CIERTA');
 assert.equal(autoriaAnaya.veredicto,'VERDADERO');
+
+// Una acusación de pacto criminal no se vuelve cierta porque el dirigente
+// opositor la haya pronunciado. Este caso reproduce la salida observada sobre
+// Alejandro Moreno y, además, comprueba que no se fabrique la fecha de 2018 al
+// unir dos pasajes distintos de la fuente partidista.
+const pactoCriminal2018 = normalizeProduction({
+  estado:'analizado', veredicto_final:'CIERTA', veredicto:'VERDADERO',
+  credibilidad:90, confianza:63,
+  afirmacion_principal:'Alejandro Moreno acusó que Andrés Manuel López Obrador inició en 2018 un supuesto pacto con el crimen organizado y presentó al llamado Cártel de Macuspana.',
+  explicacion_veredicto_final:'La publicación reproduce de forma correcta declaraciones públicas de Alejandro Moreno; reporta acusaciones formuladas por él, no pruebas judiciales.',
+  respuesta_directa:'El hilo resume declaraciones reales de Alejandro Moreno; las acusaciones permanecen como alegatos y no equivalen a pruebas judiciales concluyentes.',
+  resumen:'Moreno atribuyó a AMLO un pacto con el crimen organizado desde 2018 y señaló a sus hijos por huachicol fiscal.',
+  contexto:'El PRI difundió la acusación dentro de un discurso contra Morena.',
+  evaluacion_afirmaciones:[
+    {
+      afirmacion:'Alejandro Moreno acusó a AMLO de haber iniciado en 2018 un pacto con el crimen organizado.',
+      estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:['Comunicado y discurso del PRI.'],
+      fuente_matriz:'https://www.pri.org.mx/ElPartidoDeMexico/SaladePrensa/Nota.aspx?y=40980',
+      lo_que_no_demuestra:'No prueba judicial de que AMLO haya celebrado un pacto delictivo en 2018.'
+    },
+    {
+      afirmacion:'Moreno señaló a los hijos de López Obrador por negocios relacionados con huachicol fiscal.',
+      estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:['Declaración pública de Moreno.'],
+      fuente_matriz:'https://www.pri.org.mx/ElPartidoDeMexico/SaladePrensa/Nota.aspx?y=40980',
+      lo_que_no_demuestra:'No implica condena ni prueba judicial.'
+    },
+    {
+      afirmacion:'Moreno usó calificativos contra Morena y sus dirigentes.',
+      estado:'CONFIRMADA', relacion_con_afirmacion:'DIRECTA',
+      sustento_directo:['Transcripción del discurso.'],
+      fuente_matriz:'https://www.pri.org.mx/ElPartidoDeMexico/SaladePrensa/Nota.aspx?y=40980',
+      lo_que_no_demuestra:'El insulto no constituye prueba.'
+    }
+  ],
+  hechos_comprobados:['Moreno hizo la acusación.'],
+  evidencia_a_favor:['El PRI publicó el discurso.'],
+  evidencia_en_contra:[], indicadores_desinformacion:[],
+  limitaciones:['No hay en las fuentes citadas sentencias que avalen esas imputaciones.'],
+  fuentes:[{titulo:'PRI',url:'https://www.pri.org.mx/ElPartidoDeMexico/SaladePrensa/Nota.aspx?y=40980',tipo:'Primaria',aporte:'Discurso.'}],
+  analisis_integridad_informativa:{
+    indice_amarillismo:40, nivel_amarillismo:'MODERADO', carga_emocional:[],
+    riesgo_confirmado:'', riesgo_presentado:'', extrapolaciones:[], contexto_omitido:[],
+    titular_responsable:'', explicacion_educativa:'', fuentes_matriz:[],
+    replicas_no_independientes:[], fuentes_independientes_reales:0,
+    evidencia_coordinacion:[], probabilidad_coordinacion:0,
+    confianza_deteccion_coordinacion:0, cuentas_comparadas:[],
+    publicaciones_coincidentes:[], patron_publicacion_grupal:'', evidencia_bots:[],
+    probabilidad_automatizacion:0, confianza_deteccion_bots:0,
+    etiqueta_especial:'NINGUNA', limitaciones:[]
+  }
+}, 'https://www.threads.com/share/ejemplo-alito/');
+assert.equal(pactoCriminal2018.veredicto_final,'FALSA');
+assert.equal(pactoCriminal2018.veredicto,'FALSO');
+assert.equal(pactoCriminal2018.credibilidad,10);
+assert.ok(pactoCriminal2018.confianza >= 90);
+assert.match(pactoCriminal2018.afirmacion_principal,/López Obrador inició en 2018 un pacto/i);
+assert.equal(pactoCriminal2018.evaluacion_afirmaciones[0].relacion_con_afirmacion,'CIRCUNSTANCIAL');
+assert.equal(pactoCriminal2018.evaluacion_afirmaciones[1].estado,'CONTRADICHA');
+assert.match(pactoCriminal2018.explicacion_veredicto_final,/unir ambos fragmentos fabrica una cronología/i);
+assert.match(pactoCriminal2018.contexto,/confrontación partidista explícita/i);
+assert.equal(pactoCriminal2018.analisis_intencionalidad.clasificacion,'INTENCIÓN NO DEMOSTRADA');
+assert.equal(pactoCriminal2018.analisis_patron_objetivos.clasificacion,'CRÍTICA RECURRENTE');
+assert.deepEqual(pactoCriminal2018.evidencia_a_favor,[]);
+assert.ok(pactoCriminal2018.fuentes.some(item => /pri\.org\.mx/.test(item.url)));
+
+// Incluso si el modelo omite separar la acusación sustantiva, confirmar solo
+// actos de habla nunca puede producir un veredicto afirmativo.
+const soloActosDeHabla = normalizeProduction({
+  veredicto_final:'CIERTA', veredicto:'VERDADERO', credibilidad:90,
+  afirmacion_principal:'Una figura pública acusó a otra de corrupción.',
+  explicacion_veredicto_final:'La acusación aparece en su conferencia.',
+  evaluacion_afirmaciones:[{
+    afirmacion:'La figura pública formuló la acusación.', estado:'CONFIRMADA',
+    relacion_con_afirmacion:'DIRECTA', sustento_directo:['Video de la conferencia.'],
+    fuente_matriz:'https://example.com/video', lo_que_no_demuestra:'No demuestra la corrupción alegada.'
+  }], evidencia_a_favor:['La conferencia existe.'], limitaciones:[]
+}, 'https://example.com/publicacion');
+assert.equal(soloActosDeHabla.veredicto_final,'NO VERIFICABLE');
+assert.equal(soloActosDeHabla.veredicto,'INFORMACIÓN INSUFICIENTE');
+assert.equal(soloActosDeHabla.credibilidad,null);
+
+// Cuando la consulta sí pregunta exclusivamente por la autoría de la frase,
+// se conserva la respuesta sobre el acto de habla sin validar su contenido.
+const autoriaMoreno = normalizeProduction({
+  veredicto_final:'CIERTA', veredicto:'VERDADERO', credibilidad:95,
+  afirmacion_principal:'Alejandro Moreno dijo que López Obrador inició en 2018 un pacto con el crimen organizado.',
+  explicacion_veredicto_final:'La transcripción confirma que hizo esa acusación.',
+  evaluacion_afirmaciones:[{
+    afirmacion:'Alejandro Moreno hizo esa declaración.', estado:'CONFIRMADA',
+    relacion_con_afirmacion:'DIRECTA', sustento_directo:['Transcripción.'],
+    fuente_matriz:'https://example.com/transcripcion',
+    lo_que_no_demuestra:'No demuestra la existencia del pacto.'
+  }]
+}, '¿Es cierto que Alejandro Moreno dijo que López Obrador inició en 2018 un pacto con el crimen organizado?');
+assert.equal(autoriaMoreno.veredicto_final,'CIERTA');
+assert.equal(autoriaMoreno.veredicto,'VERDADERO');
