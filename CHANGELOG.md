@@ -1,3 +1,9 @@
+# Versión 1.21.0 - Verificación de la deuda pública (2026-09-15)
+
+- Publica una verificación sustancial de la afirmación de que Morena duplicó en siete años la deuda acumulada del país.
+- Separa el saldo observado a julio de 2026 de la proyección para el cierre de 2027 y compara pesos nominales, pesos reales y deuda como proporción del PIB.
+- Actualiza la biblioteca, la portada, el sitemap, las fechas públicas y la versión del servicio.
+
 # Versión 1.20.11 - Informe completo sin inferencias de coordinación (2026-09-15)
 
 - Elimina de la corrección del supuesto pacto cualquier insinuación residual de coordinación, automatización o bots sin evidencia específica.
