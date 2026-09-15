@@ -154,3 +154,12 @@ test('Both frontends persist cooldown, suppress repeat fetch and do not count fa
   assert(events.includes('verificacion_sin_acceso'));assert(!events.includes('verificacion_completada'));
   await context.analyze();assert.equal(calls,1);assert.equal(blocked,1);
 });
+
+test('Unresolved Threads shares offer guided recovery without inventing a verdict',async()=>{
+  const html=fs.readFileSync(new URL('./index.html',import.meta.url),'utf8');
+  assert.match(html,/THREADS NO ENTREGÓ LA PUBLICACIÓN/);
+  assert.match(html,/PEGAR TEXTO DEL POST/);
+  assert.match(html,/ADJUNTAR CAPTURA/);
+  assert.match(html,/data\?\.estado_tecnico !== "ENLACE_COMPARTIDO_NO_RESUELTO"/);
+  assert.doesNotMatch(html,/style="display:none!important"/);
+});

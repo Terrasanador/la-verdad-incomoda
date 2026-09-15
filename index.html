@@ -1,2140 +1,11 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <!-- Google AdSense -->
-  <script
-    async
-    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3013146050600948"
-    crossorigin="anonymous"></script>
-
-  <!-- Google Analytics 4 â€” seguimiento reforzado -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJ6ECPYJVJ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-
-    gtag("js", new Date());
-    gtag("config", "G-VJ6ECPYJVJ", {
-      send_page_view: false,
-      cookie_domain: "auto",
-      cookie_flags: "SameSite=None;Secure",
-      transport_type: "beacon"
-    });
-
-    // Una sola vista por carga real de pÃ¡gina.
-    gtag("event", "page_view", {
-      page_title: document.title,
-      page_location: window.location.href,
-      page_path: window.location.pathname + window.location.search,
-      send_to: "G-VJ6ECPYJVJ"
-    });
-
-    // DiagnÃ³stico local: no genera visitas artificiales; solo confirma que la etiqueta se ejecutÃ³.
-    window.addEventListener("load", function () {
-      document.documentElement.dataset.ga4Loaded = "true";
-      console.info("GA4 activo: G-VJ6ECPYJVJ");
-    });
-  </script>
-
-  <!-- LVI-ANALYTICS-VIEWS-REINFORCED-V1 -->
-  <!-- LVI-PRODUCTION-GA4-ADSENSE-V6 -->
-
-  <!-- LVI-VERDICT-BUTTON-MIC-2S-V4 -->
-  <!-- LVI-VOICE-RESULT-FIXED-V3 -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="La Verdad IncÃ³moda: inteligencia artificial y evidencia digital para evaluar la credibilidad de informaciÃ³n pÃºblica." />
-  <meta name="google-site-verification" content="P4oNwMGIVTWvjSFaru4SvY2g75APX2bZn33WCUr3JyM" />
-  <link rel="canonical" href="https://www.laverdadincomoda.mx/" />
-  <title>La Verdad IncÃ³moda | IA + Evidencia Digital</title>
-  <style>
-    :root {
-      --bg:#050506; --panel:#121216; --panel2:#19191f; --border:#373740;
-      --text:#fff; --muted:#b9b9c2; --red:#ff3b30; --green:#43d392; --yellow:#f2c94c;
-    }
-    *{box-sizing:border-box;margin:0;padding:0} html{scroll-behavior:smooth}
-    body{min-height:100vh;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:radial-gradient(circle at 50% 0%,#2b1010 0%,#0c0c0e 34%,var(--bg) 72%)}
-    button,textarea,input{font:inherit} button{cursor:pointer} a{color:inherit}
-    header{position:sticky;top:0;z-index:10;background:rgba(5,5,6,.9);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08)}
-    .nav{width:min(1000px,calc(100% - 28px));min-height:62px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}.site-links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;padding:8px 14px;border-top:1px solid rgba(255,255,255,.06)}.site-links a{color:#ddd;text-decoration:none;font-size:12px;font-weight:800}.site-links a:hover{color:#ff8580}
-    .brand{font-weight:900;letter-spacing:-.5px}.brand span{color:var(--red)}
-    .status{font-size:12px;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:7px 10px}
-    main{width:min(950px,calc(100% - 24px));margin:auto;padding:14px 0 60px}
-    .hero{text-align:center;margin-bottom:8px}.badge{display:inline-block;color:#ff8580;border:1px solid #70302d;background:rgba(255,59,48,.08);border-radius:999px;padding:6px 10px;font-size:10px;font-weight:900;letter-spacing:.3px;margin-bottom:6px}
-    h1{font-size:clamp(32px,7vw,56px);line-height:.96;letter-spacing:-2.4px;margin-bottom:4px}h1 span{color:var(--red)}
-    .subtitle{max-width:760px;margin:auto;color:var(--muted);font-size:13px;line-height:1.35}
-    .quick-how{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:8px auto 9px}.quick-how span{border:1px solid var(--border);background:#111115;border-radius:999px;padding:6px 9px;font-size:11px;color:#d5d5dc}
-    details{max-width:820px;margin:0 auto 9px;border:1px solid var(--border);border-radius:15px;background:rgba(17,17,20,.9);padding:9px 12px;text-align:left}summary{cursor:pointer;font-weight:800}details p{margin-top:10px;color:var(--muted);line-height:1.55}
-    .workspace{padding:clamp(16px,3vw,25px);border:1px solid var(--border);border-radius:24px;background:rgba(16,16,19,.97);box-shadow:0 20px 60px rgba(0,0,0,.35)}
-    .workspace h2{font-size:clamp(22px,4vw,31px);margin-bottom:4px}.workspace-intro{color:var(--muted);line-height:1.35;margin-bottom:9px;font-size:13px}
-    textarea{width:100%;min-height:135px;resize:vertical;background:#070708;color:white;border:1px solid #464650;border-radius:22px;padding:18px;outline:none;font-size:16px;line-height:1.5}textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,59,48,.12)}
-    .platforms{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 16px}.platforms span{font-size:11px;color:#94949d;border:1px solid var(--border);border-radius:999px;padding:6px 9px}
-    .drop-zone{padding:22px 16px;border:1px dashed #5c5c68;border-radius:22px;background:#0c0c0f;text-align:center;transition:.2s}.drop-zone.dragging{border-color:var(--red);background:rgba(255,59,48,.08)}
-    .drop-zone h3{margin-bottom:5px}.drop-zone p{color:var(--muted);font-size:13px;line-height:1.45}.file-button{display:inline-block;margin-top:12px;padding:11px 16px;border:1px solid #555560;border-radius:999px;background:#1b1b20;font-weight:800}#fileInput{display:none}
-    .selected-file{display:none;margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:15px;background:#17171c;text-align:left}.selected-file.visible{display:block}.selected-file small{display:block;color:var(--muted);margin-top:4px}.selected-file button{margin-top:9px;border:1px solid #4a4a54;background:#24242a;color:#fff;border-radius:11px;padding:8px 11px}
-    .mode-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.mode{padding:14px;border:1px solid var(--border);border-radius:16px;background:#17171b;color:#fff;text-align:left}.mode.active{border-color:var(--red);background:rgba(255,59,48,.09)}.mode strong{display:block;margin-bottom:4px}.mode small{color:var(--muted)}
-    .analyze{width:100%;min-height:68px;border:0;border-radius:22px;background:var(--red);color:white;font-size:clamp(19px,4vw,25px);font-weight:900}.analyze:disabled{opacity:.55;cursor:not-allowed}
-    .progress{display:none;margin-top:18px;padding:16px;border:1px solid var(--border);border-radius:18px;background:#0d0d10}.progress.visible{display:block}.progress-label{color:var(--muted);margin-bottom:8px}.track{height:9px;background:#26262c;border-radius:999px;overflow:hidden}.bar{width:0;height:100%;background:var(--red);transition:width .35s}
-    .result{display:none;margin-top:28px;padding:clamp(20px,4vw,32px);border:1px solid var(--border);border-radius:30px;background:rgba(12,12,14,.98);box-shadow:0 20px 60px rgba(0,0,0,.35)}.result.visible{display:block}
-    .final-verdict-box{margin-bottom:18px;padding:clamp(20px,4vw,30px);border:1px solid var(--border);border-radius:24px;text-align:center;background:#101014}
-    .final-verdict-label{display:block;margin-bottom:7px;color:var(--muted);font-size:12px;font-weight:900;letter-spacing:1.5px}
-    .final-verdict{font-size:clamp(42px,10vw,78px);font-weight:1000;letter-spacing:-2px;line-height:.95;overflow-wrap:anywhere}
-    .final-verdict.cierta{color:var(--green)}
-    .final-verdict.falsa{color:var(--red)}
-    .final-verdict.indeterminada{color:var(--yellow)}
-    .final-explanation{max-width:760px;margin:14px auto 0;color:#dedee5;font-size:15px;line-height:1.55}
-    .verdict{font-size:clamp(25px,5vw,42px);letter-spacing:-1.2px;line-height:1.05;color:#ff7470;margin-bottom:12px;overflow-wrap:anywhere}.metrics{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}.metric{padding:9px 12px;border:1px solid #67403e;border-radius:999px;background:rgba(255,59,48,.09);font-weight:800;font-size:13px}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{padding:18px;border:1px solid var(--border);border-radius:19px;background:var(--panel)}.card.full{grid-column:1/-1}.card h3{margin-bottom:8px}.card p,.card li{color:#d5d5dc;line-height:1.6;overflow-wrap:anywhere}.card ul{padding-left:20px}.sources{display:grid;gap:9px}.source{display:block;text-decoration:none;padding:12px;border:1px solid #3d3d46;border-radius:13px;background:#1a1a20}.source strong{display:block;margin-bottom:4px}.source small{color:var(--muted)}
-    .actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}.actions button{flex:1 1 140px;padding:12px;border:1px solid #494953;border-radius:13px;background:#1d1d22;color:#fff;font-weight:800}
-    .actions .social-copy{border-color:#7b3431;background:rgba(255,59,48,.12)}
-    .actions .share-action{border-color:#55d995;background:#137a44}
-    .disclaimer{max-width:820px;margin:24px auto 0;color:#7f7f89;text-align:center;line-height:1.6;font-size:13px}footer{text-align:center;color:#74747d;padding:28px 18px 40px}.editorial-home,.standards-home{margin:22px 0;padding:clamp(20px,4vw,32px);border:1px solid var(--border);border-radius:22px;background:#111114}.editorial-home h2,.standards-home h2{font-size:clamp(25px,5vw,38px);margin-bottom:8px}.editorial-home>p,.standards-home>p{color:#d0d0d8;line-height:1.65}.editorial-grid,.standards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.editorial-card,.standard-card{display:block;padding:16px;border:1px solid #3d3d46;border-radius:15px;background:#19191e;color:#fff;text-decoration:none}.editorial-card strong,.standard-card h3{display:block;margin-bottom:6px}.editorial-card small,.standard-card p{color:var(--muted);line-height:1.55}.standard-card p{font-size:14px}.editorial-actions{display:flex;gap:10px;flex-wrap:wrap}.editorial-actions a{padding:10px 14px;border:1px solid #633a38;border-radius:999px;color:#fff;text-decoration:none;font-weight:800;background:rgba(255,59,48,.08)}
-    /* Evita desbordamientos en pantallas pequeÃ±as */
-    html,body{width:100%;max-width:100%;overflow-x:hidden}
-    main,.workspace,.result,.grid,.card,.source,.sources,.final-verdict-box{min-width:0;max-width:100%}
-    .card p,.card li,.card h3,.source strong,.source small,.final-explanation,.verdict,.final-verdict,.metric,.disclaimer{
-      overflow-wrap:anywhere;word-break:break-word;hyphens:auto;white-space:normal
-    }
-    .grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
-    .source{width:100%;min-width:0}
-    .source strong,.source small{max-width:100%}
-    .account-audit{display:grid;gap:9px}.account-row{padding:13px;border:1px solid #3d3d46;border-radius:13px;background:#19191f}.account-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.account-name{font-weight:900}.account-label{flex:0 0 auto;padding:5px 8px;border:1px solid #5b4544;border-radius:999px;color:#ffaaa6;font-size:10px;font-weight:900}.account-row a{display:block;margin-top:5px;color:#a9cfff;font-size:12px;overflow-wrap:anywhere}.account-row ul{margin-top:8px}.match-row{padding:11px 0;border-bottom:1px solid #33333b}.match-row:last-child{border-bottom:0}.match-kind{color:#ffaaa6;font-size:11px;font-weight:900}
-
-    @media(max-width:700px){
-      body{font-size:15px}
-      main{width:calc(100% - 16px);padding:8px 0 44px}
-      .nav{width:calc(100% - 20px);min-height:54px}.editorial-grid,.standards-grid{grid-template-columns:1fr}
-      .brand{font-size:15px;white-space:nowrap}
-      .status{display:none}
-      .grid,.mode-row{grid-template-columns:minmax(0,1fr)}
-      .card.full{grid-column:auto}
-      .hero{margin-bottom:5px}
-      .subtitle{display:none}
-      .badge{font-size:9px;padding:5px 8px;margin-bottom:4px;max-width:100%;white-space:normal}
-      h1{font-size:clamp(27px,9vw,39px);letter-spacing:-1.5px;margin-bottom:1px;overflow-wrap:anywhere}
-      .quick-how{margin:5px auto 6px;gap:5px}
-      .quick-how span{font-size:10px;padding:5px 7px}
-      details{margin-bottom:7px;padding:8px 10px}
-      details p{font-size:14px}
-      .workspace{border-radius:18px;padding:13px}
-      .workspace h2{font-size:22px;overflow-wrap:anywhere}
-      .workspace-intro{display:none}
-      textarea{min-height:115px;padding:14px;font-size:16px;border-radius:17px;overflow-wrap:anywhere;word-break:break-word}
-      .platforms{margin:8px 0 10px}
-      .drop-zone{padding:15px 10px;border-radius:17px}
-      .drop-zone h3{font-size:18px}
-      .drop-zone p{font-size:12px}
-      .file-button{max-width:100%;white-space:normal}
-      .mode-row{margin:11px 0}
-      .mode{padding:12px;min-width:0}
-      .mode strong,.mode small{overflow-wrap:anywhere;word-break:break-word}
-      .analyze{min-height:56px;font-size:19px;padding:10px;overflow-wrap:anywhere;white-space:normal}
-      .result{margin-top:18px;padding:14px;border-radius:21px;width:100%}
-      .final-verdict-box{padding:17px 12px;border-radius:18px}
-      .final-verdict{font-size:clamp(36px,13vw,58px);letter-spacing:-1px}
-      .final-explanation{font-size:14px;line-height:1.5}
-      .verdict{font-size:clamp(22px,7.5vw,31px);letter-spacing:-.5px;line-height:1.12}
-      .metrics{gap:6px}
-      .metric{font-size:11px;padding:8px 9px;max-width:100%}
-      .card{padding:14px 12px;border-radius:16px;width:100%;min-width:0}
-      .card h3{font-size:18px;line-height:1.25}
-      .card p,.card li{font-size:14px;line-height:1.55}
-      .card ul{padding-left:18px}
-      .source{padding:10px;border-radius:12px}
-      .source strong{font-size:14px;line-height:1.35}
-      .source small{display:block;font-size:12px;line-height:1.4}
-      .actions{display:grid;grid-template-columns:1fr;gap:8px}
-      .actions button{width:100%;padding:11px}
-      .disclaimer{font-size:12px;padding:0 8px}
-      footer{font-size:13px;padding:22px 12px 32px}
-    }
-
-    @media(max-width:380px){
-      main{width:calc(100% - 10px)}
-      .workspace,.result{padding:11px}
-      .card{padding:12px 10px}
-      .final-verdict{font-size:36px}
-      .verdict{font-size:22px}
-      .metric{font-size:10px}
-    }
-
-
-
-    .voice-tools{
-      display:flex;align-items:center;gap:9px;margin:10px 0 4px;flex-wrap:wrap
-    }
-    .voice-button{
-      flex:1 1 230px;min-height:50px;border:1px solid #5a5a67;border-radius:15px;
-      background:#1b1b22;color:#fff;font-weight:900;padding:10px 14px;
-      display:flex;align-items:center;justify-content:center;gap:9px
-    }
-    .voice-button.listening{border-color:var(--red);background:rgba(255,59,48,.15)}
-    .voice-button:focus-visible,.speak-button:focus-visible{
-      outline:3px solid #fff;outline-offset:3px
-    }
-    .speak-button{
-      flex:1 1 190px;min-height:50px;border:1px solid #5a5a67;border-radius:15px;
-      background:#1b1b22;color:#fff;font-weight:900;padding:10px 14px
-    }
-    .voice-status{width:100%;color:var(--muted);font-size:12px;line-height:1.4}
-    .report-source{
-      margin-bottom:15px;padding:11px 13px;border:1px solid #565663;border-radius:13px;
-      background:#17171d;color:#e8e8ed;font-size:13px;font-weight:800;line-height:1.45
-    }
-    .report-source a{color:#fff;text-decoration:underline}
-    .sr-only{
-      position:absolute!important;width:1px!important;height:1px!important;padding:0!important;
-      margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;
-      white-space:nowrap!important;border:0!important
-    }
-    @media(max-width:700px){
-      .voice-tools{display:grid;grid-template-columns:1fr}
-      .voice-button,.speak-button{width:100%}
-    }
-    @media print{
-      .voice-tools{display:none!important}
-      .report-source{display:block!important;color:#000;background:#fff;border:1px solid #777}
-    }
-
-    /* Ventana Â¿CÃ³mo funciona? â€” sin assets externos */
-    .header-share{
-      appearance:none;display:flex;align-items:center;justify-content:center;gap:8px;
-      width:min(460px,calc(100% - 28px));margin:7px auto 10px;padding:11px 18px;
-      border:1px solid #55d995;border-radius:999px;background:#137a44;color:#fff;
-      box-shadow:0 7px 22px rgba(19,122,68,.28);text-align:center;
-      font-size:clamp(12px,2.5vw,15px);font-weight:1000;letter-spacing:.25px;line-height:1.25;
-      transition:background .2s ease,transform .2s ease,box-shadow .2s ease
-    }
-    .header-share:hover{background:#199457;box-shadow:0 9px 26px rgba(25,148,87,.34);transform:translateY(-1px)}
-    .header-share:active{transform:translateY(0)}
-    .header-share:focus-visible{outline:3px solid #fff;outline-offset:3px}
-    .header-share span{color:inherit}
-    .how-trigger{
-      width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;
-      margin:0 auto 9px;padding:11px 14px;border:1px solid var(--border);border-radius:15px;
-      background:rgba(17,17,20,.9);color:#fff;text-align:left;font-weight:900
-    }
-    .how-trigger small{color:var(--muted);font-weight:700}
-    .how-modal{position:fixed;inset:0;z-index:1100;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.82);backdrop-filter:blur(9px)}
-    .how-modal.visible{display:flex}
-    .how-dialog{width:min(900px,100%);max-height:calc(100vh - 36px);overflow:auto;border:1px solid var(--border);border-radius:24px;background:#111116;box-shadow:0 24px 80px rgba(0,0,0,.7);padding:22px}
-    .how-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
-    .how-head h2{font-size:clamp(25px,5vw,36px);line-height:1.08}
-    .how-close{flex:0 0 auto;width:42px;height:42px;border:1px solid #494953;border-radius:50%;background:#1d1d22;color:#fff;font-size:23px}
-    .how-lead{color:#d2d2da;line-height:1.6;margin:14px 0}
-    .how-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
-    .how-option{border:1px solid var(--border);border-radius:15px;background:#18181e;padding:13px;line-height:1.45}
-    .how-steps{margin:16px 0 20px;padding-left:22px;color:#ddd;line-height:1.65}
-    .demo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px}
-    .demo-card{border:1px solid var(--border);border-radius:17px;background:#17171d;padding:15px;min-width:0}
-    .demo-card h4{margin-bottom:9px;font-size:16px}
-    .demo-verdict{font-size:25px;font-weight:1000;color:var(--green);line-height:1.05;margin:8px 0}
-    .demo-metrics{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
-    .demo-pill{font-size:11px;font-weight:900;padding:7px 9px;border:1px solid #67403e;border-radius:999px;background:rgba(255,59,48,.09)}
-    .demo-list{padding-left:18px;color:#d5d5dc;font-size:13px;line-height:1.55}
-    .demo-source{display:block;padding:10px;border:1px solid #3d3d46;border-radius:11px;background:#1a1a20;margin-top:8px;font-size:12px;color:#d5d5dc}
-    .how-start{width:100%;min-height:54px;margin-top:18px;border:0;border-radius:16px;background:var(--red);color:#fff;font-size:18px;font-weight:1000}
-    .how-tagline{text-align:center;color:var(--muted);font-size:13px;margin-top:9px}
-    @media(max-width:700px){
-      .header-share{width:calc(100% - 20px);font-size:12px;padding:10px 14px;margin:6px auto 9px}
-      .how-modal{padding:10px;align-items:flex-end}
-      .how-dialog{max-height:94vh;border-radius:22px 22px 14px 14px;padding:17px 14px}
-      .how-options,.demo-grid{grid-template-columns:1fr}
-      .how-trigger{padding:10px 12px}
-    }
-
-    .content-modal{
-      position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
-      padding:18px;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)
-    }
-    .content-modal.visible{display:flex}
-    .content-modal-dialog{
-      width:min(620px,100%);max-height:calc(100vh - 36px);overflow:auto;
-      border:1px solid var(--border);border-radius:24px;background:#111116;
-      box-shadow:0 24px 80px rgba(0,0,0,.65);padding:22px
-    }
-    .content-modal-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}
-    .content-modal-title{font-size:clamp(23px,5vw,32px);line-height:1.08}
-    .content-modal-close{
-      flex:0 0 auto;width:42px;height:42px;border:1px solid #494953;border-radius:50%;
-      background:#1d1d22;color:#fff;font-size:23px;line-height:1
-    }
-    .content-modal-text{color:#d2d2da;line-height:1.55;margin-bottom:14px}
-    .content-modal textarea{min-height:180px;border-radius:16px}
-    .content-modal-note{display:block;color:var(--muted);font-size:12px;line-height:1.45;margin-top:8px}
-    .content-modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
-    .content-modal-actions button{
-      min-height:50px;padding:11px;border:1px solid #494953;border-radius:14px;
-      background:#1d1d22;color:#fff;font-weight:900
-    }
-    .content-modal-actions .primary{border-color:var(--red);background:var(--red)}
-    .content-modal-error{display:none;color:#ff8c87;font-size:13px;margin-top:9px}
-    .content-modal-error.visible{display:block}
-    body.modal-open{overflow:hidden}
-
-    @media(max-width:700px){
-      .content-modal{padding:10px;align-items:flex-end}
-      .content-modal-dialog{max-height:92vh;border-radius:22px 22px 14px 14px;padding:17px 14px}
-      .content-modal-actions{grid-template-columns:1fr}
-      .content-modal textarea{min-height:210px}
-    }
-
-    @media print{header,.hero,.quick-how,details,.workspace,.disclaimer,footer,.actions{display:none!important}body{background:#fff;color:#000}.result{display:block!important;border:0;box-shadow:none;background:#fff}.card,.source{background:#fff;color:#000;border-color:#bbb}.card p,.card li,.source small{color:#222}}
-  </style>
-</head>
-<body>
-<header>
-  <div class="nav"><div class="brand">LA VERDAD <span>INCÃ“MODA</span></div><div class="status">IA + Evidencia Digital</div></div>
-  <nav class="site-links" aria-label="NavegaciÃ³n editorial"><a href="/articles.html">ArtÃ­culos</a><a href="/metodologia.html">MetodologÃ­a</a><a href="/estandares-editoriales.html">EstÃ¡ndares</a><a href="/politica-editorial.html">PolÃ­tica editorial</a><a href="/correcciones.html">Correcciones</a><a href="/autores.html">Autores</a><a href="/quienes-somos.html">QuiÃ©nes somos</a><a href="/contacto.html">Contacto</a></nav>
-  <button class="header-share" id="pageShareButton" type="button" onclick="sharePage(this)" aria-label="Compartir La Verdad IncÃ³moda" aria-live="polite"><span aria-hidden="true">â†—</span><span>COMPARTIR ESTA PÃGINA</span></button>
-</header>
-<main>
-  <section class="hero">
-    <div class="badge">INTELIGENCIA ARTIFICIAL + EVIDENCIA DIGITAL</div>
-    <h1>No creas. <span>Comprueba.</span></h1>
-    <p class="subtitle">Pregunta, pega un enlace o sube un archivo. La IA investiga y contrasta evidencia pÃºblica.</p>
-  </section>
-  <div class="quick-how"><span>ğŸ’¬ Pregunta</span><span>ğŸŒ Pega un enlace</span><span>ğŸ“· Imagen</span><span>ğŸ§ Audio</span><span>ğŸ“„ Documento</span></div>
-  <button class="how-trigger" id="openHowModal" type="button"><strong>Â¿CÃ³mo funciona?</strong><small>Ver explicaciÃ³n y ejemplo â†’</small></button>
-
-  <section class="workspace">
-    <h2>Â¿QuÃ© quieres verificar?</h2>
-    <p class="workspace-intro">Escribe, pega un enlace o aÃ±ade un archivo.</p>
-    <textarea id="newsInput" placeholder="Ejemplo: Â¿QuÃ© tan confiable es esta afirmaciÃ³n segÃºn la evidencia pÃºblica disponible?"></textarea>
-    <div class="voice-tools" aria-label="Herramientas de accesibilidad por voz">
-      <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false">
-        <span aria-hidden="true">ğŸ™ï¸</span>
-        <span id="voiceInputLabel">Preguntar por voz</span>
-      </button>
-      <button class="speak-button" id="speakSummaryButton" type="button">
-        <span aria-hidden="true">ğŸ—£ï¸</span> Escuchar resumen
-      </button>
-      <button class="speak-button" id="speakFullButton" type="button">
-        <span aria-hidden="true">ğŸ“–</span> Escuchar informe completo
-      </button>
-      <button class="speak-button" id="stopSpeechButton" type="button">
-        <span aria-hidden="true">ğŸ”‡</span> Detener lectura
-      </button>
-      <p class="voice-status" id="voiceStatus" aria-live="polite">
-        Pulsa el micrÃ³fono para hablar. TambiÃ©n puedes pegar un enlace, copiar una noticia o subir una imagen o documento.
-      </p>
-    </div>
-    <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>PÃ¡ginas web</span></div>
-    <div class="drop-zone" id="dropZone">
-      <h3>Arrastra un archivo aquÃ­</h3>
-      <p>Fotos, audio, video MP4/WebM, PDF, Word, Excel, PowerPoint y texto. Adjuntos: mÃ¡ximo 3 MB. Enlaces directos a archivos: hasta 20 MB. Video: audio y muestra de fotogramas; no cada escena.</p>
-      <label class="file-button" for="fileInput">Seleccionar archivo</label>
-      <input id="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.flac,.ogg,.mp4,.webm,.pdf,.txt,.md,.csv,.tsv,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
-      <div class="selected-file" id="selectedFile"><strong id="fileName"></strong><small id="fileDetails"></small><button id="removeFile" type="button">Quitar archivo</button></div>
-    </div>
-    <div class="mode-row">
-      <button class="mode active" type="button" data-mode="rapido"><strong>âš¡ AnÃ¡lisis rÃ¡pido</strong><small>EvaluaciÃ³n breve con fuentes.</small></button>
-      <button class="mode" type="button" data-mode="profundo"><strong>ğŸ” InvestigaciÃ³n profunda</strong><small>Mayor contraste y detalle.</small></button>
-    </div>
-    <button class="analyze" id="analyzeButton" type="button">ANALIZAR CREDIBILIDAD</button>
-    <div class="progress" id="progress"><div class="progress-label" id="progressLabel">Preparandoâ€¦</div><div class="track"><div class="bar" id="progressBar"></div></div></div>
-  </section>
-
-  <section class="result" id="result" aria-live="polite"></section>
-  <section class="editorial-home"><h2>Verificaciones originales recientes</h2><p>La biblioteca reÃºne comprobaciones completas, no agregados automÃ¡ticos de noticias. Cada investigaciÃ³n formula una afirmaciÃ³n concreta, enlaza entre cinco y ocho fuentes cuando el tema lo permite, distingue datos de inferencias y explica las limitaciones de la conclusiÃ³n.</p><div class="editorial-grid"><a class="editorial-card" href="/articulos/falso-morena-duplico-deuda-siete-anos-proyeccion-2027"><strong>FALSA: la deuda no se duplicÃ³ en siete aÃ±os</strong><small>La cifra de 21.66 billones es una proyecciÃ³n para 2027; el saldo observado en julio de 2026 era de 19.22 billones.</small></a><a class="editorial-card" href="/articulos/parcial-conanp-16-2-pesos-por-hectarea-presupuesto-2027"><strong>PARCIAL: 16.2 pesos por hectÃ¡rea para la Conanp</strong><small>El cociente es correcto, pero no representa una asignaciÃ³n uniforme a cada hectÃ¡rea protegida.</small></a><a class="editorial-card" href="/articulos/cierto-robo-vehiculos-chiapas-bajo-68-por-ciento-agosto-2026"><strong>CIERTO: robo de vehÃ­culos en Chiapas bajÃ³ 68%</strong><small>La operaciÃ³n coincide, pero compara dos meses y mide carpetas registradas, no todos los robos.</small></a><a class="editorial-card" href="/articulos/cierto-record-inversion-extranjera-directa-primer-semestre-2026"><strong>CIERTO: rÃ©cord de inversiÃ³n extranjera directa</strong><small>El total llegÃ³ a 34,968 millones de dÃ³lares; 88.5% fue reinversiÃ³n de utilidades y 7.8% nuevas inversiones.</small></a><a class="editorial-card" href="/articulos/enganoso-nueva-escuela-mexicana-fracaso-pisa-2025"><strong>ENGAÃ‘OSA: PISA 2025 y la Nueva Escuela Mexicana</strong><small>La OCDE confirmÃ³ una caÃ­da significativa en matemÃ¡ticas, pero no evaluÃ³ causalmente la reforma educativa.</small></a><a class="editorial-card" href="/articulos/enganoso-pobreza-laboral-bajo-3-2-por-ciento-segundo-trimestre-2026"><strong>ENGAÃ‘OSA: 3.2% no equivale a 3.2 puntos</strong><small>RevisiÃ³n del cÃ¡lculo anual y del cambio frente al trimestre inmediato con datos del INEGI.</small></a><a class="editorial-card" href="/articulos/cierto-homicidios-dolosos-bajaron-51-por-ciento-septiembre-2024-julio-2026"><strong>CIERTO: el promedio de homicidios bajÃ³ 51%</strong><small>El cÃ¡lculo coincide con el SESNSP, pero no demuestra por sÃ­ solo quÃ© polÃ­tica produjo el cambio.</small></a><a class="editorial-card" href="/articulos/parcial-aifa-3-6-millones-pasajeros-primer-semestre-2026"><strong>PARCIAL: pasajeros del AIFA y â€œlo planeadoâ€</strong><small>La cifra de pasajeros estÃ¡ respaldada; la comparaciÃ³n con una meta semestral pÃºblica no apareciÃ³ documentada.</small></a><a class="editorial-card" href="/articulos/enganoso-cambio-identidad-somos-mexico-no-cancela-registro"><strong>ENGAÃ‘OSA: el cambio de nombre no cancelÃ³ el registro</strong><small>Resoluciones del TEPJF, el Diario Oficial y el INE separan identidad grÃ¡fica de existencia jurÃ­dica.</small></a></div><div class="editorial-actions"><a href="/articles.html">Ver las 28 publicaciones</a><a href="/metodologia.html">Conocer la metodologÃ­a</a><a href="/preguntas-frecuentes.html">Preguntas frecuentes</a></div></section>
-  <section class="standards-home"><h2>QuÃ© aporta una verificaciÃ³n</h2><p>El resultado del analizador es una ayuda inicial; las publicaciones editoriales constituyen el archivo permanente del proyecto. Para evitar conclusiones fabricadas por repeticiÃ³n, se rastrea la fuente matriz de cada dato y se comprueba si varias notas proceden del mismo comunicado, cable o video. Una noticia periodÃ­stica acredita que un medio hizo una afirmaciÃ³n, pero la veracidad depende de los documentos y registros que la sostienen.</p><div class="standards-grid"><article class="standard-card"><h3>Fuentes primarias</h3><p>Se consultan leyes, resoluciones, bases de datos, informes metodolÃ³gicos, transcripciones completas y documentos de las instituciones competentes. Una fuente oficial tampoco recibe veracidad automÃ¡tica: se revisan su alcance, fecha y mÃ©todo.</p></article><article class="standard-card"><h3>Contraste real</h3><p>Buscamos evidencia favorable y desfavorable. Las rÃ©plicas se agrupan para no presentar diez copias de una misma nota como diez comprobaciones independientes. Cuando falta una pieza decisiva, se declara sin rellenar el vacÃ­o.</p></article><article class="standard-card"><h3>ConclusiÃ³n proporcional</h3><p>CIERTO, FALSO, PARCIAL, ENGAÃ‘OSO y NO VERIFICABLE describen la evidencia disponible. La intenciÃ³n, el sesgo editorial, la coordinaciÃ³n y el uso de bots se evalÃºan por separado y solo se atribuyen cuando existen pruebas especÃ­ficas.</p></article></div><p>Todos los artÃ­culos identifican autorÃ­a editorial, fecha, afirmaciÃ³n revisada, fuentes y procedimiento de correcciones. La publicidad estÃ¡ separada de la selecciÃ³n de temas y no modifica los veredictos. Si una investigaciÃ³n cambia por evidencia nueva, la actualizaciÃ³n debe quedar documentada pÃºblicamente.</p><div class="editorial-actions"><a href="/politica-editorial.html">EstÃ¡ndares editoriales</a><a href="/autores.html">AutorÃ­a y responsabilidad</a><a href="/correcciones.html">Solicitar una correcciÃ³n</a></div></section>
-  <p class="disclaimer">La Verdad IncÃ³moda ayuda a evaluar credibilidad con IA, evidencia digital y fuentes pÃºblicas. No sustituye el trabajo periodÃ­stico ni un peritaje profesional. Si no puede acceder al contenido, no inventa un resultado.</p>
-</main>
-
-
-<div class="how-modal" id="howModal" hidden role="dialog" aria-modal="true" aria-labelledby="howModalTitle">
-  <div class="how-dialog">
-    <div class="how-head">
-      <div><div class="badge">GUÃA RÃPIDA</div><h2 id="howModalTitle">Â¿CÃ³mo funciona?</h2></div>
-      <button class="how-close" id="closeHowModal" type="button" aria-label="Cerrar">Ã—</button>
-    </div>
-    <p class="how-lead">La Verdad IncÃ³moda usa inteligencia artificial, bÃºsqueda web y contraste de evidencia pÃºblica para analizar afirmaciones y explicar cÃ³mo llegÃ³ a cada conclusiÃ³n.</p>
-    <div class="how-options">
-      <div class="how-option">ğŸ”— Pega el enlace de una noticia, publicaciÃ³n, video o red social.</div>
-      <div class="how-option">ğŸ“· Sube una imagen o captura de pantalla con texto visible.</div>
-      <div class="how-option">ğŸ“„ Adjunta un documento compatible.</div>
-      <div class="how-option">ğŸ“ <strong>TambiÃ©n puedes copiar y pegar el texto o la noticia que quieres verificar.</strong> No necesitas un enlace.</div>
-    </div>
-    <ol class="how-steps">
-      <li>Identifica la afirmaciÃ³n principal.</li><li>Lee el texto visible de imÃ¡genes y documentos.</li><li>Busca documentos, registros y fuentes pÃºblicas.</li><li>Contrasta evidencia favorable, desfavorable y limitaciones.</li><li>Entrega un veredicto, porcentajes, contexto y fuentes consultadas.</li>
-    </ol>
-    <h3>Ejemplo de un resultado</h3>
-    <p class="how-lead">Estas tarjetas ilustran la informaciÃ³n que puede incluir un informe real.</p>
-    <div class="demo-grid">
-      <article class="demo-card"><h4>Veredicto final</h4><div class="demo-verdict">CIERTA</div><strong>ClasificaciÃ³n: VERDADERO</strong><div class="demo-metrics"><span class="demo-pill">Credibilidad: 95%</span><span class="demo-pill">Confianza: 92%</span></div><p>La evidencia documental confirma materialmente la afirmaciÃ³n.</p></article>
-      <article class="demo-card"><h4>Hechos y evidencia</h4><ul class="demo-list"><li>Se localizaron documentos oficiales.</li><li>Varias fuentes independientes coinciden.</li><li>No se encontraron contradicciones relevantes.</li></ul><div class="demo-source"><strong>Contexto necesario</strong><br>El informe explica lÃ­mites y detalles importantes.</div></article>
-      <article class="demo-card"><h4>Fuentes consultadas</h4><div class="demo-source"><strong>Documento oficial</strong><br>Fuente primaria.</div><div class="demo-source"><strong>Registro pÃºblico</strong><br>Evidencia verificable.</div><div class="demo-source"><strong>InvestigaciÃ³n periodÃ­stica</strong><br>Contraste independiente.</div></article>
-    </div>
-    <button class="how-start" id="startVerification" type="button">EMPEZAR MI VERIFICACIÃ“N</button>
-    <div class="how-tagline">No creas. Comprueba.</div>
-  </div>
-</div>
-
-<div class="content-modal" id="contentModal" hidden style="display:none!important" role="dialog" aria-modal="true" aria-labelledby="contentModalTitle">
-  <div class="content-modal-dialog">
-    <div class="content-modal-header">
-      <div>
-        <div class="badge">CONTENIDO NECESARIO</div>
-        <h2 class="content-modal-title" id="contentModalTitle">AyÃºdanos a continuar la verificaciÃ³n</h2>
-      </div>
-      <button class="content-modal-close" id="contentModalClose" type="button" aria-label="Cerrar">Ã—</button>
-    </div>
-
-    <p class="content-modal-text" id="contentModalMessage">
-      No fue posible acceder automÃ¡ticamente al enlace. Pega aquÃ­ el texto completo de la publicaciÃ³n,
-      una transcripciÃ³n o una descripciÃ³n fiel de lo que afirma.
-    </p>
-
-    <textarea
-      id="contentModalInput"
-      placeholder="Pega aquÃ­ el contenido que deseas verificar..."
-    ></textarea>
-
-    <small class="content-modal-note">
-      El anÃ¡lisis indicarÃ¡ que este contenido fue proporcionado por el usuario y no obtenido directamente de la plataforma.
-    </small>
-
-    <p class="content-modal-error" id="contentModalError">
-      Escribe al menos una afirmaciÃ³n o una descripciÃ³n concreta.
-    </p>
-
-    <div class="content-modal-actions">
-      <button id="contentModalCancel" type="button">Cancelar</button>
-      <button class="primary" id="contentModalContinue" type="button">CONTINUAR ANÃLISIS</button>
-    </div>
-  </div>
-</div>
-
-<footer>Â© 2026 La Verdad IncÃ³moda Â· <a href="/privacidad.html">Privacidad</a> Â· <a href="/terminos.html">TÃ©rminos</a> Â· <a href="/contacto.html">Contacto</a> Â· <a href="/quienes-somos.html">QuiÃ©nes somos</a></footer>
-<script>
-  // Vercel Web Analytics + eventos de uso.
-  window.va = window.va || function () {
-    (window.vaq = window.vaq || []).push(arguments);
-  };
-
-  function trackUsage(name, properties = {}) {
-    try {
-      window.va("event", { name, ...properties });
-    } catch (_) {
-      // La mediciÃ³n nunca debe interrumpir la verificaciÃ³n.
-    }
-  }
-
-  const newsInput = document.getElementById("newsInput");
-  const fileInput = document.getElementById("fileInput");
-  const dropZone = document.getElementById("dropZone");
-  const selectedFileBox = document.getElementById("selectedFile");
-  const fileName = document.getElementById("fileName");
-  const fileDetails = document.getElementById("fileDetails");
-  const removeFile = document.getElementById("removeFile");
-  const analyzeButton = document.getElementById("analyzeButton");
-  const progress = document.getElementById("progress");
-  const progressLabel = document.getElementById("progressLabel");
-  const progressBar = document.getElementById("progressBar");
-  const result = document.getElementById("result");
-  const contentModal = document.getElementById("contentModal");
-  const contentModalInput = document.getElementById("contentModalInput");
-  const contentModalMessage = document.getElementById("contentModalMessage");
-  const contentModalError = document.getElementById("contentModalError");
-  const contentModalClose = document.getElementById("contentModalClose");
-  const contentModalCancel = document.getElementById("contentModalCancel");
-  const contentModalContinue = document.getElementById("contentModalContinue");
-  const voiceInputButton = document.getElementById("voiceInputButton");
-  const voiceInputLabel = document.getElementById("voiceInputLabel");
-  const voiceStatus = document.getElementById("voiceStatus");
-  const speakSummaryButton = document.getElementById("speakSummaryButton");
-  const speakFullButton = document.getElementById("speakFullButton");
-  const stopSpeechButton = document.getElementById("stopSpeechButton");
-
-  const SpeechRecognitionAPI =
-    window.SpeechRecognition || window.webkitSpeechRecognition || null;
-
-  let voiceModeEnabled = false;
-  let voiceRecognition = null;
-  let isListening = false;
-  let microphoneSilenceTimer = null;
-  let microphoneDetectedSpeech = false;
-  let lastAnalysisData = null;
-  let voiceConversationState = "idle";
-  let pendingVoiceCallback = null;
-  let welcomePending = false;
-  let welcomeHasPlayed = false;
-
-
-  let selectedFile = null;
-  let threadsCooldownUntil = 0;
-  try { threadsCooldownUntil = Number(sessionStorage.getItem("lvi_threads_retry_at")) || 0; } catch {}
-  let selectedMode = "rapido";
-  let timer = null;
-  let lastOriginalQuery = "";
-  let lastResultWasSupplemented = false;
-
-  const esc = value =>
-    String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-
-  function selectedSpeechLanguage() {
-    const pageLanguage = document.documentElement.lang || navigator.language || "es-MX";
-    return pageLanguage === "auto" ? (navigator.language || "es-MX") : pageLanguage;
-  }
-
-  function cleanSpeechText(value) {
-    return String(value || "")
-      .replace(/\s+/g, " ")
-      .replace(/https?:\/\/\S+/g, " enlace ")
-      .trim();
-  }
-
-  function speakText(text, interrupt = true) {
-    if (!("speechSynthesis" in window)) {
-      voiceStatus.textContent = "Este navegador no permite leer el contenido en voz alta.";
-      return;
-    }
-
-    const spoken = cleanSpeechText(text);
-    if (!spoken) return;
-
-    if (interrupt) window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(spoken);
-    utterance.lang = selectedSpeechLanguage();
-    utterance.rate = 0.92;
-    utterance.pitch = 1;
-    utterance.onstart = () => {
-      voiceStatus.textContent = "Leyendo en voz altaâ€¦";
-    };
-    utterance.onend = () => {
-      voiceStatus.textContent = "Lectura terminada. Puedes volver a usar el micrÃ³fono.";
-    };
-    utterance.onerror = () => {
-      voiceStatus.textContent = "No fue posible completar la lectura en voz alta.";
-    };
-
-    window.speechSynthesis.speak(utterance);
-  }
-
-  function welcomeMessage() {
-    return "Bienvenido a La Verdad IncÃ³moda. Â¿QuÃ© deseas verificar?";
-  }
-
-  function shortVoiceInstructions() {
-    return [
-      "Pulsa el botÃ³n Preguntar por voz y di quÃ© informaciÃ³n deseas verificar.",
-      "TambiÃ©n puedes pegar un enlace, copiar una noticia, o subir una imagen o un documento.",
-      "Cuando termine el anÃ¡lisis, escucharÃ¡s el resumen y lo mÃ¡s importante."
-    ].join(" ");
-  }
-
-  function clearMicrophoneSilenceTimer() {
-    if (microphoneSilenceTimer) {
-      clearTimeout(microphoneSilenceTimer);
-      microphoneSilenceTimer = null;
-    }
-  }
-
-  function startMicrophoneSilenceTimer() {
-    clearMicrophoneSilenceTimer();
-    microphoneDetectedSpeech = false;
-
-    microphoneSilenceTimer = setTimeout(() => {
-      if (!microphoneDetectedSpeech && isListening && voiceRecognition) {
-        voiceStatus.textContent =
-          "No se detectÃ³ voz en dos segundos. El micrÃ³fono se apagÃ³.";
-        try { voiceRecognition.stop(); } catch {}
-      }
-    }, 2000);
-  }
-
-  function startVoiceRecognition() {
-    if (!SpeechRecognitionAPI) {
-      const message =
-        "El reconocimiento de voz no estÃ¡ disponible en este navegador.";
-      voiceStatus.textContent = message;
-      speakText(message);
-      return;
-    }
-
-    if (voiceRecognition) {
-      try { voiceRecognition.abort(); } catch {}
-    }
-
-    voiceRecognition = new SpeechRecognitionAPI();
-    voiceRecognition.lang = selectedSpeechLanguage();
-    voiceRecognition.interimResults = true;
-    voiceRecognition.continuous = false;
-    voiceRecognition.maxAlternatives = 1;
-
-    voiceRecognition.onstart = () => {
-      isListening = true;
-      startMicrophoneSilenceTimer();
-      voiceInputButton.classList.add("listening");
-      voiceInputButton.setAttribute("aria-pressed", "true");
-      voiceInputLabel.textContent = "Escuchandoâ€¦";
-      voiceStatus.textContent = "MicrÃ³fono activo. Haz tu pregunta.";
-    };
-
-    voiceRecognition.onresult = event => {
-      let finalTranscript = "";
-
-      for (let index = event.resultIndex; index < event.results.length; index++) {
-        const transcript =
-          event.results[index]?.[0]?.transcript?.trim() || "";
-
-        if (transcript) {
-          microphoneDetectedSpeech = true;
-          clearMicrophoneSilenceTimer();
-          voiceStatus.textContent = "Voz detectada. Termina tu pregunta.";
-        }
-
-        if (event.results[index].isFinal) {
-          finalTranscript += ` ${transcript}`;
-        }
-      }
-
-      const transcript = finalTranscript.trim();
-      if (!transcript) return;
-
-      newsInput.value = transcript;
-      voiceStatus.textContent = `Pregunta reconocida: ${transcript}`;
-      voiceModeEnabled = true;
-
-      speakText(`EscuchÃ©: ${transcript}. Iniciando la verificaciÃ³n.`);
-
-      const waitUntilSpeechEnds = () => {
-        if (window.speechSynthesis?.speaking) {
-          setTimeout(waitUntilSpeechEnds, 180);
-        } else {
-          analyze();
-        }
-      };
-
-      setTimeout(waitUntilSpeechEnds, 180);
-    };
-
-    voiceRecognition.onerror = event => {
-      clearMicrophoneSilenceTimer();
-      const messages = {
-        "not-allowed":
-          "Debes permitir el acceso al micrÃ³fono. Pulsa Preguntar por voz.",
-        "service-not-allowed":
-          "El navegador no permitiÃ³ usar el micrÃ³fono.",
-        "no-speech":
-          "No se detectÃ³ voz. El micrÃ³fono se apagÃ³; pulsa Preguntar por voz para intentarlo de nuevo.",
-        "audio-capture":
-          "No se encontrÃ³ un micrÃ³fono disponible.",
-        "network":
-          "No fue posible usar el reconocimiento de voz por un problema de red."
-      };
-
-      const message =
-        messages[event.error] || "No fue posible reconocer la voz.";
-
-      voiceStatus.textContent = message;
-
-      if (event.error !== "aborted") {
-        speakText(message);
-      }
-    };
-
-    voiceRecognition.onend = () => {
-      clearMicrophoneSilenceTimer();
-      isListening = false;
-      voiceInputButton.classList.remove("listening");
-      voiceInputButton.setAttribute("aria-pressed", "false");
-      voiceInputLabel.textContent = "Preguntar por voz";
-    };
-
-    try {
-      voiceRecognition.start();
-    } catch {
-      voiceStatus.textContent =
-        "No fue posible activar el micrÃ³fono. Pulsa Preguntar por voz.";
-    }
-  }
-
-  function activateVoiceMode() {
-    voiceModeEnabled = true;
-
-    if (window.speechSynthesis?.speaking) {
-      window.speechSynthesis.cancel();
-    }
-
-    if (isListening && voiceRecognition) {
-      try { voiceRecognition.stop(); } catch {}
-      return;
-    }
-
-    startVoiceRecognition();
-  }
-
-  function playWelcomeAndThenListen() {
-    if (welcomeHasPlayed) return;
-
-    welcomeHasPlayed = true;
-    welcomePending = false;
-    voiceModeEnabled = true;
-
-    if (!("speechSynthesis" in window)) {
-      startVoiceRecognition();
-      return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(welcomeMessage());
-    utterance.lang = selectedSpeechLanguage();
-    utterance.rate = 0.92;
-    utterance.pitch = 1;
-
-    utterance.onstart = () => {
-      voiceStatus.textContent = "Reproduciendo bienvenida breve.";
-    };
-
-    utterance.onend = () => {
-      voiceStatus.textContent = "MicrÃ³fono activo. Haz tu pregunta.";
-      setTimeout(() => startVoiceRecognition(), 700);
-    };
-
-    utterance.onerror = () => {
-      voiceStatus.textContent = "MicrÃ³fono activo. Haz tu pregunta.";
-      setTimeout(() => startVoiceRecognition(), 700);
-    };
-
-    window.speechSynthesis.resume();
-    window.speechSynthesis.speak(utterance);
-  }
-
-  function scheduleWelcome() {
-    welcomePending = true;
-
-    const tryPlay = () => {
-      if (!welcomePending || welcomeHasPlayed) return;
-      playWelcomeAndThenListen();
-    };
-
-    // Conserva el comportamiento anterior que sÃ­ reproducÃ­a la bienvenida.
-    setTimeout(tryPlay, 700);
-
-    // Respaldo para navegadores que requieren el primer toque.
-    const firstInteraction = () => {
-      tryPlay();
-      window.removeEventListener("pointerdown", firstInteraction);
-      window.removeEventListener("keydown", firstInteraction);
-      window.removeEventListener("touchstart", firstInteraction);
-    };
-
-    window.addEventListener("pointerdown", firstInteraction, { once: true });
-    window.addEventListener("keydown", firstInteraction, { once: true });
-    window.addEventListener("touchstart", firstInteraction, { once: true });
-  }
-
-  function safeUrl(value) {
-    try {
-      const url = new URL(value);
-      return ["http:", "https:"].includes(url.protocol) ? url.href : "";
-    } catch {
-      return "";
-    }
-  }
-
-  function bytes(size) {
-    if (!size) return "TamaÃ±o desconocido";
-
-    const units = ["B", "KB", "MB", "GB"];
-    const index = Math.min(
-      Math.floor(Math.log(size) / Math.log(1024)),
-      3
-    );
-
-    return `${(size / 1024 ** index).toFixed(index ? 1 : 0)} ${units[index]}`;
-  }
-
-  function normalizeArray(value) {
-    if (!Array.isArray(value)) return [];
-
-    return value
-      .map(item => {
-        if (typeof item === "string") return item.trim();
-
-        if (item && typeof item === "object") {
-          return (
-            item.texto ||
-            item.descripcion ||
-            item.hecho ||
-            item.evidencia ||
-            item.aporte ||
-            ""
-          ).trim();
-        }
-
-        return "";
-      })
-      .filter(Boolean);
-  }
-
-  function unique(items) {
-    return [...new Set(normalizeArray(items))];
-  }
-
-  function percent(value) {
-    if (value === null || value === undefined || value === "") return null;
-    const number = Number(value);
-
-    if (!Number.isFinite(number)) return null;
-
-    return Math.max(0, Math.min(100, Math.round(number)));
-  }
-
-  function setFile(file) {
-    selectedFile = file || null;
-
-    if (!file) {
-      fileInput.value = "";
-      selectedFileBox.classList.remove("visible");
-      return;
-    }
-
-    if (file.size > 3000000) {
-      alert("El adjunto excede 3 MB. Un enlace directo pÃºblico permite archivos de hasta 20 MB.");
-      fileInput.value = "";
-      selectedFile = null;
-      return;
-    }
-
-    fileName.textContent = file.name;
-    fileDetails.textContent =
-      `${file.type || "Tipo desconocido"} Â· ${bytes(file.size)}`;
-
-    selectedFileBox.classList.add("visible");
-  }
-
-async function sampleVideoFrames(file) {
-    const video=document.createElement("video");
-    const objectUrl=URL.createObjectURL(file);
-    video.muted=true; video.preload="auto"; video.playsInline=true;
-    const frames=[];
-    const waitFor=(event)=>new Promise((resolve,reject)=>{
-      const cleanup=()=>{clearTimeout(timer);video.removeEventListener(event,done);video.removeEventListener("error",bad);};
-      const done=()=>{cleanup();resolve();};
-      const bad=()=>{cleanup();reject(new Error("No se pudieron muestrear imÃ¡genes del video."));};
-      const timer=setTimeout(bad,8000);
-      video.addEventListener(event,done,{once:true}); video.addEventListener("error",bad,{once:true});
-    });
-    try {
-      const ready=waitFor("loadeddata");video.src=objectUrl;await ready;
-      if(!Number.isFinite(video.duration)||video.duration<=0) return [];
-      const canvas=document.createElement("canvas");
-      const scale=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
-      canvas.width=Math.max(1,Math.round(video.videoWidth*scale));
-      canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
-      for(const fraction of [0.02,0.25,0.5,0.75,0.98]){
-        const seconds=video.duration*fraction;
-        const sought=waitFor("seeked");video.currentTime=seconds;await sought;
-        canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);
-        const data=canvas.toDataURL("image/jpeg",0.55).split(",")[1];
-        if(data.length<=60000)frames.push({seconds,data});
-      }
-    } catch { /* Backend will explicitly label audio-only coverage. */ }
-    finally {video.removeAttribute("src");video.load();URL.revokeObjectURL(objectUrl);}
-    return frames;
-  }
-
-  function file64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        const result = String(reader.result || "");
-        resolve(result.split(",")[1] || "");
-      };
-
-      reader.onerror = () =>
-        reject(new Error("No se pudo leer el archivo."));
-
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function startProgress() {
-    const stages = [
-      ["Recibiendo informaciÃ³nâ€¦", 12],
-      ["Extrayendo contenidoâ€¦", 30],
-      ["Buscando evidencia en Internetâ€¦", 50],
-      ["Contrastando fuentesâ€¦", 72],
-      ["Preparando conclusiÃ³nâ€¦", 90]
-    ];
-
-    let index = 0;
-
-    progress.classList.add("visible");
-    progressLabel.textContent = stages[0][0];
-    progressBar.style.width = `${stages[0][1]}%`;
-
-    timer = setInterval(() => {
-      index = Math.min(index + 1, stages.length - 1);
-      progressLabel.textContent = stages[index][0];
-      progressBar.style.width = `${stages[index][1]}%`;
-    }, 1200);
-  }
-
-  function endProgress(success = true) {
-    clearInterval(timer);
-    timer = null;
-
-    progressLabel.textContent = success
-      ? "AnÃ¡lisis terminado."
-      : "No se pudo completar.";
-
-    progressBar.style.width = "100%";
-
-    setTimeout(() => {
-      progress.classList.remove("visible");
-    }, 800);
-  }
-
-  function list(items) {
-    const values = unique(items);
-
-    if (!values.length) return "";
-
-    return `
-      <ul>
-        ${values.map(item => `<li>${esc(item)}</li>`).join("")}
-      </ul>
-    `;
-  }
-
-  function textCard(title, text, full = false) {
-    const value = String(text || "").trim();
-
-    if (!value) return "";
-
-    return `
-      <article class="card ${full ? "full" : ""}">
-        <h3>${esc(title)}</h3>
-        <p>${esc(value)}</p>
-      </article>
-    `;
-  }
-
-  function listCard(title, items, full = false) {
-    const values = unique(items);
-
-    if (!values.length) return "";
-
-    return `
-      <article class="card ${full ? "full" : ""}">
-        <h3>${esc(title)}</h3>
-        ${list(values)}
-      </article>
-    `;
-  }
-
-  function renderAccountAudit(integrity = {}) {
-    const accounts = Array.isArray(integrity.cuentas_comparadas) ? integrity.cuentas_comparadas.slice(0, 10) : [];
-    const matches = Array.isArray(integrity.publicaciones_coincidentes) ? integrity.publicaciones_coincidentes.slice(0, 10) : [];
-    if (!accounts.length && !matches.length && !integrity.patron_publicacion_grupal) return "";
-
-    const accountRows = accounts.map(account => {
-      const url = safeUrl(account.url);
-      return `<div class="account-row">
-        <div class="account-head"><span class="account-name">${esc(account.cuenta || "Cuenta no identificada")}</span><span class="account-label">${esc(account.clasificacion || "EVIDENCIA INSUFICIENTE")}</span></div>
-        ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(url)}</a>` : ""}
-        ${list(account.senales)}
-        ${Array.isArray(account.limitaciones) && account.limitaciones.length ? `<small>LimitaciÃ³n: ${esc(account.limitaciones.join(" "))}</small>` : ""}
-      </div>`;
-    }).join("");
-
-    const matchRows = matches.map(match => {
-      const url = safeUrl(match.url);
-      return `<div class="match-row"><div><strong>${esc(match.cuenta || "Cuenta")}</strong> Â· <span class="match-kind">${esc(match.similitud || "NO DETERMINADA")}</span></div>
-        ${match.fecha ? `<small>${esc(match.fecha)}</small>` : ""}
-        ${match.fragmento_coincidente ? `<p>â€œ${esc(match.fragmento_coincidente)}â€</p>` : ""}
-        ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Abrir publicaciÃ³n original</a>` : ""}
-      </div>`;
-    }).join("");
-
-    return `
-      ${accounts.length ? `<article class="card full"><h3>Cuentas comparadas</h3><div class="account-audit">${accountRows}</div></article>` : ""}
-      ${matches.length ? `<article class="card full"><h3>Publicaciones coincidentes</h3>${matchRows}</article>` : ""}
-      ${textCard("PatrÃ³n de publicaciÃ³n grupal", integrity.patron_publicacion_grupal, true)}
-      ${listCard("Evidencia de coordinaciÃ³n", integrity.evidencia_coordinacion, true)}
-      ${listCard("Evidencia de automatizaciÃ³n", integrity.evidencia_bots, true)}
-    `;
-  }
-
-  function renderJournalismAudit(items = []) {
-    const audits = Array.isArray(items) ? items.slice(0, 5) : [];
-    if (!audits.length) return "";
-
-    const rows = audits.map(item => {
-      const orientation = item.orientacion || "NO DETERMINADA";
-      const paymentProof = item.prueba_pago_para_mentir || "NO DOCUMENTADA";
-      return `<div class="account-row">
-        <div class="account-head">
-          <span class="account-name">${esc(item.medio_o_periodista || "Fuente no identificada")}</span>
-          <span class="account-label">OrientaciÃ³n: ${esc(orientation)}</span>
-        </div>
-        <p><strong>Â¿Hay prueba de pago para mentir?</strong> ${esc(paymentProof)}</p>
-        ${item.relacion_con_publicacion_actual ? `<p><strong>RelaciÃ³n con esta publicaciÃ³n:</strong> ${esc(item.relacion_con_publicacion_actual)}</p>` : ""}
-        ${list(item.fundamento_orientacion)}
-        ${list(item.propiedad_y_financiamiento)}
-        ${list(item.contratos_o_pagos_documentados)}
-        ${list(item.antecedentes_verificados)}
-        ${item.conclusion ? `<p>${esc(item.conclusion)}</p>` : ""}
-        ${Array.isArray(item.limitaciones) && item.limitaciones.length ? `<small>Limitaciones: ${esc(item.limitaciones.join(" "))}</small>` : ""}
-      </div>`;
-    }).join("");
-
-    return `<article class="card full">
-      <h3>AuditorÃ­a de medios y periodistas</h3>
-      <p>Separa orientaciÃ³n editorial, financiamiento, antecedentes y prueba de pago vinculada a la publicaciÃ³n concreta.</p>
-      <div class="account-audit">${rows}</div>
-    </article>`;
-  }
-
-  function firstSpokenItem(...groups) {
-    for (const group of groups) {
-      if (!Array.isArray(group)) continue;
-      const value = group.find(item => String(item || "").trim());
-      if (value) return String(value).trim();
-    }
-    return "";
-  }
-
-  function buildSpokenSummary(data = lastAnalysisData) {
-    if (!data || typeof data !== "object") {
-      return result.innerText.trim();
-    }
-
-    const isProfileAudit = data?.tipo_resultado === "auditoria_de_publicaciones";
-    const finalVerdict = String(
-      data.veredicto_final || data.veredicto || "NO VERIFICABLE"
-    ).trim();
-
-    const technicalVerdict = String(
-      data.veredicto || "INFORMACIÃ“N INSUFICIENTE"
-    ).trim();
-
-    const credibility = percent(
-      data.credibilidad ?? data.credibilidad_porcentaje
-    );
-
-    const confidence = percent(
-      data.confianza ?? data.confianza_analisis
-    );
-
-    const summary = String(
-      data.resumen ||
-      data.resumen_ejecutivo ||
-      data.respuesta_directa ||
-      data.conclusion ||
-      "No se recibiÃ³ un resumen."
-    ).trim();
-
-    const mostImportant = firstSpokenItem(
-      data.hechos_comprobados,
-      data.evidencia_a_favor,
-      data.evidencia_en_contra
-    ) || String(data.conclusion || "").trim();
-
-    if (isProfileAudit) {
-      return [
-        "Fuente de consulta: La Verdad IncÃ³moda.",
-        "AuditorÃ­a de publicaciones.",
-        `Tendenciosidad observada: ${data?.evaluacion_publicaciones?.nivel_tendenciosidad || "no determinada"}.`,
-        `Resumen: ${summary}`,
-        data.bot_detectado === true ? data.alerta_bot : "",
-        mostImportant ? `Lo mÃ¡s importante: ${mostImportant}` : ""
-      ].filter(Boolean).join(" ");
-    }
-
-    return [
-      "Fuente de consulta: La Verdad IncÃ³moda.",
-      `Veredicto final: ${finalVerdict}.`,
-      `ClasificaciÃ³n tÃ©cnica: ${technicalVerdict}.`,
-      credibility === null ? "Credibilidad de la afirmaciÃ³n: no aplica." : `Credibilidad de la afirmaciÃ³n: ${credibility} por ciento.`,
-      confidence === null ? "Confianza del anÃ¡lisis: no calculada." : `Confianza del anÃ¡lisis: ${confidence} por ciento.`,
-      `Resumen: ${summary}`,
-      mostImportant ? `Lo mÃ¡s importante: ${mostImportant}` : ""
-    ].filter(Boolean).join(" ");
-  }
-
-  function speakSummary() {
-    const text = buildSpokenSummary();
-    if (!text) {
-      speakText("TodavÃ­a no hay un resultado para leer.");
-      return;
-    }
-    speakText(text);
-  }
-
-  function speakFullReport() {
-    const text = result.innerText.trim();
-    if (!text) {
-      speakText("TodavÃ­a no hay un informe para leer.");
-      return;
-    }
-    speakText(text);
-  }
-
-  function speakResultIfNeeded() {
-    if (!voiceModeEnabled) return;
-    speakSummary();
-  }
-
-  function reportSource() {
-    return `
-      <div class="report-source">
-        Fuente de consulta: <strong>La Verdad IncÃ³moda</strong> Â·
-        <a href="https://www.laverdadincomoda.mx/" target="_blank" rel="noopener noreferrer">
-          www.laverdadincomoda.mx
-        </a>
-      </div>
-    `;
-  }
-
-  function actions() {
-    return `
-      <div class="actions">
-        <button onclick="copyReport()">Copiar informe</button>
-        <button class="social-copy" onclick="copySocialSummary(this)">Copiar resumen para redes</button>
-        <button class="share-action" onclick="shareReport()">Compartir</button>
-        <button onclick="window.print()">Guardar como PDF</button>
-      </div>
-    `;
-  }
-
-  function socialSummary(data = lastAnalysisData) {
-    if (!data || typeof data !== "object") return "";
-    const profileAudit = data.tipo_resultado === "auditoria_de_publicaciones";
-    const verdict = String(data.veredicto_final || data.veredicto || "NO VERIFICABLE").trim();
-    const rawClaim = String(data.afirmacion_principal || "").trim();
-    const claim = rawClaim.length > 180 ? `${rawClaim.slice(0, 179).trimEnd()}â€¦` : rawClaim;
-    const explanation = String(
-      data.explicacion_veredicto_final || data.respuesta_directa || data.resumen || data.conclusion || ""
-    ).trim();
-    const label = profileAudit ? "AUDITORÃA DE PUBLICACIONES" : verdict;
-    const parts = [
-      `LA VERDAD INCÃ“MODA â€” ${label}`,
-      claim ? `AfirmaciÃ³n: ${claim}` : "",
-      explanation,
-      "Consulta la evidencia y las fuentes: https://www.laverdadincomoda.mx/",
-      "#LaVerdadIncÃ³moda #NoCreasComprueba"
-    ].filter(Boolean);
-    let output = parts.join("\n\n");
-    if (output.length <= 750) return output;
-
-    const fixed = [
-      `LA VERDAD INCÃ“MODA â€” ${label}`,
-      claim ? `AfirmaciÃ³n: ${claim}` : "",
-      "Consulta la evidencia y las fuentes: https://www.laverdadincomoda.mx/",
-      "#LaVerdadIncÃ³moda #NoCreasComprueba"
-    ].filter(Boolean);
-    const reserved = fixed.join("\n\n").length + 4;
-    const available = Math.max(80, 750 - reserved);
-    const shortened = explanation.length > available
-      ? `${explanation.slice(0, Math.max(0, available - 1)).trimEnd()}â€¦`
-      : explanation;
-    output = [fixed[0], fixed[1] || "", shortened, ...fixed.slice(claim ? 2 : 1)].filter(Boolean).join("\n\n");
-    return output.slice(0, 750).trim();
-  }
-
-  async function copySocialSummary(button) {
-    if (!lastAnalysisData || lastAnalysisData.estado === "sin_acceso" || lastAnalysisData.analizado === false) return;
-    const text = socialSummary();
-    if (!text) return;
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const area = document.createElement("textarea");
-      area.value = text;
-      area.style.position = "fixed";
-      area.style.opacity = "0";
-      document.body.appendChild(area);
-      area.select();
-      document.execCommand("copy");
-      area.remove();
-    }
-    const original = button?.textContent || "Copiar resumen para redes";
-    if (button) {
-      button.textContent = `Copiado (${text.length}/750)`;
-      setTimeout(() => { button.textContent = original; }, 2200);
-    }
-    trackUsage("resumen_redes_copiado", { caracteres: text.length });
-  }
-
-  function renderSources(sources) {
-    if (!Array.isArray(sources) || !sources.length) return "";
-
-    const validSources = sources.filter(source =>
-      source && (source.url || source.titulo)
-    ).slice(0, 5);
-
-    if (!validSources.length) return "";
-
-    return `
-      <article class="card full">
-        <h3>Fuentes consultadas</h3>
-
-        <div class="sources">
-          ${validSources.map(source => {
-            const url = safeUrl(source.url);
-
-            const title =
-              source.titulo ||
-              source.title ||
-              url ||
-              "Fuente consultada";
-
-            const details = [
-              source.tipo,
-              source.fecha,
-              source.aporte
-            ].filter(Boolean).join(" Â· ");
-
-            const body = `
-              <strong>${esc(title)}</strong>
-              ${details ? `<small>${esc(details)}</small>` : ""}
-            `;
-
-            return url
-              ? `
-                <a
-                  class="source"
-                  href="${esc(url)}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  ${body}
-                </a>
-              `
-              : `<div class="source">${body}</div>`;
-          }).join("")}
-        </div>
-      </article>
-    `;
-  }
-
-  function renderLinkContext(data) {
-    const extraction = data?.extraccion_enlace;
-    const social = data?.analisis_redes;
-    if (!extraction && !social) return "";
-
-    const profile = extraction?.perfil;
-    const metadata = extraction ? [
-      extraction.plataforma && `Plataforma: ${extraction.plataforma}`,
-      profile?.nombre && `Nombre pÃºblico: ${profile.nombre}`,
-      profile?.usuario && `Usuario: @${profile.usuario}`,
-      profile?.biografia && `BiografÃ­a: ${profile.biografia}`,
-      Number.isFinite(profile?.seguidores) && `Seguidores declarados: ${profile.seguidores.toLocaleString("es-MX")}`,
-      Number.isFinite(profile?.publicaciones_declaradas) && `Publicaciones declaradas: ${profile.publicaciones_declaradas.toLocaleString("es-MX")}`,
-      extraction.titulo && `TÃ­tulo: ${extraction.titulo}`,
-      extraction.autor && `Autor o cuenta: ${extraction.autor}`,
-      extraction.fecha_publicacion && `Publicado: ${extraction.fecha_publicacion}`,
-      extraction.duracion_segundos && `DuraciÃ³n: ${Math.floor(extraction.duracion_segundos / 3600) ? `${Math.floor(extraction.duracion_segundos / 3600)} h ` : ""}${Math.floor((extraction.duracion_segundos % 3600) / 60)} min`,
-      extraction.transcripcion_recuperada ? "TranscripciÃ³n o subtÃ­tulos: recuperados" : "",
-      extraction.acceso_directo
-        ? "Acceso directo: disponible"
-        : extraction.acceso_parcial
-          ? "Acceso: ficha pÃºblica recuperada; historial parcialmente limitado"
-          : "Acceso directo: limitado"
-    ].filter(Boolean) : [];
-
-    const trends = unique(social?.tendencias_observadas || []);
-    const manipulation = unique(social?.posible_manipulacion || []);
-    const comments = Array.isArray(extraction?.comentarios)
-      ? extraction.comentarios.filter(comment => comment?.texto)
-      : [];
-
-    return `
-      <article class="card full">
-        <h3>Contexto recuperado del enlace y redes</h3>
-        ${metadata.length ? `<p>${metadata.map(esc).join("<br>")}</p>` : ""}
-        ${comments.length ? `
-          <h4>Comentarios pÃºblicos recuperados (${comments.length})</h4>
-          <p class="muted">Son una muestra contextual y no representan una votaciÃ³n sobre la veracidad.</p>
-          <ul>${comments.map(comment => {
-            const details = [comment.autor, comment.publicado].filter(Boolean).join(" Â· ");
-            return `<li>${esc(comment.texto)}${details ? `<small>${esc(details)}</small>` : ""}</li>`;
-          }).join("")}</ul>
-        ` : ""}
-        ${trends.length ? `<h4>Tendencias observadas</h4><ul>${trends.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : ""}
-        ${manipulation.length ? `<h4>Posible manipulaciÃ³n o coordinaciÃ³n</h4><ul>${manipulation.map(item => `<li>${esc(item)}</li>`).join("")}</ul>` : ""}
-        ${social?.representatividad ? `<p><strong>Representatividad:</strong> ${esc(social.representatividad)}</p>` : ""}
-        ${social?.limitaciones ? `<p><strong>Limitaciones:</strong> ${esc(social.limitaciones)}</p>` : ""}
-      </article>
-    `;
-  }
-
-  function renderVideoTopics(data) {
-    const topics = Array.isArray(data?.temas_video)
-      ? data.temas_video.filter(topic => topic && (topic.tema || topic.resumen))
-      : [];
-    if (!topics.length && !data?.resumen_video) return "";
-    return `
-      <article class="card full">
-        <h3>Resumen y contexto del video</h3>
-        ${data.resumen_video ? `<p>${esc(data.resumen_video)}</p>` : ""}
-        ${topics.map(topic => `
-          <section class="source">
-            <strong>${topic.minuto ? `${esc(topic.minuto)} Â· ` : ""}${esc(topic.tema || "Tema identificado")}</strong>
-            ${topic.resumen ? `<p>${esc(topic.resumen)}</p>` : ""}
-            ${topic.afirmaciones?.length ? `<small><b>Afirmaciones:</b> ${topic.afirmaciones.map(esc).join(" Â· ")}</small>` : ""}
-            ${topic.veredicto ? `<small><b>EvaluaciÃ³n:</b> ${esc(topic.veredicto)}</small>` : ""}
-            ${topic.contexto ? `<small><b>Contexto:</b> ${esc(topic.contexto)}</small>` : ""}
-          </section>
-        `).join("")}
-      </article>
-    `;
-  }
-
-  function buildSourceContrast(data, sources) {
-    if (data.contraste_fuentes) {
-      return String(data.contraste_fuentes).trim();
-    }
-
-    if (!sources.length) {
-      return String(
-        data.limitaciones?.[0] ||
-        "No se pudieron recuperar suficientes fuentes pÃºblicas para realizar un contraste independiente."
-      );
-    }
-
-    const types = [
-      ...new Set(
-        sources
-          .map(source => source?.tipo)
-          .filter(Boolean)
-      )
-    ];
-
-    let text =
-      `Se consultaron ${sources.length} fuente` +
-      `${sources.length === 1 ? "" : "s"} relacionada` +
-      `${sources.length === 1 ? "" : "s"} con la afirmaciÃ³n.`;
-
-    if (types.length) {
-      text += ` Se incluyeron fuentes de tipo ${types.join(", ")}.`;
-    }
-
-    const favorable = unique(
-      data.evidencia_a_favor || data.evidencia_favorable
-    );
-
-    const unfavorable = unique(
-      data.evidencia_en_contra || data.evidencia_desfavorable
-    );
-
-    if (favorable.length && unfavorable.length) {
-      text +=
-        " Se encontraron elementos tanto favorables como desfavorables, por lo que el veredicto considera ambos lados de la evidencia.";
-    } else if (unfavorable.length) {
-      text +=
-        " La evidencia recuperada contradice principalmente la afirmaciÃ³n analizada.";
-    } else if (favorable.length) {
-      text +=
-        " La evidencia recuperada respalda principalmente la afirmaciÃ³n analizada.";
-    }
-
-    return text;
-  }
-
-  function normalizeFinalVerdict(value) {
-    const normalized = String(value || "")
-      .trim()
-      .toUpperCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-
-    if (["CIERTA", "CIERTO", "VERDADERA", "VERDADERO"].includes(normalized)) {
-      return "CIERTA";
-    }
-
-    if (["FALSA", "FALSO"].includes(normalized)) {
-      return "FALSA";
-    }
-
-    if ([
-      "NO VERIFICABLE",
-      "INFORMACION INSUFICIENTE",
-      "INFORMACIÃ“N INSUFICIENTE"
-    ].includes(normalized)) {
-      return "NO VERIFICABLE";
-    }
-
-    return "";
-  }
-
-  function coherentFinalVerdict(data, fallbackVerdict = "") {
-    const technical = String(data?.veredicto || fallbackVerdict || "")
-      .trim()
-      .toUpperCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-
-    if (["VERDADERO", "MAYORMENTE VERDADERO"].includes(technical)) {
-      return "CIERTA";
-    }
-
-    if ([
-      "FALSO",
-      "ENGANOSO",
-      "FUERA DE CONTEXTO",
-      "CONTENIDO MANIPULADO",
-      "CADENA DE DESINFORMACION"
-    ].includes(technical)) {
-      return "FALSA";
-    }
-
-    if ([
-      "PARCIALMENTE VERDADERO",
-      "INFORMACION INSUFICIENTE",
-      "NO VERIFICABLE",
-      "RUMOR NO CONFIRMADO"
-    ].includes(technical)) {
-      return "NO VERIFICABLE";
-    }
-
-    return (
-      normalizeFinalVerdict(data?.veredicto_final) ||
-      normalizeFinalVerdict(fallbackVerdict)
-    );
-  }
-
-  function finalVerdictClass(value) {
-    if (value === "CIERTA") return "cierta";
-    if (value === "FALSA") return "falsa";
-    return "indeterminada";
-  }
-
-  function renderFinalVerdict(data, fallbackVerdict = "") {
-    const finalVerdict =
-      coherentFinalVerdict(data, fallbackVerdict);
-
-    if (!finalVerdict) return "";
-
-    const explanation = String(
-      data.explicacion_veredicto_final ||
-      data.justificacion_veredicto_final ||
-      ""
-    ).trim();
-
-    return `
-      <div class="final-verdict-box">
-        <span class="final-verdict-label">VEREDICTO FINAL</span>
-        <div class="final-verdict ${finalVerdictClass(finalVerdict)}">
-          ${esc(finalVerdict)}
-        </div>
-        ${
-          explanation
-            ? `<p class="final-explanation">${esc(explanation)}</p>`
-            : ""
-        }
-      </div>
-    `;
-  }
-
-  function hasUsefulResult(data) {
-    return Boolean(
-      data?.afirmacion_principal ||
-      data?.respuesta_directa ||
-      data?.resumen ||
-      data?.conclusion ||
-      (Array.isArray(data?.hechos_comprobados) && data.hechos_comprobados.length) ||
-      (Array.isArray(data?.evidencia_a_favor) && data.evidencia_a_favor.length) ||
-      (Array.isArray(data?.evidencia_en_contra) && data.evidencia_en_contra.length) ||
-      (Array.isArray(data?.fuentes) && data.fuentes.length)
-    );
-  }
-
-  function isNoVerifiableResult(data) {
-    const finalVerdict = String(data?.veredicto_final || "")
-      .trim()
-      .toUpperCase();
-
-    const technicalVerdict = String(data?.veredicto || "")
-      .trim()
-      .toUpperCase();
-
-    const explicitlyBlocked =
-      data?.estado === "sin_acceso" || data?.analizado === false;
-
-    const noVerifiable =
-      finalVerdict === "NO VERIFICABLE" ||
-      technicalVerdict === "NO VERIFICABLE" ||
-      technicalVerdict === "INFORMACIÃ“N INSUFICIENTE" ||
-      technicalVerdict === "INFORMACION INSUFICIENTE";
-
-    return explicitlyBlocked && noVerifiable;
-  }
-
-  function openContentModal(data = {}) {
-    // VersiÃ³n 1.3: el sitio investiga el enlace automÃ¡ticamente y nunca
-    // solicita al usuario copiar o transcribir la publicaciÃ³n.
-    trackUsage("enlace_investigado_sin_solicitar_texto", {
-      estado: data?.estado || "desconocido"
-    });
-    return;
-  }
-
-  function closeContentModal() {
-    contentModal.classList.remove("visible");
-    contentModal.style.display = "none";
-    contentModal.hidden = true;
-    document.body.classList.remove("modal-open");
-    contentModalError.classList.remove("visible");
-  }
-
-  function addManualContentButton(data) {
-    // Desactivado: no se muestra un botÃ³n para pedir contenido manual.
-    return;
-  }
-
-  function maybeRequestContent(data) {
-    // Desactivado: el backend continÃºa con bÃºsqueda web y fuentes pÃºblicas.
-    return;
-  }
-
-  async function continueWithProvidedContent() {
-    const supplied = contentModalInput.value.trim();
-
-    if (!supplied) {
-      contentModalError.classList.add("visible");
-      contentModalInput.focus();
-      return;
-    }
-
-    const original = lastOriginalQuery || newsInput.value.trim();
-    const combined =
-      `ENLACE O CONSULTA ORIGINAL:\n${original}\n\n` +
-      "CONTENIDO PROPORCIONADO POR EL USUARIO:\n" +
-      `${supplied}\n\n` +
-      "IMPORTANTE: El contenido anterior fue proporcionado por el usuario porque " +
-      "la plataforma no pudo consultarse directamente. Verifica las afirmaciones " +
-      "mediante fuentes pÃºblicas independientes y declara esta limitaciÃ³n.";
-
-    closeContentModal();
-    lastResultWasSupplemented = true;
-    trackUsage("contenido_manual_enviado");
-    await analyze(combined, true);
-  }
-
-  function renderBlocked(data) {
-    lastAnalysisData = null;
-    result.innerHTML = `
-      ${reportSource()}
-      <h2 class="verdict">ANÃLISIS NO COMPLETADO</h2>
-      <div class="grid">
-        ${textCard("QuÃ© ocurriÃ³", data.mensaje || "No se recuperÃ³ contenido suficiente para completar la verificaciÃ³n.", true)}
-        ${textCard("Sin veredicto", "Un fallo de acceso no demuestra que la informaciÃ³n sea verdadera o falsa.", true)}
-        ${Number(data.retry_after_seconds)>0 ? textCard("Espera antes de reintentar", `Al menos ${Math.ceil(Number(data.retry_after_seconds))} segundos. No se realizarÃ¡n reintentos automÃ¡ticos. La espera no garantiza que Threads permita el acceso despuÃ©s.`, true) : ""}
-        ${data.estado_tecnico === "ENLACE_COMPARTIDO_NO_RESUELTO" ? textCard("CÃ³mo continuar", "Abre la publicaciÃ³n original en Threads y elige â€œCopiar enlaceâ€. Pega aquÃ­ la direcciÃ³n que incluya /@cuenta/post/â€¦ o /@cuenta/video/â€¦ . Si Threads vuelve a entregar un enlace /share/â€¦, pega el texto o adjunta una captura.", true) : ""}
-        ${textCard("Enlace consultado", data.url_consultada || data.extraccion_enlace?.url_final || "", true)}
-        ${listCard("DiagnÃ³stico de recuperaciÃ³n", data.limitaciones || [], true)}
-      </div>
-    `;
-    result.classList.add("visible");
-    result.scrollIntoView({behavior:"smooth"});
-  }
-
-  function renderNoCheckableClaim(data) {
-    lastAnalysisData = data;
-    const sources = Array.isArray(data.fuentes) ? data.fuentes : [];
-    const facts = unique(data.hechos_comprobados || []);
-    const limitations = unique(data.limitaciones || []);
-    result.innerHTML = `
-      ${reportSource()}
-      ${renderFinalVerdict(data, "NO VERIFICABLE")}
-      <h2 class="verdict">ClasificaciÃ³n tÃ©cnica: SIN AFIRMACIÃ“N VERIFICABLE</h2>
-      <div class="metrics">
-        <span class="metric">Credibilidad de la afirmaciÃ³n: No aplica</span>
-        <span class="metric">Confianza del anÃ¡lisis: No calculada</span>
-        ${data.busqueda_web_realizada === true ? `<span class="metric">BÃºsqueda web: realizada</span>` : ""}
-      </div>
-      <div class="grid">
-        ${textCard("QuÃ© se recuperÃ³", data.resumen, true)}
-        ${textCard("Por quÃ© no hay un veredicto factual", data.respuesta_directa, true)}
-        ${listCard("Datos tÃ©cnicos confirmados", facts, true)}
-        ${textCard("Contexto necesario", data.contexto, true)}
-        ${listCard("QuÃ© falta para verificar", limitations, true)}
-        ${renderLinkContext(data)}
-        ${renderSources(sources)}
-      </div>
-      ${actions()}
-    `;
-    result.classList.add("visible");
-    result.scrollIntoView({ behavior: "smooth" });
-    setTimeout(speakResultIfNeeded, 150);
-  }
-
-  function render(data) {
-    lastAnalysisData = data;
-    if (
-      data.estado === "sin_acceso" || data.analizado === false
-    ) {
-      renderBlocked(data);
-      return;
-    }
-    if (data.tipo_resultado === "sin_afirmacion_verificable") {
-      renderNoCheckableClaim(data);
-      return;
-    }
-
-    const sources = Array.isArray(data.fuentes)
-      ? data.fuentes
-      : [];
-
-    const credibility = percent(
-      data.credibilidad ??
-      data.credibilidad_porcentaje
-    );
-
-    const analysisConfidence = percent(
-      data.confianza ??
-      data.confianza_analisis
-    );
-
-    const favorable = unique(
-      data.evidencia_a_favor ||
-      data.evidencia_favorable
-    );
-
-    const unfavorable = unique(
-      data.evidencia_en_contra ||
-      data.evidencia_desfavorable
-    );
-
-    const verifiedFacts = unique([
-      ...(data.hechos_comprobados || []),
-      ...favorable,
-      ...unfavorable
-    ]);
-    const atomicClaims = Array.isArray(data.evaluacion_afirmaciones)
-      ? data.evaluacion_afirmaciones.map(item => {
-          const support = Array.isArray(item.sustento_directo) && item.sustento_directo.length
-            ? ` Sustento directo: ${item.sustento_directo.join("; ")}.`
-            : " Sin sustento directo identificado.";
-          const matrix = item.fuente_matriz ? ` Fuente matriz: ${item.fuente_matriz}.` : "";
-          const limit = item.lo_que_no_demuestra ? ` No demuestra: ${item.lo_que_no_demuestra}.` : "";
-          const relation = item.relacion_con_afirmacion ? ` RelaciÃ³n: ${item.relacion_con_afirmacion}.` : "";
-          return `${item.estado || "NO DEMOSTRADA"}: ${item.afirmacion || ""}.${relation}${support}${matrix}${limit}`;
-        })
-      : [];
-
-    const limitations = unique([
-      ...(data.limitaciones || []),
-      ...(data.no_comprobado || [])
-    ]);
-
-    const misinformationIndicators = unique(
-      data.indicadores_desinformacion ||
-      data.senales_desinformacion
-    );
-
-    const summary =
-      data.resumen ||
-      data.resumen_ejecutivo ||
-      data.respuesta_directa ||
-      data.conclusion ||
-      "No se recibiÃ³ un resumen del anÃ¡lisis.";
-
-    const sourceContrast = buildSourceContrast(data, sources);
-
-    const verdict = String(
-      data.veredicto || "INFORMACIÃ“N INSUFICIENTE"
-    ).toUpperCase();
-
-    const isProfileAudit = data?.tipo_resultado === "auditoria_de_publicaciones";
-    const profileEvaluation = data?.evaluacion_publicaciones || {};
-    const intentAnalysis = data?.analisis_intencionalidad || {};
-    const intentText = intentAnalysis.clasificacion
-      ? `${intentAnalysis.clasificacion}. ${intentAnalysis.explicacion || ""}${intentAnalysis.objetivo_del_dano ? ` Objetivo identificado: ${intentAnalysis.objetivo_del_dano}.` : ""}`
-      : "";
-    const targetPattern = data?.analisis_patron_objetivos || {};
-    const integrityAnalysis = data?.analisis_integridad_informativa || {};
-    const targetPatternText = targetPattern.clasificacion
-      ? `${targetPattern.clasificacion}. Objetivo principal: ${targetPattern.objetivo_principal || "no determinado"}. ` +
-        `Publicaciones dirigidas: ${Number(targetPattern.publicaciones_dirigidas || 0)} de ${Number(targetPattern.publicaciones_revisadas || 0)} revisadas. ` +
-        `${targetPattern.periodo_muestra ? `Periodo: ${targetPattern.periodo_muestra}. ` : ""}${targetPattern.fundamento || ""}`
-      : "";
-
-    result.innerHTML = `
-      ${reportSource()}
-      ${isProfileAudit ? "" : renderFinalVerdict(data, verdict)}
-      <h2 class="verdict">
-        ${isProfileAudit ? "AUDITORÃA DE PUBLICACIONES" : `ClasificaciÃ³n tÃ©cnica: ${esc(verdict)}`}
-      </h2>
-
-      <div class="metrics">
-        ${isProfileAudit
-          ? `<span class="metric">Tendenciosidad observada: ${esc(profileEvaluation.nivel_tendenciosidad || "NO DETERMINADA")}</span>`
-          : `<span class="metric">Credibilidad de la afirmaciÃ³n: ${credibility === null ? "No aplica" : `${credibility}%`}</span>`}
-
-        <span class="metric">
-          Confianza del anÃ¡lisis: ${analysisConfidence === null ? "No calculada" : `${analysisConfidence}%`}
-        </span>
-
-        ${
-          data.busqueda_web_realizada === true
-            ? `<span class="metric">BÃºsqueda web: realizada</span>`
-            : ""
-        }
-      </div>
-
-      <div class="grid">
-        ${isProfileAudit && data.bot_detectado === true
-          ? textCard("Alerta de bot", data.alerta_bot, true)
-          : ""}
-
-        ${textCard(
-          isProfileAudit ? "EvaluaciÃ³n de las publicaciones" : "ExplicaciÃ³n del veredicto final",
-          data.explicacion_veredicto_final ||
-          data.justificacion_veredicto_final,
-          true
-        )}
-
-        ${textCard("Resumen ejecutivo", summary, true)}
-
-        ${renderVideoTopics(data)}
-
-        ${textCard(
-          isProfileAudit ? "Muestra analizada" : "AfirmaciÃ³n analizada",
-          data.afirmacion_principal,
-          true
-        )}
-
-        ${textCard(
-          "Respuesta directa",
-          data.respuesta_directa,
-          true
-        )}
-
-        ${listCard(
-          "Afirmaciones separadas y sustento",
-          atomicClaims,
-          true
-        )}
-
-        ${listCard(
-          "Hechos y evidencia comprobada",
-          verifiedFacts
-        )}
-
-        ${listCard(
-          "Evidencia favorable",
-          favorable
-        )}
-
-        ${listCard(
-          "Evidencia desfavorable",
-          unfavorable
-        )}
-
-        ${listCard(
-          "No comprobado o limitado",
-          limitations
-        )}
-
-        ${listCard(
-          "Indicadores de desinformaciÃ³n",
-          misinformationIndicators,
-          true
-        )}
-
-        ${renderAccountAudit(integrityAnalysis)}
-
-        ${textCard(
-          "Intencionalidad y posible daÃ±o",
-          intentText,
-          true
-        )}
-
-        ${textCard(
-          "PatrÃ³n contra gobiernos o personas",
-          targetPatternText,
-          true
-        )}
-
-        ${listCard(
-          "Ejemplos que fundamentan el patrÃ³n",
-          targetPattern.ejemplos
-        )}
-
-        ${listCard(
-          "Recursos narrativos recurrentes",
-          targetPattern.recursos_recurrentes
-        )}
-
-        ${listCard(
-          "Evidencia sobre la intenciÃ³n",
-          intentAnalysis.evidencia
-        )}
-
-        ${textCard(
-          "Contexto necesario",
-          data.contexto,
-          true
-        )}
-
-        ${renderJournalismAudit(data.auditoria_fuentes_periodisticas)}
-
-        ${textCard(
-          "Contraste de fuentes",
-          sourceContrast,
-          true
-        )}
-
-        ${textCard(
-          "ConclusiÃ³n",
-          data.conclusion ||
-          data.respuesta_directa ||
-          summary,
-          true
-        )}
-
-        ${textCard(
-          "Advertencia",
-          data.advertencia,
-          true
-        )}
-
-        ${renderLinkContext(data)}
-        ${renderSources(sources)}
-      </div>
-
-      ${actions()}
-    `;
-
-    result.classList.add("visible");
-    result.scrollIntoView({ behavior: "smooth" });
-    maybeRequestContent(data);
-    setTimeout(speakResultIfNeeded, 150);
-  }
-
-  function renderError(message) {
-    lastAnalysisData = {
-      veredicto_final: "NO VERIFICABLE",
-      veredicto: "ERROR",
-      credibilidad: 0,
-      confianza: 0,
-      resumen: message || "No fue posible completar el anÃ¡lisis.",
-      conclusion: message || "No fue posible completar el anÃ¡lisis."
-    };
-    result.innerHTML = `
-      ${reportSource()}
-      <h2 class="verdict">NO SE PUDO COMPLETAR</h2>
-
-      <div class="grid">
-        <article class="card full">
-          <h3>Detalle</h3>
-          <p>${esc(message || "Error desconocido.")}</p>
-        </article>
-      </div>
-    `;
-
-    result.classList.add("visible");
-    result.scrollIntoView({ behavior: "smooth" });
-    setTimeout(speakResultIfNeeded, 150);
-  }
-
-  async function analyze(textOverride = "", isSupplement = false) {
-    const candidate = typeof textOverride === "string" && textOverride ? textOverride : newsInput.value;
-    if (/https?:\/\/(?:www\.)?threads\.(?:com|net)(?:\/|$)/i.test(candidate) && Date.now() < threadsCooldownUntil) {
-      renderBlocked({mensaje:"Threads sigue dentro del periodo de espera. No se enviÃ³ otra solicitud.", retry_after_seconds:Math.ceil((threadsCooldownUntil-Date.now())/1000)});
-      return;
-    }
-    const text =
-      typeof textOverride === "string" && textOverride.trim()
-        ? textOverride.trim()
-        : newsInput.value.trim();
-
-    if (!isSupplement) {
-      lastOriginalQuery = text;
-      lastResultWasSupplemented = false;
-    }
-
-    if (!text && !selectedFile) {
-      alert(
-        "Escribe una pregunta, pega una afirmaciÃ³n, un enlace o selecciona un archivo."
-      );
-      return;
-    }
-
-    analyzeButton.disabled = true;
-    result.classList.remove("visible");
-    startProgress();
-    trackUsage("verificacion_iniciada", {
-      modo: selectedMode,
-      entrada: selectedFile ? "archivo" : "texto_o_enlace",
-      complemento_manual: Boolean(isSupplement)
-    });
-
-    try {
-      const payload = {
-        text,
-        consulta: text,
-        mode: selectedMode,
-        task: "completo"
-      };
-
-      if (selectedFile) {
-        payload.file = {
-          name: selectedFile.name,
-          type:
-            selectedFile.type ||
-            "application/octet-stream",
-          size: selectedFile.size,
-          data: await file64(selectedFile)
-        };
-        if (/video\//.test(selectedFile.type) || /\.(mp4|webm)$/i.test(selectedFile.name)) {
-          payload.file.frames = await sampleVideoFrames(selectedFile);
-        }
-      }
-
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-      const raw = await response.text();
-      const contentType = response.headers.get("content-type") || "";
-      const pareceHtml = /text\/html/i.test(contentType) || /^\s*</.test(raw);
-      let data;
-      try {
-        data = raw ? JSON.parse(raw) : {};
-      } catch {
-        throw new Error(
-          pareceHtml
-            ? "El servidor de anÃ¡lisis respondiÃ³ temporalmente con una pÃ¡gina de error. Intenta nuevamente en unos segundos."
-            : "El servidor de anÃ¡lisis no devolviÃ³ una respuesta vÃ¡lida. Intenta nuevamente en unos segundos."
-        );
-      }
-
-      if (data?.estado === "sin_acceso" || data?.analizado === false) {
-        if (Number(data.retry_after_seconds)>0 && /https?:\/\/(?:www\.)?threads\.(?:com|net)(?:\/|$)/i.test(text)) {
-          threadsCooldownUntil=Math.max(threadsCooldownUntil,Date.now()+Number(data.retry_after_seconds)*1000);
-          try { sessionStorage.setItem("lvi_threads_retry_at",String(threadsCooldownUntil)); } catch {}
-        }
-        endProgress(false);
-        trackUsage("verificacion_sin_acceso",{codigo_http:response.status,motivo:String(data.estado_tecnico||"sin_acceso")});
-        render(data);
-        return;
-      }
-      if (!response.ok) {
-        const error =
-          data.error ||
-          data.detalle ||
-          data.message ||
-          `HTTP ${response.status}`;
-
-        throw new Error(
-          typeof error === "string"
-            ? error
-            : JSON.stringify(error)
-        );
-      }
-
-      endProgress(true);
-      trackUsage("verificacion_completada", {
-        estado: String(data?.estado || "analizado"),
-        veredicto: String(data?.veredicto_final || data?.veredicto || "sin_veredicto")
-      });
-      render(data);
-    } catch (error) {
-      endProgress(false);
-      trackUsage("verificacion_error", { mensaje: String(error?.message || "error") });
-      const technicalMessage = String(error?.message || "");
-      const friendlyMessage = /failed to fetch|networkerror|load failed|network request failed/i.test(technicalMessage)
-        ? "Se interrumpiÃ³ la conexiÃ³n con el servidor durante la investigaciÃ³n. Vuelve a pulsar ANALIZAR CREDIBILIDAD; tu enlace permanece en el cuadro de consulta."
-        : technicalMessage || "No se pudo completar la investigaciÃ³n.";
-      renderError(friendlyMessage);
-    } finally {
-      analyzeButton.disabled = false;
-    }
-  }
-
-
-  const howModal = document.getElementById("howModal");
-  const openHowModal = document.getElementById("openHowModal");
-  const closeHowModal = document.getElementById("closeHowModal");
-  const startVerification = document.getElementById("startVerification");
-
-  function showHowModal() {
-    howModal.hidden = false;
-    howModal.style.display = "flex";
-    howModal.classList.add("visible");
-    document.body.classList.add("modal-open");
-  }
-  function hideHowModal() {
-    howModal.classList.remove("visible");
-    howModal.style.display = "none";
-    howModal.hidden = true;
-    document.body.classList.remove("modal-open");
-  }
-  openHowModal.addEventListener("click", showHowModal);
-  closeHowModal.addEventListener("click", hideHowModal);
-  startVerification.addEventListener("click", () => {
-    hideHowModal();
-    document.getElementById("newsInput").focus();
-    document.querySelector(".workspace").scrollIntoView({ behavior: "smooth" });
-  });
-  howModal.addEventListener("click", event => { if (event.target === howModal) hideHowModal(); });
-
-  fileInput.addEventListener("change", () =>
-    setFile(fileInput.files?.[0])
-  );
-
-  removeFile.addEventListener("click", () =>
-    setFile(null)
-  );
-
-  ["dragenter", "dragover"].forEach(eventName => {
-    dropZone.addEventListener(eventName, event => {
-      event.preventDefault();
-      dropZone.classList.add("dragging");
-    });
-  });
-
-  ["dragleave", "drop"].forEach(eventName => {
-    dropZone.addEventListener(eventName, event => {
-      event.preventDefault();
-      dropZone.classList.remove("dragging");
-    });
-  });
-
-  dropZone.addEventListener("drop", event => {
-    setFile(event.dataTransfer?.files?.[0]);
-  });
-
-  document.querySelectorAll(".mode").forEach(button => {
-    button.addEventListener("click", () => {
-      selectedMode = button.dataset.mode;
-
-      document.querySelectorAll(".mode").forEach(item => {
-        item.classList.toggle(
-          "active",
-          item === button
-        );
-      });
-    });
-  });
-
-
-  scheduleWelcome();
-
-  analyzeButton.addEventListener("click", () => analyze());
-  voiceInputButton.addEventListener("click", activateVoiceMode);
-  speakSummaryButton.addEventListener("click", speakSummary);
-  speakFullButton.addEventListener("click", speakFullReport);
-  stopSpeechButton.addEventListener("click", () => {
-    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
-    if (isListening && voiceRecognition) voiceRecognition.stop();
-    voiceConversationState = "idle";
-    pendingVoiceCallback = null;
-    voiceStatus.textContent = "Lectura y micrÃ³fono detenidos.";
-  });
-
-  contentModalClose.addEventListener("click", closeContentModal);
-  contentModalCancel.addEventListener("click", closeContentModal);
-  contentModalContinue.addEventListener("click", continueWithProvidedContent);
-
-  contentModal.addEventListener("click", event => {
-    if (event.target === contentModal) closeContentModal();
-  });
-
-  contentModalInput.addEventListener("input", () => {
-    contentModalError.classList.remove("visible");
-  });
-
-  contentModalInput.addEventListener("keydown", event => {
-    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
-      continueWithProvidedContent();
-    }
-  });
-
-  window.copyReport = async () => {
-    try {
-      const reportText =
-        "Fuente de consulta: La Verdad IncÃ³moda â€” https://www.laverdadincomoda.mx/\n\n" +
-        result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim();
-      await navigator.clipboard.writeText(reportText);
-      alert("Informe copiado.");
-    } catch {
-      alert("No se pudo copiar automÃ¡ticamente.");
-    }
-  };
-
-  window.sharePage = async button => {
-    const url = `${location.origin}${location.pathname}${location.search}`;
-    const data = {
-      title: "La Verdad IncÃ³moda",
-      text: "No creas. Comprueba la informaciÃ³n con evidencia pÃºblica.",
-      url
-    };
-    const original = button?.innerHTML || "<span aria-hidden=\"true\">â†—</span><span>COMPARTIR ESTA PÃGINA</span>";
-    const feedback = message => {
-      if (!button) return;
-      button.textContent = message;
-      setTimeout(() => { button.innerHTML = original; }, 2200);
-    };
-    const copyLink = async () => {
-      if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(url);
-      const area = document.createElement("textarea");
-      area.value = url;area.style.position = "fixed";area.style.opacity = "0";
-      document.body.appendChild(area);area.select();
-      const copied = document.execCommand("copy");area.remove();
-      if (!copied) throw new Error("No se pudo copiar el enlace.");
-    };
-    try {
-      if (navigator.share) {
-        await navigator.share(data);
-        feedback("âœ“ PÃGINA COMPARTIDA");
-      } else {
-        await copyLink();
-        feedback("âœ“ ENLACE COPIADO");
-      }
-    } catch (error) {
-      if (error.name === "AbortError") return;
-      try {
-        await copyLink();
-        feedback("âœ“ ENLACE COPIADO");
-      } catch {
-        alert("No se pudo compartir la pÃ¡gina.");
-      }
-    }
-  };
-
-  window.shareReport = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: "La Verdad IncÃ³moda",
-          text:
-            "Fuente de consulta: La Verdad IncÃ³moda â€” https://www.laverdadincomoda.mx/\n\n" +
-            result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim(),
-          url: location.href
-        });
-      } else {
-        await navigator.clipboard.writeText(
-          `Fuente de consulta: La Verdad IncÃ³moda â€” https://www.laverdadincomoda.mx/\n\n${result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim()}\n${location.href}`
-        );
-
-        alert("Informe y enlace copiados.");
-      }
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        alert("No se pudo compartir.");
-      }
-    }
-  };
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
-</body>
-</html>
+YªçŠx-®éÜj×¢ëiºÚ+Š§j[h‘éÜ¢éíßmyİ:-jZ.¶›­–)Ş³SÂDô5E•R‡FÖÃà£Æ‡FÖÂÆæsÒ&W2#à£Æ†VCà¢ÂÒÒvöövÆRE6Vç6RÒÓà¢Ç67&—@¢7–æ0¢7&3Ò&‡GG3¢ò÷vVC"ævöövÆW7–æF–6F–öâæ6öÒ÷vVBö§2öG6'–vöövÆRæ§3ö6Æ–VçCÖ6×V"Ó33CcSc“C‚ ¢7&÷76÷&–v–ãÒ&æöç–Ö÷W2#ãÂ÷67&—Cà ¢ÂÒÒvöövÆRæÇ—F–72B(	B6VwV–Ö–VçFò&Vf÷'¦FòÒÓà¢Ç67&—B7–æ27&3Ò&‡GG3¢ò÷wwrævöövÆWFvÖævW"æ6öÒöwFrö§3ö–CÔrÕd£dT5”¥d¢#ãÂ÷67&—Cà¢Ç67&—Cà¢v–æF÷ræFFÆ–W"Òv–æF÷ræFFÆ–W"ÇÂµÓ°¢gVæ7F–öâwFr‚—¶FFÆ–W"çW6‚†&wVÖVçG2“·Ğ ¢wFr‚&§2"ÂæWrFFR‚’“°¢wFr‚&6öæf–r"Â$rÕd£dT5”¥d¢"Â°¢6VæE÷vU÷f–Ws¢fÇ6RÀ¢6öö¶–UöFöÖ–ã¢&WFò"À¢6öö¶–UöfÆw3¢%6ÖU6—FSÔæöæSµ6V7W&R"À¢G&ç7÷'E÷G—S¢&&V6öâ ¢Ò“° ¢òòVæ6öÆf—7F÷"6&v&VÂFR:v–æà¢wFr‚&WfVçB"Â'vU÷f–Wr"Â°¢vU÷F—FÆS¢Fö7VÖVçBçF—FÆRÀ¢vUöÆö6F–öã¢v–æF÷ræÆö6F–öâæ‡&VbÀ¢vU÷Fƒ¢v–æF÷ræÆö6F–öâçF†æÖR²v–æF÷ræÆö6F–öâç6V&6‚À¢6VæE÷Fó¢$rÕd£dT5”¥d¢ ¢Ò“° ¢òòF–vì;77F–6òÆö6Ã¢æòvVæW&f—6—F2'F–f–6–ÆW3²6öÆò6öæf—&ÖVRÆWF—VWF6RV¦V7WL;2à¢v–æF÷ræFDWfVçDÆ—7FVæW"‚&ÆöB"ÂgVæ7F–öâ‚’°¢Fö7VÖVçBæFö7VÖVçDVÆVÖVçBæFF6WBævDÆöFVBÒ'G'VR#°¢6öç6öÆRæ–æfò‚$tB7F—fó¢rÕd£dT5”¥d¢"“°¢Ò“°¢Â÷67&—Cà ¢ÂÒÒÅd’ÔäÅ•D”52Õd”Uu2Õ$T”ädõ$4TBÕcÒÓà¢ÂÒÒÅd’Õ$ôET5D”ôâÔtBÔE4Tå4RÕcbÒÓà ¢ÂÒÒÅd’ÕdU$D”5BÔ%UEDôâÔÔ”2Ó%2ÕcBÒÓà¢ÂÒÒÅd’Õdô”4RÕ$U5TÅBÔd•„TBÕc2ÒÓà¢ÆÖWF6†'6WCÒ%UDbÓ‚"óà¢ÆÖWFæÖSÒ'f–Ww÷'B"6öçFVçCÒ'v–GFƒÖFWf–6R×v–GF‚Â–æ—F–Â×66ÆSÓã"óà¢ÆÖWFæÖSÒ&FW67&—F–öâ"6öçFVçCÒ$ÆfW&FB–æ<;6ÖöF¢–çFVÆ–vVæ6–'F–f–6–Â’Wf–FVæ6–F–v—FÂ&WfÇV"Æ7&VF–&–Æ–FBFR–æf÷&Ö6œ;6â;¦&Æ–6â"óà¢ÆÖWFæÖSÒ&vöövÆR×6—FR×fW&–f–6F–öâ"6öçFVçCÒ%FôçtÔt•eEwf¥4f'SE7e“&ssTƒ&%¦ã35t5W#4§”Ò"óà¢ÆÆ–æ²&VÃÒ&6æöæ–6Â"‡&VcÒ&‡GG3¢ò÷wwræÆfW&FF–æ6öÖöFæ×‚ò"óà¢ÇF—FÆSäÆfW&FB–æ<;6ÖöFÂ”²Wf–FVæ6–F–v—FÃÂ÷F—FÆSà¢Ç7G–ÆSà¢§&ö÷B°¢ÒÖ&s¢3SSc²Ò×æVÃ¢3##c²Ò×æVÃ#¢3““c²ÒÖ&÷&FW#¢33s3sC°¢Ò×FW‡C¢6ffc²ÒÖ×WFVC¢6#–#–3#²Ò×&VC¢6fc6#3²ÒÖw&VVã¢3C6C3“#²Ò×–VÆÆ÷s¢6c&3“F3°¢Ğ¢§¶&÷‚×6—¦–æs¦&÷&FW"Ö&÷ƒ¶Ö&v–ã£·FF–æs£Ò‡FÖÇ·67&öÆÂÖ&V†f–÷#§6Öö÷F‡Ğ¢&öG—¶Ö–âÖ†V–v‡C£fƒ¶föçBÖfÖ–Ç“¤&–ÂÄ†VÇfWF–6Ç6ç2×6W&–c¶6öÆ÷#§f"‚Ò×FW‡B“¶&6¶w&÷VæC§&F–ÂÖw&F–VçB†6—&6ÆRBSRRÂ3&#RÂ333R3BRÇf"‚ÒÖ&r’s"R—Ğ¢'WGFöâÇFW‡F&VÆ–çWG¶föçC¦–æ†W&—GÒ'WGFöç¶7W'6÷#§ö–çFW'Ò¶6öÆ÷#¦–æ†W&—GĞ¢†VFW'·÷6—F–öã§7F–6·“·F÷£·¢Ö–æFWƒ£¶&6¶w&÷VæC§&v&ƒRÃRÃbÂã’“¶&6¶G&÷Öf–ÇFW#¦&ÇW"ƒ‡‚“¶&÷&FW"Ö&÷GFöÓ£‚6öÆ–B&v&ƒ#SRÃ#SRÃ#SRÂã‚—Ğ¢ææg·v–GFƒ¦Ö–âƒ‚Æ6Æ2ƒRÒ#‡‚’“¶Ö–âÖ†V–v‡C£c'ƒ¶Ö&v–ã¦WFó¶F—7Æ“¦fÆWƒ¶Æ–vâÖ—FV×3¦6VçFW#¶§W7F–g’Ö6öçFVçC§76RÖ&WGvVVã¶v£'‡Òç6—FRÖÆ–æ·7¶F—7Æ“¦fÆWƒ¶§W7F–g’Ö6öçFVçC¦6VçFW#¶v£'ƒ¶fÆW‚×w&§w&·FF–æs£‡‚Gƒ¶&÷&FW"×F÷£‚6öÆ–B&v&ƒ#SRÃ#SRÃ#SRÂãb—Òç6—FRÖÆ–æ·2¶6öÆ÷#¢6FFC·FW‡BÖFV6÷&F–öã¦æöæS¶föçB×6—¦S£'ƒ¶föçB×vV–v‡C£ƒÒç6—FRÖÆ–æ·2¦†÷fW'¶6öÆ÷#¢6fcƒSƒĞ¢æ'&æG¶föçB×vV–v‡C£“¶ÆWGFW"×76–æs¢ÒãW‡Òæ'&æB7ç¶6öÆ÷#§f"‚Ò×&VB—Ğ¢ç7FGW7¶föçB×6—¦S£'ƒ¶6öÆ÷#§f"‚ÒÖ×WFVB“¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£““—ƒ·FF–æs£w‚‡Ğ¢Ö–ç·v–GFƒ¦Ö–âƒ“S‚Æ6Æ2ƒRÒ#G‚’“¶Ö&v–ã¦WFó·FF–æs£G‚c‡Ğ¢æ†W&÷·FW‡BÖÆ–vã¦6VçFW#¶Ö&v–âÖ&÷GFöÓ£‡‡Òæ&FvW¶F—7Æ“¦–æÆ–æRÖ&Æö6³¶6öÆ÷#¢6fcƒSƒ¶&÷&FW#£‚6öÆ–B3s3&C¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚Âã‚“¶&÷&FW"×&F—W3£““—ƒ·FF–æs£g‚ƒ¶föçB×6—¦S£ƒ¶föçB×vV–v‡C£“¶ÆWGFW"×76–æs¢ã7ƒ¶Ö&v–âÖ&÷GFöÓ£g‡Ğ¢ƒ¶föçB×6—¦S¦6Æ×ƒ3'‚ÃwgrÃSg‚“¶Æ–æRÖ†V–v‡C¢ã“c¶ÆWGFW"×76–æs¢Ó"ãGƒ¶Ö&v–âÖ&÷GFöÓ£G‡Öƒ7ç¶6öÆ÷#§f"‚Ò×&VB—Ğ¢ç7V'F—FÆW¶Ö‚×v–GFƒ£scƒ¶Ö&v–ã¦WFó¶6öÆ÷#§f"‚ÒÖ×WFVB“¶föçB×6—¦S£7ƒ¶Æ–æRÖ†V–v‡C£ã3WĞ¢çV–6²Ö†÷w¶F—7Æ“¦fÆWƒ¶fÆW‚×w&§w&¶§W7F–g’Ö6öçFVçC¦6VçFW#¶v£gƒ¶Ö&v–ã£‡‚WFò—‡ÒçV–6²Ö†÷r7ç¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&6¶w&÷VæC¢3S¶&÷&FW"×&F—W3£““—ƒ·FF–æs£g‚—ƒ¶föçB×6—¦S£ƒ¶6öÆ÷#¢6CVCVF7Ğ¢FWF–Ç7¶Ö‚×v–GFƒ£ƒ#ƒ¶Ö&v–ã£WFò—ƒ¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£Wƒ¶&6¶w&÷VæC§&v&ƒrÃrÃ#Âã’“·FF–æs£—‚'ƒ·FW‡BÖÆ–vã¦ÆVgG×7VÖÖ'—¶7W'6÷#§ö–çFW#¶föçB×vV–v‡C£ƒÖFWF–Ç2¶Ö&v–â×F÷£ƒ¶6öÆ÷#§f"‚ÒÖ×WFVB“¶Æ–æRÖ†V–v‡C£ãSWĞ¢çv÷&·76W·FF–æs¦6Æ×ƒg‚Ã7grÃ#W‚“¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£#Gƒ¶&6¶w&÷VæC§&v&ƒbÃbÃ’Âã“r“¶&÷‚×6†F÷s£#‚c‚&v&ƒÃÃÂã3R—Ğ¢çv÷&·76Rƒ'¶föçB×6—¦S¦6Æ×ƒ#'‚ÃGgrÃ3‚“¶Ö&v–âÖ&÷GFöÓ£G‡Òçv÷&·76RÖ–çG&÷¶6öÆ÷#§f"‚ÒÖ×WFVB“¶Æ–æRÖ†V–v‡C£ã3S¶Ö&v–âÖ&÷GFöÓ£—ƒ¶föçB×6—¦S£7‡Ğ¢FW‡F&V·v–GFƒ£S¶Ö–âÖ†V–v‡C£3Wƒ·&W6—¦S§fW'F–6Ã¶&6¶w&÷VæC¢3ssƒ¶6öÆ÷#§v†—FS¶&÷&FW#£‚6öÆ–B3CcCcS¶&÷&FW"×&F—W3£#'ƒ·FF–æs£‡ƒ¶÷WFÆ–æS¦æöæS¶föçB×6—¦S£gƒ¶Æ–æRÖ†V–v‡C£ãW×FW‡F&V¦fö7W7¶&÷&FW"Ö6öÆ÷#§f"‚Ò×&VB“¶&÷‚×6†F÷s£7‚&v&ƒ#SRÃS’ÃC‚Âã"—Ğ¢çÆFf÷&×7¶F—7Æ“¦fÆWƒ¶fÆW‚×w&§w&¶v£wƒ¶Ö&v–ã£'‚g‡ÒçÆFf÷&×27ç¶föçB×6—¦S£ƒ¶6öÆ÷#¢3“C“C–C¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£““—ƒ·FF–æs£g‚—‡Ğ¢æG&÷×¦öæW·FF–æs£#'‚gƒ¶&÷&FW#£‚F6†VB3V3V3cƒ¶&÷&FW"×&F—W3£#'ƒ¶&6¶w&÷VæC¢333c·FW‡BÖÆ–vã¦6VçFW#·G&ç6—F–öã¢ã'7ÒæG&÷×¦öæRæG&vv–æw¶&÷&FW"Ö6öÆ÷#§f"‚Ò×&VB“¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚Âã‚—Ğ¢æG&÷×¦öæRƒ7¶Ö&v–âÖ&÷GFöÓ£W‡ÒæG&÷×¦öæR¶6öÆ÷#§f"‚ÒÖ×WFVB“¶föçB×6—¦S£7ƒ¶Æ–æRÖ†V–v‡C£ãCWÒæf–ÆRÖ'WGFöç¶F—7Æ“¦–æÆ–æRÖ&Æö6³¶Ö&v–â×F÷£'ƒ·FF–æs£‚gƒ¶&÷&FW#£‚6öÆ–B3SSSSc¶&÷&FW"×&F—W3£““—ƒ¶&6¶w&÷VæC¢3###¶föçB×vV–v‡C£ƒÒ6f–ÆT–çWG¶F—7Æ“¦æöæWĞ¢ç6VÆV7FVBÖf–ÆW¶F—7Æ“¦æöæS¶Ö&v–â×F÷£'ƒ·FF–æs£'ƒ¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£Wƒ¶&6¶w&÷VæC¢3ss3·FW‡BÖÆ–vã¦ÆVgGÒç6VÆV7FVBÖf–ÆRçf—6–&ÆW¶F—7Æ“¦&Æö6·Òç6VÆV7FVBÖf–ÆR6ÖÆÇ¶F—7Æ“¦&Æö6³¶6öÆ÷#§f"‚ÒÖ×WFVB“¶Ö&v–â×F÷£G‡Òç6VÆV7FVBÖf–ÆR'WGFöç¶Ö&v–â×F÷£—ƒ¶&÷&FW#£‚6öÆ–B3FFSC¶&6¶w&÷VæC¢3#C#C&¶6öÆ÷#¢6ffc¶&÷&FW"×&F—W3£ƒ·FF–æs£‡‚‡Ğ¢æÖöFR×&÷w¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3£g"g#¶v£ƒ¶Ö&v–ã£g‚ÒæÖöFW·FF–æs£Gƒ¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£gƒ¶&6¶w&÷VæC¢3ss#¶6öÆ÷#¢6ffc·FW‡BÖÆ–vã¦ÆVgGÒæÖöFRæ7F—fW¶&÷&FW"Ö6öÆ÷#§f"‚Ò×&VB“¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚Âã’—ÒæÖöFR7G&öæw¶F—7Æ“¦&Æö6³¶Ö&v–âÖ&÷GFöÓ£G‡ÒæÖöFR6ÖÆÇ¶6öÆ÷#§f"‚ÒÖ×WFVB—Ğ¢ææÇ—¦W·v–GFƒ£S¶Ö–âÖ†V–v‡C£c‡ƒ¶&÷&FW#£¶&÷&FW"×&F—W3£#'ƒ¶&6¶w&÷VæC§f"‚Ò×&VB“¶6öÆ÷#§v†—FS¶föçB×6—¦S¦6Æ×ƒ—‚ÃGgrÃ#W‚“¶föçB×vV–v‡C£“ÒææÇ—¦S¦F—6&ÆVG¶÷6—G“¢ãSS¶7W'6÷#¦æ÷BÖÆÆ÷vVGĞ¢ç&öw&W77¶F—7Æ“¦æöæS¶Ö&v–â×F÷£‡ƒ·FF–æs£gƒ¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£‡ƒ¶&6¶w&÷VæC¢3CCÒç&öw&W72çf—6–&ÆW¶F—7Æ“¦&Æö6·Òç&öw&W72ÖÆ&VÇ¶6öÆ÷#§f"‚ÒÖ×WFVB“¶Ö&v–âÖ&÷GFöÓ£‡‡ÒçG&6·¶†V–v‡C£—ƒ¶&6¶w&÷VæC¢3#c#c&3¶&÷&FW"×&F—W3£““—ƒ¶÷fW&fÆ÷s¦†–FFVçÒæ&'·v–GFƒ£¶†V–v‡C£S¶&6¶w&÷VæC§f"‚Ò×&VB“·G&ç6—F–öã§v–GF‚ã3W7Ğ¢ç&W7VÇG¶F—7Æ“¦æöæS¶Ö&v–â×F÷£#‡ƒ·FF–æs¦6Æ×ƒ#‚ÃGgrÃ3'‚“¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£3ƒ¶&6¶w&÷VæC§&v&ƒ"Ã"ÃBÂã“‚“¶&÷‚×6†F÷s£#‚c‚&v&ƒÃÃÂã3R—Òç&W7VÇBçf—6–&ÆW¶F—7Æ“¦&Æö6·Ğ¢æf–æÂ×fW&F–7BÖ&÷‡¶Ö&v–âÖ&÷GFöÓ£‡ƒ·FF–æs¦6Æ×ƒ#‚ÃGgrÃ3‚“¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£#Gƒ·FW‡BÖÆ–vã¦6VçFW#¶&6¶w&÷VæC¢3GĞ¢æf–æÂ×fW&F–7BÖÆ&VÇ¶F—7Æ“¦&Æö6³¶Ö&v–âÖ&÷GFöÓ£wƒ¶6öÆ÷#§f"‚ÒÖ×WFVB“¶föçB×6—¦S£'ƒ¶föçB×vV–v‡C£“¶ÆWGFW"×76–æs£ãW‡Ğ¢æf–æÂ×fW&F–7G¶föçB×6—¦S¦6Æ×ƒC'‚ÃgrÃs‡‚“¶föçB×vV–v‡C£¶ÆWGFW"×76–æs¢Ó'ƒ¶Æ–æRÖ†V–v‡C¢ã“S¶÷fW&fÆ÷r×w&¦ç—v†W&WĞ¢æf–æÂ×fW&F–7Bæ6–W'F¶6öÆ÷#§f"‚ÒÖw&VVâ—Ğ¢æf–æÂ×fW&F–7BæfÇ6¶6öÆ÷#§f"‚Ò×&VB—Ğ¢æf–æÂ×fW&F–7Bæ–æFWFW&Ö–æF¶6öÆ÷#§f"‚Ò×–VÆÆ÷r—Ğ¢æf–æÂÖW‡ÆæF–öç¶Ö‚×v–GFƒ£scƒ¶Ö&v–ã£G‚WFò¶6öÆ÷#¢6FVFVSS¶föçB×6—¦S£Wƒ¶Æ–æRÖ†V–v‡C£ãSWĞ¢çfW&F–7G¶föçB×6—¦S¦6Æ×ƒ#W‚ÃWgrÃC'‚“¶ÆWGFW"×76–æs¢Óã'ƒ¶Æ–æRÖ†V–v‡C£ãS¶6öÆ÷#¢6fcsCs¶Ö&v–âÖ&÷GFöÓ£'ƒ¶÷fW&fÆ÷r×w&¦ç—v†W&WÒæÖWG&–77¶F—7Æ“¦fÆWƒ¶fÆW‚×w&§w&¶v£‡ƒ¶Ö&v–âÖ&÷GFöÓ£g‡ÒæÖWG&–7·FF–æs£—‚'ƒ¶&÷&FW#£‚6öÆ–B3csC6S¶&÷&FW"×&F—W3£““—ƒ¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚Âã’“¶föçB×vV–v‡C£ƒ¶föçB×6—¦S£7‡Ğ¢æw&–G¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3£g"g#¶v£'‡Òæ6&G·FF–æs£‡ƒ¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£—ƒ¶&6¶w&÷VæC§f"‚Ò×æVÂ—Òæ6&BægVÆÇ¶w&–BÖ6öÇVÖã£òÓÒæ6&Bƒ7¶Ö&v–âÖ&÷GFöÓ£‡‡Òæ6&BÂæ6&BÆ—¶6öÆ÷#¢6CVCVF3¶Æ–æRÖ†V–v‡C£ãc¶÷fW&fÆ÷r×w&¦ç—v†W&WÒæ6&BVÇ·FF–ærÖÆVgC£#‡Òç6÷W&6W7¶F—7Æ“¦w&–C¶v£—‡Òç6÷W&6W¶F—7Æ“¦&Æö6³·FW‡BÖFV6÷&F–öã¦æöæS·FF–æs£'ƒ¶&÷&FW#£‚6öÆ–B36C6CCc¶&÷&FW"×&F—W3£7ƒ¶&6¶w&÷VæC¢3#Òç6÷W&6R7G&öæw¶F—7Æ“¦&Æö6³¶Ö&v–âÖ&÷GFöÓ£G‡Òç6÷W&6R6ÖÆÇ¶6öÆ÷#§f"‚ÒÖ×WFVB—Ğ¢æ7F–öç7¶F—7Æ“¦fÆWƒ¶fÆW‚×w&§w&¶v£—ƒ¶Ö&v–â×F÷£W‡Òæ7F–öç2'WGFöç¶fÆWƒ£Cƒ·FF–æs£'ƒ¶&÷&FW#£‚6öÆ–B3C“C“S3¶&÷&FW"×&F—W3£7ƒ¶&6¶w&÷VæC¢3CC##¶6öÆ÷#¢6ffc¶föçB×vV–v‡C£ƒĞ¢æ7F–öç2ç6ö6–ÂÖ6÷—¶&÷&FW"Ö6öÆ÷#¢3v#3C3¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚Âã"—Ğ¢æ7F–öç2ç6†&RÖ7F–öç¶&÷&FW"Ö6öÆ÷#¢3SVC““S¶&6¶w&÷VæC¢33vCGĞ¢æF—66Æ–ÖW'¶Ö‚×v–GFƒ£ƒ#ƒ¶Ö&v–ã£#G‚WFò¶6öÆ÷#¢3vcvcƒ“·FW‡BÖÆ–vã¦6VçFW#¶Æ–æRÖ†V–v‡C£ãc¶föçB×6—¦S£7‡Öfö÷FW'·FW‡BÖÆ–vã¦6VçFW#¶6öÆ÷#¢3sCsCvC·FF–æs£#‡‚‡‚C‡ÒæVF—F÷&–ÂÖ†öÖRÂç7FæF&G2Ö†öÖW¶Ö&v–ã£#'‚·FF–æs¦6Æ×ƒ#‚ÃGgrÃ3'‚“¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£#'ƒ¶&6¶w&÷VæC¢3GÒæVF—F÷&–ÂÖ†öÖRƒ"Âç7FæF&G2Ö†öÖRƒ'¶föçB×6—¦S¦6Æ×ƒ#W‚ÃWgrÃ3‡‚“¶Ö&v–âÖ&÷GFöÓ£‡‡ÒæVF—F÷&–ÂÖ†öÖSçÂç7FæF&G2Ö†öÖSç¶6öÆ÷#¢6CCCƒ¶Æ–æRÖ†V–v‡C£ãcWÒæVF—F÷&–ÂÖw&–BÂç7FæF&G2Öw&–G¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3§&WVBƒ2Ãg"“¶v£ƒ¶Ö&v–ã£‡‚ÒæVF—F÷&–ÂÖ6&BÂç7FæF&BÖ6&G¶F—7Æ“¦&Æö6³·FF–æs£gƒ¶&÷&FW#£‚6öÆ–B36C6CCc¶&÷&FW"×&F—W3£Wƒ¶&6¶w&÷VæC¢3““S¶6öÆ÷#¢6ffc·FW‡BÖFV6÷&F–öã¦æöæWÒæVF—F÷&–ÂÖ6&B7G&öærÂç7FæF&BÖ6&Bƒ7¶F—7Æ“¦&Æö6³¶Ö&v–âÖ&÷GFöÓ£g‡ÒæVF—F÷&–ÂÖ6&B6ÖÆÂÂç7FæF&BÖ6&B¶6öÆ÷#§f"‚ÒÖ×WFVB“¶Æ–æRÖ†V–v‡C£ãSWÒç7FæF&BÖ6&B¶föçB×6—¦S£G‡ÒæVF—F÷&–ÂÖ7F–öç7¶F—7Æ“¦fÆWƒ¶v£ƒ¶fÆW‚×w&§w&ÒæVF—F÷&–ÂÖ7F–öç2·FF–æs£‚Gƒ¶&÷&FW#£‚6öÆ–B3c363ƒ¶&÷&FW"×&F—W3£““—ƒ¶6öÆ÷#¢6ffc·FW‡BÖFV6÷&F–öã¦æöæS¶föçB×vV–v‡C£ƒ¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚Âã‚—Ğ¢ò¢Wf—FFW6&÷&FÖ–VçF÷2VâçFÆÆ2WV\;2¢ğ¢‡FÖÂÆ&öG—·v–GFƒ£S¶Ö‚×v–GFƒ£S¶÷fW&fÆ÷r×ƒ¦†–FFVçĞ¢Ö–âÂçv÷&·76RÂç&W7VÇBÂæw&–BÂæ6&BÂç6÷W&6RÂç6÷W&6W2Âæf–æÂ×fW&F–7BÖ&÷‡¶Ö–â×v–GFƒ£¶Ö‚×v–GFƒ£WĞ¢æ6&BÂæ6&BÆ’Âæ6&Bƒ2Âç6÷W&6R7G&öærÂç6÷W&6R6ÖÆÂÂæf–æÂÖW‡ÆæF–öâÂçfW&F–7BÂæf–æÂ×fW&F–7BÂæÖWG&–2ÂæF—66Æ–ÖW'°¢÷fW&fÆ÷r×w&¦ç—v†W&S·v÷&BÖ'&V³¦'&V²×v÷&C¶‡—†Vç3¦WFó·v†—FR×76S¦æ÷&ÖÀ¢Ğ¢æw&–G¶w&–B×FV×ÆFRÖ6öÇVÖç3¦Ö–æÖ‚ƒÃg"’Ö–æÖ‚ƒÃg"—Ğ¢ç6÷W&6W·v–GFƒ£S¶Ö–â×v–GFƒ£Ğ¢ç6÷W&6R7G&öærÂç6÷W&6R6ÖÆÇ¶Ö‚×v–GFƒ£WĞ¢æ66÷VçBÖVF—G¶F—7Æ“¦w&–C¶v£—‡Òæ66÷VçB×&÷w·FF–æs£7ƒ¶&÷&FW#£‚6öÆ–B36C6CCc¶&÷&FW"×&F—W3£7ƒ¶&6¶w&÷VæC¢3““gÒæ66÷VçBÖ†VG¶F—7Æ“¦fÆWƒ¶§W7F–g’Ö6öçFVçC§76RÖ&WGvVVã¶v£ƒ¶Æ–vâÖ—FV×3¦fÆW‚×7F'GÒæ66÷VçBÖæÖW¶föçB×vV–v‡C£“Òæ66÷VçBÖÆ&VÇ¶fÆWƒ£WFó·FF–æs£W‚‡ƒ¶&÷&FW#£‚6öÆ–B3V#CSCC¶&÷&FW"×&F—W3£““—ƒ¶6öÆ÷#¢6ffc¶föçB×6—¦S£ƒ¶föçB×vV–v‡C£“Òæ66÷VçB×&÷r¶F—7Æ“¦&Æö6³¶Ö&v–â×F÷£Wƒ¶6öÆ÷#¢6–6ffc¶föçB×6—¦S£'ƒ¶÷fW&fÆ÷r×w&¦ç—v†W&WÒæ66÷VçB×&÷rVÇ¶Ö&v–â×F÷£‡‡ÒæÖF6‚×&÷w·FF–æs£‚¶&÷&FW"Ö&÷GFöÓ£‚6öÆ–B333336'ÒæÖF6‚×&÷s¦Æ7BÖ6†–ÆG¶&÷&FW"Ö&÷GFöÓ£ÒæÖF6‚Ö¶–æG¶6öÆ÷#¢6ffc¶föçB×6—¦S£ƒ¶föçB×vV–v‡C£“Ğ ¢ÖVF–†Ö‚×v–GFƒ£s‚—°¢&öG—¶föçB×6—¦S£W‡Ğ¢Ö–ç·v–GFƒ¦6Æ2ƒRÒg‚“·FF–æs£‡‚CG‡Ğ¢ææg·v–GFƒ¦6Æ2ƒRÒ#‚“¶Ö–âÖ†V–v‡C£SG‡ÒæVF—F÷&–ÂÖw&–BÂç7FæF&G2Öw&–G¶w&–B×FV×ÆFRÖ6öÇVÖç3£g'Ğ¢æ'&æG¶föçB×6—¦S£Wƒ·v†—FR×76S¦æ÷w&Ğ¢ç7FGW7¶F—7Æ“¦æöæWĞ¢æw&–BÂæÖöFR×&÷w¶w&–B×FV×ÆFRÖ6öÇVÖç3¦Ö–æÖ‚ƒÃg"—Ğ¢æ6&BægVÆÇ¶w&–BÖ6öÇVÖã¦WF÷Ğ¢æ†W&÷¶Ö&v–âÖ&÷GFöÓ£W‡Ğ¢ç7V'F—FÆW¶F—7Æ“¦æöæWĞ¢æ&FvW¶föçB×6—¦S£—ƒ·FF–æs£W‚‡ƒ¶Ö&v–âÖ&÷GFöÓ£Gƒ¶Ö‚×v–GFƒ£S·v†—FR×76S¦æ÷&ÖÇĞ¢ƒ¶föçB×6—¦S¦6Æ×ƒ#w‚Ã—grÃ3—‚“¶ÆWGFW"×76–æs¢ÓãWƒ¶Ö&v–âÖ&÷GFöÓ£ƒ¶÷fW&fÆ÷r×w&¦ç—v†W&WĞ¢çV–6²Ö†÷w¶Ö&v–ã£W‚WFògƒ¶v£W‡Ğ¢çV–6²Ö†÷r7ç¶föçB×6—¦S£ƒ·FF–æs£W‚w‡Ğ¢FWF–Ç7¶Ö&v–âÖ&÷GFöÓ£wƒ·FF–æs£‡‚‡Ğ¢FWF–Ç2¶föçB×6—¦S£G‡Ğ¢çv÷&·76W¶&÷&FW"×&F—W3£‡ƒ·FF–æs£7‡Ğ¢çv÷&·76Rƒ'¶föçB×6—¦S£#'ƒ¶÷fW&fÆ÷r×w&¦ç—v†W&WĞ¢çv÷&·76RÖ–çG&÷¶F—7Æ“¦æöæWĞ¢FW‡F&V¶Ö–âÖ†V–v‡C£Wƒ·FF–æs£Gƒ¶föçB×6—¦S£gƒ¶&÷&FW"×&F—W3£wƒ¶÷fW&fÆ÷r×w&¦ç—v†W&S·v÷&BÖ'&V³¦'&V²×v÷&GĞ¢çÆFf÷&×7¶Ö&v–ã£‡‚‡Ğ¢æG&÷×¦öæW·FF–æs£W‚ƒ¶&÷&FW"×&F—W3£w‡Ğ¢æG&÷×¦öæRƒ7¶föçB×6—¦S£‡‡Ğ¢æG&÷×¦öæR¶föçB×6—¦S£'‡Ğ¢æf–ÆRÖ'WGFöç¶Ö‚×v–GFƒ£S·v†—FR×76S¦æ÷&ÖÇĞ¢æÖöFR×&÷w¶Ö&v–ã£‚Ğ¢æÖöFW·FF–æs£'ƒ¶Ö–â×v–GFƒ£Ğ¢æÖöFR7G&öærÂæÖöFR6ÖÆÇ¶÷fW&fÆ÷r×w&¦ç—v†W&S·v÷&BÖ'&V³¦'&V²×v÷&GĞ¢ææÇ—¦W¶Ö–âÖ†V–v‡C£Sgƒ¶föçB×6—¦S£—ƒ·FF–æs£ƒ¶÷fW&fÆ÷r×w&¦ç—v†W&S·v†—FR×76S¦æ÷&ÖÇĞ¢ç&W7VÇG¶Ö&v–â×F÷£‡ƒ·FF–æs£Gƒ¶&÷&FW"×&F—W3£#ƒ·v–GFƒ£WĞ¢æf–æÂ×fW&F–7BÖ&÷‡·FF–æs£w‚'ƒ¶&÷&FW"×&F—W3£‡‡Ğ¢æf–æÂ×fW&F–7G¶föçB×6—¦S¦6Æ×ƒ3g‚Ã7grÃS‡‚“¶ÆWGFW"×76–æs¢Ó‡Ğ¢æf–æÂÖW‡ÆæF–öç¶föçB×6—¦S£Gƒ¶Æ–æRÖ†V–v‡C£ãWĞ¢çfW&F–7G¶föçB×6—¦S¦6Æ×ƒ#'‚ÃrãWgrÃ3‚“¶ÆWGFW"×76–æs¢ÒãWƒ¶Æ–æRÖ†V–v‡C£ã'Ğ¢æÖWG&–77¶v£g‡Ğ¢æÖWG&–7¶föçB×6—¦S£ƒ·FF–æs£‡‚—ƒ¶Ö‚×v–GFƒ£WĞ¢æ6&G·FF–æs£G‚'ƒ¶&÷&FW"×&F—W3£gƒ·v–GFƒ£S¶Ö–â×v–GFƒ£Ğ¢æ6&Bƒ7¶föçB×6—¦S£‡ƒ¶Æ–æRÖ†V–v‡C£ã#WĞ¢æ6&BÂæ6&BÆ—¶föçB×6—¦S£Gƒ¶Æ–æRÖ†V–v‡C£ãSWĞ¢æ6&BVÇ·FF–ærÖÆVgC£‡‡Ğ¢ç6÷W&6W·FF–æs£ƒ¶&÷&FW"×&F—W3£'‡Ğ¢ç6÷W&6R7G&öæw¶föçB×6—¦S£Gƒ¶Æ–æRÖ†V–v‡C£ã3WĞ¢ç6÷W&6R6ÖÆÇ¶F—7Æ“¦&Æö6³¶föçB×6—¦S£'ƒ¶Æ–æRÖ†V–v‡C£ãGĞ¢æ7F–öç7¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3£g#¶v£‡‡Ğ¢æ7F–öç2'WGFöç·v–GFƒ£S·FF–æs£‡Ğ¢æF—66Æ–ÖW'¶föçB×6—¦S£'ƒ·FF–æs£‡‡Ğ¢fö÷FW'¶föçB×6—¦S£7ƒ·FF–æs£#'‚'‚3'‡Ğ¢Ğ ¢ÖVF–†Ö‚×v–GFƒ£3ƒ‚—°¢Ö–ç·v–GFƒ¦6Æ2ƒRÒ‚—Ğ¢çv÷&·76RÂç&W7VÇG·FF–æs£‡Ğ¢æ6&G·FF–æs£'‚‡Ğ¢æf–æÂ×fW&F–7G¶föçB×6—¦S£3g‡Ğ¢çfW&F–7G¶föçB×6—¦S£#'‡Ğ¢æÖWG&–7¶föçB×6—¦S£‡Ğ¢Ğ   ¢çfö–6R×FööÇ7°¢F—7Æ“¦fÆWƒ¶Æ–vâÖ—FV×3¦6VçFW#¶v£—ƒ¶Ö&v–ã£‚Gƒ¶fÆW‚×w&§w& ¢Ğ¢çfö–6RÖ'WGFöç°¢fÆWƒ£#3ƒ¶Ö–âÖ†V–v‡C£Sƒ¶&÷&FW#£‚6öÆ–B3VVcs¶&÷&FW"×&F—W3£Wƒ°¢&6¶w&÷VæC¢3####¶6öÆ÷#¢6ffc¶föçB×vV–v‡C£“·FF–æs£‚Gƒ°¢F—7Æ“¦fÆWƒ¶Æ–vâÖ—FV×3¦6VçFW#¶§W7F–g’Ö6öçFVçC¦6VçFW#¶v£—€¢Ğ¢çfö–6RÖ'WGFöâæÆ—7FVæ–æw¶&÷&FW"Ö6öÆ÷#§f"‚Ò×&VB“¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚ÂãR—Ğ¢çfö–6RÖ'WGFöã¦fö7W2×f—6–&ÆRÂç7V²Ö'WGFöã¦fö7W2×f—6–&ÆW°¢÷WFÆ–æS£7‚6öÆ–B6ffc¶÷WFÆ–æRÖöfg6WC£7€¢Ğ¢ç7V²Ö'WGFöç°¢fÆWƒ£“ƒ¶Ö–âÖ†V–v‡C£Sƒ¶&÷&FW#£‚6öÆ–B3VVcs¶&÷&FW"×&F—W3£Wƒ°¢&6¶w&÷VæC¢3####¶6öÆ÷#¢6ffc¶föçB×vV–v‡C£“·FF–æs£‚G€¢Ğ¢çfö–6R×7FGW7·v–GFƒ£S¶6öÆ÷#§f"‚ÒÖ×WFVB“¶föçB×6—¦S£'ƒ¶Æ–æRÖ†V–v‡C£ãGĞ¢ç&W÷'B×6÷W&6W°¢Ö&v–âÖ&÷GFöÓ£Wƒ·FF–æs£‚7ƒ¶&÷&FW#£‚6öÆ–B3ScScc3¶&÷&FW"×&F—W3£7ƒ°¢&6¶w&÷VæC¢3ssC¶6öÆ÷#¢6S†S†VC¶föçB×6—¦S£7ƒ¶föçB×vV–v‡C£ƒ¶Æ–æRÖ†V–v‡C£ãCP¢Ğ¢ç&W÷'B×6÷W&6R¶6öÆ÷#¢6ffc·FW‡BÖFV6÷&F–öã§VæFW&Æ–æWĞ¢ç7"ÖöæÇ—°¢÷6—F–öã¦'6öÇWFR–×÷'FçC·v–GFƒ£‚–×÷'FçC¶†V–v‡C£‚–×÷'FçC·FF–æs£–×÷'FçC°¢Ö&v–ã¢Ó‚–×÷'FçC¶÷fW&fÆ÷s¦†–FFVâ–×÷'FçC¶6Æ—§&V7BƒÃÃÃ’–×÷'FçC°¢v†—FR×76S¦æ÷w&–×÷'FçC¶&÷&FW#£–×÷'Fç@¢Ğ¢ÖVF–†Ö‚×v–GFƒ£s‚—°¢çfö–6R×FööÇ7¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3£g'Ğ¢çfö–6RÖ'WGFöâÂç7V²Ö'WGFöç·v–GFƒ£WĞ¢Ğ¢ÖVF–&–çG°¢çfö–6R×FööÇ7¶F—7Æ“¦æöæR–×÷'FçGĞ¢ç&W÷'B×6÷W&6W¶F—7Æ“¦&Æö6²–×÷'FçC¶6öÆ÷#¢3¶&6¶w&÷VæC¢6ffc¶&÷&FW#£‚6öÆ–B3sswĞ¢Ğ ¢ò¢fVçFæ+ô<;6ÖògVæ6–öæò(	B6–â76WG2W‡FW&æ÷2¢ğ¢æ†VFW"×6†&W°¢V&æ6S¦æöæS¶F—7Æ“¦fÆWƒ¶Æ–vâÖ—FV×3¦6VçFW#¶§W7F–g’Ö6öçFVçC¦6VçFW#¶v£‡ƒ°¢v–GFƒ¦Ö–âƒCc‚Æ6Æ2ƒRÒ#‡‚’“¶Ö&v–ã£w‚WFòƒ·FF–æs£‚‡ƒ°¢&÷&FW#£‚6öÆ–B3SVC““S¶&÷&FW"×&F—W3£““—ƒ¶&6¶w&÷VæC¢33vCC¶6öÆ÷#¢6ffc°¢&÷‚×6†F÷s£w‚#'‚&v&ƒ’Ã#"Ãc‚Âã#‚“·FW‡BÖÆ–vã¦6VçFW#°¢föçB×6—¦S¦6Æ×ƒ'‚Ã"ãWgrÃW‚“¶föçB×vV–v‡C£¶ÆWGFW"×76–æs¢ã#Wƒ¶Æ–æRÖ†V–v‡C£ã#S°¢G&ç6—F–öã¦&6¶w&÷VæBã'2V6RÇG&ç6f÷&Òã'2V6RÆ&÷‚×6†F÷rã'2V6P¢Ğ¢æ†VFW"×6†&S¦†÷fW'¶&6¶w&÷VæC¢3““CSs¶&÷‚×6†F÷s£—‚#g‚&v&ƒ#RÃC‚ÃƒrÂã3B“·G&ç6f÷&Ó§G&ç6ÆFU’‚Ó‚—Ğ¢æ†VFW"×6†&S¦7F—fW·G&ç6f÷&Ó§G&ç6ÆFU’ƒ—Ğ¢æ†VFW"×6†&S¦fö7W2×f—6–&ÆW¶÷WFÆ–æS£7‚6öÆ–B6ffc¶÷WFÆ–æRÖöfg6WC£7‡Ğ¢æ†VFW"×6†&R7ç¶6öÆ÷#¦–æ†W&—GĞ¢æ†÷r×G&–vvW'°¢v–GFƒ£S¶F—7Æ“¦fÆWƒ¶Æ–vâÖ—FV×3¦6VçFW#¶§W7F–g’Ö6öçFVçC§76RÖ&WGvVVã¶v£'ƒ°¢Ö&v–ã£WFò—ƒ·FF–æs£‚Gƒ¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£Wƒ°¢&6¶w&÷VæC§&v&ƒrÃrÃ#Âã’“¶6öÆ÷#¢6ffc·FW‡BÖÆ–vã¦ÆVgC¶föçB×vV–v‡C£“ ¢Ğ¢æ†÷r×G&–vvW"6ÖÆÇ¶6öÆ÷#§f"‚ÒÖ×WFVB“¶föçB×vV–v‡C£sĞ¢æ†÷rÖÖöFÇ·÷6—F–öã¦f—†VC¶–ç6WC£·¢Ö–æFWƒ£¶F—7Æ“¦æöæS¶Æ–vâÖ—FV×3¦6VçFW#¶§W7F–g’Ö6öçFVçC¦6VçFW#·FF–æs£‡ƒ¶&6¶w&÷VæC§&v&ƒÃÃÂãƒ"“¶&6¶G&÷Öf–ÇFW#¦&ÇW"ƒ—‚—Ğ¢æ†÷rÖÖöFÂçf—6–&ÆW¶F—7Æ“¦fÆW‡Ğ¢æ†÷rÖF–Æöw·v–GFƒ¦Ö–âƒ“‚ÃR“¶Ö‚Ö†V–v‡C¦6Æ2ƒf‚Ò3g‚“¶÷fW&fÆ÷s¦WFó¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£#Gƒ¶&6¶w&÷VæC¢3c¶&÷‚×6†F÷s£#G‚ƒ‚&v&ƒÃÃÂãr“·FF–æs£#'‡Ğ¢æ†÷rÖ†VG¶F—7Æ“¦fÆWƒ¶Æ–vâÖ—FV×3¦fÆW‚×7F'C¶§W7F–g’Ö6öçFVçC§76RÖ&WGvVVã¶v£G‡Ğ¢æ†÷rÖ†VBƒ'¶föçB×6—¦S¦6Æ×ƒ#W‚ÃWgrÃ3g‚“¶Æ–æRÖ†V–v‡C£ã‡Ğ¢æ†÷rÖ6Æ÷6W¶fÆWƒ£WFó·v–GFƒ£C'ƒ¶†V–v‡C£C'ƒ¶&÷&FW#£‚6öÆ–B3C“C“S3¶&÷&FW"×&F—W3£SS¶&6¶w&÷VæC¢3CC##¶6öÆ÷#¢6ffc¶föçB×6—¦S£#7‡Ğ¢æ†÷rÖÆVG¶6öÆ÷#¢6C&C&F¶Æ–æRÖ†V–v‡C£ãc¶Ö&v–ã£G‚Ğ¢æ†÷rÖ÷F–öç7¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3§&WVBƒ"ÆÖ–æÖ‚ƒÃg"’“¶v£ƒ¶Ö&v–ã£G‚Ğ¢æ†÷rÖ÷F–öç¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£Wƒ¶&6¶w&÷VæC¢3ƒƒS·FF–æs£7ƒ¶Æ–æRÖ†V–v‡C£ãCWĞ¢æ†÷r×7FW7¶Ö&v–ã£g‚#ƒ·FF–ærÖÆVgC£#'ƒ¶6öÆ÷#¢6FFC¶Æ–æRÖ†V–v‡C£ãcWĞ¢æFVÖòÖw&–G¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3§&WVBƒ2ÆÖ–æÖ‚ƒÃg"’“¶v£'ƒ¶Ö&v–â×F÷£'‡Ğ¢æFVÖòÖ6&G¶&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£wƒ¶&6¶w&÷VæC¢3ssC·FF–æs£Wƒ¶Ö–â×v–GFƒ£Ğ¢æFVÖòÖ6&BƒG¶Ö&v–âÖ&÷GFöÓ£—ƒ¶föçB×6—¦S£g‡Ğ¢æFVÖò×fW&F–7G¶föçB×6—¦S£#Wƒ¶föçB×vV–v‡C£¶6öÆ÷#§f"‚ÒÖw&VVâ“¶Æ–æRÖ†V–v‡C£ãS¶Ö&v–ã£‡‚Ğ¢æFVÖòÖÖWG&–77¶F—7Æ“¦fÆWƒ¶fÆW‚×w&§w&¶v£gƒ¶Ö&v–ã£‚Ğ¢æFVÖò×–ÆÇ¶föçB×6—¦S£ƒ¶föçB×vV–v‡C£“·FF–æs£w‚—ƒ¶&÷&FW#£‚6öÆ–B3csC6S¶&÷&FW"×&F—W3£““—ƒ¶&6¶w&÷VæC§&v&ƒ#SRÃS’ÃC‚Âã’—Ğ¢æFVÖòÖÆ—7G·FF–ærÖÆVgC£‡ƒ¶6öÆ÷#¢6CVCVF3¶föçB×6—¦S£7ƒ¶Æ–æRÖ†V–v‡C£ãSWĞ¢æFVÖò×6÷W&6W¶F—7Æ“¦&Æö6³·FF–æs£ƒ¶&÷&FW#£‚6öÆ–B36C6CCc¶&÷&FW"×&F—W3£ƒ¶&6¶w&÷VæC¢3#¶Ö&v–â×F÷£‡ƒ¶föçB×6—¦S£'ƒ¶6öÆ÷#¢6CVCVF7Ğ¢æ†÷r×7F'G·v–GFƒ£S¶Ö–âÖ†V–v‡C£SGƒ¶Ö&v–â×F÷£‡ƒ¶&÷&FW#£¶&÷&FW"×&F—W3£gƒ¶&6¶w&÷VæC§f"‚Ò×&VB“¶6öÆ÷#¢6ffc¶föçB×6—¦S£‡ƒ¶föçB×vV–v‡C£Ğ¢æ†÷r×FvÆ–æW·FW‡BÖÆ–vã¦6VçFW#¶6öÆ÷#§f"‚ÒÖ×WFVB“¶föçB×6—¦S£7ƒ¶Ö&v–â×F÷£—‡Ğ¢ÖVF–†Ö‚×v–GFƒ£s‚—°¢æ†VFW"×6†&W·v–GFƒ¦6Æ2ƒRÒ#‚“¶föçB×6—¦S£'ƒ·FF–æs£‚Gƒ¶Ö&v–ã£g‚WFò—‡Ğ¢æ†÷rÖÖöFÇ·FF–æs£ƒ¶Æ–vâÖ—FV×3¦fÆW‚ÖVæGĞ¢æ†÷rÖF–Æöw¶Ö‚Ö†V–v‡C£“Gfƒ¶&÷&FW"×&F—W3£#'‚#'‚G‚Gƒ·FF–æs£w‚G‡Ğ¢æ†÷rÖ÷F–öç2ÂæFVÖòÖw&–G¶w&–B×FV×ÆFRÖ6öÇVÖç3£g'Ğ¢æ†÷r×G&–vvW'·FF–æs£‚'‡Ğ¢Ğ ¢æ6öçFVçBÖÖöFÇ°¢÷6—F–öã¦f—†VC¶–ç6WC£·¢Ö–æFWƒ£¶F—7Æ“¦æöæS¶Æ–vâÖ—FV×3¦6VçFW#¶§W7F–g’Ö6öçFVçC¦6VçFW#°¢FF–æs£‡ƒ¶&6¶w&÷VæC§&v&ƒÃÃÂãs‚“¶&6¶G&÷Öf–ÇFW#¦&ÇW"ƒ‡‚¢Ğ¢æ6öçFVçBÖÖöFÂçf—6–&ÆW¶F—7Æ“¦fÆW‡Ğ¢æ6öçFVçBÖÖöFÂÖF–Æöw°¢v–GFƒ¦Ö–âƒc#‚ÃR“¶Ö‚Ö†V–v‡C¦6Æ2ƒf‚Ò3g‚“¶÷fW&fÆ÷s¦WFó°¢&÷&FW#£‚6öÆ–Bf"‚ÒÖ&÷&FW"“¶&÷&FW"×&F—W3£#Gƒ¶&6¶w&÷VæC¢3c°¢&÷‚×6†F÷s£#G‚ƒ‚&v&ƒÃÃÂãcR“·FF–æs£#'€¢Ğ¢æ6öçFVçBÖÖöFÂÖ†VFW'¶F—7Æ“¦fÆWƒ¶Æ–vâÖ—FV×3¦fÆW‚×7F'C¶§W7F–g’Ö6öçFVçC§76RÖ&WGvVVã¶v£Gƒ¶Ö&v–âÖ&÷GFöÓ£'‡Ğ¢æ6öçFVçBÖÖöFÂ×F—FÆW¶föçB×6—¦S¦6Æ×ƒ#7‚ÃWgrÃ3'‚“¶Æ–æRÖ†V–v‡C£ã‡Ğ¢æ6öçFVçBÖÖöFÂÖ6Æ÷6W°¢fÆWƒ£WFó·v–GFƒ£C'ƒ¶†V–v‡C£C'ƒ¶&÷&FW#£‚6öÆ–B3C“C“S3¶&÷&FW"×&F—W3£SS°¢&6¶w&÷VæC¢3CC##¶6öÆ÷#¢6ffc¶föçB×6—¦S£#7ƒ¶Æ–æRÖ†V–v‡C£¢Ğ¢æ6öçFVçBÖÖöFÂ×FW‡G¶6öÆ÷#¢6C&C&F¶Æ–æRÖ†V–v‡C£ãSS¶Ö&v–âÖ&÷GFöÓ£G‡Ğ¢æ6öçFVçBÖÖöFÂFW‡F&V¶Ö–âÖ†V–v‡C£ƒƒ¶&÷&FW"×&F—W3£g‡Ğ¢æ6öçFVçBÖÖöFÂÖæ÷FW¶F—7Æ“¦&Æö6³¶6öÆ÷#§f"‚ÒÖ×WFVB“¶föçB×6—¦S£'ƒ¶Æ–æRÖ†V–v‡C£ãCS¶Ö&v–â×F÷£‡‡Ğ¢æ6öçFVçBÖÖöFÂÖ7F–öç7¶F—7Æ“¦w&–C¶w&–B×FV×ÆFRÖ6öÇVÖç3§&WVBƒ2Ãg"“¶v£—ƒ¶Ö&v–â×F÷£g‡Ğ¢æ6öçFVçBÖÖöFÂÖ7F–öç2'WGFöç°¢Ö–âÖ†V–v‡C£Sƒ·FF–æs£ƒ¶&÷&FW#£‚6öÆ–B3C“C“S3¶&÷&FW"×&F—W3£Gƒ°¢&6¶w&÷VæC¢3CC##¶6öÆ÷#¢6ffc¶föçB×vV–v‡C£“ ¢Ğ¢æ6öçFVçBÖÖöFÂÖ7F–öç2ç&–Ö'—¶&÷&FW"Ö6öÆ÷#§f"‚Ò×&VB“¶&6¶w&÷VæC§f"‚Ò×&VB—Ğ¢æ6öçFVçBÖÖöFÂÖ7F–öç2æGF6‡¶&÷&FW"Ö6öÆ÷#¢3SVC““S¶&6¶w&÷VæC¢33vCGĞ¢ç&V6÷fW'’Ö7F–öç7¶F—7Æ“¦fÆWƒ¶fÆW‚×w&§w&¶v£—ƒ¶Ö&v–â×F÷£'‡Ğ¢ç&V6÷fW'’Ö7F–öç2'WGFöç¶fÆWƒ£“ƒ·FF–æs£'ƒ¶&÷&FW#£‚6öÆ–B3SVC““S¶&÷&FW"×&F—W3£7ƒ¶&6¶w&÷VæC¢33vCC¶6öÆ÷#¢6ffc¶föçB×vV–v‡C£“Ğ¢æ6öçFVçBÖÖöFÂÖW'&÷'¶F—7Æ“¦æöæS¶6öÆ÷#¢6fc†3ƒs¶föçB×6—¦S£7ƒ¶Ö&v–â×F÷£—‡Ğ¢æ6öçFVçBÖÖöFÂÖW'&÷"çf—6–&ÆW¶F—7Æ“¦&Æö6·Ğ¢&öG’æÖöFÂÖ÷Vç¶÷fW&fÆ÷s¦†–FFVçĞ ¢ÖVF–†Ö‚×v–GFƒ£s‚—°¢æ6öçFVçBÖÖöFÇ·FF–æs£ƒ¶Æ–vâÖ—FV×3¦fÆW‚ÖVæGĞ¢æ6öçFVçBÖÖöFÂÖF–Æöw¶Ö‚Ö†V–v‡C£“'fƒ¶&÷&FW"×&F—W3£#'‚#'‚G‚Gƒ·FF–æs£w‚G‡Ğ¢æ6öçFVçBÖÖöFÂÖ7F–öç7¶w&–B×FV×ÆFRÖ6öÇVÖç3£g'Ğ¢æ6öçFVçBÖÖöFÂFW‡F&V¶Ö–âÖ†V–v‡C£#‡Ğ¢Ğ ¢ÖVF–&–çG¶†VFW"Âæ†W&òÂçV–6²Ö†÷rÆFWF–Ç2Âçv÷&·76RÂæF—66Æ–ÖW"Æfö÷FW"Âæ7F–öç7¶F—7Æ“¦æöæR–×÷'FçGÖ&öG—¶&6¶w&÷VæC¢6ffc¶6öÆ÷#¢3Òç&W7VÇG¶F—7Æ“¦&Æö6²–×÷'FçC¶&÷&FW#£¶&÷‚×6†F÷s¦æöæS¶&6¶w&÷VæC¢6ffgÒæ6&BÂç6÷W&6W¶&6¶w&÷VæC¢6ffc¶6öÆ÷#¢3¶&÷&FW"Ö6öÆ÷#¢6&&'Òæ6&BÂæ6&BÆ’Âç6÷W&6R6ÖÆÇ¶6öÆ÷#¢3##'×Ğ¢Â÷7G–ÆSà£Âö†VCà£Æ&öG“à£Æ†VFW#à¢ÆF—b6Æ73Ò&æb#ãÆF—b6Æ73Ò&'&æB#äÄdU$DBÇ7ãä”ä<94ÔôDÂ÷7ããÂöF—cãÆF—b6Æ73Ò'7FGW2#ä”²Wf–FVæ6–F–v—FÃÂöF—cãÂöF—cà¢Ææb6Æ73Ò'6—FRÖÆ–æ·2"&–ÖÆ&VÃÒ$æfVv6œ;6âVF—F÷&–Â#ãÆ‡&VcÒ"ö'F–6ÆW2æ‡FÖÂ#ä'L:Ö7VÆ÷3ÂöãÆ‡&VcÒ"öÖWFöFöÆöv–æ‡FÖÂ#äÖWFöFöÆö|:ÖÂöãÆ‡&VcÒ"öW7FæF&W2ÖVF—F÷&–ÆW2æ‡FÖÂ#äW7L:æF&W3ÂöãÆ‡&VcÒ"÷öÆ—F–6ÖVF—F÷&–Âæ‡FÖÂ#åöÌ:×F–6VF—F÷&–ÃÂöãÆ‡&VcÒ"ö6÷'&V66–öæW2æ‡FÖÂ#ä6÷'&V66–öæW3ÂöãÆ‡&VcÒ"öWF÷&W2æ‡FÖÂ#äWF÷&W3ÂöãÆ‡&VcÒ"÷V–VæW2×6öÖ÷2æ‡FÖÂ#åVœ:–æW26öÖ÷3ÂöãÆ‡&VcÒ"ö6öçF7Fòæ‡FÖÂ#ä6öçF7FóÂöãÂöæcà¢Æ'WGFöâ6Æ73Ò&†VFW"×6†&R"–CÒ'vU6†&T'WGFöâ"G—SÒ&'WGFöâ"öæ6Æ–6³Ò'6†&UvR‡F†—2’"&–ÖÆ&VÃÒ$6ö×'F—"ÆfW&FB–æ<;6ÖöF"&–ÖÆ—fSÒ'öÆ—FR#ãÇ7â&–Ö†–FFVãÒ'G'VR#î(isÂ÷7ããÇ7ãä4ôÕ%D•"U5D8t”äÂ÷7ããÂö'WGFöãà£Âö†VFW#à£ÆÖ–ãà¢Ç6V7F–öâ6Æ73Ò&†W&ò#à¢ÆF—b6Æ73Ò&&FvR#ä”åDTÄ”tTä4”%D”d”4”Â²Ud”DTä4”D”t•DÃÂöF—cà¢Æƒäæò7&V2âÇ7ãä6ö×'VV&ãÂ÷7ããÂöƒà¢Ç6Æ73Ò'7V'F—FÆR#å&VwVçFÂVvVâVæÆ6Rò7V&RVâ&6†—fòâÆ”–çfW7F–v’6öçG&7FWf–FVæ6–;¦&Æ–6ãÂ÷à¢Â÷6V7F–öãà¢ÆF—b6Æ73Ò'V–6²Ö†÷r#ãÇ7ãï	ù*Â&VwVçFÂ÷7ããÇ7ãï	øÉVvVâVæÆ6SÂ÷7ããÇ7ãï	ù;r–ÖvVãÂ÷7ããÇ7ãï	øêrVF–óÂ÷7ããÇ7ãï	ù8BFö7VÖVçFóÂ÷7ããÂöF—cà¢Æ'WGFöâ6Æ73Ò&†÷r×G&–vvW""–CÒ&÷Vä†÷tÖöFÂ"G—SÒ&'WGFöâ#ãÇ7G&öæsì+ô<;6ÖògVæ6–öæóÂ÷7G&öæsãÇ6ÖÆÃåfW"W‡Æ–66œ;6â’V¦V×Æò(i#Â÷6ÖÆÃãÂö'WGFöãà ¢Ç6V7F–öâ6Æ73Ò'v÷&·76R#à¢Æƒ#ì+õ\:’V–W&W2fW&–f–6#óÂöƒ#à¢Ç6Æ73Ò'v÷&·76RÖ–çG&ò#äW67&–&RÂVvVâVæÆ6Rò;FRVâ&6†—fòãÂ÷à¢ÇFW‡F&V–CÒ&æWw4–çWB"Æ6V†öÆFW#Ò$V¦V×Æó¢+õ\:’Fâ6öæf–&ÆRW2W7Ff—&Ö6œ;6â6V|;¦âÆWf–FVæ6–;¦&Æ–6F—7öæ–&ÆSò#ãÂ÷FW‡F&Và¢ÆF—b6Æ73Ò'fö–6R×FööÇ2"&–ÖÆ&VÃÒ$†W'&Ö–VçF2FR66W6–&–Æ–FB÷"f÷¢#à¢Æ'WGFöâ6Æ73Ò'fö–6RÖ'WGFöâ"–CÒ'fö–6T–çWD'WGFöâ"G—SÒ&'WGFöâ"&–×&W76VCÒ&fÇ6R#à¢Ç7â&–Ö†–FFVãÒ'G'VR#ï	øéûˆóÂ÷7ãà¢Ç7â–CÒ'fö–6T–çWDÆ&VÂ#å&VwVçF"÷"f÷£Â÷7ãà¢Âö'WGFöãà¢Æ'WGFöâ6Æ73Ò'7V²Ö'WGFöâ"–CÒ'7Vµ7VÖÖ'”'WGFöâ"G—SÒ&'WGFöâ#à¢Ç7â&–Ö†–FFVãÒ'G'VR#ï	ùz>ûˆóÂ÷7ãâW67V6†"&W7VÖVà¢Âö'WGFöãà¢Æ'WGFöâ6Æ73Ò'7V²Ö'WGFöâ"–CÒ'7V´gVÆÄ'WGFöâ"G—SÒ&'WGFöâ#à¢Ç7â&–Ö†–FFVãÒ'G'VR#ï	ù9cÂ÷7ãâW67V6†"–æf÷&ÖR6ö×ÆWFğ¢Âö'WGFöãà¢Æ'WGFöâ6Æ73Ò'7V²Ö'WGFöâ"–CÒ'7F÷7VV6„'WGFöâ"G—SÒ&'WGFöâ#à¢Ç7â&–Ö†–FFVãÒ'G'VR#ï	ùHsÂ÷7ãâFWFVæW"ÆV7GW&¢Âö'WGFöãà¢Ç6Æ73Ò'fö–6R×7FGW2"–CÒ'fö–6U7FGW2"&–ÖÆ—fSÒ'öÆ—FR#à¢VÇ6VÂÖ–7,;6föæò&†&Æ"âFÖ&œ:–âVVFW2Vv"VâVæÆ6RÂ6÷–"Vææ÷F–6–ò7V&—"Væ–ÖvVâòFö7VÖVçFòà¢Â÷à¢ÂöF—cà¢ÆF—b6Æ73Ò'ÆFf÷&×2#ãÇ7ãäf6V&öö³Â÷7ããÇ7ãåF–µFö³Â÷7ããÇ7ãå–÷UGV&SÂ÷7ããÇ7ãä–ç7Fw&ÓÂ÷7ããÇ7ãåƒÂ÷7ããÇ7ãåF‡&VG3Â÷7ããÇ7ãå:v–æ2vV#Â÷7ããÂöF—cà¢ÆF—b6Æ73Ò&G&÷×¦öæR"–CÒ&G&÷¦öæR#à¢Æƒ3ä'&7G&Vâ&6†—fò\:ÓÂöƒ3à¢Çäf÷F÷2ÂVF–òÂf–FVòÕBõvV$ÒÂDbÂv÷&BÂW†6VÂÂ÷vW%ö–çB’FW‡FòâF§VçF÷3¢Ü:†–Öò2Ô"âVæÆ6W2F—&V7F÷2&6†—f÷3¢†7F#Ô"âf–FVó¢VF–ò’×VW7G&FRf÷Föw&Ö3²æò6FW66VæãÂ÷à¢ÆÆ&VÂ6Æ73Ò&f–ÆRÖ'WGFöâ"f÷#Ò&f–ÆT–çWB#å6VÆV66–öæ"&6†—fóÂöÆ&VÃà¢Æ–çWB–CÒ&f–ÆT–çWB"G—SÒ&f–ÆR"66WCÒ"æ§rÂæ§VrÂçærÂçvV'Âæv–bÂæ×2ÂæÓFÂçvbÂæfÆ2ÂæövrÂæ×BÂçvV&ÒÂçFbÂçG‡BÂæÖBÂæ77bÂçG7bÂæFö2ÂæFö7‚Âç†Ç2Âç†Ç7‚ÂçBÂçG‚"óà¢ÆF—b6Æ73Ò'6VÆV7FVBÖf–ÆR"–CÒ'6VÆV7FVDf–ÆR#ãÇ7G&öær–CÒ&f–ÆTæÖR#ãÂ÷7G&öæsãÇ6ÖÆÂ–CÒ&f–ÆTFWF–Ç2#ãÂ÷6ÖÆÃãÆ'WGFöâ–CÒ'&VÖ÷fTf–ÆR"G—SÒ&'WGFöâ#åV—F"&6†—fóÂö'WGFöããÂöF—cà¢ÂöF—cà¢ÆF—b6Æ73Ò&ÖöFR×&÷r#à¢Æ'WGFöâ6Æ73Ò&ÖöFR7F—fR"G—SÒ&'WGFöâ"FFÖÖöFSÒ'&–Fò#ãÇ7G&öæsî)ªì:Æ—6—2,:–FóÂ÷7G&öæsãÇ6ÖÆÃäWfÇV6œ;6â'&WfR6öâgVVçFW2ãÂ÷6ÖÆÃãÂö'WGFöãà¢Æ'WGFöâ6Æ73Ò&ÖöFR"G—SÒ&'WGFöâ"FFÖÖöFSÒ'&ögVæFò#ãÇ7G&öæsï	ùHâ–çfW7F–v6œ;6â&ögVæFÂ÷7G&öæsãÇ6ÖÆÃäÖ–÷"6öçG&7FR’FWFÆÆRãÂ÷6ÖÆÃãÂö'WGFöãà¢ÂöF—cà¢Æ'WGFöâ6Æ73Ò&æÇ—¦R"–CÒ&æÇ—¦T'WGFöâ"G—SÒ&'WGFöâ#ääÄ•¤"5$TD”$”Ä”DCÂö'WGFöãà¢ÆF—b6Æ73Ò'&öw&W72"–CÒ'&öw&W72#ãÆF—b6Æ73Ò'&öw&W72ÖÆ&VÂ"–CÒ'&öw&W74Æ&VÂ#å&W&æFş(
+cÂöF—cãÆF—b6Æ73Ò'G&6²#ãÆF—b6Æ73Ò&&""–CÒ'&öw&W74&"#ãÂöF—cãÂöF—cãÂöF—cà¢Â÷6V7F–öãà ¢Ç6V7F–öâ6Æ73Ò'&W7VÇB"–CÒ'&W7VÇB"&–ÖÆ—fSÒ'öÆ—FR#ãÂ÷6V7F–öãà¢Ç6V7F–öâ6Æ73Ò&VF—F÷&–ÂÖ†öÖR#ãÆƒ#åfW&–f–66–öæW2÷&–v–æÆW2&V6–VçFW3Âöƒ#ãÇäÆ&–&Æ–÷FV6&\;¦æR6ö×&ö&6–öæW26ö×ÆWF2Âæòw&VvF÷2WFöÜ:F–6÷2FRæ÷F–6–2â6F–çfW7F–v6œ;6âf÷&×VÆVæf—&Ö6œ;6â6öæ7&WFÂVæÆ¦VçG&R6–æ6ò’ö6†ògVVçFW27VæFòVÂFVÖÆòW&Ö—FRÂF—7F–æwVRFF÷2FR–æfW&Væ6–2’W‡Æ–6Æ2Æ–Ö—F6–öæW2FRÆ6öæ6ÇW6œ;6âãÂ÷ãÆF—b6Æ73Ò&VF—F÷&–ÂÖw&–B#ãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2öfÇ6òÖÖ÷&VæÖGWÆ–6òÖFWVF×6–WFRÖæ÷2×&÷–V66–öâÓ##r#ãÇ7G&öæsädÅ4¢ÆFWVFæò6RGWÆ–<;2Vâ6–WFR;÷3Â÷7G&öæsãÇ6ÖÆÃäÆ6–g&FR#ãcb&–ÆÆöæW2W2Væ&÷–V66œ;6â&##s²VÂ6ÆFòö'6W'fFòVâ§VÆ–òFR##bW&FR’ã#"&–ÆÆöæW2ãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2÷&6–ÂÖ6öæçÓbÓ"×W6÷2×÷"Ö†V7F&V×&W7WVW7FòÓ##r#ãÇ7G&öæså$4”Ã¢bã"W6÷2÷"†V7L:&V&Æ6öæçÂ÷7G&öæsãÇ6ÖÆÃäVÂ6ö6–VçFRW26÷'&V7FòÂW&òæò&W&W6VçFVæ6–væ6œ;6âVæ–f÷&ÖR6F†V7L:&V&÷FVv–FãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2ö6–W'Fò×&ö&ò×fV†–7VÆ÷2Ö6†–2Ö&¦òÓc‚×÷"Ö6–VçFòÖv÷7FòÓ##b#ãÇ7G&öæsä4”U%Dó¢&ö&òFRfVŒ:Ö7VÆ÷2Vâ6†–2&¬;2c‚SÂ÷7G&öæsãÇ6ÖÆÃäÆ÷W&6œ;6â6ö–æ6–FRÂW&ò6ö×&F÷2ÖW6W2’Ö–FR6'WF2&Vv—7G&F2ÂæòFöF÷2Æ÷2&ö&÷2ãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2ö6–W'Fò×&V6÷&BÖ–çfW'6–öâÖW‡G&æ¦W&ÖF—&V7F×&–ÖW"×6VÖW7G&RÓ##b#ãÇ7G&öæsä4”U%Dó¢,:–6÷&BFR–çfW'6œ;6âW‡G&æ¦W&F—&V7FÂ÷7G&öæsãÇ6ÖÆÃäVÂF÷FÂÆÆV|;23BÃ“c‚Ö–ÆÆöæW2FRL;6Æ&W3²ƒ‚ãRRgVR&V–çfW'6œ;6âFRWF–Æ–FFW2’rã‚RçVWf2–çfW'6–öæW2ãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2öVævæ÷6òÖçVWfÖW67VVÆÖÖW†–6æÖg&66ò×—6Ó##R#ãÇ7G&öæsäTät9õ4¢•4##R’ÆçVWfW67VVÆÖW†–6æÂ÷7G&öæsãÇ6ÖÆÃäÆô4DR6öæf—&Ü;2Væ6:ÖF6–væ–f–6F—fVâÖFVÜ:F–62ÂW&òæòWfÇ\;26W6ÆÖVçFRÆ&Vf÷&ÖVGV6F—fãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2öVævæ÷6ò×ö'&W¦ÖÆ&÷&ÂÖ&¦òÓ2Ó"×÷"Ö6–VçFò×6VwVæFò×G&–ÖW7G&RÓ##b#ãÇ7G&öæsäTät9õ4¢2ã"RæòWV—fÆR2ã"VçF÷3Â÷7G&öæsãÇ6ÖÆÃå&Wf—6œ;6âFVÂ<:Æ7VÆòçVÂ’FVÂ6Ö&–òg&VçFRÂG&–ÖW7G&R–æÖVF–Fò6öâFF÷2FVÂ”äTt’ãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2ö6–W'FòÖ†öÖ–6–F–÷2ÖFöÆ÷6÷2Ö&¦&öâÓS×÷"Ö6–VçFò×6WF–VÖ'&RÓ##BÖ§VÆ–òÓ##b#ãÇ7G&öæsä4”U%Dó¢VÂ&öÖVF–òFR†öÖ–6–F–÷2&¬;2SSÂ÷7G&öæsãÇ6ÖÆÃäVÂ<:Æ7VÆò6ö–æ6–FR6öâVÂ4U4å5ÂW&òæòFV×VW7G&÷"<:Ò6öÆò\:’öÌ:×F–6&öGV¦òVÂ6Ö&–òãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2÷&6–ÂÖ–fÓ2ÓbÖÖ–ÆÆöæW2×6¦W&÷2×&–ÖW"×6VÖW7G&RÓ##b#ãÇ7G&öæså$4”Ã¢6¦W&÷2FVÂ”d’(	ÆÆòÆæVFş(	ÓÂ÷7G&öæsãÇ6ÖÆÃäÆ6–g&FR6¦W&÷2W7L:&W7ÆFF²Æ6ö×&6œ;6â6öâVæÖWF6VÖW7G&Â;¦&Æ–6æò&V6œ;2Fö7VÖVçFFãÂ÷6ÖÆÃãÂöãÆ6Æ73Ò&VF—F÷&–ÂÖ6&B"‡&VcÒ"ö'F–7VÆ÷2öVævæ÷6òÖ6Ö&–òÖ–FVçF–FB×6öÖ÷2ÖÖW†–6òÖæòÖ6æ6VÆ×&Vv—7G&ò#ãÇ7G&öæsäTät9õ4¢VÂ6Ö&–òFRæöÖ'&Ræò6æ6VÌ;2VÂ&Vv—7G&óÂ÷7G&öæsãÇ6ÖÆÃå&W6öÇV6–öæW2FVÂDU¤bÂVÂF–&–òöf–6–Â’VÂ”äR6W&â–FVçF–FBw,:f–6FRW†—7FVæ6–§W,:ÖF–6ãÂ÷6ÖÆÃãÂöãÂöF—cãÆF—b6Æ73Ò&VF—F÷&–ÂÖ7F–öç2#ãÆ‡&VcÒ"ö'F–6ÆW2æ‡FÖÂ#åfW"Æ2#‚V&Æ–66–öæW3ÂöãÆ‡&VcÒ"öÖWFöFöÆöv–æ‡FÖÂ#ä6öæö6W"ÆÖWFöFöÆö|:ÖÂöãÆ‡&VcÒ"÷&VwVçF2Ög&V7VVçFW2æ‡FÖÂ#å&VwVçF2g&V7VVçFW3ÂöãÂöF—cãÂ÷6V7F–öãà¢Ç6V7F–öâ6Æ73Ò'7FæF&G2Ö†öÖR#ãÆƒ#å\:’÷'FVæfW&–f–66œ;6ãÂöƒ#ãÇäVÂ&W7VÇFFòFVÂæÆ—¦F÷"W2Væ—VF–æ–6–Ã²Æ2V&Æ–66–öæW2VF—F÷&–ÆW26öç7F—GW–VâVÂ&6†—fòW&ÖæVçFRFVÂ&÷–V7Fòâ&Wf—F"6öæ6ÇW6–öæW2f'&–6F2÷"&WWF–6œ;6âÂ6R&7G&VÆgVVçFRÖG&—¢FR6FFFò’6R6ö×'VV&6’f&–2æ÷F2&ö6VFVâFVÂÖ—6Öò6ö×Væ–6FòÂ6&ÆRòf–FVòâVææ÷F–6–W&–öL:×7F–67&VF—FVRVâÖVF–ò†—¦òVæf—&Ö6œ;6âÂW&òÆfW&6–FBFWVæFRFRÆ÷2Fö7VÖVçF÷2’&Vv—7G&÷2VRÆ6÷7F–VæVâãÂ÷ãÆF—b6Æ73Ò'7FæF&G2Öw&–B#ãÆ'F–6ÆR6Æ73Ò'7FæF&BÖ6&B#ãÆƒ3ägVVçFW2&–Ö&–3Âöƒ3ãÇå6R6öç7VÇFâÆW–W2Â&W6öÇV6–öæW2Â&6W2FRFF÷2Â–æf÷&ÖW2ÖWFöFöÌ;6v–6÷2ÂG&ç67&—6–öæW26ö×ÆWF2’Fö7VÖVçF÷2FRÆ2–ç7F—GV6–öæW26ö×WFVçFW2âVægVVçFRöf–6–ÂF×ö6ò&V6–&RfW&6–FBWFöÜ:F–6¢6R&Wf—6â7RÆ6æ6RÂfV6†’Ü:—FöFòãÂ÷ãÂö'F–6ÆSãÆ'F–6ÆR6Æ73Ò'7FæF&BÖ6&B#ãÆƒ3ä6öçG&7FR&VÃÂöƒ3ãÇä'W66Ö÷2Wf–FVæ6–ff÷&&ÆR’FW6ff÷&&ÆRâÆ2,:—Æ–626Rw'Wâ&æò&W6VçF"F–W¢6÷–2FRVæÖ—6Öæ÷F6öÖòF–W¢6ö×&ö&6–öæW2–æFWVæF–VçFW2â7VæFòfÇFVæ–W¦FV6—6—fÂ6RFV6Æ&6–â&VÆÆVæ"VÂf<:ÖòãÂ÷ãÂö'F–6ÆSãÆ'F–6ÆR6Æ73Ò'7FæF&BÖ6&B#ãÆƒ3ä6öæ6ÇW6œ;6â&÷÷&6–öæÃÂöƒ3ãÇä4”U%DòÂdÅ4òÂ$4”ÂÂTät9õ4ò’äòdU$”d”4$ÄRFW67&–&VâÆWf–FVæ6–F—7öæ–&ÆRâÆ–çFVæ6œ;6âÂVÂ6W6vòVF—F÷&–ÂÂÆ6ö÷&F–æ6œ;6â’VÂW6òFR&÷G26RWfÌ;¦â÷"6W&Fò’6öÆò6RG&–'W–Vâ7VæFòW†—7FVâ'VV&2W7V<:Öf–62ãÂ÷ãÂö'F–6ÆSãÂöF—cãÇåFöF÷2Æ÷2'L:Ö7VÆ÷2–FVçF–f–6âWF÷,:ÖVF—F÷&–ÂÂfV6†Âf—&Ö6œ;6â&Wf—6FÂgVVçFW2’&ö6VF–Ö–VçFòFR6÷'&V66–öæW2âÆV&Æ–6–FBW7L:6W&FFRÆ6VÆV66œ;6âFRFVÖ2’æòÖöF–f–6Æ÷2fW&VF–7F÷2â6’Væ–çfW7F–v6œ;6â6Ö&–÷"Wf–FVæ6–çVWfÂÆ7GVÆ—¦6œ;6âFV&RVVF"Fö7VÖVçFF;¦&Æ–6ÖVçFRãÂ÷ãÆF—b6Æ73Ò&VF—F÷&–ÂÖ7F–öç2#ãÆ‡&VcÒ"÷öÆ—F–6ÖVF—F÷&–Âæ‡FÖÂ#äW7L:æF&W2VF—F÷&–ÆW3ÂöãÆ‡&VcÒ"öWF÷&W2æ‡FÖÂ#äWF÷,:Ö’&W7öç6&–Æ–FCÂöãÆ‡&VcÒ"ö6÷'&V66–öæW2æ‡FÖÂ#å6öÆ–6—F"Væ6÷'&V66œ;6ãÂöãÂöF—cãÂ÷6V7F–öãà¢Ç6Æ73Ò&F—66Æ–ÖW"#äÆfW&FB–æ<;6ÖöF—VFWfÇV"7&VF–&–Æ–FB6öâ”ÂWf–FVæ6–F–v—FÂ’gVVçFW2;¦&Æ–62âæò7W7F—GW–RVÂG&&¦òW&–öL:×7F–6òæ’VâW&—F¦R&öfW6–öæÂâ6’æòVVFR66VFW"Â6öçFVæ–FòÂæò–çfVçFVâ&W7VÇFFòãÂ÷à£ÂöÖ–ãà  £ÆF—b6Æ73Ò&†÷rÖÖöFÂ"–CÒ&†÷tÖöFÂ"†–FFVâ&öÆSÒ&F–Æör"&–ÖÖöFÃÒ'G'VR"&–ÖÆ&VÆÆVF'“Ò&†÷tÖöFÅF—FÆR#à¢ÆF—b6Æ73Ò&†÷rÖF–Æör#à¢ÆF—b6Æ73Ò&†÷rÖ†VB#à¢ÆF—cãÆF—b6Æ73Ò&&FvR#äu\8Ô,8”DÂöF—cãÆƒ"–CÒ&†÷tÖöFÅF—FÆR#ì+ô<;6ÖògVæ6–öæóÂöƒ#ãÂöF—cà¢Æ'WGFöâ6Æ73Ò&†÷rÖ6Æ÷6R"–CÒ&6Æ÷6T†÷tÖöFÂ"G—SÒ&'WGFöâ"&–ÖÆ&VÃÒ$6W'&"#ì9sÂö'WGFöãà¢ÂöF—cà¢Ç6Æ73Ò&†÷rÖÆVB#äÆfW&FB–æ<;6ÖöFW6–çFVÆ–vVæ6–'F–f–6–ÂÂ,;§7VVFvV"’6öçG&7FRFRWf–FVæ6–;¦&Æ–6&æÆ—¦"f—&Ö6–öæW2’W‡Æ–6"<;6ÖòÆÆV|;26F6öæ6ÇW6œ;6âãÂ÷à¢ÆF—b6Æ73Ò&†÷rÖ÷F–öç2#à¢ÆF—b6Æ73Ò&†÷rÖ÷F–öâ#ï	ùIrVvVÂVæÆ6RFRVææ÷F–6–ÂV&Æ–66œ;6âÂf–FVòò&VB6ö6–ÂãÂöF—cà¢ÆF—b6Æ73Ò&†÷rÖ÷F–öâ#ï	ù;r7V&RVæ–ÖvVâò6GW&FRçFÆÆ6öâFW‡Fòf—6–&ÆRãÂöF—cà¢ÆF—b6Æ73Ò&†÷rÖ÷F–öâ#ï	ù8BF§VçFVâFö7VÖVçFò6ö×F–&ÆRãÂöF—cà¢ÆF—b6Æ73Ò&†÷rÖ÷F–öâ#ï	ù9ÒÇ7G&öæsåFÖ&œ:–âVVFW26÷–"’Vv"VÂFW‡FòòÆæ÷F–6–VRV–W&W2fW&–f–6"ãÂ÷7G&öæsâæòæV6W6—F2VâVæÆ6RãÂöF—cà¢ÂöF—cà¢ÆöÂ6Æ73Ò&†÷r×7FW2#à¢ÆÆ“ä–FVçF–f–6Æf—&Ö6œ;6â&–æ6—ÂãÂöÆ“ãÆÆ“äÆVRVÂFW‡Fòf—6–&ÆRFR–Ü:vVæW2’Fö7VÖVçF÷2ãÂöÆ“ãÆÆ“ä'W66Fö7VÖVçF÷2Â&Vv—7G&÷2’gVVçFW2;¦&Æ–62ãÂöÆ“ãÆÆ“ä6öçG&7FWf–FVæ6–ff÷&&ÆRÂFW6ff÷&&ÆR’Æ–Ö—F6–öæW2ãÂöÆ“ãÆÆ“äVçG&VvVâfW&VF–7FòÂ÷&6VçF¦W2Â6öçFW‡Fò’gVVçFW26öç7VÇFF2ãÂöÆ“à¢ÂööÃà¢Æƒ3äV¦V×ÆòFRVâ&W7VÇFFóÂöƒ3à¢Ç6Æ73Ò&†÷rÖÆVB#äW7F2F&¦WF2–ÇW7G&âÆ–æf÷&Ö6œ;6âVRVVFR–æ6ÇV—"Vâ–æf÷&ÖR&VÂãÂ÷à¢ÆF—b6Æ73Ò&FVÖòÖw&–B#à¢Æ'F–6ÆR6Æ73Ò&FVÖòÖ6&B#ãÆƒCåfW&VF–7Fòf–æÃÂöƒCãÆF—b6Æ73Ò&FVÖò×fW&F–7B#ä4”U%DÂöF—cãÇ7G&öæsä6Æ6–f–66œ;6ã¢dU$DDU$óÂ÷7G&öæsãÆF—b6Æ73Ò&FVÖòÖÖWG&–72#ãÇ7â6Æ73Ò&FVÖò×–ÆÂ#ä7&VF–&–Æ–FC¢“RSÂ÷7ããÇ7â6Æ73Ò&FVÖò×–ÆÂ#ä6öæf–ç¦¢“"SÂ÷7ããÂöF—cãÇäÆWf–FVæ6–Fö7VÖVçFÂ6öæf—&ÖÖFW&–ÆÖVçFRÆf—&Ö6œ;6âãÂ÷ãÂö'F–6ÆSà¢Æ'F–6ÆR6Æ73Ò&FVÖòÖ6&B#ãÆƒCä†V6†÷2’Wf–FVæ6–ÂöƒCãÇVÂ6Æ73Ò&FVÖòÖÆ—7B#ãÆÆ“å6RÆö6Æ—¦&öâFö7VÖVçF÷2öf–6–ÆW2ãÂöÆ“ãÆÆ“åf&–2gVVçFW2–æFWVæF–VçFW26ö–æ6–FVâãÂöÆ“ãÆÆ“äæò6RVæ6öçG&&öâ6öçG&F–66–öæW2&VÆWfçFW2ãÂöÆ“ãÂ÷VÃãÆF—b6Æ73Ò&FVÖò×6÷W&6R#ãÇ7G&öæsä6öçFW‡FòæV6W6&–óÂ÷7G&öæsãÆ'#äVÂ–æf÷&ÖRW‡Æ–6Ì:ÖÖ—FW2’FWFÆÆW2–×÷'FçFW2ãÂöF—cãÂö'F–6ÆSà¢Æ'F–6ÆR6Æ73Ò&FVÖòÖ6&B#ãÆƒCägVVçFW26öç7VÇFF3ÂöƒCãÆF—b6Æ73Ò&FVÖò×6÷W&6R#ãÇ7G&öæsäFö7VÖVçFòöf–6–ÃÂ÷7G&öæsãÆ'#ägVVçFR&–Ö&–ãÂöF—cãÆF—b6Æ73Ò&FVÖò×6÷W&6R#ãÇ7G&öæså&Vv—7G&ò;¦&Æ–6óÂ÷7G&öæsãÆ'#äWf–FVæ6–fW&–f–6&ÆRãÂöF—cãÆF—b6Æ73Ò&FVÖò×6÷W&6R#ãÇ7G&öæsä–çfW7F–v6œ;6âW&–öL:×7F–6Â÷7G&öæsãÆ'#ä6öçG&7FR–æFWVæF–VçFRãÂöF—cãÂö'F–6ÆSà¢ÂöF—cà¢Æ'WGFöâ6Æ73Ò&†÷r×7F'B"–CÒ'7F'EfW&–f–6F–öâ"G—SÒ&'WGFöâ#äTÕU¤"Ô’dU$”d”44œ94ãÂö'WGFöãà¢ÆF—b6Æ73Ò&†÷r×FvÆ–æR#äæò7&V2â6ö×'VV&ãÂöF—cà¢ÂöF—cà£ÂöF—cà £ÆF—b6Æ73Ò&6öçFVçBÖÖöFÂ"–CÒ&6öçFVçDÖöFÂ"†–FFVâ&öÆSÒ&F–Æör"&–ÖÖöFÃÒ'G'VR"&–ÖÆ&VÆÆVF'“Ò&6öçFVçDÖöFÅF—FÆR#à¢ÆF—b6Æ73Ò&6öçFVçBÖÖöFÂÖF–Æör#à¢ÆF—b6Æ73Ò&6öçFVçBÖÖöFÂÖ†VFW"#à¢ÆF—cà¢ÆF—b6Æ73Ò&&FvR#ä4ôåDTä”DòäT4U4$”óÂöF—cà¢Æƒ"6Æ73Ò&6öçFVçBÖÖöFÂ×F—FÆR"–CÒ&6öçFVçDÖöFÅF—FÆR#äœ;¦Fæ÷26öçF–çV"ÆfW&–f–66œ;6ãÂöƒ#à¢ÂöF—cà¢Æ'WGFöâ6Æ73Ò&6öçFVçBÖÖöFÂÖ6Æ÷6R"–CÒ&6öçFVçDÖöFÄ6Æ÷6R"G—SÒ&'WGFöâ"&–ÖÆ&VÃÒ$6W'&"#ì9sÂö'WGFöãà¢ÂöF—cà ¢Ç6Æ73Ò&6öçFVçBÖÖöFÂ×FW‡B"–CÒ&6öçFVçDÖöFÄÖW76vR#à¢æògVR÷6–&ÆR66VFW"WFöÜ:F–6ÖVçFRÂVæÆ6RâVv\:ÒVÂFW‡Fò6ö×ÆWFòFRÆV&Æ–66œ;6âÀ¢VæG&ç67&—6œ;6âòVæFW67&—6œ;6âf–VÂFRÆòVRf—&Öà¢Â÷à ¢ÇFW‡F&V¢–CÒ&6öçFVçDÖöFÄ–çWB ¢Æ6V†öÆFW#Ò%Vv\:ÒVÂ6öçFVæ–FòVRFW6V2fW&–f–6"âââ ¢ãÂ÷FW‡F&Và ¢Ç6ÖÆÂ6Æ73Ò&6öçFVçBÖÖöFÂÖæ÷FR#à¢VÂì:Æ—6—2–æF–6,:VRW7FR6öçFVæ–FògVR&÷÷&6–öæFò÷"VÂW7V&–ò’æòö'FVæ–FòF—&V7FÖVçFRFRÆÆFf÷&Öà¢Â÷6ÖÆÃà ¢Ç6Æ73Ò&6öçFVçBÖÖöFÂÖW'&÷""–CÒ&6öçFVçDÖöFÄW'&÷"#à¢W67&–&RÂÖVæ÷2Væf—&Ö6œ;6âòVæFW67&—6œ;6â6öæ7&WFà¢Â÷à ¢ÆF—b6Æ73Ò&6öçFVçBÖÖöFÂÖ7F–öç2#à¢Æ'WGFöâ–CÒ&6öçFVçDÖöFÄ6æ6VÂ"G—SÒ&'WGFöâ#ä6æ6VÆ#Âö'WGFöãà¢Æ'WGFöâ6Æ73Ò&GF6‚"–CÒ&6öçFVçDÖöFÄGF6‚"G—SÒ&'WGFöâ#äD¥TåD"4EU$Âö'WGFöãà¢Æ'WGFöâ6Æ73Ò'&–Ö'’"–CÒ&6öçFVçDÖöFÄ6öçF–çVR"G—SÒ&'WGFöâ#ä4ôåD”åT"ì8Ä•4•3Âö'WGFöãà¢ÂöF—cà¢ÂöF—cà£ÂöF—cà £Æfö÷FW#ì*’##bÆfW&FB–æ<;6ÖöF+rÆ‡&VcÒ"÷&—f6–FBæ‡FÖÂ#å&—f6–FCÂöâ+rÆ‡&VcÒ"÷FW&Ö–æ÷2æ‡FÖÂ#åL:—&Ö–æ÷3Âöâ+rÆ‡&VcÒ"ö6öçF7Fòæ‡FÖÂ#ä6öçF7FóÂöâ+rÆ‡&VcÒ"÷V–VæW2×6öÖ÷2æ‡FÖÂ#åVœ:–æW26öÖ÷3ÂöãÂöfö÷FW#à£Ç67&—Cà¢òòfW&6VÂvV"æÇ—F–72²WfVçF÷2FRW6òà¢v–æF÷rçfÒv–æF÷rçfÇÂgVæ7F–öâ‚’°¢‡v–æF÷rçfÒv–æF÷rçfÇÂµÒ’çW6‚†&wVÖVçG2“°¢Ó° ¢gVæ7F–öâG&6µW6vR†æÖRÂ&÷W'F–W2Ò·Ò’°¢G'’°¢v–æF÷rçf‚&WfVçB"Â²æÖRÂââç&÷W'F–W2Ò“°¢Ò6F6‚…ò’°¢òòÆÖVF–6œ;6âçVæ6FV&R–çFW''V×—"ÆfW&–f–66œ;6âà¢Ğ¢Ğ ¢6öç7BæWw4–çWBÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&æWw4–çWB"“°¢6öç7Bf–ÆT–çWBÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&f–ÆT–çWB"“°¢6öç7BG&÷¦öæRÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&G&÷¦öæR"“°¢6öç7B6VÆV7FVDf–ÆT&÷‚ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'6VÆV7FVDf–ÆR"“°¢6öç7Bf–ÆTæÖRÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&f–ÆTæÖR"“°¢6öç7Bf–ÆTFWF–Ç2ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&f–ÆTFWF–Ç2"“°¢6öç7B&VÖ÷fTf–ÆRÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'&VÖ÷fTf–ÆR"“°¢6öç7BæÇ—¦T'WGFöâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&æÇ—¦T'WGFöâ"“°¢6öç7B&öw&W72ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'&öw&W72"“°¢6öç7B&öw&W74Æ&VÂÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'&öw&W74Æ&VÂ"“°¢6öç7B&öw&W74&"ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'&öw&W74&""“°¢6öç7B&W7VÇBÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'&W7VÇB"“°¢6öç7B6öçFVçDÖöFÂÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÂ"“°¢6öç7B6öçFVçDÖöFÄ–çWBÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÄ–çWB"“°¢6öç7B6öçFVçDÖöFÄÖW76vRÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÄÖW76vR"“°¢6öç7B6öçFVçDÖöFÄW'&÷"ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÄW'&÷""“°¢6öç7B6öçFVçDÖöFÄ6Æ÷6RÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÄ6Æ÷6R"“°¢6öç7B6öçFVçDÖöFÄ6æ6VÂÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÄ6æ6VÂ"“°¢6öç7B6öçFVçDÖöFÄGF6‚ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÄGF6‚"“°¢6öç7B6öçFVçDÖöFÄ6öçF–çVRÒFö7VÖVçBævWDVÆVÖVçD'”–B‚&6öçFVçDÖöFÄ6öçF–çVR"“°¢6öç7Bfö–6T–çWD'WGFöâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'fö–6T–çWD'WGFöâ"“°¢6öç7Bfö–6T–çWDÆ&VÂÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'fö–6T–çWDÆ&VÂ"“°¢6öç7Bfö–6U7FGW2ÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'fö–6U7FGW2"“°¢6öç7B7Vµ7VÖÖ'”'WGFöâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'7Vµ7VÖÖ'”'WGFöâ"“°¢6öç7B7V´gVÆÄ'WGFöâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'7V´gVÆÄ'WGFöâ"“°¢6öç7B7F÷7VV6„'WGFöâÒFö7VÖVçBævWDVÆVÖVçD'”–B‚'7F÷7VV6„'WGFöâ"“° ¢6öç7B7VV6…&V6övæ—F–öä’Ğ¢v–æF÷rå7VV6…&V6övæ—F–öâÇÂv–æF÷rçvV&¶—E7VV6…&V6övæ—F–öâÇÂçVÆÃ° ¢ÆWBfö–6TÖöFTVæ&ÆVBÒfÇ6S°¢ÆWBfö–6U&V6övæ—F–öâÒçVÆÃ°¢ÆWB—4Æ—7FVæ–ærÒfÇ6S°¢ÆWBÖ–7&÷†öæU6–ÆVæ6UF–ÖW"ÒçVÆÃ°¢ÆWBÖ–7&÷†öæTFWFV7FVE7VV6‚ÒfÇ6S°¢ÆWBÆ7DæÇ—6—4FFÒçVÆÃ°¢ÆWBfö–6T6öçfW'6F–öå7FFRÒ&–FÆR#°¢ÆWBVæF–æufö–6T6ÆÆ&6²ÒçVÆÃ°¢ÆWBvVÆ6öÖUVæF–ærÒfÇ6S°¢ÆWBvVÆ6öÖT†5Æ–VBÒfÇ6S°  ¢ÆWB6VÆV7FVDf–ÆRÒçVÆÃ°¢ÆWBF‡&VG46ööÆF÷våVçF–ÂÒ°¢G'’²F‡&VG46ööÆF÷våVçF–ÂÒçVÖ&W"‡6W76–öå7F÷&vRævWD—FVÒ‚&Çf•÷F‡&VG5÷&WG'•öB"’’ÇÂ²Ò6F6‚·Ğ¢ÆWB6VÆV7FVDÖöFRÒ'&–Fò#°¢ÆWBF–ÖW"ÒçVÆÃ°¢ÆWBÆ7D÷&–v–æÅVW'’Ò"#°¢ÆWBÆ7D&Æö6¶VDFFÒçVÆÃ°¢ÆWBÆ7E&W7VÇEv57WÆVÖVçFVBÒfÇ6S° ¢6öç7BW62ÒfÇVRÓà¢7G&–ær‡fÇVRóò""¢ç&WÆ6TÆÂ‚"b"Â"f×²"¢ç&WÆ6TÆÂ‚#Â"Â"fÇC²"¢ç&WÆ6TÆÂ‚#â"Â"fwC²"¢ç&WÆ6TÆÂ‚r"rÂ"gV÷C²"¢ç&WÆ6TÆÂ‚"r"Â"b33“²"“° ¢gVæ7F–öâ6VÆV7FVE7VV6„ÆæwVvR‚’°¢6öç7BvTÆæwVvRÒFö7VÖVçBæFö7VÖVçDVÆVÖVçBæÆærÇÂæf–vF÷"æÆæwVvRÇÂ&W2ÔÕ‚#°¢&WGW&âvTÆæwVvRÓÓÒ&WFò"ò†æf–vF÷"æÆæwVvRÇÂ&W2ÔÕ‚"’¢vTÆæwVvS°¢Ğ ¢gVæ7F–öâ6ÆVå7VV6…FW‡B‡fÇVR’°¢&WGW&â7G&–ær‡fÇVRÇÂ""¢ç&WÆ6R‚õÇ2²örÂ""¢ç&WÆ6R‚ö‡GG3ó¥ÂõÂõÅ2²örÂ"VæÆ6R"¢çG&–Ò‚“°¢Ğ ¢gVæ7F–öâ7VµFW‡B‡FW‡BÂ–çFW''WBÒG'VR’°¢–b‚‚'7VV6…7–çF†W6—2"–âv–æF÷r’’°¢fö–6U7FGW2çFW‡D6öçFVçBÒ$W7FRæfVvF÷"æòW&Ö—FRÆVW"VÂ6öçFVæ–FòVâf÷¢ÇFâ#°¢&WGW&ã°¢Ğ ¢6öç7B7ö¶VâÒ6ÆVå7VV6…FW‡B‡FW‡B“°¢–b‚7ö¶Vâ’&WGW&ã° ¢–b†–çFW''WB’v–æF÷rç7VV6…7–çF†W6—2æ6æ6VÂ‚“° ¢6öç7BWGFW&æ6RÒæWr7VV6…7–çF†W6—5WGFW&æ6R‡7ö¶Vâ“°¢WGFW&æ6RæÆærÒ6VÆV7FVE7VV6„ÆæwVvR‚“°¢WGFW&æ6Rç&FRÒã“#°¢WGFW&æ6Rç—F6‚Ò°¢WGFW&æ6Ræöç7F'BÒ‚’Óâ°¢fö–6U7FGW2çFW‡D6öçFVçBÒ$ÆW–VæFòVâf÷¢ÇF(
+b#°¢Ó°¢WGFW&æ6RæöæVæBÒ‚’Óâ°¢fö–6U7FGW2çFW‡D6öçFVçBÒ$ÆV7GW&FW&Ö–æFâVVFW2föÇfW"W6"VÂÖ–7,;6föæòâ#°¢Ó°¢WGFW&æ6RæöæW'&÷"Ò‚’Óâ°¢fö–6U7FGW2çFW‡D6öçFVçBÒ$æògVR÷6–&ÆR6ö×ÆWF"ÆÆV7GW&Vâf÷¢ÇFâ#°¢Ó° ¢v–æF÷rç7VV6…7–çF†W6—2ç7V²‡WGFW&æ6R“°¢Ğ ¢gVæ7F–öâvVÆ6öÖTÖW76vR‚’°¢&WGW&â$&–VçfVæ–FòÆfW&FB–æ<;6ÖöFâ+õ\:’FW6V2fW&–f–6#ò#°¢Ğ ¢gVæ7F–öâ6†÷'Efö–6T–ç7G'V7F–öç2‚’°¢&WGW&â°¢%VÇ6VÂ&÷L;6â&VwVçF"÷"f÷¢’F’\:’–æf÷&Ö6œ;6âFW6V2fW&–f–6"â"À¢%FÖ&œ:–âVVFW2Vv"VâVæÆ6RÂ6÷–"Vææ÷F–6–Âò7V&—"Væ–ÖvVâòVâFö7VÖVçFòâ"À¢$7VæFòFW&Ö–æRVÂì:Æ—6—2ÂW67V6†,:2VÂ&W7VÖVâ’ÆòÜ:2–×÷'FçFRâ ¢Òæ¦ö–â‚""“°¢Ğ ¢gVæ7F–öâ6ÆV$Ö–7&÷†öæU6–ÆVæ6UF–ÖW"‚’°¢–b†Ö–7&÷†öæU6–ÆVæ6UF–ÖW"’°¢6ÆV%F–ÖV÷WB†Ö–7&÷†öæU6–ÆVæ6UF–ÖW"“°¢Ö–7&÷†öæU6–ÆVæ6UF–ÖW"ÒçVÆÃ°¢Ğ¢Ğ ¢gVæ7F–öâ7F'DÖ–7&÷†öæU6–ÆVæ6UF–ÖW"‚’°¢6ÆV$Ö–7&÷†öæU6–ÆVæ6UF–ÖW"‚“°¢Ö–7&÷†öæTFWFV7FVE7VV6‚ÒfÇ6S° ¢Ö–7&÷†öæU6–ÆVæ6UF–ÖW"Ò6WEF–ÖV÷WB‚‚’Óâ°¢–b‚Ö–7&÷†öæTFWFV7FVE7VV6‚bb—4Æ—7FVæ–ærbbfö–6U&V6övæ—F–öâ’°¢fö–6U7FGW2çFW‡D6öçFVçBĞ¢$æò6RFWFV7L;2f÷¢VâF÷26VwVæF÷2âVÂÖ–7,;6föæò6R|;2â#°¢G'’²fö–6U&V6övæ—F–öâç7F÷‚“²Ò6F6‚·Ğ¢Ğ¢ÒÂ#“°¢Ğ ¢gVæ7F–öâ7F'Efö–6U&V6övæ—F–öâ‚’°¢–b‚7VV6…&V6övæ—F–öä’’°¢6öç7BÖW76vRĞ¢$VÂ&V6öæö6–Ö–VçFòFRf÷¢æòW7L:F—7öæ–&ÆRVâW7FRæfVvF÷"â#°¢fö–6U7FGW2çFW‡D6öçFVçBÒÖW76vS°¢7VµFW‡B†ÖW76vR“°¢&WGW&ã°¢Ğ ¢–b‡fö–6U&V6övæ—F–öâ’°¢G'’²fö–6U&V6övæ—F–öâæ&÷'B‚“²Ò6F6‚·Ğ¢Ğ ¢fö–6U&V6övæ—F–öâÒæWr7VV6…&V6övæ—F–öä’‚“°¢fö–6U&V6övæ—F–öâæÆærÒ6VÆV7FVE7VV6„ÆæwVvR‚“°¢fö–6U&V6övæ—F–öâæ–çFW&–Õ&W7VÇG2ÒG'VS°¢fö–6U&V6övæ—F–öâæ6öçF–çV÷W2ÒfÇ6S°¢fö–6U&V6övæ—F–öâæÖ„ÇFW&æF—fW2Ò° ¢fö–6U&V6övæ—F–öâæöç7F'BÒ‚’Óâ°¢—4Æ—7FVæ–ærÒG'VS°¢7F'DÖ–7&÷†öæU6–ÆVæ6UF–ÖW"‚“°¢fö–6T–çWD'WGFöâæ6Æ74Æ—7BæFB‚&Æ—7FVæ–ær"“°¢fö–6T–çWD'WGFöâç6WDGG&–'WFR‚&&–×&W76VB"Â'G'VR"“°¢fö–6T–çWDÆ&VÂçFW‡D6öçFVçBÒ$W67V6†æFş(
+b#°¢fö–6U7FGW2çFW‡D6öçFVçBÒ$Ö–7,;6föæò7F—fòâ†¢GR&VwVçFâ#°¢Ó° ¢fö–6U&V6övæ—F–öâæöç&W7VÇBÒWfVçBÓâ°¢ÆWBf–æÅG&ç67&—BÒ"#° ¢f÷"†ÆWB–æFW‚ÒWfVçBç&W7VÇD–æFWƒ²–æFW‚ÂWfVçBç&W7VÇG2æÆVæwFƒ²–æFW‚²²’°¢6öç7BG&ç67&—BĞ¢WfVçBç&W7VÇG5¶–æFW…Óòå³ÓòçG&ç67&—CòçG&–Ò‚’ÇÂ"#° ¢–b‡G&ç67&—B’°¢Ö–7&÷†öæTFWFV7FVE7VV6‚ÒG'VS°¢6ÆV$Ö–7&÷†öæU6–ÆVæ6UF–ÖW"‚“°¢fö–6U7FGW2çFW‡D6öçFVçBÒ%f÷¢FWFV7FFâFW&Ö–æGR&VwVçFâ#°¢Ğ ¢–b†WfVçBç&W7VÇG5¶–æFW…Òæ—4f–æÂ’°¢f–æÅG&ç67&—B³ÒG·G&ç67&—GÖ°¢Ğ¢Ğ ¢6öç7BG&ç67&—BÒf–æÅG&ç67&—BçG&–Ò‚“°¢–b‚G&ç67&—B’&WGW&ã° ¢æWw4–çWBçfÇVRÒG&ç67&—C°¢fö–6U7FGW2çFW‡D6öçFVçBÒ&VwVçF&V6öæö6–F¢G·G&ç67&—GÖ°¢fö–6TÖöFTVæ&ÆVBÒG'VS° ¢7VµFW‡B†W67V6Œ:“¢G·G&ç67&—GÒâ–æ–6–æFòÆfW&–f–66œ;6âæ“° ¢6öç7Bv—EVçF–Å7VV6„VæG2Ò‚’Óâ°¢–b‡v–æF÷rç7VV6…7–çF†W6—3òç7V¶–ær’°¢6WEF–ÖV÷WB‡v—EVçF–Å7VV6„VæG2Âƒ“°¢ÒVÇ6R°¢æÇ—¦R‚“°¢Ğ¢Ó° ¢6WEF–ÖV÷WB‡v—EVçF–Å7VV6„VæG2Âƒ“°¢Ó° ¢fö–6U&V6övæ—F–öâæöæW'&÷"ÒWfVçBÓâ°¢6ÆV$Ö–7&÷†öæU6–ÆVæ6UF–ÖW"‚“°¢6öç7BÖW76vW2Ò°¢&æ÷BÖÆÆ÷vVB# ¢$FV&W2W&Ö—F—"VÂ66W6òÂÖ–7,;6föæòâVÇ6&VwVçF"÷"f÷¢â"À¢'6W'f–6RÖæ÷BÖÆÆ÷vVB# ¢$VÂæfVvF÷"æòW&Ö—Fœ;2W6"VÂÖ–7,;6föæòâ"À¢&æò×7VV6‚# ¢$æò6RFWFV7L;2f÷¢âVÂÖ–7,;6föæò6R|;3²VÇ6&VwVçF"÷"f÷¢&–çFVçF&ÆòFRçVWfòâ"À¢&VF–òÖ6GW&R# ¢$æò6RVæ6öçG,;2VâÖ–7,;6föæòF—7öæ–&ÆRâ"À¢&æWGv÷&²# ¢$æògVR÷6–&ÆRW6"VÂ&V6öæö6–Ö–VçFòFRf÷¢÷"Vâ&ö&ÆVÖFR&VBâ ¢Ó° ¢6öç7BÖW76vRĞ¢ÖW76vW5¶WfVçBæW'&÷%ÒÇÂ$æògVR÷6–&ÆR&V6öæö6W"Æf÷¢â#° ¢fö–6U7FGW2çFW‡D6öçFVçBÒÖW76vS° ¢–b†WfVçBæW'&÷"ÓÒ&&÷'FVB"’°¢7VµFW‡B†ÖW76vR“°¢Ğ¢Ó° ¢fö–6U&V6övæ—F–öâæöæVæBÒ‚’Óâ°¢6ÆV$Ö–7&÷†öæU6–ÆVæ6UF–ÖW"‚“°¢—4Æ—7FVæ–ærÒfÇ6S°¢fö–6T–çWD'WGFöâæ6Æ74Æ—7Bç&VÖ÷fR‚&Æ—7FVæ–ær"“°¢fö–6T–çWD'WGFöâç6WDGG&–'WFR‚&&–×&W76VB"Â&fÇ6R"“°¢fö–6T–çWDÆ&VÂçFW‡D6öçFVçBÒ%&VwVçF"÷"f÷¢#°¢Ó° ¢G'’°¢fö–6U&V6övæ—F–öâç7F'B‚“°¢Ò6F6‚°¢fö–6U7FGW2çFW‡D6öçFVçBĞ¢$æògVR÷6–&ÆR7F—f"VÂÖ–7,;6föæòâVÇ6&VwVçF"÷"f÷¢â#°¢Ğ¢Ğ ¢gVæ7F–öâ7F—fFUfö–6TÖöFR‚’°¢fö–6TÖöFTVæ&ÆVBÒG'VS° ¢–b‡v–æF÷rç7VV6…7–çF†W6—3òç7V¶–ær’°¢v–æF÷rç7VV6…7–çF†W6—2æ6æ6VÍµç{h‘éì¶»§q«^u•¹Ñ €´€Ä¤ì(€€€€€ÁÉ½É•ÍÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ğ€ôÍÑ…•Ím¥¹‘•áulÁtì(€€€€€ÁÉ½É•ÍÍ	…È¹ÍÑå±”¹İ¥‘Ñ €ô€‘íÍÑ…•Ím¥¹‘•áulÅuô•€ì(€€€ô°€ÄÈÀÀ¤ì(€ô((€™Õ¹Ñ¥½¸•¹‘AÉ½É•ÍÌ¡ÍÕ•ÍÌ€ôÑÉÕ”¤ì(€€€±•…É%¹Ñ•ÉÙ…°¡Ñ¥µ•È¤ì(€€€Ñ¥µ•È€ô¹Õ±°ì((€€€ÁÉ½É•ÍÍ1…‰•°¹Ñ•áÑ½¹Ñ•¹Ğ€ôÍÕ•ÍÌ(€€€€€€ü€‰»…±¥Í¥ÌÑ•Éµ¥¹…‘¼¸ˆ(€€€€€€è€‰9¼Í”ÁÕ‘¼½µÁ±•Ñ…È¸ˆì((€€€ÁÉ½É•ÍÍ	…È¹ÍÑå±”¹İ¥‘Ñ €ô€ˆÄÀÀ”ˆì((€€€Í•ÑQ¥µ•½ÕĞ  ¤€ôøì(€€€€€ÁÉ½É•ÍÌ¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰Ù¥Í¥‰±”ˆ¤ì(€€€ô°€àÀÀ¤ì(€ô((€™Õ¹Ñ¥½¸±¥ÍĞ¡¥Ñ•µÌ¤ì(€€€½¹ÍĞÙ…±Õ•Ì€ôÕ¹¥ÅÕ”¡¥Ñ•µÌ¤ì((€€€¥˜€ …Ù…±Õ•Ì¹±•¹Ñ ¤É•ÑÕÉ¸€ˆˆì((€€€É•ÑÕÉ¸€(€€€€€€ñÕ°ø(€€€€€€€€‘íÙ…±Õ•Ì¹µ…À¡¥Ñ•´€ôø€ñ±¤ø‘í•ÍŒ¡¥Ñ•´¥ôğ½±¤ù€¤¹©½¥¸ ˆˆ¥ô(€€€€€€ğ½Õ°ø(€€€€ì(€ô((€™Õ¹Ñ¥½¸Ñ•áÑ…É¡Ñ¥Ñ±”°Ñ•áĞ°™Õ±°€ô™…±Í”¤ì(€€€½¹ÍĞÙ…±Õ”€ôMÑÉ¥¹œ¡Ñ•áĞñğ€ˆˆ¤¹ÑÉ¥´ ¤ì((€€€¥˜€ …Ù…±Õ”¤É•ÑÕÉ¸€ˆˆì((€€€É•ÑÕÉ¸€(€€€€€€ñ…ÉÑ¥±”±…ÍÌô‰…É€‘í™Õ±°€ü€‰™Õ±°ˆ€è€ˆ‰ôˆø(€€€€€€€€ñ Ìø‘í•ÍŒ¡Ñ¥Ñ±”¥ôğ½ Ìø(€€€€€€€€ñÀø‘í•ÍŒ¡Ù…±Õ”¥ôğ½Àø(€€€€€€ğ½…ÉÑ¥±”ø(€€€€ì(€ô((€™Õ¹Ñ¥½¸±¥ÍÑ…É¡Ñ¥Ñ±”°¥Ñ•µÌ°™Õ±°€ô™…±Í”¤ì(€€€½¹ÍĞÙ…±Õ•Ì€ôÕ¹¥ÅÕ”¡¥Ñ•µÌ¤ì((€€€¥˜€ …Ù…±Õ•Ì¹±•¹Ñ ¤É•ÑÕÉ¸€ˆˆì((€€€É•ÑÕÉ¸€(€€€€€€ñ…ÉÑ¥±”±…ÍÌô‰…É€‘í™Õ±°€ü€‰™Õ±°ˆ€è€ˆ‰ôˆø(€€€€€€€€ñ Ìø‘í•ÍŒ¡Ñ¥Ñ±”¥ôğ½ Ìø(€€€€€€€€‘í±¥ÍĞ¡Ù…±Õ•Ì¥ô(€€€€€€ğ½…ÉÑ¥±”ø(€€€€ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•É½Õ¹ÑÕ‘¥Ğ¡¥¹Ñ•É¥Ñä€ôíô¤ì(€€€½¹ÍĞ…½Õ¹ÑÌ€ôÉÉ…ä¹¥ÍÉÉ…ä¡¥¹Ñ•É¥Ñä¹Õ•¹Ñ…Í}½µÁ…É…‘…Ì¤€ü¥¹Ñ•É¥Ñä¹Õ•¹Ñ…Í}½µÁ…É…‘…Ì¹Í±¥” À°€ÄÀ¤€èmtì(€€€½¹ÍĞµ…Ñ¡•Ì€ôÉÉ…ä¹¥ÍÉÉ…ä¡¥¹Ñ•É¥Ñä¹ÁÕ‰±¥…¥½¹•Í}½¥¹¥‘•¹Ñ•Ì¤€ü¥¹Ñ•É¥Ñä¹ÁÕ‰±¥…¥½¹•Í}½¥¹¥‘•¹Ñ•Ì¹Í±¥” À°€ÄÀ¤€èmtì(€€€¥˜€ ……½Õ¹ÑÌ¹±•¹Ñ €˜˜€…µ…Ñ¡•Ì¹±•¹Ñ €˜˜€…¥¹Ñ•É¥Ñä¹Á…ÑÉ½¹}ÁÕ‰±¥…¥½¹}ÉÕÁ…°¤É•ÑÕÉ¸€ˆˆì((€€€½¹ÍĞ…½Õ¹ÑI½İÌ€ô…½Õ¹ÑÌ¹µ…À¡…½Õ¹Ğ€ôøì(€€€€€½¹ÍĞÕÉ°€ôÍ…™•UÉ°¡…½Õ¹Ğ¹ÕÉ°¤ì(€€€€€É•ÑÕÉ¸€ñ‘¥Ø±…ÍÌô‰…½Õ¹ĞµÉ½Üˆø(€€€€€€€€ñ‘¥Ø±…ÍÌô‰…½Õ¹Ğµ¡•…ˆøñÍÁ…¸±…ÍÌô‰…½Õ¹Ğµ¹…µ”ˆø‘í•ÍŒ¡…½Õ¹Ğ¹Õ•¹Ñ„ñğ€‰Õ•¹Ñ„¹¼¥‘•¹Ñ¥™¥…‘„ˆ¥ôğ½ÍÁ…¸øñÍÁ…¸±…ÍÌô‰…½Õ¹Ğµ±…‰•°ˆø‘í•ÍŒ¡…½Õ¹Ğ¹±…Í¥™¥…¥½¸ñğ€‰Y%9%%9MU%%9Qˆ¥ôğ½ÍÁ…¸øğ½‘¥Øø(€€€€€€€€‘íÕÉ°€ü€ñ„¡É•˜ôˆ‘í•ÍŒ¡ÕÉ°¥ôˆÑ…É•Ğô‰}‰±…¹¬ˆÉ•°ô‰¹½½Á•¹•È¹½É•™•ÉÉ•Èˆø‘í•ÍŒ¡ÕÉ°¥ôğ½„ù€€è€ˆ‰ô(€€€€€€€€‘í±¥ÍĞ¡…½Õ¹Ğ¹Í•¹…±•Ì¥ô(€€€€€€€€‘íÉÉ…ä¹¥ÍÉÉ…ä¡…½Õ¹Ğ¹±¥µ¥Ñ…¥½¹•Ì¤€˜˜…½Õ¹Ğ¹±¥µ¥Ñ…¥½¹•Ì¹±•¹Ñ €ü€ñÍµ…±°ù1¥µ¥Ñ…§Í¸è€‘í•ÍŒ¡…½Õ¹Ğ¹±¥µ¥Ñ…¥½¹•Ì¹©½¥¸ ˆ€ˆ¤¥ôğ½Íµ…±°ù€€è€ˆ‰ô(€€€€€€ğ½‘¥Øù€ì(€€€ô¤¹©½¥¸ ˆˆ¤ì((€€€½¹ÍĞµ…Ñ¡I½İÌ€ôµ…Ñ¡•Ì¹µ…À¡µ…Ñ €ôøì(€€€€€½¹ÍĞÕÉ°€ôÍ…™•UÉ°¡µ…Ñ ¹ÕÉ°¤ì(€€€€€É•ÑÕÉ¸€ñ‘¥Ø±…ÍÌô‰µ…Ñ µÉ½Üˆøñ‘¥ØøñÍÑÉ½¹œø‘í•ÍŒ¡µ…Ñ ¹Õ•¹Ñ„ñğ€‰Õ•¹Ñ„ˆ¥ôğ½ÍÑÉ½¹œøƒ
+Ü€ñÍÁ…¸±…ÍÌô‰µ…Ñ µ­¥¹ˆø‘í•ÍŒ¡µ…Ñ ¹Í¥µ¥±¥ÑÕñğ€‰9<QI5%9ˆ¥ôğ½ÍÁ…¸øğ½‘¥Øø(€€€€€€€€‘íµ…Ñ ¹™•¡„€ü€ñÍµ…±°ø‘í•ÍŒ¡µ…Ñ ¹™•¡„¥ôğ½Íµ…±°ù€€è€ˆ‰ô(€€€€€€€€‘íµ…Ñ ¹™É…µ•¹Ñ½}½¥¹¥‘•¹Ñ”€ü€ñÀûŠp‘í•ÍŒ¡µ…Ñ ¹™É…µ•¹Ñ½}½¥¹¥‘•¹Ñ”¥÷Štğ½Àù€€è€ˆ‰ô(€€€€€€€€‘íÕÉ°€ü€ñ„¡É•˜ôˆ‘í•ÍŒ¡ÕÉ°¥ôˆÑ…É•Ğô‰}‰±…¹¬ˆÉ•°ô‰¹½½Á•¹•È¹½É•™•ÉÉ•Èˆù‰É¥ÈÁÕ‰±¥…§Í¸½É¥¥¹…°ğ½„ù€€è€ˆ‰ô(€€€€€€ğ½‘¥Øù€ì(€€€ô¤¹©½¥¸ ˆˆ¤ì((€€€É•ÑÕÉ¸€(€€€€€€‘í…½Õ¹ÑÌ¹±•¹Ñ €ü€ñ…ÉÑ¥±”±…ÍÌô‰…É™Õ±°ˆøñ ÌùÕ•¹Ñ…Ì½µÁ…É…‘…Ìğ½ Ìøñ‘¥Ø±…ÍÌô‰…½Õ¹Ğµ…Õ‘¥Ğˆø‘í…½Õ¹ÑI½İÍôğ½‘¥Øøğ½…ÉÑ¥±”ù€€è€ˆ‰ô(€€€€€€‘íµ…Ñ¡•Ì¹±•¹Ñ €ü€ñ…ÉÑ¥±”±…ÍÌô‰…É™Õ±°ˆøñ ÌùAÕ‰±¥…¥½¹•Ì½¥¹¥‘•¹Ñ•Ìğ½ Ìø‘íµ…Ñ¡I½İÍôğ½…ÉÑ¥±”ù€€è€ˆ‰ô(€€€€€€‘íÑ•áÑ…É ‰A…ÑËÍ¸‘”ÁÕ‰±¥…§Í¸ÉÕÁ…°ˆ°¥¹Ñ•É¥Ñä¹Á…ÑÉ½¹}ÁÕ‰±¥…¥½¹}ÉÕÁ…°°ÑÉÕ”¥ô(€€€€€€‘í±¥ÍÑ…É ‰Ù¥‘•¹¥„‘”½½É‘¥¹…§Í¸ˆ°¥¹Ñ•É¥Ñä¹•Ù¥‘•¹¥…}½½É‘¥¹…¥½¸°ÑÉÕ”¥ô(€€€€€€‘í±¥ÍÑ…É ‰Ù¥‘•¹¥„‘”…ÕÑ½µ…Ñ¥é…§Í¸ˆ°¥¹Ñ•É¥Ñä¹•Ù¥‘•¹¥…}‰½ÑÌ°ÑÉÕ”¥ô(€€€€ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•É)½ÕÉ¹…±¥ÍµÕ‘¥Ğ¡¥Ñ•µÌ€ômt¤ì(€€€½¹ÍĞ…Õ‘¥ÑÌ€ôÉÉ…ä¹¥ÍÉÉ…ä¡¥Ñ•µÌ¤€ü¥Ñ•µÌ¹Í±¥” À°€Ô¤€èmtì(€€€¥˜€ ……Õ‘¥ÑÌ¹±•¹Ñ ¤É•ÑÕÉ¸€ˆˆì((€€€½¹ÍĞÉ½İÌ€ô…Õ‘¥ÑÌ¹µ…À¡¥Ñ•´€ôøì(€€€€€½¹ÍĞ½É¥•¹Ñ…Ñ¥½¸€ô¥Ñ•´¹½É¥•¹Ñ…¥½¸ñğ€‰9<QI5%9ˆì(€€€€€½¹ÍĞÁ…åµ•¹ÑAÉ½½˜€ô¥Ñ•´¹ÁÉÕ•‰…}Á…½}Á…É…}µ•¹Ñ¥Èñğ€‰9<=U59Qˆì(€€€€€É•ÑÕÉ¸€ñ‘¥Ø±…ÍÌô‰…½Õ¹ĞµÉ½Üˆø(€€€€€€€€ñ‘¥Ø±…ÍÌô‰…½Õ¹Ğµ¡•…ˆø(€€€€€€€€€€ñÍÁ…¸±…ÍÌô‰…½Õ¹Ğµ¹…µ”ˆø‘í•ÍŒ¡¥Ñ•´¹µ•‘¥½}½}Á•É¥½‘¥ÍÑ„ñğ€‰Õ•¹Ñ”¹¼¥‘•¹Ñ¥™¥…‘„ˆ¥ôğ½ÍÁ…¸ø(€€€€€€€€€€ñÍÁ…¸±…ÍÌô‰…½Õ¹Ğµ±…‰•°ˆù=É¥•¹Ñ…§Í¸è€‘í•ÍŒ¡½É¥•¹Ñ…Ñ¥½¸¥ôğ½ÍÁ…¸ø(€€€€€€€€ğ½‘¥Øø(€€€€€€€€ñÀøñÍÑÉ½¹œû
+ı!…äÁÉÕ•‰„‘”Á…¼Á…É„µ•¹Ñ¥Èüğ½ÍÑÉ½¹œø€‘í•ÍŒ¡Á…åµ•¹ÑAÉ½½˜¥ôğ½Àø(€€€€€€€€‘í¥Ñ•´¹É•±…¥½¹}½¹}ÁÕ‰±¥…¥½¹}…ÑÕ…°€ü€ñÀøñÍÑÉ½¹œùI•±…§Í¸½¸•ÍÑ„ÁÕ‰±¥…§Í¸èğ½ÍÑÉ½¹œø€‘í•ÍŒ¡¥Ñ•´¹É•±…¥½¹}½¹}ÁÕ‰±¥…¥½¹}…ÑÕ…°¥ôğ½Àù€€è€ˆ‰ô(€€€€€€€€‘í±¥ÍĞ¡¥Ñ•´¹™Õ¹‘…µ•¹Ñ½}½É¥•¹Ñ…¥½¸¥ô(€€€€€€€€‘í±¥ÍĞ¡¥Ñ•´¹ÁÉ½Á¥•‘…‘}å}™¥¹…¹¥…µ¥•¹Ñ¼¥ô(€€€€€€€€‘í±¥ÍĞ¡¥Ñ•´¹½¹ÑÉ…Ñ½Í}½}Á…½Í}‘½Õµ•¹Ñ…‘½Ì¥ô(€€€€€€€€‘í±¥ÍĞ¡¥Ñ•´¹…¹Ñ••‘•¹Ñ•Í}Ù•É¥™¥…‘½Ì¥ô(€€€€€€€€‘í¥Ñ•´¹½¹±ÕÍ¥½¸€ü€ñÀø‘í•ÍŒ¡¥Ñ•´¹½¹±ÕÍ¥½¸¥ôğ½Àù€€è€ˆ‰ô(€€€€€€€€‘íÉÉ…ä¹¥ÍÉÉ…ä¡¥Ñ•´¹±¥µ¥Ñ…¥½¹•Ì¤€˜˜¥Ñ•´¹±¥µ¥Ñ…¥½¹•Ì¹±•¹Ñ €ü€ñÍµ…±°ù1¥µ¥Ñ…¥½¹•Ìè€‘í•ÍŒ¡¥Ñ•´¹±¥µ¥Ñ…¥½¹•Ì¹©½¥¸ ˆ€ˆ¤¥ôğ½Íµ…±°ù€€è€ˆ‰ô(€€€€€€ğ½‘¥Øù€ì(€€€ô¤¹©½¥¸ ˆˆ¤ì((€€€É•ÑÕÉ¸€ñ…ÉÑ¥±”±…ÍÌô‰…É™Õ±°ˆø(€€€€€€ñ ÌùÕ‘¥Ñ½Ëµ„‘”µ•‘¥½ÌäÁ•É¥½‘¥ÍÑ…Ìğ½ Ìø(€€€€€€ñÀùM•Á…É„½É¥•¹Ñ…§Í¸•‘¥Ñ½É¥…°°™¥¹…¹¥…µ¥•¹Ñ¼°…¹Ñ••‘•¹Ñ•ÌäÁÉÕ•‰„‘”Á…¼Ù¥¹Õ±…‘„„±„ÁÕ‰±¥…§Í¸½¹É•Ñ„¸ğ½Àø(€€€€€€ñ‘¥Ø±…ÍÌô‰…½Õ¹Ğµ…Õ‘¥Ğˆø‘íÉ½İÍôğ½‘¥Øø(€€€€ğ½…ÉÑ¥±”ù€ì(€ô((€™Õ¹Ñ¥½¸™¥ÉÍÑMÁ½­•¹%Ñ•´ ¸¸¹É½ÕÁÌ¤ì(€€€™½È€¡½¹ÍĞÉ½ÕÀ½˜É½ÕÁÌ¤ì(€€€€€¥˜€ …ÉÉ…ä¹¥ÍÉÉ…ä¡É½ÕÀ¤¤½¹Ñ¥¹Õ”ì(€€€€€½¹ÍĞÙ…±Õ”€ôÉ½ÕÀ¹™¥¹¡¥Ñ•´€ôøMÑÉ¥¹œ¡¥Ñ•´ñğ€ˆˆ¤¹ÑÉ¥´ ¤¤ì(€€€€€¥˜€¡Ù…±Õ”¤É•ÑÕÉ¸MÑÉ¥¹œ¡Ù…±Õ”¤¹ÑÉ¥´ ¤ì(€€€ô(€€€É•ÑÕÉ¸€ˆˆì(€ô((€™Õ¹Ñ¥½¸‰Õ¥±‘MÁ½­•¹MÕµµ…Éä¡‘…Ñ„€ô±…ÍÑ¹…±åÍ¥Í…Ñ„¤ì(€€€¥˜€ …‘…Ñ„ñğÑåÁ•½˜‘…Ñ„€„ôô€‰½‰©•Ğˆ¤ì(€€€€€É•ÑÕÉ¸É•ÍÕ±Ğ¹¥¹¹•ÉQ•áĞ¹ÑÉ¥´ ¤ì(€€€ô((€€€½¹ÍĞ¥ÍAÉ½™¥±•Õ‘¥Ğ€ô‘…Ñ„ü¹Ñ¥Á½}É•ÍÕ±Ñ…‘¼€ôôô€‰…Õ‘¥Ñ½É¥…}‘•}ÁÕ‰±¥…¥½¹•Ìˆì(€€€½¹ÍĞ™¥¹…±Y•É‘¥Ğ€ôMÑÉ¥¹œ (€€€€€‘…Ñ„¹Ù•É•‘¥Ñ½}™¥¹…°ñğ‘…Ñ„¹Ù•É•‘¥Ñ¼ñğ€‰9<YI%%	1ˆ(€€€€¤¹ÑÉ¥´ ¤ì((€€€½¹ÍĞÑ•¡¹¥…±Y•É‘¥Ğ€ôMÑÉ¥¹œ (€€€€€‘…Ñ„¹Ù•É•‘¥Ñ¼ñğ€‰%9=I5'M8%9MU%%9Qˆ(€€€€¤¹ÑÉ¥´ ¤ì((€€€½¹ÍĞÉ•‘¥‰¥±¥Ñä€ôÁ•É•¹Ğ (€€€€€‘…Ñ„¹É•‘¥‰¥±¥‘…€üü‘…Ñ„¹É•‘¥‰¥±¥‘…‘}Á½É•¹Ñ…©”(€€€€¤ì((€€€½¹ÍĞ½¹™¥‘•¹”€ôÁ•É•¹Ğ (€€€€€‘…Ñ„¹½¹™¥…¹é„€üü‘…Ñ„¹½¹™¥…¹é…}…¹…±¥Í¥Ì(€€€€¤ì((€€€½¹ÍĞÍÕµµ…Éä€ôMÑÉ¥¹œ (€€€€€‘…Ñ„¹É•ÍÕµ•¸ñğ(€€€€€‘…Ñ„¹É•ÍÕµ•¹}•©•ÕÑ¥Ù¼ñğ(€€€€€‘…Ñ„¹É•ÍÁÕ•ÍÑ…}‘¥É•Ñ„ñğ(€€€€€‘…Ñ„¹½¹±ÕÍ¥½¸ñğ(€€€€€€‰9¼Í”É•¥‰§ÌÕ¸É•ÍÕµ•¸¸ˆ(€€€€¤¹ÑÉ¥´ ¤ì((€€€½¹ÍĞµ½ÍÑ%µÁ½ÉÑ…¹Ğ€ô™¥ÉÍÑMÁ½­•¹%Ñ•´ (€€€€€‘…Ñ„¹¡•¡½Í}½µÁÉ½‰…‘½Ì°(€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}…}™…Ù½È°(€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}•¹}½¹ÑÉ„(€€€€¤ñğMÑÉ¥¹œ¡‘…Ñ„¹½¹±ÕÍ¥½¸ñğ€ˆˆ¤¹ÑÉ¥´ ¤ì((€€€¥˜€¡¥ÍAÉ½™¥±•Õ‘¥Ğ¤ì(€€€€€É•ÑÕÉ¸l(€€€€€€€€‰Õ•¹Ñ”‘”½¹ÍÕ±Ñ„è1„Y•É‘…%¹Íµ½‘„¸ˆ°(€€€€€€€€‰Õ‘¥Ñ½Ëµ„‘”ÁÕ‰±¥…¥½¹•Ì¸ˆ°(€€€€€€€Q•¹‘•¹¥½Í¥‘…½‰Í•ÉÙ…‘„è€‘í‘…Ñ„ü¹•Ù…±Õ…¥½¹}ÁÕ‰±¥…¥½¹•Ìü¹¹¥Ù•±}Ñ•¹‘•¹¥½Í¥‘…ñğ€‰¹¼‘•Ñ•Éµ¥¹…‘„‰ô¹€°(€€€€€€€I•ÍÕµ•¸è€‘íÍÕµµ…Éåõ€°(€€€€€€€‘…Ñ„¹‰½Ñ}‘•Ñ•Ñ…‘¼€ôôôÑÉÕ”€ü‘…Ñ„¹…±•ÉÑ…}‰½Ğ€è€ˆˆ°(€€€€€€€µ½ÍÑ%µÁ½ÉÑ…¹Ğ€ü1¼·…Ì¥µÁ½ÉÑ…¹Ñ”è€‘íµ½ÍÑ%µÁ½ÉÑ…¹Ñõ€€è€ˆˆ(€€€€€t¹™¥±Ñ•È¡	½½±•…¸¤¹©½¥¸ ˆ€ˆ¤ì(€€€ô((€€€É•ÑÕÉ¸l(€€€€€€‰Õ•¹Ñ”‘”½¹ÍÕ±Ñ„è1„Y•É‘…%¹Íµ½‘„¸ˆ°(€€€€€Y•É•‘¥Ñ¼™¥¹…°è€‘í™¥¹…±Y•É‘¥Ñô¹€°(€€€€€±…Í¥™¥…§Í¸Ó¥¹¥„è€‘íÑ•¡¹¥…±Y•É‘¥Ñô¹€°(€€€€€É•‘¥‰¥±¥Ñä€ôôô¹Õ±°€ü€‰É•‘¥‰¥±¥‘…‘”±„…™¥Éµ…§Í¸è¹¼…Á±¥„¸ˆ€èÉ•‘¥‰¥±¥‘…‘”±„…™¥Éµ…§Í¸è€‘íÉ•‘¥‰¥±¥ÑåôÁ½È¥•¹Ñ¼¹€°(€€€€€½¹™¥‘•¹”€ôôô¹Õ±°€ü€‰½¹™¥…¹é„‘•°…»…±¥Í¥Ìè¹¼…±Õ±…‘„¸ˆ€è½¹™¥…¹é„‘•°…»…±¥Í¥Ìè€‘í½¹™¥‘•¹•ôÁ½È¥•¹Ñ¼¹€°(€€€€€I•ÍÕµ•¸è€‘íÍÕµµ…Éåõ€°(€€€€€µ½ÍÑ%µÁ½ÉÑ…¹Ğ€ü1¼·…Ì¥µÁ½ÉÑ…¹Ñ”è€‘íµ½ÍÑ%µÁ½ÉÑ…¹Ñõ€€è€ˆˆ(€€€t¹™¥±Ñ•È¡	½½±•…¸¤¹©½¥¸ ˆ€ˆ¤ì(€ô((€™Õ¹Ñ¥½¸ÍÁ•…­MÕµµ…Éä ¤ì(€€€½¹ÍĞÑ•áĞ€ô‰Õ¥±‘MÁ½­•¹MÕµµ…Éä ¤ì(€€€¥˜€ …Ñ•áĞ¤ì(€€€€€ÍÁ•…­Q•áĞ ‰Q½‘…Ûµ„¹¼¡…äÕ¸É•ÍÕ±Ñ…‘¼Á…É„±••È¸ˆ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€ÍÁ•…­Q•áĞ¡Ñ•áĞ¤ì(€ô((€™Õ¹Ñ¥½¸ÍÁ•…­Õ±±I•Á½ÉĞ ¤ì(€€€½¹ÍĞÑ•áĞ€ôÉ•ÍÕ±Ğ¹¥¹¹•ÉQ•áĞ¹ÑÉ¥´ ¤ì(€€€¥˜€ …Ñ•áĞ¤ì(€€€€€ÍÁ•…­Q•áĞ ‰Q½‘…Ûµ„¹¼¡…äÕ¸¥¹™½Éµ”Á…É„±••È¸ˆ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€ÍÁ•…­Q•áĞ¡Ñ•áĞ¤ì(€ô((€™Õ¹Ñ¥½¸ÍÁ•…­I•ÍÕ±Ñ%™9••‘• ¤ì(€€€¥˜€ …Ù½¥•5½‘•¹…‰±•¤É•ÑÕÉ¸ì(€€€ÍÁ•…­MÕµµ…Éä ¤ì(€ô((€™Õ¹Ñ¥½¸É•Á½ÉÑM½ÕÉ” ¤ì(€€€É•ÑÕÉ¸€(€€€€€€ñ‘¥Ø±…ÍÌô‰É•Á½ÉĞµÍ½ÕÉ”ˆø(€€€€€€€Õ•¹Ñ”‘”½¹ÍÕ±Ñ„è€ñÍÑÉ½¹œù1„Y•É‘…%¹Íµ½‘„ğ½ÍÑÉ½¹œøƒ
+Ü(€€€€€€€€ñ„¡É•˜ô‰¡ÑÑÁÌè¼½İİÜ¹±…Ù•É‘…‘¥¹½µ½‘„¹µà¼ˆÑ…É•Ğô‰}‰±…¹¬ˆÉ•°ô‰¹½½Á•¹•È¹½É•™•ÉÉ•Èˆø(€€€€€€€€€İİÜ¹±…Ù•É‘…‘¥¹½µ½‘„¹µà(€€€€€€€€ğ½„ø(€€€€€€ğ½‘¥Øø(€€€€ì(€ô((€™Õ¹Ñ¥½¸…Ñ¥½¹Ì ¤ì(€€€É•ÑÕÉ¸€(€€€€€€ñ‘¥Ø±…ÍÌô‰…Ñ¥½¹Ìˆø(€€€€€€€€ñ‰ÕÑÑ½¸½¹±¥¬ô‰½ÁåI•Á½ÉĞ ¤ˆù½Á¥…È¥¹™½Éµ”ğ½‰ÕÑÑ½¸ø(€€€€€€€€ñ‰ÕÑÑ½¸±…ÍÌô‰Í½¥…°µ½Áäˆ½¹±¥¬ô‰½ÁåM½¥…±MÕµµ…Éä¡Ñ¡¥Ì¤ˆù½Á¥…ÈÉ•ÍÕµ•¸Á…É„É•‘•Ìğ½‰ÕÑÑ½¸ø(€€€€€€€€ñ‰ÕÑÑ½¸±…ÍÌô‰Í¡…É”µ…Ñ¥½¸ˆ½¹±¥¬ô‰Í¡…É•I•Á½ÉĞ ¤ˆù½µÁ…ÉÑ¥Èğ½‰ÕÑÑ½¸ø(€€€€€€€€ñ‰ÕÑÑ½¸½¹±¥¬ô‰İ¥¹‘½Ü¹ÁÉ¥¹Ğ ¤ˆùÕ…É‘…È½µ¼Ağ½‰ÕÑÑ½¸ø(€€€€€€ğ½‘¥Øø(€€€€ì(€ô((€™Õ¹Ñ¥½¸Í½¥…±MÕµµ…Éä¡‘…Ñ„€ô±…ÍÑ¹…±åÍ¥Í…Ñ„¤ì(€€€¥˜€ …‘…Ñ„ñğÑåÁ•½˜‘…Ñ„€„ôô€‰½‰©•Ğˆ¤É•ÑÕÉ¸€ˆˆì(€€€½¹ÍĞÁÉ½™¥±•Õ‘¥Ğ€ô‘…Ñ„¹Ñ¥Á½}É•ÍÕ±Ñ…‘¼€ôôô€‰…Õ‘¥Ñ½É¥…}‘•}ÁÕ‰±¥…¥½¹•Ìˆì(€€€½¹ÍĞÙ•É‘¥Ğ€ôMÑÉ¥¹œ¡‘…Ñ„¹Ù•É•‘¥Ñ½}™¥¹…°ñğ‘…Ñ„¹Ù•É•‘¥Ñ¼ñğ€‰9<YI%%	1ˆ¤¹ÑÉ¥´ ¤ì(€€€½¹ÍĞÉ…İ±…¥´€ôMÑÉ¥¹œ¡‘…Ñ„¹…™¥Éµ…¥½¹}ÁÉ¥¹¥Á…°ñğ€ˆˆ¤¹ÑÉ¥´ ¤ì(€€€½¹ÍĞ±…¥´€ôÉ…İ±…¥´¹±•¹Ñ €ø€ÄàÀ€ü€‘íÉ…İ±…¥´¹Í±¥” À°€ÄÜä¤¹ÑÉ¥µ¹ ¥÷Š™€€èÉ…İ±…¥´ì(€€€½¹ÍĞ•áÁ±…¹…Ñ¥½¸€ôMÑÉ¥¹œ (€€€€€‘…Ñ„¹•áÁ±¥…¥½¹}Ù•É•‘¥Ñ½}™¥¹…°ñğ‘…Ñ„¹É•ÍÁÕ•ÍÑ…}‘¥É•Ñ„ñğ‘…Ñ„¹É•ÍÕµ•¸ñğ‘…Ñ„¹½¹±ÕÍ¥½¸ñğ€ˆˆ(€€€€¤¹ÑÉ¥´ ¤ì(€€€½¹ÍĞ±…‰•°€ôÁÉ½™¥±•Õ‘¥Ğ€ü€‰U%Q=K5AU	1%%=9Lˆ€èÙ•É‘¥Ğì(€€€½¹ÍĞÁ…ÉÑÌ€ôl(€€€€€1YI%9M5=ƒŠP€‘í±…‰•±õ€°(€€€€€±…¥´€ü™¥Éµ…§Í¸è€‘í±…¥µõ€€è€ˆˆ°(€€€€€•áÁ±…¹…Ñ¥½¸°(€€€€€€‰½¹ÍÕ±Ñ„±„•Ù¥‘•¹¥„ä±…Ì™Õ•¹Ñ•Ìè¡ÑÑÁÌè¼½İİÜ¹±…Ù•É‘…‘¥¹½µ½‘„¹µà¼ˆ°(€€€€€€ˆ1…Y•É‘…‘%¹Íµ½‘„€9½É•…Í½µÁÉÕ•‰„ˆ(€€€t¹™¥±Ñ•È¡	½½±•…¸¤ì(€€€±•Ğ½ÕÑÁÕĞ€ôÁ…ÉÑÌ¹©½¥¸ ‰q¹q¸ˆ¤ì(€€€¥˜€¡½ÕÑÁÕĞ¹±•¹Ñ €ğô€ÜÔÀ¤É•ÑÕÉ¸½ÕÑÁÕĞì((€€€½¹ÍĞ™¥á•€ôl(€€€€€1YI%9M5=ƒŠP€‘í±…‰•±õ€°(€€€€€±…¥´€ü™¥Éµ…§Í¸è€‘í±…¥µõ€€è€ˆˆ°(€€€€€€‰½¹ÍÕ±Ñ„±„•Ù¥‘•¹¥„ä±…Ì™Õ•¹Ñ•Ìè¡ÑÑÁÌè¼½İİÜ¹±…Ù•É‘…‘¥¹½µ½‘„¹µà¼ˆ°(€€€€€€ˆ1…Y•É‘…‘%¹Íµ½‘„€9½É•…Í½µÁÉÕ•‰„ˆ(€€€t¹™¥±Ñ•È¡	½½±•…¸¤ì(€€€½¹ÍĞÉ•Í•ÉÙ•€ô™¥á•¹©½¥¸ ‰q¹q¸ˆ¤¹±•¹Ñ €¬€Ğì(€€€½¹ÍĞ…Ù…¥±…‰±”€ô5…Ñ ¹µ…à àÀ°€ÜÔÀ€´É•Í•ÉÙ•¤ì(€€€½¹ÍĞÍ¡½ÉÑ•¹•€ô•áÁ±…¹…Ñ¥½¸¹±•¹Ñ €ø…Ù…¥±…‰±”(€€€€€€ü€‘í•áÁ±…¹…Ñ¥½¸¹Í±¥” À°5…Ñ ¹µ…à À°…Ù…¥±…‰±”€´€Ä¤¤¹ÑÉ¥µ¹ ¥÷Š™€(€€€€€€è•áÁ±…¹…Ñ¥½¸ì(€€€½ÕÑÁÕĞ€ôm™¥á•‘lÁt°™¥á•‘lÅtñğ€ˆˆ°Í¡½ÉÑ•¹•°€¸¸¹™¥á•¹Í±¥”¡±…¥´€ü€È€è€Ä¥t¹™¥±Ñ•È¡	½½±•…¸¤¹©½¥¸ ‰q¹q¸ˆ¤ì(€€€É•ÑÕÉ¸½ÕÑÁÕĞ¹Í±¥” À°€ÜÔÀ¤¹ÑÉ¥´ ¤ì(€ô((€…Íå¹Œ™Õ¹Ñ¥½¸½ÁåM½¥…±MÕµµ…Éä¡‰ÕÑÑ½¸¤ì(€€€¥˜€ …±…ÍÑ¹…±åÍ¥Í…Ñ„ñğ±…ÍÑ¹…±åÍ¥Í…Ñ„¹•ÍÑ…‘¼€ôôô€‰Í¥¹}…•Í¼ˆñğ±…ÍÑ¹…±åÍ¥Í…Ñ„¹…¹…±¥é…‘¼€ôôô™…±Í”¤É•ÑÕÉ¸ì(€€€½¹ÍĞÑ•áĞ€ôÍ½¥…±MÕµµ…Éä ¤ì(€€€¥˜€ …Ñ•áĞ¤É•ÑÕÉ¸ì(€€€ÑÉäì(€€€€€…İ…¥Ğ¹…Ù¥…Ñ½È¹±¥Á‰½…É¹İÉ¥Ñ•Q•áĞ¡Ñ•áĞ¤ì(€€€ô…Ñ ì(€€€€€½¹ÍĞ…É•„€ô‘½Õµ•¹Ğ¹É•…Ñ•±•µ•¹Ğ ‰Ñ•áÑ…É•„ˆ¤ì(€€€€€…É•„¹Ù…±Õ”€ôÑ•áĞì(€€€€€…É•„¹ÍÑå±”¹Á½Í¥Ñ¥½¸€ô€‰™¥á•ˆì(€€€€€…É•„¹ÍÑå±”¹½Á…¥Ñä€ô€ˆÀˆì(€€€€€‘½Õµ•¹Ğ¹‰½‘ä¹…ÁÁ•¹‘¡¥±¡…É•„¤ì(€€€€€…É•„¹Í•±•Ğ ¤ì(€€€€€‘½Õµ•¹Ğ¹•á•½µµ…¹ ‰½Áäˆ¤ì(€€€€€…É•„¹É•µ½Ù” ¤ì(€€€ô(€€€½¹ÍĞ½É¥¥¹…°€ô‰ÕÑÑ½¸ü¹Ñ•áÑ½¹Ñ•¹Ğñğ€‰½Á¥…ÈÉ•ÍÕµ•¸Á…É„É•‘•Ìˆì(€€€¥˜€¡‰ÕÑÑ½¸¤ì(€€€€€‰ÕÑÑ½¸¹Ñ•áÑ½¹Ñ•¹Ğ€ô½Á¥…‘¼€ ‘íÑ•áĞ¹±•¹Ñ¡ô¼ÜÔÀ¥€ì(€€€€€Í•ÑQ¥µ•½ÕĞ  ¤€ôøì‰ÕÑÑ½¸¹Ñ•áÑ½¹Ñ•¹Ğ€ô½É¥¥¹…°ìô°€ÈÈÀÀ¤ì(€€€ô(€€€ÑÉ…­UÍ…” ‰É•ÍÕµ•¹}É•‘•Í}½Á¥…‘¼ˆ°ì…É…Ñ•É•ÌèÑ•áĞ¹±•¹Ñ ô¤ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•ÉM½ÕÉ•Ì¡Í½ÕÉ•Ì¤ì(€€€¥˜€ …ÉÉ…ä¹¥ÍÉÉ…ä¡Í½ÕÉ•Ì¤ñğ€…Í½ÕÉ•Ì¹±•¹Ñ ¤É•ÑÕÉ¸€ˆˆì((€€€½¹ÍĞÙ…±¥‘M½ÕÉ•Ì€ôÍ½ÕÉ•Ì¹™¥±Ñ•È¡Í½ÕÉ”€ôø(€€€€€Í½ÕÉ”€˜˜€¡Í½ÕÉ”¹ÕÉ°ñğÍ½ÕÉ”¹Ñ¥ÑÕ±¼¤(€€€€¤¹Í±¥” À°€Ô¤ì((€€€¥˜€ …Ù…±¥‘M½ÕÉ•Ì¹±•¹Ñ ¤É•ÑÕÉ¸€ˆˆì((€€€É•ÑÕÉ¸€(€€€€€€ñ…ÉÑ¥±”±…ÍÌô‰…É™Õ±°ˆø(€€€€€€€€ñ ÌùÕ•¹Ñ•Ì½¹ÍÕ±Ñ…‘…Ìğ½ Ìø((€€€€€€€€ñ‘¥Ø±…ÍÌô‰Í½ÕÉ•Ìˆø(€€€€€€€€€€‘íÙ…±¥‘M½ÕÉ•Ì¹µ…À¡Í½ÕÉ”€ôøì(€€€€€€€€€€€½¹ÍĞÕÉ°€ôÍ…™•UÉ°¡Í½ÕÉ”¹ÕÉ°¤ì((€€€€€€€€€€€½¹ÍĞÑ¥Ñ±”€ô(€€€€€€€€€€€€€Í½ÕÉ”¹Ñ¥ÑÕ±¼ñğ(€€€€€€€€€€€€€Í½ÕÉ”¹Ñ¥Ñ±”ñğ(€€€€€€€€€€€€€ÕÉ°ñğ(€€€€€€€€€€€€€€‰Õ•¹Ñ”½¹ÍÕ±Ñ…‘„ˆì((€€€€€€€€€€€½¹ÍĞ‘•Ñ…¥±Ì€ôl(€€€€€€€€€€€€€Í½ÕÉ”¹Ñ¥Á¼°(€€€€€€€€€€€€€Í½ÕÉ”¹™•¡„°(€€€€€€€€€€€€€Í½ÕÉ”¹…Á½ÉÑ”(€€€€€€€€€€€t¹™¥±Ñ•È¡	½½±•…¸¤¹©½¥¸ ˆƒ
+Ü€ˆ¤ì((€€€€€€€€€€€½¹ÍĞ‰½‘ä€ô€(€€€€€€€€€€€€€€ñÍÑÉ½¹œø‘í•ÍŒ¡Ñ¥Ñ±”¥ôğ½ÍÑÉ½¹œø(€€€€€€€€€€€€€€‘í‘•Ñ…¥±Ì€ü€ñÍµ…±°ø‘í•ÍŒ¡‘•Ñ…¥±Ì¥ôğ½Íµ…±°ù€€è€ˆ‰ô(€€€€€€€€€€€€ì((€€€€€€€€€€€É•ÑÕÉ¸ÕÉ°(€€€€€€€€€€€€€€ü€(€€€€€€€€€€€€€€€€ñ„(€€€€€€€€€€€€€€€€€±…ÍÌô‰Í½ÕÉ”ˆ(€€€€€€€€€€€€€€€€€¡É•˜ôˆ‘í•ÍŒ¡ÕÉ°¥ôˆ(€€€€€€€€€€€€€€€€€Ñ…É•Ğô‰}‰±…¹¬ˆ(€€€€€€€€€€€€€€€€€É•°ô‰¹½½Á•¹•È¹½É•™•ÉÉ•Èˆ(€€€€€€€€€€€€€€€€ø(€€€€€€€€€€€€€€€€€€‘í‰½‘åô(€€€€€€€€€€€€€€€€ğ½„ø(€€€€€€€€€€€€€€(€€€€€€€€€€€€€€è€ñ‘¥Ø±…ÍÌô‰Í½ÕÉ”ˆø‘í‰½‘åôğ½‘¥Øù€ì(€€€€€€€€€ô¤¹©½¥¸ ˆˆ¥ô(€€€€€€€€ğ½‘¥Øø(€€€€€€ğ½…ÉÑ¥±”ø(€€€€ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•É1¥¹­½¹Ñ•áĞ¡‘…Ñ„¤ì(€€€½¹ÍĞ•áÑÉ…Ñ¥½¸€ô‘…Ñ„ü¹•áÑÉ…¥½¹}•¹±…”ì(€€€½¹ÍĞÍ½¥…°€ô‘…Ñ„ü¹…¹…±¥Í¥Í}É•‘•Ìì(€€€¥˜€ …•áÑÉ…Ñ¥½¸€˜˜€…Í½¥…°¤É•ÑÕÉ¸€ˆˆì((€€€½¹ÍĞÁÉ½™¥±”€ô•áÑÉ…Ñ¥½¸ü¹Á•É™¥°ì(€€€½¹ÍĞµ•Ñ…‘…Ñ„€ô•áÑÉ…Ñ¥½¸€ül(€€€€€•áÑÉ…Ñ¥½¸¹Á±…Ñ…™½Éµ„€˜˜A±…Ñ…™½Éµ„è€‘í•áÑÉ…Ñ¥½¸¹Á±…Ñ…™½Éµ…õ€°(€€€€€ÁÉ½™¥±”ü¹¹½µ‰É”€˜˜9½µ‰É”Ãé‰±¥¼è€‘íÁÉ½™¥±”¹¹½µ‰É•õ€°(€€€€€ÁÉ½™¥±”ü¹ÕÍÕ…É¥¼€˜˜UÍÕ…É¥¼è ‘íÁÉ½™¥±”¹ÕÍÕ…É¥½õ€°(€€€€€ÁÉ½™¥±”ü¹‰¥½É…™¥„€˜˜	¥½É…›µ„è€‘íÁÉ½™¥±”¹‰¥½É…™¥…õ€°(€€€€€9Õµ‰•È¹¥Í¥¹¥Ñ”¡ÁÉ½™¥±”ü¹Í•Õ¥‘½É•Ì¤€˜˜M•Õ¥‘½É•Ì‘•±…É…‘½Ìè€‘íÁÉ½™¥±”¹Í•Õ¥‘½É•Ì¹Ñ½1½…±•MÑÉ¥¹œ ‰•Ìµ5`ˆ¥õ€°(€€€€€9Õµ‰•È¹¥Í¥¹¥Ñ”¡ÁÉ½™¥±”ü¹ÁÕ‰±¥…¥½¹•Í}‘•±…É…‘…Ì¤€˜˜AÕ‰±¥…¥½¹•Ì‘•±…É…‘…Ìè€‘íÁÉ½™¥±”¹ÁÕ‰±¥…¥½¹•Í}‘•±…É…‘…Ì¹Ñ½1½…±•MÑÉ¥¹œ ‰•Ìµ5`ˆ¥õ€°(€€€€€•áÑÉ…Ñ¥½¸¹Ñ¥ÑÕ±¼€˜˜SµÑÕ±¼è€‘í•áÑÉ…Ñ¥½¸¹Ñ¥ÑÕ±½õ€°(€€€€€•áÑÉ…Ñ¥½¸¹…ÕÑ½È€˜˜ÕÑ½È¼Õ•¹Ñ„è€‘í•áÑÉ…Ñ¥½¸¹…ÕÑ½Éõ€°(€€€€€•áÑÉ…Ñ¥½¸¹™•¡…}ÁÕ‰±¥…¥½¸€˜˜AÕ‰±¥…‘¼è€‘í•áÑÉ…Ñ¥½¸¹™•¡…}ÁÕ‰±¥…¥½¹õ€°(€€€€€•áÑÉ…Ñ¥½¸¹‘ÕÉ…¥½¹}Í•Õ¹‘½Ì€˜˜ÕÉ…§Í¸è€‘í5…Ñ ¹™±½½È¡•áÑÉ…Ñ¥½¸¹‘ÕÉ…¥½¹}Í•Õ¹‘½Ì€¼€ÌØÀÀ¤€ü€‘í5…Ñ ¹™±½½È¡•áÑÉ…Ñ¥½¸¹‘ÕÉ…¥½¹}Í•Õ¹‘½Ì€¼€ÌØÀÀ¥ô €€è€ˆ‰ô‘í5…Ñ ¹™±½½È ¡•áÑÉ…Ñ¥½¸¹‘ÕÉ…¥½¹}Í•Õ¹‘½Ì€”€ÌØÀÀ¤€¼€ØÀ¥ôµ¥¹€°(€€€€€•áÑÉ…Ñ¥½¸¹ÑÉ…¹ÍÉ¥Á¥½¹}É•ÕÁ•É…‘„€ü€‰QÉ…¹ÍÉ¥Á§Í¸¼ÍÕ‰ÓµÑÕ±½ÌèÉ•ÕÁ•É…‘½Ìˆ€è€ˆˆ°(€€€€€•áÑÉ…Ñ¥½¸¹…•Í½}‘¥É•Ñ¼(€€€€€€€€ü€‰•Í¼‘¥É•Ñ¼è‘¥ÍÁ½¹¥‰±”ˆ(€€€€€€€€è•áÑÉ…Ñ¥½¸¹…•Í½}Á…É¥…°(€€€€€€€€€€ü€‰•Í¼è™¥¡„Ãé‰±¥„É•ÕÁ•É…‘„ì¡¥ÍÑ½É¥…°Á…É¥…±µ•¹Ñ”±¥µ¥Ñ…‘¼ˆ(€€€€€€€€€€è€‰•Í¼‘¥É•Ñ¼è±¥µ¥Ñ…‘¼ˆ(€€€t¹™¥±Ñ•È¡	½½±•…¸¤€èmtì((€€€½¹ÍĞÑÉ•¹‘Ì€ôÕ¹¥ÅÕ”¡Í½¥…°ü¹Ñ•¹‘•¹¥…Í}½‰Í•ÉÙ…‘…Ìñğmt¤ì(€€€½¹ÍĞµ…¹¥ÁÕ±…Ñ¥½¸€ôÕ¹¥ÅÕ”¡Í½¥…°ü¹Á½Í¥‰±•}µ…¹¥ÁÕ±…¥½¸ñğmt¤ì(€€€½¹ÍĞ½µµ•¹ÑÌ€ôÉÉ…ä¹¥ÍÉÉ…ä¡•áÑÉ…Ñ¥½¸ü¹½µ•¹Ñ…É¥½Ì¤(€€€€€€ü•áÑÉ…Ñ¥½¸¹½µ•¹Ñ…É¥½Ì¹™¥±Ñ•È¡½µµ•¹Ğ€ôø½µµ•¹Ğü¹Ñ•áÑ¼¤(€€€€€€èmtì((€€€É•ÑÕÉ¸€(€€€€€€ñ…ÉÑ¥±”±…ÍÌô‰…É™Õ±°ˆø(€€€€€€€€ñ Ìù½¹Ñ•áÑ¼É•ÕÁ•É…‘¼‘•°•¹±…”äÉ•‘•Ìğ½ Ìø(€€€€€€€€‘íµ•Ñ…‘…Ñ„¹±•¹Ñ €ü€ñÀø‘íµ•Ñ…‘…Ñ„¹µ…À¡•ÍŒ¤¹©½¥¸ ˆñ‰Èøˆ¥ôğ½Àù€€è€ˆ‰ô(€€€€€€€€‘í½µµ•¹ÑÌ¹±•¹Ñ €ü€(€€€€€€€€€€ñ Ğù½µ•¹Ñ…É¥½ÌÃé‰±¥½ÌÉ•ÕÁ•É…‘½Ì€ ‘í½µµ•¹ÑÌ¹±•¹Ñ¡ô¤ğ½ Ğø(€€€€€€€€€€ñÀ±…ÍÌô‰µÕÑ•ˆùM½¸Õ¹„µÕ•ÍÑÉ„½¹Ñ•áÑÕ…°ä¹¼É•ÁÉ•Í•¹Ñ…¸Õ¹„Ù½Ñ…§Í¸Í½‰É”±„Ù•É…¥‘…¸ğ½Àø(€€€€€€€€€€ñÕ°ø‘í½µµ•¹ÑÌ¹µ…À¡½µµ•¹Ğ€ôøì(€€€€€€€€€€€½¹ÍĞ‘•Ñ…¥±Ì€ôm½µµ•¹Ğ¹…ÕÑ½È°½µµ•¹Ğ¹ÁÕ‰±¥…‘½t¹™¥±Ñ•È¡	½½±•…¸¤¹©½¥¸ ˆƒ
+Ü€ˆ¤ì(€€€€€€€€€€€É•ÑÕÉ¸€ñ±¤ø‘í•ÍŒ¡½µµ•¹Ğ¹Ñ•áÑ¼¥ô‘í‘•Ñ…¥±Ì€ü€ñÍµ…±°ø‘í•ÍŒ¡‘•Ñ…¥±Ì¥ôğ½Íµ…±°ù€€è€ˆ‰ôğ½±¤ù€ì(€€€€€€€€€ô¤¹©½¥¸ ˆˆ¥ôğ½Õ°ø(€€€€€€€€€è€ˆ‰ô(€€€€€€€€‘íÑÉ•¹‘Ì¹±•¹Ñ €ü€ñ ĞùQ•¹‘•¹¥…Ì½‰Í•ÉÙ…‘…Ìğ½ ĞøñÕ°ø‘íÑÉ•¹‘Ì¹µ…À¡¥Ñ•´€ôø€ñ±¤ø‘í•ÍŒ¡¥Ñ•´¥ôğ½±¤ù€¤¹©½¥¸ ˆˆ¥ôğ½Õ°ù€€è€ˆ‰ô(€€€€€€€€‘íµ…¹¥ÁÕ±…Ñ¥½¸¹±•¹Ñ €ü€ñ ĞùA½Í¥‰±”µ…¹¥ÁÕ±…§Í¸¼½½É‘¥¹…§Í¸ğ½ ĞøñÕ°ø‘íµ…¹¥ÁÕ±…Ñ¥½¸¹µ…À¡¥Ñ•´€ôø€ñ±¤ø‘í•ÍŒ¡¥Ñ•´¥ôğ½±¤ù€¤¹©½¥¸ ˆˆ¥ôğ½Õ°ù€€è€ˆ‰ô(€€€€€€€€‘íÍ½¥…°ü¹É•ÁÉ•Í•¹Ñ…Ñ¥Ù¥‘…€ü€ñÀøñÍÑÉ½¹œùI•ÁÉ•Í•¹Ñ…Ñ¥Ù¥‘…èğ½ÍÑÉ½¹œø€‘í•ÍŒ¡Í½¥…°¹É•ÁÉ•Í•¹Ñ…Ñ¥Ù¥‘…¥ôğ½Àù€€è€ˆ‰ô(€€€€€€€€‘íÍ½¥…°ü¹±¥µ¥Ñ…¥½¹•Ì€ü€ñÀøñÍÑÉ½¹œù1¥µ¥Ñ…¥½¹•Ìèğ½ÍÑÉ½¹œø€‘í•ÍŒ¡Í½¥…°¹±¥µ¥Ñ…¥½¹•Ì¥ôğ½Àù€€è€ˆ‰ô(€€€€€€ğ½…ÉÑ¥±”ø(€€€€ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•ÉY¥‘•½Q½Á¥Ì¡‘…Ñ„¤ì(€€€½¹ÍĞÑ½Á¥Ì€ôÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„ü¹Ñ•µ…Í}Ù¥‘•¼¤(€€€€€€ü‘…Ñ„¹Ñ•µ…Í}Ù¥‘•¼¹™¥±Ñ•È¡Ñ½Á¥Œ€ôøÑ½Á¥Œ€˜˜€¡Ñ½Á¥Œ¹Ñ•µ„ñğÑ½Á¥Œ¹É•ÍÕµ•¸¤¤(€€€€€€èmtì(€€€¥˜€ …Ñ½Á¥Ì¹±•¹Ñ €˜˜€…‘…Ñ„ü¹É•ÍÕµ•¹}Ù¥‘•¼¤É•ÑÕÉ¸€ˆˆì(€€€É•ÑÕÉ¸€(€€€€€€ñ…ÉÑ¥±”±…ÍÌô‰…É™Õ±°ˆø(€€€€€€€€ñ ÌùI•ÍÕµ•¸ä½¹Ñ•áÑ¼‘•°Ù¥‘•¼ğ½ Ìø(€€€€€€€€‘í‘…Ñ„¹É•ÍÕµ•¹}Ù¥‘•¼€ü€ñÀø‘í•ÍŒ¡‘…Ñ„¹É•ÍÕµ•¹}Ù¥‘•¼¥ôğ½Àù€€è€ˆ‰ô(€€€€€€€€‘íÑ½Á¥Ì¹µ…À¡Ñ½Á¥Œ€ôø€(€€€€€€€€€€ñÍ•Ñ¥½¸±…ÍÌô‰Í½ÕÉ”ˆø(€€€€€€€€€€€€ñÍÑÉ½¹œø‘íÑ½Á¥Œ¹µ¥¹ÕÑ¼€ü€‘í•ÍŒ¡Ñ½Á¥Œ¹µ¥¹ÕÑ¼¥ôƒ
+Ü€€è€ˆ‰ô‘í•ÍŒ¡Ñ½Á¥Œ¹Ñ•µ„ñğ€‰Q•µ„¥‘•¹Ñ¥™¥…‘¼ˆ¥ôğ½ÍÑÉ½¹œø(€€€€€€€€€€€€‘íÑ½Á¥Œ¹É•ÍÕµ•¸€ü€ñÀø‘í•ÍŒ¡Ñ½Á¥Œ¹É•ÍÕµ•¸¥ôğ½Àù€€è€ˆ‰ô(€€€€€€€€€€€€‘íÑ½Á¥Œ¹…™¥Éµ…¥½¹•Ìü¹±•¹Ñ €ü€ñÍµ…±°øñˆù™¥Éµ…¥½¹•Ìèğ½ˆø€‘íÑ½Á¥Œ¹…™¥Éµ…¥½¹•Ì¹µ…À¡•ÍŒ¤¹©½¥¸ ˆƒ
+Ü€ˆ¥ôğ½Íµ…±°ù€€è€ˆ‰ô(€€€€€€€€€€€€‘íÑ½Á¥Œ¹Ù•É•‘¥Ñ¼€ü€ñÍµ…±°øñˆùÙ…±Õ…§Í¸èğ½ˆø€‘í•ÍŒ¡Ñ½Á¥Œ¹Ù•É•‘¥Ñ¼¥ôğ½Íµ…±°ù€€è€ˆ‰ô(€€€€€€€€€€€€‘íÑ½Á¥Œ¹½¹Ñ•áÑ¼€ü€ñÍµ…±°øñˆù½¹Ñ•áÑ¼èğ½ˆø€‘í•ÍŒ¡Ñ½Á¥Œ¹½¹Ñ•áÑ¼¥ôğ½Íµ…±°ù€€è€ˆ‰ô(€€€€€€€€€€ğ½Í•Ñ¥½¸ø(€€€€€€€€¤¹©½¥¸ ˆˆ¥ô(€€€€€€ğ½…ÉÑ¥±”ø(€€€€ì(€ô((€™Õ¹Ñ¥½¸‰Õ¥±‘M½ÕÉ•½¹ÑÉ…ÍĞ¡‘…Ñ„°Í½ÕÉ•Ì¤ì(€€€¥˜€¡‘…Ñ„¹½¹ÑÉ…ÍÑ•}™Õ•¹Ñ•Ì¤ì(€€€€€É•ÑÕÉ¸MÑÉ¥¹œ¡‘…Ñ„¹½¹ÑÉ…ÍÑ•}™Õ•¹Ñ•Ì¤¹ÑÉ¥´ ¤ì(€€€ô((€€€¥˜€ …Í½ÕÉ•Ì¹±•¹Ñ ¤ì(€€€€€É•ÑÕÉ¸MÑÉ¥¹œ (€€€€€€€‘…Ñ„¹±¥µ¥Ñ…¥½¹•Ìü¹lÁtñğ(€€€€€€€€‰9¼Í”ÁÕ‘¥•É½¸É•ÕÁ•É…ÈÍÕ™¥¥•¹Ñ•Ì™Õ•¹Ñ•ÌÃé‰±¥…ÌÁ…É„É•…±¥é…ÈÕ¸½¹ÑÉ…ÍÑ”¥¹‘•Á•¹‘¥•¹Ñ”¸ˆ(€€€€€€¤ì(€€€ô((€€€½¹ÍĞÑåÁ•Ì€ôl(€€€€€€¸¸¹¹•ÜM•Ğ (€€€€€€€Í½ÕÉ•Ì(€€€€€€€€€€¹µ…À¡Í½ÕÉ”€ôøÍ½ÕÉ”ü¹Ñ¥Á¼¤(€€€€€€€€€€¹™¥±Ñ•È¡	½½±•…¸¤(€€€€€€¤(€€€tì((€€€±•ĞÑ•áĞ€ô(€€€€€M”½¹ÍÕ±Ñ…É½¸€‘íÍ½ÕÉ•Ì¹±•¹Ñ¡ô™Õ•¹Ñ•€€¬(€€€€€€‘íÍ½ÕÉ•Ì¹±•¹Ñ €ôôô€Ä€ü€ˆˆ€è€‰Ì‰ôÉ•±…¥½¹…‘…€€¬(€€€€€€‘íÍ½ÕÉ•Ì¹±•¹Ñ €ôôô€Ä€ü€ˆˆ€è€‰Ì‰ô½¸±„…™¥Éµ…§Í¸¹€ì((€€€¥˜€¡ÑåÁ•Ì¹±•¹Ñ ¤ì(€€€€€Ñ•áĞ€¬ô€M”¥¹±Õå•É½¸™Õ•¹Ñ•Ì‘”Ñ¥Á¼€‘íÑåÁ•Ì¹©½¥¸ ˆ°€ˆ¥ô¹€ì(€€€ô((€€€½¹ÍĞ™…Ù½É…‰±”€ôÕ¹¥ÅÕ” (€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}…}™…Ù½Èñğ‘…Ñ„¹•Ù¥‘•¹¥…}™…Ù½É…‰±”(€€€€¤ì((€€€½¹ÍĞÕ¹™…Ù½É…‰±”€ôÕ¹¥ÅÕ” (€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}•¹}½¹ÑÉ„ñğ‘…Ñ„¹•Ù¥‘•¹¥…}‘•Í™…Ù½É…‰±”(€€€€¤ì((€€€¥˜€¡™…Ù½É…‰±”¹±•¹Ñ €˜˜Õ¹™…Ù½É…‰±”¹±•¹Ñ ¤ì(€€€€€Ñ•áĞ€¬ô(€€€€€€€€ˆM”•¹½¹ÑÉ…É½¸•±•µ•¹Ñ½ÌÑ…¹Ñ¼™…Ù½É…‰±•Ì½µ¼‘•Í™…Ù½É…‰±•Ì°Á½È±¼ÅÕ”•°Ù•É•‘¥Ñ¼½¹Í¥‘•É„…µ‰½Ì±…‘½Ì‘”±„•Ù¥‘•¹¥„¸ˆì(€€€ô•±Í”¥˜€¡Õ¹™…Ù½É…‰±”¹±•¹Ñ ¤ì(€€€€€Ñ•áĞ€¬ô(€€€€€€€€ˆ1„•Ù¥‘•¹¥„É•ÕÁ•É…‘„½¹ÑÉ…‘¥”ÁÉ¥¹¥Á…±µ•¹Ñ”±„…™¥Éµ…§Í¸…¹…±¥é…‘„¸ˆì(€€€ô•±Í”¥˜€¡™…Ù½É…‰±”¹±•¹Ñ ¤ì(€€€€€Ñ•áĞ€¬ô(€€€€€€€€ˆ1„•Ù¥‘•¹¥„É•ÕÁ•É…‘„É•ÍÁ…±‘„ÁÉ¥¹¥Á…±µ•¹Ñ”±„…™¥Éµ…§Í¸…¹…±¥é…‘„¸ˆì(€€€ô((€€€É•ÑÕÉ¸Ñ•áĞì(€ô((€™Õ¹Ñ¥½¸¹½Éµ…±¥é•¥¹…±Y•É‘¥Ğ¡Ù…±Õ”¤ì(€€€½¹ÍĞ¹½Éµ…±¥é•€ôMÑÉ¥¹œ¡Ù…±Õ”ñğ€ˆˆ¤(€€€€€€¹ÑÉ¥´ ¤(€€€€€€¹Ñ½UÁÁ•É…Í” ¤(€€€€€€¹¹½Éµ…±¥é” ‰9ˆ¤(€€€€€€¹É•Á±…” ½mqÔÀÌÀÀµqÔÀÌÙ™t½œ°€ˆˆ¤ì((€€€¥˜€¡l‰%IQˆ°€‰%IQ<ˆ°€‰YIIˆ°€‰YII<‰t¹¥¹±Õ‘•Ì¡¹½Éµ…±¥é•¤¤ì(€€€€€É•ÑÕÉ¸€‰%IQˆì(€€€ô((€€€¥˜€¡l‰1Mˆ°€‰1M<‰t¹¥¹±Õ‘•Ì¡¹½Éµ…±¥é•¤¤ì(€€€€€É•ÑÕÉ¸€‰1Mˆì(€€€ô((€€€¥˜€¡l(€€€€€€‰9<YI%%	1ˆ°(€€€€€€‰%9=I5%=8%9MU%%9Qˆ°(€€€€€€‰%9=I5'M8%9MU%%9Qˆ(€€€t¹¥¹±Õ‘•Ì¡¹½Éµ…±¥é•¤¤ì(€€€€€É•ÑÕÉ¸€‰9<YI%%	1ˆì(€€€ô((€€€É•ÑÕÉ¸€ˆˆì(€ô((€™Õ¹Ñ¥½¸½¡•É•¹Ñ¥¹…±Y•É‘¥Ğ¡‘…Ñ„°™…±±‰…­Y•É‘¥Ğ€ô€ˆˆ¤ì(€€€½¹ÍĞÑ•¡¹¥…°€ôMÑÉ¥¹œ¡‘…Ñ„ü¹Ù•É•‘¥Ñ¼ñğ™…±±‰…­Y•É‘¥Ğñğ€ˆˆ¤(€€€€€€¹ÑÉ¥´ ¤(€€€€€€¹Ñ½UÁÁ•É…Í” ¤(€€€€€€¹¹½Éµ…±¥é” ‰9ˆ¤(€€€€€€¹É•Á±…” ½mqÔÀÌÀÀµqÔÀÌÙ™t½œ°€ˆˆ¤ì((€€€¥˜€¡l‰YII<ˆ°€‰5e=I59QYII<‰t¹¥¹±Õ‘•Ì¡Ñ•¡¹¥…°¤¤ì(€€€€€É•ÑÕÉ¸€‰%IQˆì(€€€ô((€€€¥˜€¡l(€€€€€€‰1M<ˆ°(€€€€€€‰99=M<ˆ°(€€€€€€‰UI=9QaQ<ˆ°(€€€€€€‰=9Q9%<59%AU1<ˆ°(€€€€€€‰9M%9=I5%=8ˆ(€€€t¹¥¹±Õ‘•Ì¡Ñ•¡¹¥…°¤¤ì(€€€€€É•ÑÕÉ¸€‰1Mˆì(€€€ô((€€€¥˜€¡l(€€€€€€‰AI%159QYII<ˆ°(€€€€€€‰%9=I5%=8%9MU%%9Qˆ°(€€€€€€‰9<YI%%	1ˆ°(€€€€€€‰IU5=H9<=9%I5<ˆ(€€€t¹¥¹±Õ‘•Ì¡Ñ•¡¹¥…°¤¤ì(€€€€€É•ÑÕÉ¸€‰9<YI%%	1ˆì(€€€ô((€€€É•ÑÕÉ¸€ (€€€€€¹½Éµ…±¥é•¥¹…±Y•É‘¥Ğ¡‘…Ñ„ü¹Ù•É•‘¥Ñ½}™¥¹…°¤ñğ(€€€€€¹½Éµ…±¥é•¥¹…±Y•É‘¥Ğ¡™…±±‰…­Y•É‘¥Ğ¤(€€€€¤ì(€ô((€™Õ¹Ñ¥½¸™¥¹…±Y•É‘¥Ñ±…ÍÌ¡Ù…±Õ”¤ì(€€€¥˜€¡Ù…±Õ”€ôôô€‰%IQˆ¤É•ÑÕÉ¸€‰¥•ÉÑ„ˆì(€€€¥˜€¡Ù…±Õ”€ôôô€‰1Mˆ¤É•ÑÕÉ¸€‰™…±Í„ˆì(€€€É•ÑÕÉ¸€‰¥¹‘•Ñ•Éµ¥¹…‘„ˆì(€ô((€™Õ¹Ñ¥½¸É•¹‘•É¥¹…±Y•É‘¥Ğ¡‘…Ñ„°™…±±‰…­Y•É‘¥Ğ€ô€ˆˆ¤ì(€€€½¹ÍĞ™¥¹…±Y•É‘¥Ğ€ô(€€€€€½¡•É•¹Ñ¥¹…±Y•É‘¥Ğ¡‘…Ñ„°™…±±‰…­Y•É‘¥Ğ¤ì((€€€¥˜€ …™¥¹…±Y•É‘¥Ğ¤É•ÑÕÉ¸€ˆˆì((€€€½¹ÍĞ•áÁ±…¹…Ñ¥½¸€ôMÑÉ¥¹œ (€€€€€‘…Ñ„¹•áÁ±¥…¥½¹}Ù•É•‘¥Ñ½}™¥¹…°ñğ(€€€€€‘…Ñ„¹©ÕÍÑ¥™¥…¥½¹}Ù•É•‘¥Ñ½}™¥¹…°ñğ(€€€€€€ˆˆ(€€€€¤¹ÑÉ¥´ ¤ì((€€€É•ÑÕÉ¸€(€€€€€€ñ‘¥Ø±…ÍÌô‰™¥¹…°µÙ•É‘¥Ğµ‰½àˆø(€€€€€€€€ñÍÁ…¸±…ÍÌô‰™¥¹…°µÙ•É‘¥Ğµ±…‰•°ˆùYI%Q<%90ğ½ÍÁ…¸ø(€€€€€€€€ñ‘¥Ø±…ÍÌô‰™¥¹…°µÙ•É‘¥Ğ€‘í™¥¹…±Y•É‘¥Ñ±…ÍÌ¡™¥¹…±Y•É‘¥Ğ¥ôˆø(€€€€€€€€€€‘í•ÍŒ¡™¥¹…±Y•É‘¥Ğ¥ô(€€€€€€€€ğ½‘¥Øø(€€€€€€€€‘ì(€€€€€€€€€•áÁ±…¹…Ñ¥½¸(€€€€€€€€€€€€ü€ñÀ±…ÍÌô‰™¥¹…°µ•áÁ±…¹…Ñ¥½¸ˆø‘í•ÍŒ¡•áÁ±…¹…Ñ¥½¸¥ôğ½Àù€(€€€€€€€€€€€€è€ˆˆ(€€€€€€€ô(€€€€€€ğ½‘¥Øø(€€€€ì(€ô((€™Õ¹Ñ¥½¸¡…ÍUÍ•™Õ±I•ÍÕ±Ğ¡‘…Ñ„¤ì(€€€É•ÑÕÉ¸	½½±•…¸ (€€€€€‘…Ñ„ü¹…™¥Éµ…¥½¹}ÁÉ¥¹¥Á…°ñğ(€€€€€‘…Ñ„ü¹É•ÍÁÕ•ÍÑ…}‘¥É•Ñ„ñğ(€€€€€‘…Ñ„ü¹É•ÍÕµ•¸ñğ(€€€€€‘…Ñ„ü¹½¹±ÕÍ¥½¸ñğ(€€€€€€¡ÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„ü¹¡•¡½Í}½µÁÉ½‰…‘½Ì¤€˜˜‘…Ñ„¹¡•¡½Í}½µÁÉ½‰…‘½Ì¹±•¹Ñ ¤ñğ(€€€€€€¡ÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„ü¹•Ù¥‘•¹¥…}…}™…Ù½È¤€˜˜‘…Ñ„¹•Ù¥‘•¹¥…}…}™…Ù½È¹±•¹Ñ ¤ñğ(€€€€€€¡ÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„ü¹•Ù¥‘•¹¥…}•¹}½¹ÑÉ„¤€˜˜‘…Ñ„¹•Ù¥‘•¹¥…}•¹}½¹ÑÉ„¹±•¹Ñ ¤ñğ(€€€€€€¡ÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„ü¹™Õ•¹Ñ•Ì¤€˜˜‘…Ñ„¹™Õ•¹Ñ•Ì¹±•¹Ñ ¤(€€€€¤ì(€ô((€™Õ¹Ñ¥½¸¥Í9½Y•É¥™¥…‰±•I•ÍÕ±Ğ¡‘…Ñ„¤ì(€€€½¹ÍĞ™¥¹…±Y•É‘¥Ğ€ôMÑÉ¥¹œ¡‘…Ñ„ü¹Ù•É•‘¥Ñ½}™¥¹…°ñğ€ˆˆ¤(€€€€€€¹ÑÉ¥´ ¤(€€€€€€¹Ñ½UÁÁ•É…Í” ¤ì((€€€½¹ÍĞÑ•¡¹¥…±Y•É‘¥Ğ€ôMÑÉ¥¹œ¡‘…Ñ„ü¹Ù•É•‘¥Ñ¼ñğ€ˆˆ¤(€€€€€€¹ÑÉ¥´ ¤(€€€€€€¹Ñ½UÁÁ•É…Í” ¤ì((€€€½¹ÍĞ•áÁ±¥¥Ñ±å	±½­•€ô(€€€€€‘…Ñ„ü¹•ÍÑ…‘¼€ôôô€‰Í¥¹}…•Í¼ˆñğ‘…Ñ„ü¹…¹…±¥é…‘¼€ôôô™…±Í”ì((€€€½¹ÍĞ¹½Y•É¥™¥…‰±”€ô(€€€€€™¥¹…±Y•É‘¥Ğ€ôôô€‰9<YI%%	1ˆñğ(€€€€€Ñ•¡¹¥…±Y•É‘¥Ğ€ôôô€‰9<YI%%	1ˆñğ(€€€€€Ñ•¡¹¥…±Y•É‘¥Ğ€ôôô€‰%9=I5'M8%9MU%%9Qˆñğ(€€€€€Ñ•¡¹¥…±Y•É‘¥Ğ€ôôô€‰%9=I5%=8%9MU%%9Qˆì((€€€É•ÑÕÉ¸•áÁ±¥¥Ñ±å	±½­•€˜˜¹½Y•É¥™¥…‰±”ì(€ô((€™Õ¹Ñ¥½¸½Á•¹½¹Ñ•¹Ñ5½‘…°¡‘…Ñ„€ôíô¤ì(€€€½¹Ñ•¹Ñ5½‘…±5•ÍÍ…”¹Ñ•áÑ½¹Ñ•¹Ğ€ô‘…Ñ„ü¹•ÍÑ…‘½}Ñ•¹¥¼€ôôô€‰91}=5AIQ%=}9=}IMU1Q<ˆ(€€€€€€ü€‰Q¡É•…‘Ì¹¼•¹ÑÉ•ŸÌ±„ÁÕ‰±¥…§Í¸…Í½¥…‘„„•ÍÑ”•¹±…”½µÁ…ÉÑ¥‘¼¸A•„•°Ñ•áÑ¼‘”±„ÁÕ‰±¥…§Í¸¼…‘©Õ¹Ñ„Õ¹„…ÁÑÕÉ„ì½¹Í•ÉÙ…É•µ½Ì•°•¹±…”½É¥¥¹…°äÙ•É¥™¥…É•µ½Ì±„…™¥Éµ…§Í¸½¸™Õ•¹Ñ•Ì¥¹‘•Á•¹‘¥•¹Ñ•Ì¸ˆ(€€€€€€è€‰9¼™Õ”Á½Í¥‰±”É•ÕÁ•É…È•°½¹Ñ•¹¥‘¼¸A•„•°Ñ•áÑ¼‘”±„ÁÕ‰±¥…§Í¸°Õ¹„ÑÉ…¹ÍÉ¥Á§Í¸¼Õ¹„‘•ÍÉ¥Á§Í¸™¥•°‘”±„…™¥Éµ…§Í¸¸ˆì(€€€½¹Ñ•¹Ñ5½‘…±%¹ÁÕĞ¹Ù…±Õ”€ô€ˆˆì(€€€½¹Ñ•¹Ñ5½‘…±ÉÉ½È¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰Ù¥Í¥‰±”ˆ¤ì(€€€½¹Ñ•¹Ñ5½‘…°¹¡¥‘‘•¸€ô™…±Í”ì(€€€½¹Ñ•¹Ñ5½‘…°¹ÍÑå±”¹‘¥ÍÁ±…ä€ô€‰™±•àˆì(€€€½¹Ñ•¹Ñ5½‘…°¹±…ÍÍ1¥ÍĞ¹…‘ ‰Ù¥Í¥‰±”ˆ¤ì(€€€‘½Õµ•¹Ğ¹‰½‘ä¹±…ÍÍ1¥ÍĞ¹…‘ ‰µ½‘…°µ½Á•¸ˆ¤ì(€€€ÑÉ…­UÍ…” ‰½¹Ñ•¹¥‘½}Í½±¥¥Ñ…‘½}Á…É…}½¹Ñ¥¹Õ…Èˆ°ì(€€€€€•ÍÑ…‘¼è‘…Ñ„ü¹•ÍÑ…‘¼ñğ€‰‘•Í½¹½¥‘¼ˆ(€€€ô¤ì(€€€Í•ÑQ¥µ•½ÕĞ  ¤€ôø½¹Ñ•¹Ñ5½‘…±%¹ÁÕĞ¹™½ÕÌ ¤°€ÔÀ¤ì(€ô((€™Õ¹Ñ¥½¸±½Í•½¹Ñ•¹Ñ5½‘…° ¤ì(€€€½¹Ñ•¹Ñ5½‘…°¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰Ù¥Í¥‰±”ˆ¤ì(€€€½¹Ñ•¹Ñ5½‘…°¹ÍÑå±”¹‘¥ÍÁ±…ä€ô€‰¹½¹”ˆì(€€€½¹Ñ•¹Ñ5½‘…°¹¡¥‘‘•¸€ôÑÉÕ”ì(€€€‘½Õµ•¹Ğ¹‰½‘ä¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰µ½‘…°µ½Á•¸ˆ¤ì(€€€½¹Ñ•¹Ñ5½‘…±ÉÉ½È¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰Ù¥Í¥‰±”ˆ¤ì(€ô((€™Õ¹Ñ¥½¸…‘‘5…¹Õ…±½¹Ñ•¹Ñ	ÕÑÑ½¸¡‘…Ñ„¤ì(€€€½Á•¹½¹Ñ•¹Ñ5½‘…°¡‘…Ñ„¤ì(€ô((€™Õ¹Ñ¥½¸µ…å‰•I•ÅÕ•ÍÑ½¹Ñ•¹Ğ¡‘…Ñ„¤ì(€€€¥˜€¡‘…Ñ„ü¹•ÍÑ…‘½}Ñ•¹¥¼€„ôô€‰91}=5AIQ%=}9=}IMU1Q<ˆ¤É•ÑÕÉ¸ì(€€€Í•ÑQ¥µ•½ÕĞ  ¤€ôø½Á•¹½¹Ñ•¹Ñ5½‘…°¡‘…Ñ„¤°€ÌÀÀ¤ì(€ô((€…Íå¹Œ™Õ¹Ñ¥½¸½¹Ñ¥¹Õ•]¥Ñ¡AÉ½Ù¥‘•‘½¹Ñ•¹Ğ ¤ì(€€€½¹ÍĞÍÕÁÁ±¥•€ô½¹Ñ•¹Ñ5½‘…±%¹ÁÕĞ¹Ù…±Õ”¹ÑÉ¥´ ¤ì((€€€¥˜€ …ÍÕÁÁ±¥•¤ì(€€€€€½¹Ñ•¹Ñ5½‘…±ÉÉ½È¹±…ÍÍ1¥ÍĞ¹…‘ ‰Ù¥Í¥‰±”ˆ¤ì(€€€€€½¹Ñ•¹Ñ5½‘…±%¹ÁÕĞ¹™½ÕÌ ¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô((€€€½¹ÍĞ½É¥¥¹…°€ô±…ÍÑ=É¥¥¹…±EÕ•Éäñğ¹•İÍ%¹ÁÕĞ¹Ù…±Õ”¹ÑÉ¥´ ¤ì(€€€½¹ÍĞ½µ‰¥¹•€ô(€€€€€91<=9MU1Q=I%%90éq¸‘í½É¥¥¹…±õq¹q¹€€¬(€€€€€€‰=9Q9%<AI=A=I%=9<A=H0UMUI%<éq¸ˆ€¬(€€€€€€‘íÍÕÁÁ±¥•‘õq¹q¹€€¬(€€€€€€‰%5A=IQ9Qè°½¹Ñ•¹¥‘¼…¹Ñ•É¥½È™Õ”ÁÉ½Á½É¥½¹…‘¼Á½È•°ÕÍÕ…É¥¼Á½ÉÅÕ”€ˆ€¬(€€€€€€‰±„Á±…Ñ…™½Éµ„¹¼ÁÕ‘¼½¹ÍÕ±Ñ…ÉÍ”‘¥É•Ñ…µ•¹Ñ”¸Y•É¥™¥„±…Ì…™¥Éµ…¥½¹•Ì€ˆ€¬(€€€€€€‰µ•‘¥…¹Ñ”™Õ•¹Ñ•ÌÃé‰±¥…Ì¥¹‘•Á•¹‘¥•¹Ñ•Ìä‘•±…É„•ÍÑ„±¥µ¥Ñ…§Í¸¸ˆì((€€€±½Í•½¹Ñ•¹Ñ5½‘…° ¤ì(€€€±…ÍÑI•ÍÕ±Ñ]…ÍMÕÁÁ±•µ•¹Ñ•€ôÑÉÕ”ì(€€€ÑÉ…­UÍ…” ‰½¹Ñ•¹¥‘½}µ…¹Õ…±}•¹Ù¥…‘¼ˆ¤ì(€€€…İ…¥Ğ…¹…±åé”¡½µ‰¥¹•°ÑÉÕ”¤ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•É	±½­•¡‘…Ñ„¤ì(€€€±…ÍÑ¹…±åÍ¥Í…Ñ„€ô¹Õ±°ì(€€€É•ÍÕ±Ğ¹¥¹¹•É!Q50€ô€(€€€€€€‘íÉ•Á½ÉÑM½ÕÉ” ¥ô(€€€€€€ñ È±…ÍÌô‰Ù•É‘¥Ğˆø‘í‘…Ñ„¹•ÍÑ…‘½}Ñ•¹¥¼€ôôô€‰91}=5AIQ%=}9=}IMU1Q<ˆ€ü€‰Q!IL9<9QIL1AU	1%'M8ˆ€è€‰;1%M%L9<=5A1Q<‰ôğ½ Èø(€€€€€€ñ‘¥Ø±…ÍÌô‰É¥ˆø(€€€€€€€€‘íÑ•áÑ…É ‰E×¤½ÕÉÉ§Ìˆ°‘…Ñ„¹µ•¹Í…©”ñğ€‰9¼Í”É•ÕÁ•ËÌ½¹Ñ•¹¥‘¼ÍÕ™¥¥•¹Ñ”Á…É„½µÁ±•Ñ…È±„Ù•É¥™¥…§Í¸¸ˆ°ÑÉÕ”¥ô(€€€€€€€€‘íÑ•áÑ…É ‰M¥¸Ù•É•‘¥Ñ¼ˆ°€‰U¸™…±±¼‘”…•Í¼¹¼‘•µÕ•ÍÑÉ„ÅÕ”±„¥¹™½Éµ…§Í¸Í•„Ù•É‘…‘•É„¼™…±Í„¸ˆ°ÑÉÕ”¥ô(€€€€€€€€‘í9Õµ‰•È¡‘…Ñ„¹É•ÑÉå}…™Ñ•É}Í•½¹‘Ì¤øÀ€üÑ•áÑ…É ‰ÍÁ•É„…¹Ñ•Ì‘”É•¥¹Ñ•¹Ñ…Èˆ°°µ•¹½Ì€‘í5…Ñ ¹•¥°¡9Õµ‰•È¡‘…Ñ„¹É•ÑÉå}…™Ñ•É}Í•½¹‘Ì¤¥ôÍ•Õ¹‘½Ì¸9¼Í”É•…±¥é…Ë…¸É•¥¹Ñ•¹Ñ½Ì…ÕÑ½·…Ñ¥½Ì¸1„•ÍÁ•É„¹¼…É…¹Ñ¥é„ÅÕ”Q¡É•…‘ÌÁ•Éµ¥Ñ„•°…•Í¼‘•ÍÁ×¥Ì¹€°ÑÉÕ”¤€è€ˆ‰ô(€€€€€€€€‘í‘…Ñ„¹•ÍÑ…‘½}Ñ•¹¥¼€ôôô€‰91}=5AIQ%=}9=}IMU1Q<ˆ€üÑ•áÑ…É ‰Íµ¼½¹Ñ¥¹Õ…Èˆ°€‰‰É”±„ÁÕ‰±¥…§Í¸½É¥¥¹…°•¸Q¡É•…‘Ìä•±¥”ƒŠq½Á¥…È•¹±…—Št¸A•„…Å×´±„‘¥É•§Í¸ÅÕ”¥¹±Õå„€½Õ•¹Ñ„½Á½ÍĞ¿Š˜¼€½Õ•¹Ñ„½Ù¥‘•¼¿Š˜€¸M¤Q¡É•…‘ÌÙÕ•±Ù”„•¹ÑÉ•…ÈÕ¸•¹±…”€½Í¡…É”¿Š˜°Á•„•°Ñ•áÑ¼¼…‘©Õ¹Ñ„Õ¹„…ÁÑÕÉ„¸ˆ°ÑÉÕ”¤€è€ˆ‰ô(€€€€€€€€‘íÑ•áÑ…É ‰¹±…”½¹ÍÕ±Ñ…‘¼ˆ°‘…Ñ„¹ÕÉ±}½¹ÍÕ±Ñ…‘„ñğ‘…Ñ„¹•áÑÉ…¥½¹}•¹±…”ü¹ÕÉ±}™¥¹…°ñğ€ˆˆ°ÑÉÕ”¥ô(€€€€€€€€‘í±¥ÍÑ…É ‰¥…»ÍÍÑ¥¼‘”É•ÕÁ•É…§Í¸ˆ°‘…Ñ„¹±¥µ¥Ñ…¥½¹•Ìñğmt°ÑÉÕ”¥ô(€€€€€€ğ½‘¥Øø(€€€€€€‘í‘…Ñ„¹•ÍÑ…‘½}Ñ•¹¥¼€ôôô€‰91}=5AIQ%=}9=}IMU1Q<ˆ€ü€ñ‘¥Ø±…ÍÌô‰É•½Ù•Éäµ…Ñ¥½¹Ìˆøñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬ô‰½Á•¹½¹Ñ•¹Ñ5½‘…°¡±…ÍÑ	±½­•‘…Ñ„¤ˆùAHQaQ<0A=MPğ½‰ÕÑÑ½¸øñ‰ÕÑÑ½¸ÑåÁ”ô‰‰ÕÑÑ½¸ˆ½¹±¥¬ô‰™¥±•%¹ÁÕĞ¹±¥¬ ¤ˆù)U9QHAQUIğ½‰ÕÑÑ½¸øğ½‘¥Øù€€è€ˆ‰ô(€€€€ì(€€€±…ÍÑ	±½­•‘…Ñ„€ô‘…Ñ„ì(€€€É•ÍÕ±Ğ¹±…ÍÍ1¥ÍĞ¹…‘ ‰Ù¥Í¥‰±”ˆ¤ì(€€€É•ÍÕ±Ğ¹ÍÉ½±±%¹Ñ½Y¥•Ü¡í‰•¡…Ù¥½Èè‰Íµ½½Ñ ‰ô¤ì(€€€µ…å‰•I•ÅÕ•ÍÑ½¹Ñ•¹Ğ¡‘…Ñ„¤ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•É9½¡•­…‰±•±…¥´¡‘…Ñ„¤ì(€€€±…ÍÑ¹…±åÍ¥Í…Ñ„€ô‘…Ñ„ì(€€€½¹ÍĞÍ½ÕÉ•Ì€ôÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„¹™Õ•¹Ñ•Ì¤€ü‘…Ñ„¹™Õ•¹Ñ•Ì€èmtì(€€€½¹ÍĞ™…ÑÌ€ôÕ¹¥ÅÕ”¡‘…Ñ„¹¡•¡½Í}½µÁÉ½‰…‘½Ìñğmt¤ì(€€€½¹ÍĞ±¥µ¥Ñ…Ñ¥½¹Ì€ôÕ¹¥ÅÕ”¡‘…Ñ„¹±¥µ¥Ñ…¥½¹•Ìñğmt¤ì(€€€É•ÍÕ±Ğ¹¥¹¹•É!Q50€ô€(€€€€€€‘íÉ•Á½ÉÑM½ÕÉ” ¥ô(€€€€€€‘íÉ•¹‘•É¥¹…±Y•É‘¥Ğ¡‘…Ñ„°€‰9<YI%%	1ˆ¥ô(€€€€€€ñ È±…ÍÌô‰Ù•É‘¥Ğˆù±…Í¥™¥…§Í¸Ó¥¹¥„èM%8%I5'M8YI%%	1ğ½ Èø(€€€€€€ñ‘¥Ø±…ÍÌô‰µ•ÑÉ¥Ìˆø(€€€€€€€€ñÍÁ…¸±…ÍÌô‰µ•ÑÉ¥ŒˆùÉ•‘¥‰¥±¥‘…‘”±„…™¥Éµ…§Í¸è9¼…Á±¥„ğ½ÍÁ…¸ø(€€€€€€€€ñÍÁ…¸±…ÍÌô‰µ•ÑÉ¥Œˆù½¹™¥…¹é„‘•°…»…±¥Í¥Ìè9¼…±Õ±…‘„ğ½ÍÁ…¸ø(€€€€€€€€‘í‘…Ñ„¹‰ÕÍÅÕ•‘…}İ•‰}É•…±¥é…‘„€ôôôÑÉÕ”€ü€ñÍÁ…¸±…ÍÌô‰µ•ÑÉ¥ŒˆùéÍÅÕ•‘„İ•ˆèÉ•…±¥é…‘„ğ½ÍÁ…¸ù€€è€ˆ‰ô(€€€€€€ğ½‘¥Øø(€€€€€€ñ‘¥Ø±…ÍÌô‰É¥ˆø(€€€€€€€€‘íÑ•áÑ…É ‰E×¤Í”É•ÕÁ•ËÌˆ°‘…Ñ„¹É•ÍÕµ•¸°ÑÉÕ”¥ô(€€€€€€€€‘íÑ•áÑ…É ‰A½ÈÅ×¤¹¼¡…äÕ¸Ù•É•‘¥Ñ¼™…ÑÕ…°ˆ°‘…Ñ„¹É•ÍÁÕ•ÍÑ…}‘¥É•Ñ„°ÑÉÕ”¥ô(€€€€€€€€‘í±¥ÍÑ…É ‰…Ñ½ÌÓ¥¹¥½Ì½¹™¥Éµ…‘½Ìˆ°™…ÑÌ°ÑÉÕ”¥ô(€€€€€€€€‘íÑ•áÑ…É ‰½¹Ñ•áÑ¼¹••Í…É¥¼ˆ°‘…Ñ„¹½¹Ñ•áÑ¼°ÑÉÕ”¥ô(€€€€€€€€‘í±¥ÍÑ…É ‰E×¤™…±Ñ„Á…É„Ù•É¥™¥…Èˆ°±¥µ¥Ñ…Ñ¥½¹Ì°ÑÉÕ”¥ô(€€€€€€€€‘íÉ•¹‘•É1¥¹­½¹Ñ•áĞ¡‘…Ñ„¥ô(€€€€€€€€‘íÉ•¹‘•ÉM½ÕÉ•Ì¡Í½ÕÉ•Ì¥ô(€€€€€€ğ½‘¥Øø(€€€€€€‘í…Ñ¥½¹Ì ¥ô(€€€€ì(€€€É•ÍÕ±Ğ¹±…ÍÍ1¥ÍĞ¹…‘ ‰Ù¥Í¥‰±”ˆ¤ì(€€€É•ÍÕ±Ğ¹ÍÉ½±±%¹Ñ½Y¥•Ü¡ì‰•¡…Ù¥½Èè€‰Íµ½½Ñ ˆô¤ì(€€€Í•ÑQ¥µ•½ÕĞ¡ÍÁ•…­I•ÍÕ±Ñ%™9••‘•°€ÄÔÀ¤ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•È¡‘…Ñ„¤ì(€€€±…ÍÑ¹…±åÍ¥Í…Ñ„€ô‘…Ñ„ì(€€€¥˜€ (€€€€€‘…Ñ„¹•ÍÑ…‘¼€ôôô€‰Í¥¹}…•Í¼ˆñğ‘…Ñ„¹…¹…±¥é…‘¼€ôôô™…±Í”(€€€€¤ì(€€€€€É•¹‘•É	±½­•¡‘…Ñ„¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€¥˜€¡‘…Ñ„¹Ñ¥Á½}É•ÍÕ±Ñ…‘¼€ôôô€‰Í¥¹}…™¥Éµ…¥½¹}Ù•É¥™¥…‰±”ˆ¤ì(€€€€€É•¹‘•É9½¡•­…‰±•±…¥´¡‘…Ñ„¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô((€€€½¹ÍĞÍ½ÕÉ•Ì€ôÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„¹™Õ•¹Ñ•Ì¤(€€€€€€ü‘…Ñ„¹™Õ•¹Ñ•Ì(€€€€€€èmtì((€€€½¹ÍĞÉ•‘¥‰¥±¥Ñä€ôÁ•É•¹Ğ (€€€€€‘…Ñ„¹É•‘¥‰¥±¥‘…€üü(€€€€€‘…Ñ„¹É•‘¥‰¥±¥‘…‘}Á½É•¹Ñ…©”(€€€€¤ì((€€€½¹ÍĞ…¹…±åÍ¥Í½¹™¥‘•¹”€ôÁ•É•¹Ğ (€€€€€‘…Ñ„¹½¹™¥…¹é„€üü(€€€€€‘…Ñ„¹½¹™¥…¹é…}…¹…±¥Í¥Ì(€€€€¤ì((€€€½¹ÍĞ™…Ù½É…‰±”€ôÕ¹¥ÅÕ” (€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}…}™…Ù½Èñğ(€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}™…Ù½É…‰±”(€€€€¤ì((€€€½¹ÍĞÕ¹™…Ù½É…‰±”€ôÕ¹¥ÅÕ” (€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}•¹}½¹ÑÉ„ñğ(€€€€€‘…Ñ„¹•Ù¥‘•¹¥…}‘•Í™…Ù½É…‰±”(€€€€¤ì((€€€½¹ÍĞÙ•É¥™¥•‘…ÑÌ€ôÕ¹¥ÅÕ”¡l(€€€€€€¸¸¸¡‘…Ñ„¹¡•¡½Í}½µÁÉ½‰…‘½Ìñğmt¤°(€€€€€€¸¸¹™…Ù½É…‰±”°(€€€€€€¸¸¹Õ¹™…Ù½É…‰±”(€€€t¤ì(€€€½¹ÍĞ…Ñ½µ¥±…¥µÌ€ôÉÉ…ä¹¥ÍÉÉ…ä¡‘…Ñ„¹•Ù…±Õ…¥½¹}…™¥Éµ…¥½¹•Ì¤(€€€€€€ü‘…Ñ„¹•Ù…±Õ…¥½¹}…™¥Éµ…¥½¹•Ì¹µ…À¡¥Ñ•´€ôøì(€€€€€€€€€½¹ÍĞÍÕÁÁ½ÉĞ€ôÉÉ…ä¹¥ÍÉÉ…ä¡¥Ñ•´¹ÍÕÍÑ•¹Ñ½}‘¥É•Ñ¼¤€˜˜¥Ñ•´¹ÍÕÍÑ•¹Ñ½}‘¥É•Ñ¼¹±•¹Ñ (€€€€€€€€€€€€ü€MÕÍÑ•¹Ñ¼‘¥É•Ñ¼è€‘í¥Ñ•´¹ÍÕÍÑ•¹Ñ½}‘¥É•Ñ¼¹©½¥¸ ˆì€ˆ¥ô¹€(€€€€€€€€€€€€è€ˆM¥¸ÍÕÍÑ•¹Ñ¼‘¥É•Ñ¼¥‘•¹Ñ¥™¥…‘¼¸ˆì(€€€€€€€€€½¹ÍĞµ…ÑÉ¥à€ô¥Ñ•´¹™Õ•¹Ñ•}µ…ÑÉ¥è€ü€Õ•¹Ñ”µ…ÑÉ¥èè€‘í¥Ñ•´¹™Õ•¹Ñ•}µ…ÑÉ¥éô¹€€è€ˆˆì(€€€€€€€€€½¹ÍĞ±¥µ¥Ğ€ô¥Ñ•´¹±½}ÅÕ•}¹½}‘•µÕ•ÍÑÉ„€ü€9¼‘•µÕ•ÍÑÉ„è€‘í¥Ñ•´¹±½}ÅÕ•}¹½}‘•µÕ•ÍÑÉ…ô¹€€è€ˆˆì(€€€€€€€€€½¹ÍĞÉ•±…Ñ¥½¸€ô¥Ñ•´¹É•±…¥½¹}½¹}…™¥Éµ…¥½¸€ü€I•±…§Í¸è€‘í¥Ñ•´¹É•±…¥½¹}½¹}…™¥Éµ…¥½¹ô¹€€è€ˆˆì(€€€€€€€€€É•ÑÕÉ¸€‘í¥Ñ•´¹•ÍÑ…‘¼ñğ€‰9<5=MQI‰ôè€‘í¥Ñ•´¹…™¥Éµ…¥½¸ñğ€ˆ‰ô¸‘íÉ•±…Ñ¥½¹ô‘íÍÕÁÁ½ÉÑô‘íµ…ÑÉ¥áô‘í±¥µ¥Ñõ€ì(€€€€€€€ô¤(€€€€€€èmtì((€€€½¹ÍĞ±¥µ¥Ñ…Ñ¥½¹Ì€ôÕ¹¥ÅÕ”¡l(€€€€€€¸¸¸¡‘…Ñ„¹±¥µ¥Ñ…¥½¹•Ìñğmt¤°(€€€€€€¸¸¸¡‘…Ñ„¹¹½}½µÁÉ½‰…‘¼ñğmt¤(€€€t¤ì((€€€½¹ÍĞµ¥Í¥¹™½Éµ…Ñ¥½¹%¹‘¥…Ñ½ÉÌ€ôÕ¹¥ÅÕ” (€€€€€‘…Ñ„¹¥¹‘¥…‘½É•Í}‘•Í¥¹™½Éµ…¥½¸ñğ(€€€€€‘…Ñ„¹Í•¹…±•Í}‘•Í¥¹™½Éµ…¥½¸(€€€€¤ì((€€€½¹ÍĞÍÕµµ…Éä€ô(€€€€€‘…Ñ„¹É•ÍÕµ•¸ñğ(€€€€€‘…Ñ„¹É•ÍÕµ•¹}•©•ÕÑ¥Ù¼ñğ(€€€€€‘…Ñ„¹É•ÍÁÕ•ÍÑ…}‘¥É•Ñ„ñğ(€€€€€‘…Ñ„¹½¹±ÕÍ¥½¸ñğ(€€€€€€‰9¼Í”É•¥‰§ÌÕ¸É•ÍÕµ•¸‘•°…»…±¥Í¥Ì¸ˆì((€€€½¹ÍĞÍ½ÕÉ•½¹ÑÉ…ÍĞ€ô‰Õ¥±‘M½ÕÉ•½¹ÑÉ…ÍĞ¡‘…Ñ„°Í½ÕÉ•Ì¤ì((€€€½¹ÍĞÙ•É‘¥Ğ€ôMÑÉ¥¹œ (€€€€€‘…Ñ„¹Ù•É•‘¥Ñ¼ñğ€‰%9=I5'M8%9MU%%9Qˆ(€€€€¤¹Ñ½UÁÁ•É…Í” ¤ì((€€€½¹ÍĞ¥ÍAÉ½™¥±•Õ‘¥Ğ€ô‘…Ñ„ü¹Ñ¥Á½}É•ÍÕ±Ñ…‘¼€ôôô€‰…Õ‘¥Ñ½É¥…}‘•}ÁÕ‰±¥…¥½¹•Ìˆì(€€€½¹ÍĞÁÉ½™¥±•Ù…±Õ…Ñ¥½¸€ô‘…Ñ„ü¹•Ù…±Õ…¥½¹}ÁÕ‰±¥…¥½¹•Ìñğíôì(€€€½¹ÍĞ¥¹Ñ•¹Ñ¹…±åÍ¥Ì€ô‘…Ñ„ü¹…¹…±¥Í¥Í}¥¹Ñ•¹¥½¹…±¥‘…ñğíôì(€€€½¹ÍĞ¥¹Ñ•¹ÑQ•áĞ€ô¥¹Ñ•¹Ñ¹…±åÍ¥Ì¹±…Í¥™¥…¥½¸(€€€€€€ü€‘í¥¹Ñ•¹Ñ¹…±åÍ¥Ì¹±…Í¥™¥…¥½¹ô¸€‘í¥¹Ñ•¹Ñ¹…±åÍ¥Ì¹•áÁ±¥…¥½¸ñğ€ˆ‰ô‘í¥¹Ñ•¹Ñ¹…±åÍ¥Ì¹½‰©•Ñ¥Ù½}‘•±}‘…¹¼€ü€=‰©•Ñ¥Ù¼¥‘•¹Ñ¥™¥…‘¼è€‘í¥¹Ñ•¹Ñ¹…±åÍ¥Ì¹½‰©•Ñ¥Ù½}‘•±}‘…¹½ô¹€€è€ˆ‰õ€(€€€€€€è€ˆˆì(€€€½¹ÍĞÑ…É•ÑA…ÑÑ•É¸€ô‘…Ñ„ü¹…¹…±¥Í¥Í}Á…ÑÉ½¹}½‰©•Ñ¥Ù½Ìñğíôì(€€€½¹ÍĞ¥¹Ñ•É¥Ñå¹…±åÍ¥Ì€ô‘…Ñ„ü¹…¹…±¥Í¥Í}¥¹Ñ•É¥‘…‘}¥¹™½Éµ…Ñ¥Ù„ñğíôì(€€€½¹ÍĞÑ…É•ÑA…ÑÑ•É¹Q•áĞ€ôÑ…É•ÑA…ÑÑ•É¸¹±…Í¥™¥…¥½¸(€€€€€€ü€‘íÑ…É•ÑA…ÑÑ•É¸¹±…Í¥™¥…¥½¹ô¸=‰©•Ñ¥Ù¼ÁÉ¥¹¥Á…°è€‘íÑ…É•ÑA…ÑÑ•É¸¹½‰©•Ñ¥Ù½}ÁÉ¥¹¥Á…°ñğ€‰¹¼‘•Ñ•Éµ¥¹…‘¼‰ô¸€€¬(€€€€€€€AÕ‰±¥…¥½¹•Ì‘¥É¥¥‘…Ìè€‘í9Õµ‰•È¡Ñ…É•ÑA…ÑÑ•É¸¹ÁÕ‰±¥…¥½¹•Í}‘¥É¥¥‘…Ìñğ€À¥ô‘”€‘í9Õµ‰•È¡Ñ…É•ÑA…ÑÑ•É¸¹ÁÕ‰±¥…¥½¹•Í}É•Ù¥Í…‘…Ìñğ€À¥ôÉ•Ù¥Í…‘…Ì¸€€¬(€€€€€€€€‘íÑ…É•ÑA…ÑÑ•É¸¹Á•É¥½‘½}µÕ•ÍÑÉ„€üA•É¥½‘¼è€‘íÑ…É•ÑA…ÑÑ•É¸¹Á•É¥½‘½}µÕ•ÍÑÉ…ô¸€€è€ˆ‰ô‘íÑ…É•ÑA…ÑÑ•É¸¹™Õ¹‘…µ•¹Ñ¼ñğ€ˆ‰õ€(€€€€€€è€ˆˆì((€€€É•ÍÕ±Ğ¹¥¹¹•É!Q50€ô€(€€€€€€‘íÉ•Á½ÉÑM½ÕÉ” ¥ô(€€€€€€‘í¥ÍAÉ½™¥±•Õ‘¥Ğ€ü€ˆˆ€èÉ•¹‘•É¥¹…±Y•É‘¥Ğ¡‘…Ñ„°Ù•É‘¥Ğ¥ô(€€€€€€ñ È±…ÍÌô‰Ù•É‘¥Ğˆø(€€€€€€€€‘í¥ÍAÉ½™¥±•Õ‘¥Ğ€ü€‰U%Q=K5AU	1%%=9Lˆ€è±…Í¥™¥…§Í¸Ó¥¹¥„è€‘í•ÍŒ¡Ù•É‘¥Ğ¥õô(€€€€€€ğ½ Èø((€€€€€€ñ‘¥Ø±…ÍÌô‰µ•ÑÉ¥Ìˆø(€€€€€€€€‘í¥ÍAÉ½™¥±•Õ‘¥Ğ(€€€€€€€€€€ü€ñÍÁ…¸±…ÍÌô‰µ•ÑÉ¥ŒˆùQ•¹‘•¹¥½Í¥‘…½‰Í•ÉÙ…‘„è€‘í•ÍŒ¡ÁÉ½™¥±•Ù…±Õ…Ñ¥½¸¹¹¥Ù•±}Ñ•¹‘•¹¥½Í¥‘…ñğ€‰9<QI5%9ˆ¥ôğ½ÍÁ…¸ù€(€€€€€€€€€€è€ñÍÁ…¸±…ÍÌô‰µ•ÑÉ¥ŒˆùÉ•‘¥‰¥±¥‘…‘”±„…™¥Éµ…§Í¸è€‘íÉ•‘¥‰¥±¥Ñä€ôôô¹Õ±°€ü€‰9¼…Á±¥„ˆ€è€‘íÉ•‘¥‰¥±¥Ñåô•ôğ½ÍÁ…¸ùô((€€€€€€€€ñÍÁ…¸±…ÍÌô‰µ•ÑÉ¥Œˆø(€€€€€€€€€½¹™¥…¹é„‘•°…»…±¥Í¥Ìè€‘í…¹…±åÍ¥Í½¹™¥‘•¹”€ôôô¹Õ±°€ü€‰9¼…±Õ±…‘„ˆ€è€‘í…¹…±åÍ¥Í½¹™¥‘•¹•ô•ô(€€€€€€€€ğ½ÍÁ…¸ø((€€€€€€€€‘ì(€€€€€€€€€‘…Ñ„¹‰ÕÍÅÕ•‘…}İ•‰}É•…±¥é…‘„€ôôôÑÉÕ”(€€€€€€€€€€€€ü€ñÍÁ…¸±…ÍÌô‰µ•ÑÉ¥ŒˆùéÍÅÕ•‘„İ•ˆèÉ•…±¥é…‘„ğ½ÍÁ…¸ù€(€€€€€€€€€€€€è€ˆˆ(€€€€€€€ô(€€€€€€ğ½‘¥Øø((€€€€€€ñ‘¥Ø±…ÍÌô‰É¥ˆø(€€€€€€€€‘í¥ÍAÉ½™¥±•Õ‘¥Ğ€˜˜‘…Ñ„¹‰½Ñ}‘•Ñ•Ñ…‘¼€ôôôÑÉÕ”(€€€€€€€€€€üÑ•áÑ…É ‰±•ÉÑ„‘”‰½Ğˆ°‘…Ñ„¹…±•ÉÑ…}‰½Ğ°ÑÉÕ”¤(€€€€€€€€€€è€ˆ‰ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€¥ÍAÉ½™¥±•Õ‘¥Ğ€ü€‰Ù…±Õ…§Í¸‘”±…ÌÁÕ‰±¥…¥½¹•Ìˆ€è€‰áÁ±¥…§Í¸‘•°Ù•É•‘¥Ñ¼™¥¹…°ˆ°(€€€€€€€€€‘…Ñ„¹•áÁ±¥…¥½¹}Ù•É•‘¥Ñ½}™¥¹…°ñğ(€€€€€€€€€‘…Ñ„¹©ÕÍÑ¥™¥…¥½¹}Ù•É•‘¥Ñ½}™¥¹…°°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÑ•áÑ…É ‰I•ÍÕµ•¸•©•ÕÑ¥Ù¼ˆ°ÍÕµµ…Éä°ÑÉÕ”¥ô((€€€€€€€€‘íÉ•¹‘•ÉY¥‘•½Q½Á¥Ì¡‘…Ñ„¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€¥ÍAÉ½™¥±•Õ‘¥Ğ€ü€‰5Õ•ÍÑÉ„…¹…±¥é…‘„ˆ€è€‰™¥Éµ…§Í¸…¹…±¥é…‘„ˆ°(€€€€€€€€€‘…Ñ„¹…™¥Éµ…¥½¹}ÁÉ¥¹¥Á…°°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€€‰I•ÍÁÕ•ÍÑ„‘¥É•Ñ„ˆ°(€€€€€€€€€‘…Ñ„¹É•ÍÁÕ•ÍÑ…}‘¥É•Ñ„°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰™¥Éµ…¥½¹•ÌÍ•Á…É…‘…ÌäÍÕÍÑ•¹Ñ¼ˆ°(€€€€€€€€€…Ñ½µ¥±…¥µÌ°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰!•¡½Ìä•Ù¥‘•¹¥„½µÁÉ½‰…‘„ˆ°(€€€€€€€€€Ù•É¥™¥•‘…ÑÌ(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰Ù¥‘•¹¥„™…Ù½É…‰±”ˆ°(€€€€€€€€€™…Ù½É…‰±”(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰Ù¥‘•¹¥„‘•Í™…Ù½É…‰±”ˆ°(€€€€€€€€€Õ¹™…Ù½É…‰±”(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰9¼½µÁÉ½‰…‘¼¼±¥µ¥Ñ…‘¼ˆ°(€€€€€€€€€±¥µ¥Ñ…Ñ¥½¹Ì(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰%¹‘¥…‘½É•Ì‘”‘•Í¥¹™½Éµ…§Í¸ˆ°(€€€€€€€€€µ¥Í¥¹™½Éµ…Ñ¥½¹%¹‘¥…Ñ½ÉÌ°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÉ•¹‘•É½Õ¹ÑÕ‘¥Ğ¡¥¹Ñ•É¥Ñå¹…±åÍ¥Ì¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€€‰%¹Ñ•¹¥½¹…±¥‘…äÁ½Í¥‰±”‘‡Å¼ˆ°(€€€€€€€€€¥¹Ñ•¹ÑQ•áĞ°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€€‰A…ÑËÍ¸½¹ÑÉ„½‰¥•É¹½Ì¼Á•ÉÍ½¹…Ìˆ°(€€€€€€€€€Ñ…É•ÑA…ÑÑ•É¹Q•áĞ°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰©•µÁ±½ÌÅÕ”™Õ¹‘…µ•¹Ñ…¸•°Á…ÑËÍ¸ˆ°(€€€€€€€€€Ñ…É•ÑA…ÑÑ•É¸¹•©•µÁ±½Ì(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰I•ÕÉÍ½Ì¹…ÉÉ…Ñ¥Ù½ÌÉ•ÕÉÉ•¹Ñ•Ìˆ°(€€€€€€€€€Ñ…É•ÑA…ÑÑ•É¸¹É•ÕÉÍ½Í}É•ÕÉÉ•¹Ñ•Ì(€€€€€€€€¥ô((€€€€€€€€‘í±¥ÍÑ…É (€€€€€€€€€€‰Ù¥‘•¹¥„Í½‰É”±„¥¹Ñ•¹§Í¸ˆ°(€€€€€€€€€¥¹Ñ•¹Ñ¹…±åÍ¥Ì¹•Ù¥‘•¹¥„(€€€€€€€€¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€€‰½¹Ñ•áÑ¼¹••Í…É¥¼ˆ°(€€€€€€€€€‘…Ñ„¹½¹Ñ•áÑ¼°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÉ•¹‘•É)½ÕÉ¹…±¥ÍµÕ‘¥Ğ¡‘…Ñ„¹…Õ‘¥Ñ½É¥…}™Õ•¹Ñ•Í}Á•É¥½‘¥ÍÑ¥…Ì¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€€‰½¹ÑÉ…ÍÑ”‘”™Õ•¹Ñ•Ìˆ°(€€€€€€€€€Í½ÕÉ•½¹ÑÉ…ÍĞ°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€€‰½¹±ÕÍ§Í¸ˆ°(€€€€€€€€€‘…Ñ„¹½¹±ÕÍ¥½¸ñğ(€€€€€€€€€‘…Ñ„¹É•ÍÁÕ•ÍÑ…}‘¥É•Ñ„ñğ(€€€€€€€€€ÍÕµµ…Éä°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÑ•áÑ…É (€€€€€€€€€€‰‘Ù•ÉÑ•¹¥„ˆ°(€€€€€€€€€‘…Ñ„¹…‘Ù•ÉÑ•¹¥„°(€€€€€€€€€ÑÉÕ”(€€€€€€€€¥ô((€€€€€€€€‘íÉ•¹‘•É1¥¹­½¹Ñ•áĞ¡‘…Ñ„¥ô(€€€€€€€€‘íÉ•¹‘•ÉM½ÕÉ•Ì¡Í½ÕÉ•Ì¥ô(€€€€€€ğ½‘¥Øø((€€€€€€‘í…Ñ¥½¹Ì ¥ô(€€€€ì((€€€É•ÍÕ±Ğ¹±…ÍÍ1¥ÍĞ¹…‘ ‰Ù¥Í¥‰±”ˆ¤ì(€€€É•ÍÕ±Ğ¹ÍÉ½±±%¹Ñ½Y¥•Ü¡ì‰•¡…Ù¥½Èè€‰Íµ½½Ñ ˆô¤ì(€€€µ…å‰•I•ÅÕ•ÍÑ½¹Ñ•¹Ğ¡‘…Ñ„¤ì(€€€Í•ÑQ¥µ•½ÕĞ¡ÍÁ•…­I•ÍÕ±Ñ%™9••‘•°€ÄÔÀ¤ì(€ô((€™Õ¹Ñ¥½¸É•¹‘•ÉÉÉ½È¡µ•ÍÍ…”¤ì(€€€±…ÍÑ¹…±åÍ¥Í…Ñ„€ôì(€€€€€Ù•É•‘¥Ñ½}™¥¹…°è€‰9<YI%%	1ˆ°(€€€€€Ù•É•‘¥Ñ¼è€‰II=Hˆ°(€€€€€É•‘¥‰¥±¥‘…è€À°(€€€€€½¹™¥…¹é„è€À°(€€€€€É•ÍÕµ•¸èµ•ÍÍ…”ñğ€‰9¼™Õ”Á½Í¥‰±”½µÁ±•Ñ…È•°…»…±¥Í¥Ì¸ˆ°(€€€€€½¹±ÕÍ¥½¸èµ•ÍÍ…”ñğ€‰9¼™Õ”Á½Í¥‰±”½µÁ±•Ñ…È•°…»…±¥Í¥Ì¸ˆ(€€€ôì(€€€É•ÍÕ±Ğ¹¥¹¹•É!Q50€ô€(€€€€€€‘íÉ•Á½ÉÑM½ÕÉ” ¥ô(€€€€€€ñ È±…ÍÌô‰Ù•É‘¥Ğˆù9<MAU<=5A1QHğ½ Èø((€€€€€€ñ‘¥Ø±…ÍÌô‰É¥ˆø(€€€€€€€€ñ…ÉÑ¥±”±…ÍÌô‰…É™Õ±°ˆø(€€€€€€€€€€ñ Ìù•Ñ…±±”ğ½ Ìø(€€€€€€€€€€ñÀø‘í•ÍŒ¡µ•ÍÍ…”ñğ€‰ÉÉ½È‘•Í½¹½¥‘¼¸ˆ¥ôğ½Àø(€€€€€€€€ğ½…ÉÑ¥±”ø(€€€€€€ğ½‘¥Øø(€€€€ì((€€€É•ÍÕ±Ğ¹±…ÍÍ1¥ÍĞ¹…‘ ‰Ù¥Í¥‰±”ˆ¤ì(€€€É•ÍÕ±Ğ¹ÍÉ½±±%¹Ñ½Y¥•Ü¡ì‰•¡…Ù¥½Èè€‰Íµ½½Ñ ˆô¤ì(€€€Í•ÑQ¥µ•½ÕĞ¡ÍÁ•…­I•ÍÕ±Ñ%™9••‘•°€ÄÔÀ¤ì(€ô((€…Íå¹Œ™Õ¹Ñ¥½¸…¹…±åé”¡Ñ•áÑ=Ù•ÉÉ¥‘”€ô€ˆˆ°¥ÍMÕÁÁ±•µ•¹Ğ€ô™…±Í”¤ì(€€€½¹ÍĞ…¹‘¥‘…Ñ”€ôÑåÁ•½˜Ñ•áÑ=Ù•ÉÉ¥‘”€ôôô€‰ÍÑÉ¥¹œˆ€˜˜Ñ•áÑ=Ù•ÉÉ¥‘”€üÑ•áÑ=Ù•ÉÉ¥‘”€è¹•İÍ%¹ÁÕĞ¹Ù…±Õ”ì(€€€¥˜€ ½¡ÑÑÁÌüép½p¼ üéİİİp¸¤ıÑ¡É•…‘Íp¸ üé½µñ¹•Ğ¤ üép½ğ¤½¤¹Ñ•ÍĞ¡…¹‘¥‘…Ñ”¤€˜˜…Ñ”¹¹½Ü ¤€ğÑ¡É•…‘Í½½±‘½İ¹U¹Ñ¥°¤ì(€€€€€É•¹‘•É	±½­•¡íµ•¹Í…©”è‰Q¡É•…‘ÌÍ¥Õ”‘•¹ÑÉ¼‘•°Á•É¥½‘¼‘”•ÍÁ•É„¸9¼Í”•¹Ù§Ì½ÑÉ„Í½±¥¥ÑÕ¸ˆ°É•ÑÉå}…™Ñ•É}Í•½¹‘Ìé5…Ñ ¹•¥° ¡Ñ¡É•…‘Í½½±‘½İ¹U¹Ñ¥°µ…Ñ”¹¹½Ü ¤¤¼ÄÀÀÀ¥ô¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô(€€€½¹ÍĞÑ•áĞ€ô(€€€€€ÑåÁ•½˜Ñ•áÑ=Ù•ÉÉ¥‘”€ôôô€‰ÍÑÉ¥¹œˆ€˜˜Ñ•áÑ=Ù•ÉÉ¥‘”¹ÑÉ¥´ ¤(€€€€€€€€üÑ•áÑ=Ù•ÉÉ¥‘”¹ÑÉ¥´ ¤(€€€€€€€€è¹•İÍ%¹ÁÕĞ¹Ù…±Õ”¹ÑÉ¥´ ¤ì((€€€¥˜€ …¥ÍMÕÁÁ±•µ•¹Ğ¤ì(€€€€€±…ÍÑ=É¥¥¹…±EÕ•Éä€ôÑ•áĞì(€€€€€±…ÍÑI•ÍÕ±Ñ]…ÍMÕÁÁ±•µ•¹Ñ•€ô™…±Í”ì(€€€ô((€€€¥˜€ …Ñ•áĞ€˜˜€…Í•±•Ñ•‘¥±”¤ì(€€€€€…±•ÉĞ (€€€€€€€€‰ÍÉ¥‰”Õ¹„ÁÉ•Õ¹Ñ„°Á•„Õ¹„…™¥Éµ…§Í¸°Õ¸•¹±…”¼Í•±•¥½¹„Õ¸…É¡¥Ù¼¸ˆ(€€€€€€¤ì(€€€€€É•ÑÕÉ¸ì(€€€ô((€€€…¹…±åé•	ÕÑÑ½¸¹‘¥Í…‰±•€ôÑÉÕ”ì(€€€É•ÍÕ±Ğ¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰Ù¥Í¥‰±”ˆ¤ì(€€€ÍÑ…ÉÑAÉ½É•ÍÌ ¤ì(€€€ÑÉ…­UÍ…” ‰Ù•É¥™¥…¥½¹}¥¹¥¥…‘„ˆ°ì(€€€€€µ½‘¼èÍ•±•Ñ•‘5½‘”°(€€€€€•¹ÑÉ…‘„èÍ•±•Ñ•‘¥±”€ü€‰…É¡¥Ù¼ˆ€è€‰Ñ•áÑ½}½}•¹±…”ˆ°(€€€€€½µÁ±•µ•¹Ñ½}µ…¹Õ…°è	½½±•…¸¡¥ÍMÕÁÁ±•µ•¹Ğ¤(€€€ô¤ì((€€€ÑÉäì(€€€€€½¹ÍĞÁ…å±½…€ôì(€€€€€€€Ñ•áĞ°(€€€€€€€½¹ÍÕ±Ñ„èÑ•áĞ°(€€€€€€€µ½‘”èÍ•±•Ñ•‘5½‘”°(€€€€€€€Ñ…Í¬è€‰½µÁ±•Ñ¼ˆ(€€€€€ôì((€€€€€¥˜€¡Í•±•Ñ•‘¥±”¤ì(€€€€€€€Á…å±½…¹™¥±”€ôì(€€€€€€€€€¹…µ”èÍ•±•Ñ•‘¥±”¹¹…µ”°(€€€€€€€€€ÑåÁ”è(€€€€€€€€€€€Í•±•Ñ•‘¥±”¹ÑåÁ”ñğ(€€€€€€€€€€€€‰…ÁÁ±¥…Ñ¥½¸½½Ñ•ĞµÍÑÉ•…´ˆ°(€€€€€€€€€Í¥é”èÍ•±•Ñ•‘¥±”¹Í¥é”°(€€€€€€€€€‘…Ñ„è…İ…¥Ğ™¥±”ØĞ¡Í•±•Ñ•‘¥±”¤(€€€€€€€ôì(€€€€€€€¥˜€ ½Ù¥‘•½p¼¼¹Ñ•ÍĞ¡Í•±•Ñ•‘¥±”¹ÑåÁ”¤ñğ€½p¸¡µÀÑñİ•‰´¤½¤¹Ñ•ÍĞ¡Í•±•Ñ•‘¥±”¹¹…µ”¤¤ì(€€€€€€€€€Á…å±½…¹™¥±”¹™É…µ•Ì€ô…İ…¥ĞÍ…µÁ±•Y¥‘•½É…µ•Ì¡Í•±•Ñ•‘¥±”¤ì(€€€€€€€ô(€€€€€ô((€€€€€½¹ÍĞÉ•ÍÁ½¹Í”€ô…İ…¥Ğ™•Ñ  ˆ½…Á¤½…¹…±åé”ˆ°ì(€€€€€€€µ•Ñ¡½è€‰A=MPˆ°(€€€€€€€¡•…‘•ÉÌèì(€€€€€€€€€€‰½¹Ñ•¹ĞµQåÁ”ˆè€‰…ÁÁ±¥…Ñ¥½¸½©Í½¸ˆ(€€€€€€€ô°(€€€€€€€‰½‘äè)M=8¹ÍÑÉ¥¹¥™ä¡Á…å±½…¤(€€€€€ô¤ì(€€€€€½¹ÍĞÉ…Ü€ô…İ…¥ĞÉ•ÍÁ½¹Í”¹Ñ•áĞ ¤ì(€€€€€½¹ÍĞ½¹Ñ•¹ÑQåÁ”€ôÉ•ÍÁ½¹Í”¹¡•…‘•ÉÌ¹•Ğ ‰½¹Ñ•¹ĞµÑåÁ”ˆ¤ñğ€ˆˆì(€€€€€½¹ÍĞÁ…É••!Ñµ°€ô€½Ñ•áÑp½¡Ñµ°½¤¹Ñ•ÍĞ¡½¹Ñ•¹ÑQåÁ”¤ñğ€½yqÌ¨ğ¼¹Ñ•ÍĞ¡É…Ü¤ì(€€€€€±•Ğ‘…Ñ„ì(€€€€€ÑÉäì(€€€€€€€‘…Ñ„€ôÉ…Ü€ü)M=8¹Á…ÉÍ”¡É…Ü¤€èíôì(€€€€€ô…Ñ ì(€€€€€€€Ñ¡É½Ü¹•ÜÉÉ½È (€€€€€€€€€Á…É••!Ñµ°(€€€€€€€€€€€€ü€‰°Í•ÉÙ¥‘½È‘”…»…±¥Í¥ÌÉ•ÍÁ½¹‘§ÌÑ•µÁ½É…±µ•¹Ñ”½¸Õ¹„Ã…¥¹„‘”•ÉÉ½È¸%¹Ñ•¹Ñ„¹Õ•Ù…µ•¹Ñ”•¸Õ¹½ÌÍ•Õ¹‘½Ì¸ˆ(€€€€€€€€€€€€è€‰°Í•ÉÙ¥‘½È‘”…»…±¥Í¥Ì¹¼‘•Ù½±Ù§ÌÕ¹„É•ÍÁÕ•ÍÑ„Û…±¥‘„¸%¹Ñ•¹Ñ„¹Õ•Ù…µ•¹Ñ”•¸Õ¹½ÌÍ•Õ¹‘½Ì¸ˆ(€€€€€€€€¤ì(€€€€€ô((€€€€€¥˜€¡‘…Ñ„ü¹•ÍÑ…‘¼€ôôô€‰Í¥¹}…•Í¼ˆñğ‘…Ñ„ü¹…¹…±¥é…‘¼€ôôô™…±Í”¤ì(€€€€€€€¥˜€¡9Õµ‰•È¡‘…Ñ„¹É•ÑÉå}…™Ñ•É}Í•½¹‘Ì¤øÀ€˜˜€½¡ÑÑÁÌüép½p¼ üéİİİp¸¤ıÑ¡É•…‘Íp¸ üé½µñ¹•Ğ¤ üép½ğ¤½¤¹Ñ•ÍĞ¡Ñ•áĞ¤¤ì(€€€€€€€€€Ñ¡É•…‘Í½½±‘½İ¹U¹Ñ¥°õ5…Ñ ¹µ…à¡Ñ¡É•…‘Í½½±‘½İ¹U¹Ñ¥°±…Ñ”¹¹½Ü ¤­9Õµ‰•È¡‘…Ñ„¹É•ÑÉå}…™Ñ•É}Í•½¹‘Ì¤¨ÄÀÀÀ¤ì(€€€€€€€€€ÑÉäìÍ•ÍÍ¥½¹MÑ½É…”¹Í•Ñ%Ñ•´ ‰±Ù¥}Ñ¡É•…‘Í}É•ÑÉå}…Ğˆ±MÑÉ¥¹œ¡Ñ¡É•…‘Í½½±‘½İ¹U¹Ñ¥°¤¤ìô…Ñ íô(€€€€€€€ô(€€€€€€€•¹‘AÉ½É•ÍÌ¡™…±Í”¤ì(€€€€€€€ÑÉ…­UÍ…” ‰Ù•É¥™¥…¥½¹}Í¥¹}…•Í¼ˆ±í½‘¥½}¡ÑÑÀéÉ•ÍÁ½¹Í”¹ÍÑ…ÑÕÌ±µ½Ñ¥Ù¼éMÑÉ¥¹œ¡‘…Ñ„¹•ÍÑ…‘½}Ñ•¹¥½ñğ‰Í¥¹}…•Í¼ˆ¥ô¤ì(€€€€€€€É•¹‘•È¡‘…Ñ„¤ì(€€€€€€€É•ÑÕÉ¸ì(€€€€€ô(€€€€€¥˜€ …É•ÍÁ½¹Í”¹½¬¤ì(€€€€€€€½¹ÍĞ•ÉÉ½È€ô(€€€€€€€€€‘…Ñ„¹•ÉÉ½Èñğ(€€€€€€€€€‘…Ñ„¹‘•Ñ…±±”ñğ(€€€€€€€€€‘…Ñ„¹µ•ÍÍ…”ñğ(€€€€€€€€€!QQ@€‘íÉ•ÍÁ½¹Í”¹ÍÑ…ÑÕÍõ€ì((€€€€€€€Ñ¡É½Ü¹•ÜÉÉ½È (€€€€€€€€€ÑåÁ•½˜•ÉÉ½È€ôôô€‰ÍÑÉ¥¹œˆ(€€€€€€€€€€€€ü•ÉÉ½È(€€€€€€€€€€€€è)M=8¹ÍÑÉ¥¹¥™ä¡•ÉÉ½È¤(€€€€€€€€¤ì(€€€€€ô((€€€€€•¹‘AÉ½É•ÍÌ¡ÑÉÕ”¤ì(€€€€€ÑÉ…­UÍ…” ‰Ù•É¥™¥…¥½¹}½µÁ±•Ñ…‘„ˆ°ì(€€€€€€€•ÍÑ…‘¼èMÑÉ¥¹œ¡‘…Ñ„ü¹•ÍÑ…‘¼ñğ€‰…¹…±¥é…‘¼ˆ¤°(€€€€€€€Ù•É•‘¥Ñ¼èMÑÉ¥¹œ¡‘…Ñ„ü¹Ù•É•‘¥Ñ½}™¥¹…°ñğ‘…Ñ„ü¹Ù•É•‘¥Ñ¼ñğ€‰Í¥¹}Ù•É•‘¥Ñ¼ˆ¤(€€€€€ô¤ì(€€€€€É•¹‘•È¡‘…Ñ„¤ì(€€€ô…Ñ €¡•ÉÉ½È¤ì(€€€€€•¹‘AÉ½É•ÍÌ¡™…±Í”¤ì(€€€€€ÑÉ…­UÍ…” ‰Ù•É¥™¥…¥½¹}•ÉÉ½Èˆ°ìµ•¹Í…©”èMÑÉ¥¹œ¡•ÉÉ½Èü¹µ•ÍÍ…”ñğ€‰•ÉÉ½Èˆ¤ô¤ì(€€€€€½¹ÍĞÑ•¡¹¥…±5•ÍÍ…”€ôMÑÉ¥¹œ¡•ÉÉ½Èü¹µ•ÍÍ…”ñğ€ˆˆ¤ì(€€€€€½¹ÍĞ™É¥•¹‘±å5•ÍÍ…”€ô€½™…¥±•Ñ¼™•Ñ¡ñ¹•Ñİ½É­•ÉÉ½Éñ±½…™…¥±•‘ñ¹•Ñİ½É¬É•ÅÕ•ÍĞ™…¥±•½¤¹Ñ•ÍĞ¡Ñ•¡¹¥…±5•ÍÍ…”¤(€€€€€€€€ü€‰M”¥¹Ñ•ÉÉÕµÁ§Ì±„½¹•á§Í¸½¸•°Í•ÉÙ¥‘½È‘ÕÉ…¹Ñ”±„¥¹Ù•ÍÑ¥…§Í¸¸YÕ•±Ù”„ÁÕ±Í…È91%iHI%	%1%ìÑÔ•¹±…”Á•Éµ…¹•”•¸•°Õ…‘É¼‘”½¹ÍÕ±Ñ„¸ˆ(€€€€€€€€èÑ•¡¹¥…±5•ÍÍ…”ñğ€‰9¼Í”ÁÕ‘¼½µÁ±•Ñ…È±„¥¹Ù•ÍÑ¥…§Í¸¸ˆì(€€€€€É•¹‘•ÉÉÉ½È¡™É¥•¹‘±å5•ÍÍ…”¤ì(€€€ô™¥¹…±±äì(€€€€€…¹…±åé•	ÕÑÑ½¸¹‘¥Í…‰±•€ô™…±Í”ì(€€€ô(€ô(((€½¹ÍĞ¡½İ5½‘…°€ô‘½Õµ•¹Ğ¹•Ñ±•µ•¹Ñ	å% ‰¡½İ5½‘…°ˆ¤ì(€½¹ÍĞ½Á•¹!½İ5½‘…°€ô‘½Õµ•¹Ğ¹•Ñ±•µ•¹Ñ	å% ‰½Á•¹!½İ5½‘…°ˆ¤ì(€½¹ÍĞ±½Í•!½İ5½‘…°€ô‘½Õµ•¹Ğ¹•Ñ±•µ•¹Ñ	å% ‰±½Í•!½İ5½‘…°ˆ¤ì(€½¹ÍĞÍÑ…ÉÑY•É¥™¥…Ñ¥½¸€ô‘½Õµ•¹Ğ¹•Ñ±•µ•¹Ñ	å% ‰ÍÑ…ÉÑY•É¥™¥…Ñ¥½¸ˆ¤ì((€™Õ¹Ñ¥½¸Í¡½İ!½İ5½‘…° ¤ì(€€€¡½İ5½‘…°¹¡¥‘‘•¸€ô™…±Í”ì(€€€¡½İ5½‘…°¹ÍÑå±”¹‘¥ÍÁ±…ä€ô€‰™±•àˆì(€€€¡½İ5½‘…°¹±…ÍÍ1¥ÍĞ¹…‘ ‰Ù¥Í¥‰±”ˆ¤ì(€€€‘½Õµ•¹Ğ¹‰½‘ä¹±…ÍÍ1¥ÍĞ¹…‘ ‰µ½‘…°µ½Á•¸ˆ¤ì(€ô(€™Õ¹Ñ¥½¸¡¥‘•!½İ5½‘…° ¤ì(€€€¡½İ5½‘…°¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰Ù¥Í¥‰±”ˆ¤ì(€€€¡½İ5½‘…°¹ÍÑå±”¹‘¥ÍÁ±…ä€ô€‰¹½¹”ˆì(€€€¡½İ5½‘…°¹¡¥‘‘•¸€ôÑÉÕ”ì(€€€‘½Õµ•¹Ğ¹‰½‘ä¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰µ½‘…°µ½Á•¸ˆ¤ì(€ô(€½Á•¹!½İ5½‘…°¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°Í¡½İ!½İ5½‘…°¤ì(€±½Í•!½İ5½‘…°¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°¡¥‘•!½İ5½‘…°¤ì(€ÍÑ…ÉÑY•É¥™¥…Ñ¥½¸¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°€ ¤€ôøì(€€€¡¥‘•!½İ5½‘…° ¤ì(€€€‘½Õµ•¹Ğ¹•Ñ±•µ•¹Ñ	å% ‰¹•İÍ%¹ÁÕĞˆ¤¹™½ÕÌ ¤ì(€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½È ˆ¹İ½É­ÍÁ…”ˆ¤¹ÍÉ½±±%¹Ñ½Y¥•Ü¡ì‰•¡…Ù¥½Èè€‰Íµ½½Ñ ˆô¤ì(€ô¤ì(€¡½İ5½‘…°¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°•Ù•¹Ğ€ôøì¥˜€¡•Ù•¹Ğ¹Ñ…É•Ğ€ôôô¡½İ5½‘…°¤¡¥‘•!½İ5½‘…° ¤ìô¤ì((€™¥±•%¹ÁÕĞ¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰¡…¹”ˆ°€ ¤€ôø(€€€Í•Ñ¥±”¡™¥±•%¹ÁÕĞ¹™¥±•Ìü¹lÁt¤(€€¤ì((€É•µ½Ù•¥±”¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°€ ¤€ôø(€€€Í•Ñ¥±”¡¹Õ±°¤(€€¤ì((€l‰‘É…•¹Ñ•Èˆ°€‰‘É…½Ù•È‰t¹™½É… ¡•Ù•¹Ñ9…µ”€ôøì(€€€‘É½Ái½¹”¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È¡•Ù•¹Ñ9…µ”°•Ù•¹Ğ€ôøì(€€€€€•Ù•¹Ğ¹ÁÉ•Ù•¹Ñ•™…Õ±Ğ ¤ì(€€€€€‘É½Ái½¹”¹±…ÍÍ1¥ÍĞ¹…‘ ‰‘É…¥¹œˆ¤ì(€€€ô¤ì(€ô¤ì((€l‰‘É…±•…Ù”ˆ°€‰‘É½À‰t¹™½É… ¡•Ù•¹Ñ9…µ”€ôøì(€€€‘É½Ái½¹”¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È¡•Ù•¹Ñ9…µ”°•Ù•¹Ğ€ôøì(€€€€€•Ù•¹Ğ¹ÁÉ•Ù•¹Ñ•™…Õ±Ğ ¤ì(€€€€€‘É½Ái½¹”¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰‘É…¥¹œˆ¤ì(€€€ô¤ì(€ô¤ì((€‘É½Ái½¹”¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰‘É½Àˆ°•Ù•¹Ğ€ôøì(€€€Í•Ñ¥±”¡•Ù•¹Ğ¹‘…Ñ…QÉ…¹Í™•Èü¹™¥±•Ìü¹lÁt¤ì(€ô¤ì((€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½É±° ˆ¹µ½‘”ˆ¤¹™½É… ¡‰ÕÑÑ½¸€ôøì(€€€‰ÕÑÑ½¸¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°€ ¤€ôøì(€€€€€Í•±•Ñ•‘5½‘”€ô‰ÕÑÑ½¸¹‘…Ñ…Í•Ğ¹µ½‘”ì((€€€€€‘½Õµ•¹Ğ¹ÅÕ•ÉåM•±•Ñ½É±° ˆ¹µ½‘”ˆ¤¹™½É… ¡¥Ñ•´€ôøì(€€€€€€€¥Ñ•´¹±…ÍÍ1¥ÍĞ¹Ñ½±” (€€€€€€€€€€‰…Ñ¥Ù”ˆ°(€€€€€€€€€¥Ñ•´€ôôô‰ÕÑÑ½¸(€€€€€€€€¤ì(€€€€€ô¤ì(€€€ô¤ì(€ô¤ì(((€Í¡•‘Õ±•]•±½µ” ¤ì((€…¹…±åé•	ÕÑÑ½¸¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°€ ¤€ôø…¹…±åé” ¤¤ì(€Ù½¥•%¹ÁÕÑ	ÕÑÑ½¸¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°…Ñ¥Ù…Ñ•Y½¥•5½‘”¤ì(€ÍÁ•…­MÕµµ…Éå	ÕÑÑ½¸¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°ÍÁ•…­MÕµµ…Éä¤ì(€ÍÁ•…­Õ±±	ÕÑÑ½¸¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°ÍÁ•…­Õ±±I•Á½ÉĞ¤ì(€ÍÑ½ÁMÁ••¡	ÕÑÑ½¸¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°€ ¤€ôøì(€€€¥˜€ ‰ÍÁ••¡Må¹Ñ¡•Í¥Ìˆ¥¸İ¥¹‘½Ü¤İ¥¹‘½Ü¹ÍÁ••¡Må¹Ñ¡•Í¥Ì¹…¹•° ¤ì(€€€¥˜€¡¥Í1¥ÍÑ•¹¥¹œ€˜˜Ù½¥•I•½¹¥Ñ¥½¸¤Ù½¥•I•½¹¥Ñ¥½¸¹ÍÑ½À ¤ì(€€€Ù½¥•½¹Ù•ÉÍ…Ñ¥½¹MÑ…Ñ”€ô€‰¥‘±”ˆì(€€€Á•¹‘¥¹Y½¥•…±±‰…¬€ô¹Õ±°ì(€€€Ù½¥•MÑ…ÑÕÌ¹Ñ•áÑ½¹Ñ•¹Ğ€ô€‰1•ÑÕÉ„äµ¥ËÍ™½¹¼‘•Ñ•¹¥‘½Ì¸ˆì(€ô¤ì((€½¹Ñ•¹Ñ5½‘…±±½Í”¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°±½Í•½¹Ñ•¹Ñ5½‘…°¤ì(€½¹Ñ•¹Ñ5½‘…±…¹•°¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°±½Í•½¹Ñ•¹Ñ5½‘…°¤ì(€½¹Ñ•¹Ñ5½‘…±½¹Ñ¥¹Õ”¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°½¹Ñ¥¹Õ•]¥Ñ¡AÉ½Ù¥‘•‘½¹Ñ•¹Ğ¤ì(€½¹Ñ•¹Ñ5½‘…±ÑÑ… ¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°€ ¤€ôøì(€€€±½Í•½¹Ñ•¹Ñ5½‘…° ¤ì(€€€™¥±•%¹ÁÕĞ¹±¥¬ ¤ì(€ô¤ì((€½¹Ñ•¹Ñ5½‘…°¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰±¥¬ˆ°•Ù•¹Ğ€ôøì(€€€¥˜€¡•Ù•¹Ğ¹Ñ…É•Ğ€ôôô½¹Ñ•¹Ñ5½‘…°¤±½Í•½¹Ñ•¹Ñ5½‘…° ¤ì(€ô¤ì((€½¹Ñ•¹Ñ5½‘…±%¹ÁÕĞ¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰¥¹ÁÕĞˆ°€ ¤€ôøì(€€€½¹Ñ•¹Ñ5½‘…±ÉÉ½È¹±…ÍÍ1¥ÍĞ¹É•µ½Ù” ‰Ù¥Í¥‰±”ˆ¤ì(€ô¤ì((€½¹Ñ•¹Ñ5½‘…±%¹ÁÕĞ¹…‘‘Ù•¹Ñ1¥ÍÑ•¹•È ‰­•å‘½İ¸ˆ°•Ù•¹Ğ€ôøì(€€€¥˜€ ¡•Ù•¹Ğ¹ÑÉ±-•äñğ•Ù•¹Ğ¹µ•Ñ…-•ä¤€˜˜•Ù•¹Ğ¹­•ä€ôôô€‰¹Ñ•Èˆ¤ì(€€€€€½¹Ñ¥¹Õ•]¥Ñ¡AÉ½Ù¥‘•‘½¹Ñ•¹Ğ ¤ì(€€€ô(€ô¤ì((€İ¥¹‘½Ü¹½ÁåI•Á½ÉĞ€ô…Íå¹Œ€ ¤€ôøì(€€€ÑÉäì(€€€€€½¹ÍĞÉ•Á½ÉÑQ•áĞ€ô(€€€€€€€€‰Õ•¹Ñ”‘”½¹ÍÕ±Ñ„è1„Y•É‘…%¹Íµ½‘„ƒŠP¡ÑÑÁÌè¼½İİÜ¹±…Ù•É‘…‘¥¹½µ½‘„¹µà½q¹q¸ˆ€¬(€€€€€€€É•ÍÕ±Ğ¹¥¹¹•ÉQ•áĞ¹É•Á±…” ½yÕ•¹Ñ”‘”½¹ÍÕ±Ñ„émyq¹t©q¸ü½¤°€ˆˆ¤¹ÑÉ¥´ ¤ì(€€€€€…İ…¥Ğ¹…Ù¥…Ñ½È¹±¥Á‰½…É¹İÉ¥Ñ•Q•áĞ¡É•Á½ÉÑQ•áĞ¤ì(€€€€€…±•ÉĞ ‰%¹™½Éµ”½Á¥…‘¼¸ˆ¤ì(€€€ô…Ñ ì(€€€€€…±•ÉĞ ‰9¼Í”ÁÕ‘¼½Á¥…È…ÕÑ½·…Ñ¥…µ•¹Ñ”¸ˆ¤ì(€€€ô(€ôì((€İ¥¹‘½Ü¹Í¡…É•A…”€ô…Íå¹Œ‰ÕÑÑ½¸€ôøì(€€€½¹ÍĞÕÉ°€ô€‘í±½…Ñ¥½¸¹½É¥¥¹ô‘í±½…Ñ¥½¸¹Á…Ñ¡¹…µ•ô‘í±½…Ñ¥½¸¹Í•…É¡õ€ì(€€€½¹ÍĞ‘…Ñ„€ôì(€€€€€Ñ¥Ñ±”è€‰1„Y•É‘…%¹Íµ½‘„ˆ°(€€€€€Ñ•áĞè€‰9¼É•…Ì¸½µÁÉÕ•‰„±„¥¹™½Éµ…§Í¸½¸•Ù¥‘•¹¥„Ãé‰±¥„¸ˆ°(€€€€€ÕÉ°(€€€ôì(€€€½¹ÍĞ½É¥¥¹…°€ô‰ÕÑÑ½¸ü¹¥¹¹•É!Q50ñğ€ˆñÍÁ…¸…É¥„µ¡¥‘‘•¸õp‰ÑÉÕ•pˆûŠ\ğ½ÍÁ…¸øñÍÁ…¸ù=5AIQ%HMQC%9ğ½ÍÁ…¸øˆì(€€€½¹ÍĞ™••‘‰…¬€ôµ•ÍÍ…”€ôøì(€€€€€¥˜€ …‰ÕÑÑ½¸¤É•ÑÕÉ¸ì(€€€€€‰ÕÑÑ½¸¹Ñ•áÑ½¹Ñ•¹Ğ€ôµ•ÍÍ…”ì(€€€€€Í•ÑQ¥µ•½ÕĞ  ¤€ôøì‰ÕÑÑ½¸¹¥¹¹•É!Q50€ô½É¥¥¹…°ìô°€ÈÈÀÀ¤ì(€€€ôì(€€€½¹ÍĞ½Áå1¥¹¬€ô…Íå¹Œ€ ¤€ôøì(€€€€€¥˜€¡¹…Ù¥…Ñ½È¹±¥Á‰½…Éü¹İÉ¥Ñ•Q•áĞ¤É•ÑÕÉ¸¹…Ù¥…Ñ½È¹±¥Á‰½…É¹İÉ¥Ñ•Q•áĞ¡ÕÉ°¤ì(€€€€€½¹ÍĞ…É•„€ô‘½Õµ•¹Ğ¹É•…Ñ•±•µ•¹Ğ ‰Ñ•áÑ…É•„ˆ¤ì(€€€€€…É•„¹Ù…±Õ”€ôÕÉ°í…É•„¹ÍÑå±”¹Á½Í¥Ñ¥½¸€ô€‰™¥á•ˆí…É•„¹ÍÑå±”¹½Á…¥Ñä€ô€ˆÀˆì(€€€€€‘½Õµ•¹Ğ¹‰½‘ä¹…ÁÁ•¹‘¡¥±¡…É•„¤í…É•„¹Í•±•Ğ ¤ì(€€€€€½¹ÍĞ½Á¥•€ô‘½Õµ•¹Ğ¹•á•½µµ…¹ ‰½Áäˆ¤í…É•„¹É•µ½Ù” ¤ì(€€€€€¥˜€ …½Á¥•¤Ñ¡É½Ü¹•ÜÉÉ½È ‰9¼Í”ÁÕ‘¼½Á¥…È•°•¹±…”¸ˆ¤ì(€€€ôì(€€€ÑÉäì(€€€€€¥˜€¡¹…Ù¥…Ñ½È¹Í¡…É”¤ì(€€€€€€€…İ…¥Ğ¹…Ù¥…Ñ½È¹Í¡…É”¡‘…Ñ„¤ì(€€€€€€€™••‘‰…¬ ‹ŠrLC%9=5AIQ%ˆ¤ì(€€€€€ô•±Í”ì(€€€€€€€…İ…¥Ğ½Áå1¥¹¬ ¤ì(€€€€€€€™••‘‰…¬ ‹ŠrL91=A%<ˆ¤ì(€€€€€ô(€€€ô…Ñ €¡•ÉÉ½È¤ì(€€€€€¥˜€¡•ÉÉ½È¹¹…µ”€ôôô€‰‰½ÉÑÉÉ½Èˆ¤É•ÑÕÉ¸ì(€€€€€ÑÉäì(€€€€€€€…İ…¥Ğ½Áå1¥¹¬ ¤ì(€€€€€€€™••‘‰…¬ ‹ŠrL91=A%<ˆ¤ì(€€€€€ô…Ñ ì(€€€€€€€…±•ÉĞ ‰9¼Í”ÁÕ‘¼½µÁ…ÉÑ¥È±„Ã…¥¹„¸ˆ¤ì(€€€€€ô(€€€ô(€ôì((€İ¥¹‘½Ü¹Í¡…É•I•Á½ÉĞ€ô…Íå¹Œ€ ¤€ôøì(€€€ÑÉäì(€€€€€¥˜€¡¹…Ù¥…Ñ½È¹Í¡…É”¤ì(€€€€€€€…İ…¥Ğ¹…Ù¥…Ñ½È¹Í¡…É”¡ì(€€€€€€€€€Ñ¥Ñ±”è€‰1„Y•É‘…%¹Íµ½‘„ˆ°(€€€€€€€€€Ñ•áĞè(€€€€€€€€€€€€‰Õ•¹Ñ”‘”½¹ÍÕ±Ñ„è1„Y•É‘…%¹Íµ½‘„ƒŠP¡ÑÑÁÌè¼½İİÜ¹±…Ù•É‘…‘¥¹½µ½‘„¹µà½q¹q¸ˆ€¬(€€€€€€€€€€€É•ÍÕ±Ğ¹¥¹¹•ÉQ•áĞ¹É•Á±…” ½yÕ•¹Ñ”‘”½¹ÍÕ±Ñ„émyq¹t©q¸ü½¤°€ˆˆ¤¹ÑÉ¥´ ¤°(€€€€€€€€€ÕÉ°è±½…Ñ¥½¸¹¡É•˜(€€€€€€€ô¤ì(€€€€€ô•±Í”ì(€€€€€€€…İ…¥Ğ¹…Ù¥…Ñ½È¹±¥Á‰½…É¹İÉ¥Ñ•Q•áĞ (€€€€€€€€€Õ•¹Ñ”‘”½¹ÍÕ±Ñ„è1„Y•É‘…%¹Íµ½‘„ƒŠP¡ÑÑÁÌè¼½İİÜ¹±…Ù•É‘…‘¥¹½µ½‘„¹µà½q¹q¸‘íÉ•ÍÕ±Ğ¹¥¹¹•ÉQ•áĞ¹É•Á±…” ½yÕ•¹Ñ”‘”½¹ÍÕ±Ñ„émyq¹t©q¸ü½¤°€ˆˆ¤¹ÑÉ¥´ ¥õq¸‘í±½…Ñ¥½¸¹¡É•™õ€(€€€€€€€€¤ì((€€€€€€€…±•ÉĞ ‰%¹™½Éµ”ä•¹±…”½Á¥…‘½Ì¸ˆ¤ì(€€€€€ô(€€€ô…Ñ €¡•ÉÉ½È¤ì(€€€€€¥˜€¡•ÉÉ½È¹¹…µ”€„ôô€‰‰½ÉÑÉÉ½Èˆ¤ì(€€€€€€€…±•ÉĞ ‰9¼Í”ÁÕ‘¼½µÁ…ÉÑ¥È¸ˆ¤ì(€€€€€ô(€€€ô(€ôì(ğ½ÍÉ¥ÁĞø(ñÍÉ¥ÁĞ‘•™•ÈÍÉŒôˆ½}Ù•É•°½¥¹Í¥¡ÑÌ½ÍÉ¥ÁĞ¹©Ìˆøğ½ÍÉ¥ÁĞø(ğ½‰½‘äø(ğ½¡Ñµ°ø

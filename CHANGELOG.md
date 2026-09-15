@@ -1,3 +1,9 @@
+# Versión 1.21.1 - Recuperación guiada de enlaces rotos de Threads (2026-09-15)
+
+- Mantiene el principio de no emitir un veredicto cuando Threads no expone la publicación asociada a un enlace `/share/`.
+- Abre automáticamente un diálogo de recuperación para pegar el texto del post o adjuntar una captura sin perder la consulta original.
+- Añade acciones visibles junto al diagnóstico para reanudar la verificación y evita que el usuario quede en un callejón sin salida.
+
 # Versión 1.21.0 - Verificación de la deuda pública (2026-09-15)
 
 - Publica una verificación sustancial de la afirmación de que Morena duplicó en siete años la deuda acumulada del país.
