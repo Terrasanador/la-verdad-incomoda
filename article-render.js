@@ -27,6 +27,7 @@ function esc(value) {
 
 function articleHtml(article) {
   const canonical = `${SITE}/articulos/${encodeURIComponent(article.slug)}`;
+  const isFactCheck = Boolean(article.verdict && article.claim);
   const published = new Date(article.publishedAt || article.updatedAt).toLocaleDateString("es-MX", {
     year: "numeric", month: "long", day: "numeric", timeZone: "UTC"
   });
@@ -59,9 +60,9 @@ function articleHtml(article) {
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(article.title)} | La Verdad Incómoda</title>
 <meta name="description" content="${esc(article.summary || article.title)}">
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="${isFactCheck ? "index,follow,max-image-preview:large" : "noindex,follow"}">
 <link rel="canonical" href="${canonical}">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3013146050600948" crossorigin="anonymous"></script>
+${isFactCheck ? '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3013146050600948" crossorigin="anonymous"></script>' : ""}
 <meta property="og:type" content="article"><meta property="og:title" content="${esc(article.title)}">
 <meta property="og:description" content="${esc(article.summary || article.title)}"><meta property="og:url" content="${canonical}">
 <script type="application/ld+json">${JSON.stringify(schema).replace(/</g, "\\u003c")}</script>

@@ -32,6 +32,19 @@ test("thin legacy guides were deepened with unique practical material", () => {
   assert.equal(new Set(guides.map(article => deepening[article.slug])).size, guides.length);
 });
 
+test("sitemap promotes investigated claims while guides remain clearly separate", () => {
+  const sitemap = fs.readFileSync(new URL("./sitemap.xml", import.meta.url), "utf8");
+  const listing = fs.readFileSync(new URL("./articles.html", import.meta.url), "utf8");
+  const renderer = fs.readFileSync(new URL("./article-render.js", import.meta.url), "utf8");
+  for (const article of published) {
+    assert.match(listing, new RegExp(`/articulos/${article.slug}`), `${article.slug} is missing from the static library`);
+    assert.equal(sitemap.includes(`/articulos/${article.slug}<`), Boolean(article.verdict), `${article.slug} has wrong sitemap eligibility`);
+  }
+  assert.match(listing, /Verificaciones documentadas/);
+  assert.match(listing, /Guías prácticas/);
+  assert.match(renderer, /noindex,follow/);
+});
+
 test("monetizable pages include canonical, crawler and AdSense signals", () => {
   const articleRenderer = fs.readFileSync(new URL("./article-render.js", import.meta.url), "utf8");
   const listing = fs.readFileSync(new URL("./articles.html", import.meta.url), "utf8");

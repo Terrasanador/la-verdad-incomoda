@@ -385,3 +385,9 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 
 - Publicada una verificación original sobre el aseguramiento de unos 59 millones de litros y la diferencia entre incautación e identificación de su procedencia ilícita.
 - Biblioteca, tarjetas destacadas, sitemap, fechas y versión actualizados. Siete fuentes, incluido el parte estatal original y la conferencia pública.
+# Versión 1.22.1 - Biblioteca y portada centradas en verificaciones (2026-09-19)
+
+- La portada muestra tres investigaciones originales antes del analizador y enlaza directamente a la biblioteca.
+- La biblioteca distingue 11 verificaciones documentadas de 18 guías prácticas y ofrece el catálogo completo aun sin JavaScript.
+- El sitemap enumera únicamente las investigaciones originales entre las rutas de artículos; las guías siguen disponibles para lectores, con `noindex,follow` y sin cargar el código publicitario hasta una revisión editorial más profunda.
+- Añadido un control cruzado entre catálogo, sitemap y tipo de contenido.
