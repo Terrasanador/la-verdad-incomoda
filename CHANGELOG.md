@@ -381,3 +381,7 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - La interfaz reintenta una vez los fallos transitorios de red y sustituye “Failed to fetch” por una explicación útil en español.
 - La función de análisis admite hasta 300 segundos en plataformas Vercel compatibles.
 - El endpoint de salud informa si las claves de OpenAI y YouTube están configuradas, sin exponer sus valores.
+# Versión 1.22.0 - Aseguramiento de combustible en Guanajuato (2026-09-19)
+
+- Publicada una verificación original sobre el aseguramiento de unos 59 millones de litros y la diferencia entre incautación e identificación de su procedencia ilícita.
+- Biblioteca, tarjetas destacadas, sitemap, fechas y versión actualizados. Siete fuentes, incluido el parte estatal original y la conferencia pública.
