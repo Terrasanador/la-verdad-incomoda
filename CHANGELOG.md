@@ -391,3 +391,9 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - La biblioteca distingue 11 verificaciones documentadas de 18 guías prácticas y ofrece el catálogo completo aun sin JavaScript.
 - El sitemap enumera únicamente las investigaciones originales entre las rutas de artículos; las guías siguen disponibles para lectores, con `noindex,follow` y sin cargar el código publicitario hasta una revisión editorial más profunda.
 - Añadido un control cruzado entre catálogo, sitemap y tipo de contenido.
+# Versión 1.22.2 - Correcciones de atribución y propiedad (2026-09-19)
+
+- Revisadas las afirmaciones centrales de las once verificaciones publicadas; se corrigieron dos conclusiones que excedían la evidencia.
+- Rancho San Cristóbal: la diferencia de ubicación no prueba la titularidad de un segundo inmueble. Veredicto corregido a NO VERIFICABLE para la propiedad; el predio de Reynosa sí es distinto del de Guanajuato.
+- Somos México: la noticia sobre la orden de cambiar nombre, emblema y colores no afirmaba una cancelación acreditada. Veredicto corregido a CIERTO para el hecho documentado; se conserva el contexto jurídico.
+- Las dos modificaciones quedan registradas en cada artículo y en la política pública de correcciones; actualizados biblioteca, sitemap y versión.
