@@ -30,6 +30,19 @@ assert.equal(publishedPrediction.credibilidad, null);
 assert.deepEqual(publishedPrediction.evidencia_a_favor, []);
 assert.equal(publishedPrediction.evaluacion_afirmaciones[0].relacion_con_afirmacion, 'CIRCUNSTANCIAL');
 assert.equal(publishedPrediction.evaluacion_afirmaciones[1].estado, 'NO DEMOSTRADA');
+const missingPublicWarrant = normalizeProduction({
+  veredicto: 'ENGAÑOSO', veredicto_final: 'ENGAÑOSA',
+  afirmacion_principal: 'AMLO estará en la cárcel antes de que termine este sexenio.',
+  evaluacion_afirmaciones: [{
+    afirmacion: 'Existe evidencia pública de una orden de aprehensión o sentencia que confirme el encarcelamiento inminente de AMLO.',
+    estado: 'CONTRADICHA', relacion_con_afirmacion: 'DIRECTA',
+    sustento_directo: ['No se localizaron anuncios oficiales de órdenes de aprehensión.'],
+    fuente_matriz: 'https://example.com/pagina-no-pertinente'
+  }]
+});
+assert.equal(missingPublicWarrant.evaluacion_afirmaciones[0].estado, 'NO DEMOSTRADA');
+assert.deepEqual(missingPublicWarrant.evaluacion_afirmaciones[0].sustento_directo, []);
+assert.equal(missingPublicWarrant.evaluacion_afirmaciones[0].fuente_matriz, '');
 
 assert.equal(normalizeProduction({
   veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE',
