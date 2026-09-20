@@ -869,7 +869,7 @@ export function applyUnsupportedCriminalPredictionGuard(result) {
   if (!result || typeof result !== 'object') return result;
   const thesis = String(result.afirmacion_principal || result.afirmacion_analizada || '');
   const futurePrison = /(?:estar[aá]|terminar[aá]|ir[aá]|ser[aá]\s+(?:encarcelad[oa]|detenid[oa])|acabar[aá])[^.!?]{0,85}(?:c[aá]rcel|prisi[oó]n|pres[oa]|encarcelad[oa])|(?:c[aá]rcel|prisi[oó]n)[^.!?]{0,60}(?:antes de|este sexenio)/i.test(thesis);
-  if (!futurePrison || result.veredicto_final !== 'NO VERIFICABLE') return result;
+  if (!futurePrison || !['NO VERIFICABLE', 'ENGAÑOSA'].includes(result.veredicto_final)) return result;
   const conditional = /\b(?:podr[ií]a|quiz[aá]s?|tal vez|es posible|ser[ií]a posible|no descarto|probablemente)\b/i.test(thesis);
   if (conditional) return result;
   const directProof = (result.evaluacion_afirmaciones || []).some(item =>
@@ -888,9 +888,22 @@ export function applyUnsupportedCriminalPredictionGuard(result) {
     'La publicación presenta como segura una detención futura que no acredita. Las investigaciones de allegados y la repetición de la predicción no son prueba de un proceso contra la persona señalada.';
   result.resumen = result.respuesta_directa;
   result.conclusion = result.respuesta_directa;
-  result.evidencia_a_favor = (Array.isArray(result.evidencia_a_favor) ? result.evidencia_a_favor : []).filter(item =>
-    !/(?:video|audio|transcripci[oó]n|predicci[oó]n|declar[oó]|dijo|public[oó]|allegad|familiar|hij[oa]s?|empresa vinculad)/i.test(String(item))
-  );
+  // La circulación de la predicción y los procesos de terceros no acreditan
+  // el encarcelamiento futuro de la persona mencionada.
+  result.evidencia_a_favor = [];
+  for (const item of Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : []) {
+    if (/(?:afirm[oóa]|declar[oóa]|public[oóa]|difundi[oó]|dijo|titulares?|r[eé]plicas?)/i.test(String(item.afirmacion || '')) &&
+        item.estado === 'CONFIRMADA') {
+      item.relacion_con_afirmacion = 'CIRCUNSTANCIAL';
+      item.lo_que_no_demuestra = 'Que la predicción sea cierta ni que exista una orden o un proceso contra la persona mencionada.';
+    }
+    if (item.estado === 'CONTRADICHA' &&
+        /(?:garanticen|encarcelamiento futuro|estar[aá].{0,40}c[aá]rcel|antes de.{0,40}sexenio)/i.test(String(item.afirmacion || '')) &&
+        /(?:allegad|entorno|familiar|hij[oa]s?|no hay registro p[uú]blico|no se reporta|ausencia de comunicaci[oó]n)/i.test((item.sustento_directo || []).join(' '))) {
+      item.estado = 'NO DEMOSTRADA';
+      item.lo_que_no_demuestra = 'La falta de pruebas actuales no refuta por sí sola un desenlace futuro.';
+    }
+  }
   if (result.analisis_intencionalidad?.clasificacion === 'INDICIOS DE INTENCIÓN') {
     result.analisis_intencionalidad = {
       ...result.analisis_intencionalidad,
