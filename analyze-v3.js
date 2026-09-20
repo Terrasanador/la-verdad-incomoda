@@ -897,10 +897,12 @@ export function applyUnsupportedCriminalPredictionGuard(result) {
       item.relacion_con_afirmacion = 'CIRCUNSTANCIAL';
       item.lo_que_no_demuestra = 'Que la predicción sea cierta ni que exista una orden o un proceso contra la persona mencionada.';
     }
-    if (item.estado === 'CONTRADICHA' &&
-        /(?:garanticen|encarcelamiento futuro|estar[aá].{0,40}c[aá]rcel|antes de.{0,40}sexenio)/i.test(String(item.afirmacion || '')) &&
-        /(?:allegad|entorno|familiar|hij[oa]s?|no hay registro p[uú]blico|no se reporta|ausencia de comunicaci[oó]n)/i.test((item.sustento_directo || []).join(' '))) {
+    const preguntaPorPruebaDeDetencion = /(?:garanticen|encarcelamiento futuro|estar[aá].{0,40}c[aá]rcel|antes de.{0,40}sexenio|evidencia p[uú]blica.{0,80}(?:orden de aprehensi[oó]n|sentencia))/i.test(String(item.afirmacion || ''));
+    const soloAusenciaOContexto = /(?:allegad|entorno|familiar|hij[oa]s?|no hay registro p[uú]blico|no se reporta|ausencia de comunicaci[oó]n|no se localizaron|no se encontraron)/i.test((item.sustento_directo || []).join(' '));
+    if (item.estado === 'CONTRADICHA' && preguntaPorPruebaDeDetencion && soloAusenciaOContexto) {
       item.estado = 'NO DEMOSTRADA';
+      item.sustento_directo = [];
+      item.fuente_matriz = '';
       item.lo_que_no_demuestra = 'La falta de pruebas actuales no refuta por sí sola un desenlace futuro.';
     }
   }
