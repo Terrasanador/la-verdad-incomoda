@@ -8,10 +8,22 @@ const prisonPrediction = normalizeProduction({
   evidencia_a_favor: ['El video publicó la predicción', 'Una investigación de allegados'],
   analisis_intencionalidad: { clasificacion: 'INDICIOS DE INTENCIÓN', objetivo_del_dano: 'Desacreditar' }
 });
-assert.equal(prisonPrediction.veredicto_final, 'NO VERIFICABLE');
-assert.equal(prisonPrediction.etiqueta_evidencia, 'PREDICCIÓN SIN SUSTENTO');
+assert.equal(prisonPrediction.veredicto_final, 'ENGAÑOSA');
+assert.equal(prisonPrediction.veredicto, 'ENGAÑOSO');
+assert.equal(prisonPrediction.etiqueta_evidencia, 'PREDICCIÓN CATEGÓRICA SIN SUSTENTO');
 assert.deepEqual(prisonPrediction.evidencia_a_favor, []);
 assert.equal(prisonPrediction.analisis_intencionalidad.clasificacion, 'INTENCIÓN NO DEMOSTRADA');
+
+assert.equal(normalizeProduction({
+  veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE',
+  afirmacion_principal: 'AMLO podría estar en la cárcel antes de que termine el sexenio.',
+  evaluacion_afirmaciones: [{ afirmacion: 'Podría estar en la cárcel', estado: 'NO DEMOSTRADA', relacion_con_afirmacion: 'DIRECTA' }]
+}).veredicto_final, 'NO VERIFICABLE');
+assert.equal(normalizeProduction({
+  veredicto: 'FALSO', veredicto_final: 'FALSA',
+  afirmacion_principal: 'AMLO estará en la cárcel antes de que termine el sexenio.',
+  evaluacion_afirmaciones: [{ afirmacion: 'Estará en la cárcel', estado: 'CONTRADICHA', relacion_con_afirmacion: 'DIRECTA' }]
+}).veredicto_final, 'FALSA');
 
 function normalize(result) {
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
