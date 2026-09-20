@@ -2,7 +2,8 @@ import analyzeHandler from './analyze.js';
 
 // La Verdad Incómoda — guardas metodológicas V3.
 // Este adaptador refuerza el motor existente sin duplicar sus 120 KB de lógica.
-const POLICY = `\n\nREGLAS V3 OBLIGATORIAS PARA ESTA VERIFICACIÓN:\n1) Identifica primero la TESIS CENTRAL o acusación que el contenido intenta instalar.\n2) Separa hechos SUSTANTIVOS que prueban esa tesis de datos PERIFÉRICOS (nombre, cargo, fecha, parentesco, lugar, que alguien publicó la acusación, etc.). Un dato periférico verdadero NO convierte una acusación central falsa o no demostrada en PARCIALMENTE CIERTA.\n3) PARCIALMENTE CIERTA/PARCIALMENTE VERDADERO solo procede cuando al menos una proposición SUSTANTIVA de la tesis central está demostrada y otra proposición SUSTANTIVA está contradicha o no demostrada.\n4) Si la tesis central está materialmente contradicha por evidencia suficiente, usa FALSA/FALSO aunque contenga datos periféricos correctos.\n5) Si la tesis central atribuye órdenes secretas, encubrimiento, protección, conspiración, intención o causalidad y no existe evidencia suficiente para confirmarla o refutarla, usa NO VERIFICABLE/INFORMACIÓN INSUFICIENTE; no la premies con verdad parcial por hechos accesorios.\n6) AUDITA AL EMISOR: identifica la fuente matriz; revisa antecedentes públicos relevantes y una muestra verificable de publicaciones anteriores; registra patrón editorial, objetivos recurrentes, falsedades o correcciones documentadas, propiedad/financiamiento/conflictos solo si están sustentados, y orientación IZQUIERDA/DERECHA/MIXTA/NO DETERMINADA únicamente con evidencia acumulada. La orientación jamás decide la verdad.\n7) Distingue crítica legítima, opinión adversa, cobertura negativa recurrente, campaña de descrédito y ataque sistemático con desinformación. No atribuyas pago, coordinación o intención sin evidencia.\n8) Deduplica réplicas: varias notas que copian la misma fuente matriz cuentan como una sola cadena, no como corroboraciones independientes.\n9) Antes del veredicto responde internamente: ¿cuál es la tesis central?, ¿qué evidencia DIRECTA la prueba o contradice?, ¿qué datos son periféricos?, ¿quién origina la acusación y qué patrón verificable muestra su historial?\n10) Mantén presunción de inocencia y separa hechos procesales de culpabilidad.\n11) INVESTIGA EL ENTORNO COMPLETO antes de clasificar: localiza la fuente primaria, metodología, anexos o tablas, periodo comparable, alcance, limitaciones, reacciones oficiales y críticas técnicas pertinentes. No te limites a confirmar cómo circula el titular ni a resumir el texto proporcionado por el usuario.\n12) Para pruebas, índices, encuestas y estadísticas internacionales consulta obligatoriamente: nota del país o ficha oficial, informe y guía metodológica, significancia estadística, tamaño y cobertura de la muestra, cambios de población o elegibilidad y declaraciones públicas de quienes dirigen o elaboran la medición. Distingue una diferencia numérica de un cambio estadísticamente significativo.\n13) Verifica la exposición temporal: antes de atribuir un resultado a una reforma, gobierno, plan educativo o política, comprueba cuándo se aplicó, cuánto tiempo estuvieron expuestas las personas evaluadas y si la fuente primaria hace esa atribución causal.\n14) Evalúa por separado todo término fuerte del titular —por ejemplo "fracaso", "colapso", "milagro", "causó" o "demuestra"—. La existencia del titular o su repetición es CIRCUNSTANCIAL, no prueba directa de su verdad.\n15) NO VERIFICABLE se reserva para casos en los que, después de agotar la búsqueda, ninguna parte factual sustantiva de la tesis puede resolverse. Si hay componentes sustantivos confirmados y otros contradichos o no demostrados, usa PARCIALMENTE CIERTA; si los datos son reales pero el encuadre altera su significado, usa ENGAÑOSA.\n16) Un resultado NO VERIFICABLE debe tener credibilidad nula/no aplicable; nunca muestres simultáneamente "información insuficiente" y una credibilidad numérica alta.\n17) Si se solicitan comentarios de quienes dirigen, coordinan o elaboran una prueba, prioriza su intervención directa: presentación oficial, transcripción, video completo, artículo firmado o comunicado de la institución. Una nota periodística o un comunicado gubernamental que resuma sus palabras es evidencia secundaria y debe identificarse como tal; no inventes ni confirmes una cita que no recuperaste.\n18) Las palabras absolutas —"solo", "únicamente", "nunca", "siempre", "todos" o "ninguno"— requieren prueba del alcance total. Si la evidencia solo confirma algunos ejemplos o una reacción, no marques el absoluto como CONFIRMADO.\n19) No confundas dos preguntas: comprobar que una autoridad DIJO o ATRIBUYÓ algo no demuestra que la acusación editorial de que "culpa", "se excusa" o "busca un pretexto" sea cierta. Esas palabras atribuyen una estrategia o intención y requieren evidencia propia.\n20) En afirmaciones sobre PISA y COVID-19 contrasta obligatoriamente las intervenciones directas de la OCDE: la pandemia no puede ignorarse, pero no existe una relación simple entre cierres y tendencias, y parte del deterioro internacional empezó antes de 2020. No conviertas uno de esos matices en causa única.\n21) Si una frase mezcla una declaración comprobada con un encuadre acusatorio que omite causas concurrentes reconocidas por la fuente primaria, la categoría adecuada es ENGAÑOSA; usa FALSA solo cuando la tesis central esté contradicha de manera material.\n`;
+const POLICY = `\n\nREGLAS V3 OBLIGATORIAS PARA ESTA VERIFICACIÓN:\n1) Identifica primero la TESIS CENTRAL o acusación que el contenido intenta instalar.\n2) Separa hechos SUSTANTIVOS que prueban esa tesis de datos PERIFÉRICOS (nombre, cargo, fecha, parentesco, lugar, que alguien publicó la acusación, etc.). Un dato periférico verdadero NO convierte una acusación central falsa o no demostrada en PARCIALMENTE CIERTA.\n3) PARCIALMENTE CIERTA/PARCIALMENTE VERDADERO solo procede cuando al menos una proposición SUSTANTIVA de la tesis central está demostrada y otra proposición SUSTANTIVA está contradicha o no demostrada.\n4) Si la tesis central está materialmente contradicha por evidencia suficiente, usa FALSA/FALSO aunque contenga datos periféricos correctos.\n5) Si la tesis central atribuye órdenes secretas, encubrimiento, protección, conspiración, intención o causalidad y no existe evidencia suficiente para confirmarla o refutarla, usa NO VERIFICABLE/INFORMACIÓN INSUFICIENTE; no la premies con verdad parcial por hechos accesorios.\n6) AUDITA AL EMISOR: identifica la fuente matriz; revisa antecedentes públicos relevantes y una muestra verificable de publicaciones anteriores; registra patrón editorial, objetivos recurrentes, falsedades o correcciones documentadas, propiedad/financiamiento/conflictos solo si están sustentados, y orientación IZQUIERDA/DERECHA/MIXTA/NO DETERMINADA únicamente con evidencia acumulada. La orientación jamás decide la verdad.\n7) Distingue crítica legítima, opinión adversa, cobertura negativa recurrente, campaña de descrédito y ataque sistemático con desinformación. No atribuyas pago, coordinación o intención sin evidencia.\n8) Deduplica réplicas: varias notas que copian la misma fuente matriz cuentan como una sola cadena, no como corroboraciones independientes.\n9) Antes del veredicto responde internamente: ¿cuál es la tesis central?, ¿qué evidencia DIRECTA la prueba o contradice?, ¿qué datos son periféricos?, ¿quién origina la acusación y qué patrón verificable muestra su historial?\n10) Mantén presunción de inocencia y separa hechos procesales de culpabilidad.\n11) INVESTIGA EL ENTORNO COMPLETO antes de clasificar: localiza la fuente primaria, metodología, anexos o tablas, periodo comparable, alcance, limitaciones, reacciones oficiales y críticas técnicas pertinentes. No te limites a confirmar cómo circula el titular ni a resumir el texto proporcionado por el usuario.\n12) Para pruebas, índices, encuestas y estadísticas internacionales consulta obligatoriamente: nota del país o ficha oficial, informe y guía metodológica, significancia estadística, tamaño y cobertura de la muestra, cambios de población o elegibilidad y declaraciones públicas de quienes dirigen o elaboran la medición. Distingue una diferencia numérica de un cambio estadísticamente significativo.\n13) Verifica la exposición temporal: antes de atribuir un resultado a una reforma, gobierno, plan educativo o política, comprueba cuándo se aplicó, cuánto tiempo estuvieron expuestas las personas evaluadas y si la fuente primaria hace esa atribución causal.\n14) Evalúa por separado todo término fuerte del titular —por ejemplo "fracaso", "colapso", "milagro", "causó" o "demuestra"—. La existencia del titular o su repetición es CIRCUNSTANCIAL, no prueba directa de su verdad.\n15) NO VERIFICABLE se reserva para casos en los que, después de agotar la búsqueda, ninguna parte factual sustantiva de la tesis puede resolverse. Si hay componentes sustantivos confirmados y otros contradichos o no demostrados, usa PARCIALMENTE CIERTA; si los datos son reales pero el encuadre altera su significado, usa ENGAÑOSA.\n16) Un resultado NO VERIFICABLE debe tener credibilidad nula/no aplicable; nunca muestres simultáneamente "información insuficiente" y una credibilidad numérica alta.\n17) Si se solicitan comentarios de quienes dirigen, coordinan o elaboran una prueba, prioriza su intervención directa: presentación oficial, transcripción, video completo, artículo firmado o comunicado de la institución. Una nota periodística o un comunicado gubernamental que resuma sus palabras es evidencia secundaria y debe identificarse como tal; no inventes ni confirmes una cita que no recuperaste.\n18) Las palabras absolutas —"solo", "únicamente", "nunca", "siempre", "todos" o "ninguno"— requieren prueba del alcance total. Si la evidencia solo confirma algunos ejemplos o una reacción, no marques el absoluto como CONFIRMADO.\n19) No confundas dos preguntas: comprobar que una autoridad DIJO o ATRIBUYÓ algo no demuestra que la acusación editorial de que "culpa", "se excusa" o "busca un pretexto" sea cierta. Esas palabras atribuyen una estrategia o intención y requieren evidencia propia.\n20) En afirmaciones sobre PISA y COVID-19 contrasta obligatoriamente las intervenciones directas de la OCDE: la pandemia no puede ignorarse, pero no existe una relación simple entre cierres y tendencias, y parte del deterioro internacional empezó antes de 2020. No conviertas uno de esos matices en causa única.\n21) Si una frase mezcla una declaración comprobada con un encuadre acusatorio que omite causas concurrentes reconocidas por la fuente primaria, la categoría adecuada es ENGAÑOSA; usa FALSA solo cuando la tesis central esté contradicha de manera material.
+22) En encuestas electorales, separa (a) que una imagen circuló, (b) autenticidad/autorización de la encuestadora, (c) que un estudio fue realizado con método auditable, (d) resultado de ese estudio y (e) preferencias generales o pronóstico. Dos medios que reproducen el mismo gráfico NO son dos encuestas ni corroboran autoría, muestreo, entrevistas o margen de error. Busca publicación original verificable de la casa y ficha técnica completa; contrasta con estudios independientes de pregunta, universo y fecha comparables. Si falta el original y la tesis central es que los porcentajes son fiables, no uses CIERTA, MAYORMENTE VERDADERO ni credibilidad numérica alta; indica NO VERIFICABLE sin afirmar que la imagen sea falsificada. Diferencias entre encuestas no prueban que una sea falsa.\n`;
 
 const ATTRIBUTION_POLICY = `\nREGLAS DE ACUSACIONES Y ATRIBUCIÓN:\n22) Una fuente anónima es una atribución que debe evaluarse, no corroboración independiente. En acusaciones sobre salud, consumo de sustancias, delitos, vida privada o conducta actual de una persona, exige evidencia directa, pertinente e independientemente corroborada. La repetición de la acusación por portales o cuentas no satisface ese estándar.\n23) Si únicamente está confirmado que alguien DIJO, PUBLICÓ o REPITIÓ X, mientras X aparece como NO DEMOSTRADA o el propio informe reconoce que no hay pruebas verificables, nunca cierres con CIERTA ni PARCIALMENTE CIERTA. Usa NO VERIFICABLE si X no puede confirmarse ni refutarse; usa FALSA solo si evidencia suficiente contradice materialmente X.\n24) El historial de un emisor modifica cuánto contraste necesita su contenido, pero no decide el veredicto. Aplica el mismo método a Anabel Hernández, Atypical TV, Carlos Salinas Pliego, Chumel Torres, Luisito Comunica, Adela Micha, Latinus, cuentas oficialistas, autoridades y cualquier otra fuente. Documenta errores, correcciones y conflictos concretos; no uses etiquetas políticas como sustituto de pruebas.\n25) Cuando la fuente original califique su propia versión como supuesto, rumor, testimonio anónimo o no comprobado, conserva esa incertidumbre. No transformes ese lenguaje en un hecho confirmado.\n`;
 
@@ -917,6 +918,62 @@ export function applyUnsupportedCriminalPredictionGuard(result) {
   return result;
 }
 
+
+/**
+ * Un eco de la misma infografía no autentica a la encuestadora ni verifica
+ * entrevistas, muestreo, porcentajes o preferencias reales.
+ */
+export function applyUnverifiedPollGraphicGuard(result, input = '') {
+  if (!result || typeof result !== 'object') return result;
+  const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
+  const afirmacion = normalizarTexto([input, result.afirmacion_principal, result.resumen].join(' '));
+  const diagnostico = normalizarTexto([
+    result.explicacion_veredicto_final, result.respuesta_directa, result.resumen,
+    result.conclusion, result.contraste_fuentes,
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : []),
+    ...evaluaciones.map(item => item?.lo_que_no_demuestra)
+  ].join(' '));
+  const encuesta = /encuest|sondeo|medicion|radiografia partidista|preferencias electorales/.test(afirmacion);
+  const grafico = /infografia|grafico|imagen|porcentaj|resultado|liderazgo|puntera/.test(afirmacion);
+  const faltaOriginal = /(?:no (?:se |ha |hemos )?(?:encontro|localizo|obtuvo|consulto|accedio)|sin acceso|falta (?:de )?(?:acceso|enlace)|ausencia de).{0,90}(?:informe|reporte|documento|ficha|fuente|metodologia|cuestionario|original|encuestadora)/.test(diagnostico) ||
+    /(?:informe|reporte|documento|ficha|fuente|metodologia|cuestionario|original).{0,50}(?:no (?:se |ha |hemos )?(?:encontro|localizo|obtuvo|consulto|accedio)|no esta disponible)/.test(diagnostico);
+  if (!encuesta || !grafico || !faltaOriginal) return result;
+
+  const titular = normalizarTexto(result.afirmacion_principal);
+  // Si la pregunta era únicamente si determinados medios publicaron una imagen,
+  // esa circulación sí es verificable, aunque sus cifras no lo sean.
+  if (/^(?:si |es cierto que )?(?:medios|portales|la prensa).{0,65}(?:reprodujeron|publicaron|difundieron)/.test(titular)) return result;
+
+  result.veredicto_final = 'NO VERIFICABLE';
+  result.veredicto = 'INFORMACIÓN INSUFICIENTE';
+  result.credibilidad = null;
+  result.explicacion_veredicto_final =
+    'La circulación de una infografía atribuida a una encuestadora no comprueba que ésta la haya elaborado ni que las entrevistas, la ficha técnica y los porcentajes correspondan a un estudio auténtico y auditable. Las notas que copian la misma imagen no son corroboraciones independientes. Sin el original verificable y su metodología, no se puede validar la exactitud de las cifras ni presentarlas como panorama electoral comprobado. Otros sondeos comparables sirven de contraste, pero sus diferencias tampoco demuestran por sí mismas una falsificación.';
+  result.respuesta_directa =
+    'Solo está comprobada la circulación de la imagen; la autoría, el método y la fiabilidad de sus porcentajes no quedaron verificados mediante una fuente primaria auditable.';
+  result.conclusion = result.respuesta_directa;
+  for (const item of evaluaciones) {
+    const texto = normalizarTexto(item?.afirmacion);
+    if (/(?:encuest|sondeo|medicion|infografia|porcentaj|entrevist|metodolog|margen|partid|liderazg|preferencia)/.test(texto) &&
+        !/(?:fue difundid|fue reproducid|fue compartid|circulo|la nota publico)/.test(texto)) {
+      item.estado = 'NO DEMOSTRADA';
+      item.relacion_con_afirmacion = 'CIRCUNSTANCIAL';
+      item.lo_que_no_demuestra =
+        'La repetición de la infografía no verifica su autoría, las entrevistas, el margen de error ni la fiabilidad electoral de los porcentajes.';
+    }
+  }
+  const favor = Array.isArray(result.evidencia_a_favor) ? result.evidencia_a_favor : [];
+  result.evidencia_a_favor = favor.filter(item =>
+    !/(?:infografia|encuest|sondeo|porcentaj|agregador|medio|nota|portal)/.test(normalizarTexto(item))
+  );
+  result.limitaciones = [...new Set([
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : []),
+    'No se verificó directamente el informe original y la ficha metodológica de la encuestadora atribuida.',
+    'Las reproducciones periodísticas de una misma imagen no constituyen corroboración independiente.'
+  ])];
+  return result;
+}
+
 export function normalize(result, input = '') {
   if (!result || typeof result !== 'object') return result;
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
@@ -1010,7 +1067,7 @@ export function normalize(result, input = '') {
       if (result.veredicto === 'PARCIALMENTE VERDADERO') result.veredicto = 'VERDADERO';
     }
   }
-  return applyUnsupportedCriminalPredictionGuard(applyCriminalPact2018Guard(
+  return applyUnverifiedPollGraphicGuard(applyUnsupportedCriminalPredictionGuard(applyCriminalPact2018Guard(
     applyUnfoldedBallotFramingGuard(
       applyPisaPandemicFramingGuard(
         applyBookSynopsisEvidenceGuard(
@@ -1022,7 +1079,7 @@ export function normalize(result, input = '') {
       input
     ),
     input
-  ));
+  )), input);
 }
 
 export const config = { maxDuration: 300 };
