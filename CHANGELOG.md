@@ -1,3 +1,9 @@
+# Versión 1.23.0 - Verificación del antecedente de alertas celulares (2026-09-20)
+
+- Comprueba que el alertamiento celular a escala nacional en los simulacros fue anunciado y ensayado en 2025, pese a un subtítulo de 2026 que lo presenta como estreno.
+- Distingue alcance planeado de entrega individual demostrada y el primer ejercicio en sábado del primer uso del canal celular.
+- Añade seis fuentes enlazadas, una verificación original de 1,289 palabras, datos estructurados y listado/sitemap actualizados.
+
 # Versión 1.21.2 - Sinopsis y reseñas no prueban una acusación (2026-09-15)
 
 - Corrige el caso que declaró cierta una afirmación totalizante sobre infiltración criminal basándose en la tesis de un libro, su ficha editorial y reseñas.
