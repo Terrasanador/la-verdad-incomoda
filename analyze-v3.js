@@ -13,7 +13,7 @@ const POLITICAL_CONTEXT_POLICY = `\nREGLAS PARA CITAS Y ENCUADRES POLÍTICOS:\n3
 const BOOK_EVIDENCE_POLICY = `\nREGLAS PARA LIBROS, SINOPSIS Y RESEÑAS:\n41) Una ficha editorial, contraportada, página de venta, Google Books, reseña, entrevista promocional o resumen confirma que una obra y su tesis existen; no demuestra que sus acusaciones sean verdaderas. Nunca las uses como corroboración independiente del contenido del libro.\n42) Para validar una acusación factual de un libro exige la evidencia subyacente pertinente: documentos identificables, expedientes, resoluciones, registros, testimonios corroborados y contraste independiente. La reputación, premios o historial crítico de la autora tampoco sustituyen esa prueba.\n43) No uses un libro anterior para validar automáticamente otro libro, video o acusación posterior. Comprueba título, edición, fecha, pasaje y evidencia específica.\n44) Si no recuperaste la transcripción del video ni examinaste el pasaje íntegro del libro, no atribuyas documentos o testimonios concretos ni afirmes que la obra “demuestra” la tesis. Declara la limitación.\n45) Expresiones absolutas o totalizantes como “el crimen organizado se convirtió en el sistema mismo” o “las instituciones ocultan la realidad” requieren evidencia de ese alcance. Casos particulares de corrupción o infiltración no prueban una sustitución total del Estado ni una política unificada de ocultamiento. Si la publicación presenta ese salto como hecho y solo aporta sinopsis, reseñas o la voz de la propia autora, clasifica la afirmación categórica como FALSA.\n`;
 
 function addPolicy(req) {
-  const predictionPolicy = `\nPREDICCIONES PENALES: Separa «será encarcelado» de afirmaciones presentes sobre imputación u orden. Sin documentos directos califica la predicción como SIN SUSTENTO DOCUMENTAL y NO VERIFICABLE técnicamente; no la presentes como una posibilidad probada. Una investigación de familiares o allegados no es evidencia a favor de una futura condena de la persona señalada. Si una afirmación presente sobre una orden queda contradicha documentalmente, verifícala por separado. No atribuyas intención de mentir ni campaña a partir de una sola publicación.\n`;
+  const predictionPolicy = `\nPREDICCIONES PENALES: Separa «será encarcelado» de afirmaciones presentes sobre imputación u orden. Si se anuncia categóricamente como certeza un encarcelamiento futuro sin prueba directa, clasifica la PRESENTACIÓN como ENGAÑOSA y la predicción subyacente como NO DEMOSTRADA. Una hipótesis expresamente condicional puede permanecer NO VERIFICABLE. No clasifiques FALSA una predicción futura solo por ausencia de pruebas; si el plazo venció, comprueba el desenlace con evidencia antes de declararla FALSA. Una investigación de familiares o allegados no es evidencia a favor de una futura condena de la persona señalada. Si una afirmación presente sobre una orden queda contradicha documentalmente, verifícala por separado. No atribuyas intención de mentir ni campaña a partir de una sola publicación.\n`;
   const body = req.body || {};
   const keys = ['consulta','pregunta','question','query','text','input','content'];
   const key = keys.find(k => typeof body[k] === 'string' && body[k].trim());
@@ -870,16 +870,25 @@ export function applyUnsupportedCriminalPredictionGuard(result) {
   const thesis = String(result.afirmacion_principal || result.afirmacion_analizada || '');
   const futurePrison = /(?:estar[aá]|terminar[aá]|ir[aá]|ser[aá]\s+(?:encarcelad[oa]|detenid[oa])|acabar[aá])[^.!?]{0,85}(?:c[aá]rcel|prisi[oó]n|pres[oa]|encarcelad[oa])|(?:c[aá]rcel|prisi[oó]n)[^.!?]{0,60}(?:antes de|este sexenio)/i.test(thesis);
   if (!futurePrison || result.veredicto_final !== 'NO VERIFICABLE') return result;
+  const conditional = /\b(?:podr[ií]a|quiz[aá]s?|tal vez|es posible|ser[ií]a posible|no descarto|probablemente)\b/i.test(thesis);
+  if (conditional) return result;
   const directProof = (result.evaluacion_afirmaciones || []).some(item =>
     item?.relacion_con_afirmacion === 'DIRECTA' && item?.estado === 'CONFIRMADA' &&
     /(?:orden de aprehensi[oó]n|imputaci[oó]n formal|sentencia|expediente judicial)/i.test((item.sustento_directo || []).join(' '))
   );
   if (directProof) return result;
-  result.etiqueta_evidencia = 'PREDICCIÓN SIN SUSTENTO';
+
+  result.veredicto = 'ENGAÑOSO';
+  result.veredicto_final = 'ENGAÑOSA';
+  result.etiqueta_evidencia = 'PREDICCIÓN CATEGÓRICA SIN SUSTENTO';
   result.credibilidad = null;
-  result.explicacion_veredicto_final = 'La publicación anuncia como certeza un encarcelamiento futuro sin aportar una orden, imputación o documento judicial verificable contra la persona señalada. La predicción carece de sustento; su resultado futuro no puede declararse falso o verdadero antes del plazo indicado.';
-  result.respuesta_directa = 'No hay prueba directa presentada de que esa persona vaya a ser encarcelada. La afirmación es una predicción sin sustento documental; acusaciones o procesos de terceros no acreditan un procedimiento contra ella.';
-  result.evidencia_a_favor = (result.evidencia_a_favor || []).filter(item =>
+  result.explicacion_veredicto_final =
+    'Es engañoso anunciar como certeza que una persona será encarcelada antes de que termine el sexenio sin aportar una orden, imputación ni documento judicial pertinente. El desenlace futuro sigue sin demostrarse; la falta de evidencia pública actual, por sí sola, tampoco prueba que nunca ocurrirá.';
+  result.respuesta_directa =
+    'La publicación presenta como segura una detención futura que no acredita. Las investigaciones de allegados y la repetición de la predicción no son prueba de un proceso contra la persona señalada.';
+  result.resumen = result.respuesta_directa;
+  result.conclusion = result.respuesta_directa;
+  result.evidencia_a_favor = (Array.isArray(result.evidencia_a_favor) ? result.evidencia_a_favor : []).filter(item =>
     !/(?:video|audio|transcripci[oó]n|predicci[oó]n|declar[oó]|dijo|public[oó]|allegad|familiar|hij[oa]s?|empresa vinculad)/i.test(String(item))
   );
   if (result.analisis_intencionalidad?.clasificacion === 'INDICIOS DE INTENCIÓN') {
