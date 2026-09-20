@@ -954,10 +954,11 @@ export function applyUnverifiedPollGraphicGuard(result, input = '') {
   result.conclusion = result.respuesta_directa;
   for (const item of evaluaciones) {
     const texto = normalizarTexto(item?.afirmacion);
-    if (/(?:encuest|sondeo|medicion|infografia|porcentaj|entrevist|metodolog|margen|partid|liderazg|preferencia)/.test(texto) &&
+    if (/(?:encuest|sondeo|medicion|infografia|porcentaj|entrevist|metodolog|margen|partid|liderazg|preferencia|\\d+[.,]\\d+\\s*%|segun (?:ese|el) estudio)/.test(texto) &&
         !/(?:fue difundid|fue reproducid|fue compartid|circulo|la nota publico)/.test(texto)) {
       item.estado = 'NO DEMOSTRADA';
       item.relacion_con_afirmacion = 'CIRCUNSTANCIAL';
+      item.sustento_directo = [];
       item.lo_que_no_demuestra =
         'La repetición de la infografía no verifica su autoría, las entrevistas, el margen de error ni la fiabilidad electoral de los porcentajes.';
     }
