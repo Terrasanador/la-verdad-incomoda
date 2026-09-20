@@ -1,6 +1,18 @@
 import assert from 'node:assert/strict';
 import { applyPisaPandemicFramingGuard, normalize as normalizeProduction } from './analyze-v3.js';
 
+const prisonPrediction = normalizeProduction({
+  veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE', credibilidad: null,
+  afirmacion_principal: 'Andrés Manuel López Obrador estará en la cárcel antes de que termine este sexenio.',
+  evaluacion_afirmaciones: [{ afirmacion: 'Estará en la cárcel', estado: 'NO DEMOSTRADA', relacion_con_afirmacion: 'DIRECTA' }],
+  evidencia_a_favor: ['El video publicó la predicción', 'Una investigación de allegados'],
+  analisis_intencionalidad: { clasificacion: 'INDICIOS DE INTENCIÓN', objetivo_del_dano: 'Desacreditar' }
+});
+assert.equal(prisonPrediction.veredicto_final, 'NO VERIFICABLE');
+assert.equal(prisonPrediction.etiqueta_evidencia, 'PREDICCIÓN SIN SUSTENTO');
+assert.deepEqual(prisonPrediction.evidencia_a_favor, []);
+assert.equal(prisonPrediction.analisis_intencionalidad.clasificacion, 'INTENCIÓN NO DEMOSTRADA');
+
 function normalize(result) {
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
   const finalPorTecnico = {

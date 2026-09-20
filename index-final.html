@@ -1433,6 +1433,7 @@ async function sampleVideoFrames(file) {
     return `
       <div class="final-verdict-box">
         <span class="final-verdict-label">VEREDICTO FINAL</span>
+        ${data.etiqueta_evidencia ? `<p class="final-explanation"><strong>${esc(data.etiqueta_evidencia)}</strong></p>` : ""}
         <div class="final-verdict ${finalVerdictClass(finalVerdict)}">
           ${esc(finalVerdict)}
         </div>

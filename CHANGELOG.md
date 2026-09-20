@@ -397,3 +397,9 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - Rancho San Cristóbal: la diferencia de ubicación no prueba la titularidad de un segundo inmueble. Veredicto corregido a NO VERIFICABLE para la propiedad; el predio de Reynosa sí es distinto del de Guanajuato.
 - Somos México: la noticia sobre la orden de cambiar nombre, emblema y colores no afirmaba una cancelación acreditada. Veredicto corregido a CIERTO para el hecho documentado; se conserva el contexto jurídico.
 - Las dos modificaciones quedan registradas en cada artículo y en la política pública de correcciones; actualizados biblioteca, sitemap y versión.
+# Versión 1.22.3 - Predicciones penales sin sustento (2026-09-20)
+
+- Distingue expresamente una predicción de encarcelamiento sin sustento documental de una afirmación sobre un proceso penal presente.
+- Muestra «PREDICCIÓN SIN SUSTENTO» por encima del veredicto técnico NO VERIFICABLE cuando no se aporta prueba procesal directa; evita sugerir que la predicción está respaldada.
+- Retira del apartado favorable las publicaciones que solo repiten la predicción y las investigaciones de familiares o allegados.
+- No atribuye intención de mentir a un emisor por el tono de una sola publicación. Añade una prueba de regresión.
