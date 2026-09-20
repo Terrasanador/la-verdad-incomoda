@@ -13,6 +13,23 @@ assert.equal(prisonPrediction.veredicto, 'ENGAÑOSO');
 assert.equal(prisonPrediction.etiqueta_evidencia, 'PREDICCIÓN CATEGÓRICA SIN SUSTENTO');
 assert.deepEqual(prisonPrediction.evidencia_a_favor, []);
 assert.equal(prisonPrediction.analisis_intencionalidad.clasificacion, 'INTENCIÓN NO DEMOSTRADA');
+const publishedPrediction = normalizeProduction({
+  veredicto: 'ENGAÑOSO', veredicto_final: 'ENGAÑOSA', credibilidad: 5,
+  afirmacion_principal: 'Antes de que acabe este sexenio, Andrés Manuel López Obrador estará en la cárcel.',
+  evidencia_a_favor: [
+    'La cuenta difundió el titular.',
+    'Réplicas en redes atribuyen la predicción al canal.'
+  ],
+  evaluacion_afirmaciones: [
+    { afirmacion: 'Atypical Te Ve afirma categóricamente que AMLO estará en la cárcel.', estado: 'CONFIRMADA', relacion_con_afirmacion: 'DIRECTA' },
+    { afirmacion: 'Existen procesos que garanticen el encarcelamiento futuro de AMLO.', estado: 'CONTRADICHA', relacion_con_afirmacion: 'DIRECTA', sustento_directo: ['No se reportan órdenes contra personas del entorno.'] }
+  ]
+});
+assert.equal(publishedPrediction.veredicto_final, 'ENGAÑOSA');
+assert.equal(publishedPrediction.credibilidad, null);
+assert.deepEqual(publishedPrediction.evidencia_a_favor, []);
+assert.equal(publishedPrediction.evaluacion_afirmaciones[0].relacion_con_afirmacion, 'CIRCUNSTANCIAL');
+assert.equal(publishedPrediction.evaluacion_afirmaciones[1].estado, 'NO DEMOSTRADA');
 
 assert.equal(normalizeProduction({
   veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE',
