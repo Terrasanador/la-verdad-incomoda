@@ -1,5 +1,13 @@
 import assert from 'node:assert/strict';
-import { applyPisaPandemicFramingGuard, normalize as normalizeProduction } from './analyze-v3.js';
+import { MEDIA_FORENSICS_POLICY, applyPisaPandemicFramingGuard, normalize as normalizeProduction } from './analyze-v3.js';
+
+// La verificación multimedia debe distinguir autenticidad del archivo, contexto
+// atribuido y encuadre editorial añadido por quien republica.
+assert.match(MEDIA_FORENSICS_POLICY, /archivo real puede ser desinformación si se reutiliza con contexto falso/i);
+assert.match(MEDIA_FORENSICS_POLICY, /presentación oficial.{0,220}no es prueba automática/is);
+assert.match(MEDIA_FORENSICS_POLICY, /CONTEXTO FALSO \/ IMÁGENES REUTILIZADAS/);
+assert.match(MEDIA_FORENSICS_POLICY, /ANÁLISIS NO COMPLETADO/);
+assert.match(MEDIA_FORENSICS_POLICY, /“censura”.{0,180}tesis separadas/is);
 
 const prisonPrediction = normalizeProduction({
   veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE', credibilidad: null,
