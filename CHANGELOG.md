@@ -1,3 +1,9 @@
+# Versión 1.24.0 - Verificación de la autosuficiencia financiera de Pemex (2026-09-21)
+
+- Contrasta la promesa de que Pemex no necesitaría apoyo de Hacienda en 2027 con el paquete económico presentado para ese año.
+- Documenta la transferencia federal propuesta de 81,100 millones de pesos y distingue menor dependencia de autosuficiencia.
+- Añade siete fuentes, una verificación original de 1,451 palabras, datos estructurados y biblioteca/sitemap actualizados.
+
 # Versión 1.23.0 - Verificación del antecedente de alertas celulares (2026-09-20)
 
 - Comprueba que el alertamiento celular a escala nacional en los simulacros fue anunciado y ensayado en 2025, pese a un subtítulo de 2026 que lo presenta como estreno.
