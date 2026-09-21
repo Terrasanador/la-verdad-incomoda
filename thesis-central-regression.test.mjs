@@ -9,6 +9,31 @@ assert.match(MEDIA_FORENSICS_POLICY, /CONTEXTO FALSO \/ IMÁGENES REUTILIZADAS/)
 assert.match(MEDIA_FORENSICS_POLICY, /ANÁLISIS NO COMPLETADO/);
 assert.match(MEDIA_FORENSICS_POLICY, /“censura”.{0,180}tesis separadas/is);
 
+const videoSinFotogramas = normalizeProduction({
+  estado: 'analizado', veredicto_final: 'CIERTA', veredicto: 'VERDADERO',
+  credibilidad: 80, confianza: 63,
+  afirmacion_principal: 'Medios difundieron imágenes de Yemen como si fueran de Sinaloa y reutilizaron imágenes de Guerrero como si fueran de Chalco.',
+  resumen: 'Una nota y una conferencia describen los videos.',
+  evaluacion_afirmaciones: [{
+    afirmacion: 'Las imágenes de Chalco son las mismas que las de Guerrero.',
+    estado: 'CONFIRMADA', relacion_con_afirmacion: 'DIRECTA'
+  }],
+  limitaciones: ['Se procesó la pista de audio; no se inspeccionaron las imágenes del video.'],
+  extraccion_enlace: {
+    plataforma: 'TikTok',
+    url_final: 'https://www.tiktok.com/@ejemplo/video/123',
+    duracion_segundos: 291,
+    transcripcion_recuperada: false,
+    limitaciones: ['Se inspeccionó la miniatura pública del video como una sola imagen.']
+  }
+}, 'https://vt.tiktok.com/ejemplo/');
+assert.equal(videoSinFotogramas.estado, 'sin_acceso');
+assert.equal(videoSinFotogramas.estado_tecnico, 'AUDIOVISUAL_NO_INSPECCIONADO');
+assert.equal(videoSinFotogramas.veredicto_final, null);
+assert.equal(videoSinFotogramas.credibilidad, null);
+assert.equal(videoSinFotogramas.compartir_habilitado, false);
+assert.match(videoSinFotogramas.mensaje, /Análisis no completado/);
+
 const prisonPrediction = normalizeProduction({
   veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE', credibilidad: null,
   afirmacion_principal: 'Andrés Manuel López Obrador estará en la cárcel antes de que termine este sexenio.',
