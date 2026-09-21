@@ -977,6 +977,53 @@ export function applyUnverifiedPollGraphicGuard(result, input = '') {
   return result;
 }
 
+/**
+ * Impide emitir un veredicto visual cuando el propio informe reconoce que no
+ * examinó el video o sus fotogramas. La identificación del enlace, el audio,
+ * una miniatura o notas que describen el clip no sustituyen esa inspección.
+ */
+export function applyUninspectedMultimediaGuard(result, input = '') {
+  if (!result || typeof result !== 'object') return result;
+  const textoTesis = normalizarTexto([
+    input,
+    result.afirmacion_principal,
+    result.resumen,
+    result.respuesta_directa,
+    ...(Array.isArray(result.evaluacion_afirmaciones)
+      ? result.evaluacion_afirmaciones.map(item => item?.afirmacion)
+      : [])
+  ].join(' '));
+  const diagnostico = normalizarTexto([
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : []),
+    ...(Array.isArray(result?.extraccion_enlace?.limitaciones)
+      ? result.extraccion_enlace.limitaciones
+      : [])
+  ].join(' '));
+  const tesisVisual = /(?:video|imagenes?|fotogramas?|metraje|escenas?|grabacion).{0,120}(?:mism[oa]s?|corresponde|pertenece|reutiliz|duplicad|otro (?:lugar|pais|evento)|fuera de contexto|contexto falso)|(?:mism[oa]s?|reutiliz|duplicad|contexto falso).{0,120}(?:video|imagenes?|fotogramas?|metraje|escenas?)/.test(textoTesis);
+  const admiteFaltaVisual = /(?:no se|sin haber|no fue posible).{0,55}(?:inspeccion|analiz|revis|recuper).{0,55}(?:imagenes?|fotogramas?|video|audiovisual)|(?:solo|unicamente).{0,35}(?:miniatura|imagen previa)/.test(diagnostico);
+  if (!tesisVisual || !admiteFaltaVisual) return result;
+
+  return {
+    estado: 'sin_acceso',
+    analizado: false,
+    tipo_resultado: 'error_recuperacion',
+    estado_tecnico: 'AUDIOVISUAL_NO_INSPECCIONADO',
+    veredicto: null,
+    veredicto_final: null,
+    credibilidad: null,
+    confianza: null,
+    mensaje: 'Análisis no completado: el enlace fue identificado, pero no se recuperaron o inspeccionaron los fotogramas necesarios para comprobar sus afirmaciones visuales. Esto no indica que sean verdaderas ni falsas.',
+    fuentes: [],
+    compartir_habilitado: false,
+    url_consultada: result?.extraccion_enlace?.url_final || String(input || ''),
+    limitaciones: [
+      'No se verificó visualmente la secuencia completa ni la coincidencia entre fotogramas.',
+      'El audio, una miniatura, los metadatos y las notas que describen el video no sustituyen el examen audiovisual.'
+    ],
+    extraccion_enlace: result.extraccion_enlace || null
+  };
+}
+
 export function normalize(result, input = '') {
   if (!result || typeof result !== 'object') return result;
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
@@ -1070,7 +1117,7 @@ export function normalize(result, input = '') {
       if (result.veredicto === 'PARCIALMENTE VERDADERO') result.veredicto = 'VERDADERO';
     }
   }
-  return applyUnverifiedPollGraphicGuard(applyUnsupportedCriminalPredictionGuard(applyCriminalPact2018Guard(
+  return applyUninspectedMultimediaGuard(applyUnverifiedPollGraphicGuard(applyUnsupportedCriminalPredictionGuard(applyCriminalPact2018Guard(
     applyUnfoldedBallotFramingGuard(
       applyPisaPandemicFramingGuard(
         applyBookSynopsisEvidenceGuard(
@@ -1082,7 +1129,7 @@ export function normalize(result, input = '') {
       input
     ),
     input
-  )), input);
+  )), input), input);
 }
 
 export const config = { maxDuration: 300 };
@@ -1094,4 +1141,3 @@ export default async function handler(req, res) {
   res.json = payload => originalJson(normalize(payload, input));
   return analyzeHandler(req, res);
 }
-
