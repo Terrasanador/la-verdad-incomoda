@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {threadsLinkType,threadsCanonicalFromHtml,retryAfterSeconds,threadsRetryRemaining,resetThreadsCooldownsForTest,threadsReferenceOnly,incompleteThreadsResult} from './threads-access.js';
 import {extractPublicLink} from './extract-content.js';
-import {extractSocialPublicData} from './social-data.js';
+import {extractSocialPublicData,extractThreadsEmbedMedia} from './social-data.js';
 import handler from './analyze.js';
 
 const share='https://www.threads.com/share/example/';
@@ -69,8 +69,19 @@ test('Unresolved share never calls an incompatible provider endpoint',()=>withMo
   global.fetch=async()=>{throw new Error('No network request expected');};
   const result=await extractSocialPublicData(share);assert.equal(result.consultas_intentadas,0);assert.equal(result.tipo_enlace,'compartido_no_resuelto');
 }));
+test('Public Threads embed recovers the MP4 without social-provider credits',async()=>{
+  const mp4='https://scontent.example.cdninstagram.com/o1/v/t2/video.mp4?x=1&y=2';
+  const media=await extractThreadsEmbedMedia(post,{fetchImpl:async url=>{
+    assert.equal(new URL(url).pathname,'/@usuario/post/ABC_123/embed');
+    return new Response(`<video src="${mp4.replaceAll('&','&amp;')}"></video>`,{headers:{'content-type':'text/html'}});
+  }});
+  assert.equal(media.tipo,'video');
+  assert.equal(media.video_url,mp4);
+});
 test('Resolved post goes to post-details, not profile',()=>withMocks(async()=>{
-  global.fetch=async(url)=>{const target=new URL(url);assert.equal(target.pathname,'/v1/threads/post-details');assert.equal(target.searchParams.get('url'),post);return Response.json({text:'Recovered claim'});};
+  global.fetch=async(url)=>{const target=new URL(url);
+    if(target.hostname==='www.threads.com') return new Response('<html>Post without video</html>',{headers:{'content-type':'text/html'}});
+    assert.equal(target.pathname,'/v1/threads/post-details');assert.equal(target.searchParams.get('url'),post);return Response.json({text:'Recovered claim'});};
   const result=await extractSocialPublicData(post);assert.equal(result.consultas_exitosas,1);
 }));
 test('Direct 429 stops requests across Threads domains and surfaces wait',()=>withMocks(async()=>{
@@ -79,9 +90,13 @@ test('Direct 429 stops requests across Threads domains and surfaces wait',()=>wi
   const second=await extractPublicLink('https://www.threads.net/share/other');assert.equal(n,1);assert(second.retry_after_seconds>0);assert(threadsRetryRemaining()>0);
 }));
 test('Provider 429 exposes wait and does not retry',()=>withMocks(async()=>{
-  let n=0;global.fetch=async()=>{n++;return new Response('',{status:429,headers:{'retry-after':'90'}});};
+  let providerCalls=0;global.fetch=async url=>{
+    const target=new URL(url);
+    if(target.hostname==='www.threads.com') return new Response('<html>Post without video</html>',{headers:{'content-type':'text/html'}});
+    providerCalls++;return new Response('',{status:429,headers:{'retry-after':'90'}});
+  };
   const first=await extractSocialPublicData(post);assert.equal(first.retry_after_seconds,90);
-  const second=await extractSocialPublicData(post);assert.equal(n,1);assert(second.retry_after_seconds>0);
+  const second=await extractSocialPublicData(post);assert.equal(providerCalls,1);assert(second.retry_after_seconds>0);
 }));
 test('Handler continues to web search on unresolved or rate-limited Threads share',()=>withMocks(async()=>{
   for(const limited of [false,true]) {
