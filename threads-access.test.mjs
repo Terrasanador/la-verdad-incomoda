@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import {threadsLinkType,threadsCanonicalFromHtml,retryAfterSeconds,threadsRetryRemaining,resetThreadsCooldownsForTest,threadsReferenceOnly,incompleteThreadsResult} from './threads-access.js';
 import {extractPublicLink} from './extract-content.js';
-import {extractSocialPublicData,extractThreadsEmbedMedia} from './social-data.js';
+import {extractSocialPublicData,extractThreadsEmbedMedia,indexedThreadsEvidence} from './social-data.js';
 import handler from './analyze.js';
 
 const share='https://www.threads.com/share/example/';
@@ -77,6 +77,12 @@ test('Public Threads embed recovers the MP4 without social-provider credits',asy
   }});
   assert.equal(media.tipo,'video');
   assert.equal(media.video_url,mp4);
+});
+test('Indexed Threads context separates speaker identity from truth of accusations',()=>{
+  const evidence=indexedThreadsEvidence('https://www.threads.com/@jorgetejero/post/DdkTfdwElXL');
+  assert.equal(evidence.hablante_atribuida_por_copias_publicas,'Carolina Viggiano');
+  assert(evidence.fuentes_para_identificar_y_contextualizar.some(url=>url.includes('centralelectoral.ine.mx')));
+  assert.match(evidence.advertencias.join(' '),/no convierten en verdaderas acusaciones/i);
 });
 test('Resolved post goes to post-details, not profile',()=>withMocks(async()=>{
   global.fetch=async(url)=>{const target=new URL(url);
