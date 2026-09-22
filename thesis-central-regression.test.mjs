@@ -10,6 +10,7 @@ assert.match(MEDIA_FORENSICS_POLICY, /ANÁLISIS NO COMPLETADO/);
 assert.match(MEDIA_FORENSICS_POLICY, /“censura”.{0,180}tesis separadas/is);
 assert.match(MEDIA_FORENSICS_POLICY, /frase distintiva de 8 a 16 palabras/i);
 assert.match(MEDIA_FORENSICS_POLICY, /la grabación solo demuestra que fueron pronunciadas/i);
+assert.match(MEDIA_FORENSICS_POLICY, /no la tesis central/i);
 
 const videoSinFotogramas = normalizeProduction({
   estado: 'analizado', veredicto_final: 'CIERTA', veredicto: 'VERDADERO',
@@ -68,6 +69,26 @@ const threadsVideoConAudio = normalizeProduction({
 }, 'https://www.threads.com/@ejemplo/post/ABC');
 assert.notEqual(threadsVideoConAudio.estado_tecnico,'AUDIO_NO_TRANSCRITO');
 assert.equal(threadsVideoConAudio.veredicto_final,'ENGAÑOSA');
+
+const threadsSoloConfirmaLiteralidad = normalizeProduction({
+  estado:'analizado', veredicto_final:'CIERTA', veredicto:'VERDADERO',
+  credibilidad:95, confianza:63,
+  afirmacion_principal:'El video contiene audio donde una persona dice que es producto de una coalición.',
+  explicacion_veredicto_final:'La pista coincide con la cita, pero no se identificó al hablante ni el contexto.',
+  respuesta_directa:'Sí, el audio contiene esas frases.',
+  resumen:'Se confirmó únicamente la literalidad del audio.',
+  evaluacion_afirmaciones:[{
+    afirmacion:'El video contiene las frases transcritas.', estado:'CONFIRMADA',
+    relacion_con_afirmacion:'DIRECTA', sustento_directo:['Pista de audio procesada.'],
+    fuente_matriz:'https://www.threads.com/@ejemplo/post/ABC',
+    lo_que_no_demuestra:'No demuestra que las afirmaciones pronunciadas sean verdaderas.'
+  }],
+  cobertura_archivos:[{tipo:'video/mp4',limitaciones:['Se procesó la pista de audio; no se inspeccionaron las imágenes del video.']}],
+  extraccion_enlace:{plataforma:'Threads',tipo_enlace:'publicacion_con_video',transcripcion_recuperada:false}
+}, 'https://www.threads.com/@ejemplo/post/ABC');
+assert.equal(threadsSoloConfirmaLiteralidad.veredicto_final,'NO VERIFICABLE');
+assert.equal(threadsSoloConfirmaLiteralidad.veredicto,'INFORMACIÓN INSUFICIENTE');
+assert.equal(threadsSoloConfirmaLiteralidad.credibilidad,null);
 
 const prisonPrediction = normalizeProduction({
   veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE', credibilidad: null,
