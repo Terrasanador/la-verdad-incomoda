@@ -8,6 +8,8 @@ assert.match(MEDIA_FORENSICS_POLICY, /presentación oficial.{0,220}no es prueba 
 assert.match(MEDIA_FORENSICS_POLICY, /CONTEXTO FALSO \/ IMÁGENES REUTILIZADAS/);
 assert.match(MEDIA_FORENSICS_POLICY, /ANÁLISIS NO COMPLETADO/);
 assert.match(MEDIA_FORENSICS_POLICY, /“censura”.{0,180}tesis separadas/is);
+assert.match(MEDIA_FORENSICS_POLICY, /frase distintiva de 8 a 16 palabras/i);
+assert.match(MEDIA_FORENSICS_POLICY, /la grabación solo demuestra que fueron pronunciadas/i);
 
 const videoSinFotogramas = normalizeProduction({
   estado: 'analizado', veredicto_final: 'CIERTA', veredicto: 'VERDADERO',
