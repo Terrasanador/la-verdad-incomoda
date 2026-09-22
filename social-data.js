@@ -37,6 +37,35 @@ const INDEXED_SOCIAL_EXAMPLES = {
   }
 };
 
+// Evidencia pública complementaria para publicaciones de Threads cuyo video
+// puede recuperarse, pero cuya identidad o contexto no aparecen en el pie de
+// foto. Son pistas auditables para la investigación, nunca un veredicto fijo.
+const INDEXED_THREADS_EXAMPLES = {
+  'DdkTfdwElXL': {
+    transcripcion_clave: 'No me ofende que me digan PRIAN. Soy producto de una coalición. Me ofendería si me dijeran narcosenadora.',
+    hablante_atribuida_por_copias_publicas: 'Carolina Viggiano',
+    fuentes_para_identificar_y_contextualizar: [
+      'https://www.facebook.com/RadioFormulaMX/posts/no-me-ofende-que-me-digan-prian-soy-producto-de-una-coalici%C3%B3n-me-ofender%C3%ADa-si-me/1255003937088562/',
+      'https://www.instagram.com/reel/DdkNZ7ogYae/',
+      'https://centralelectoral.ine.mx/2024/04/05/consejo-local-del-ine-hidalgo-declara-improcedente-medidas-cautelares-en-contra-del-partido-morena/',
+      'https://pri.org.mx/elpartidodemexico/saladeprensa/Nota.aspx?y=37562'
+    ],
+    advertencias: [
+      'Las copias de Radio Fórmula ayudan a identificar a la hablante y la literalidad; no convierten en verdaderas acusaciones partidistas pronunciadas en el clip.',
+      'Las fuentes del INE y del PRI permiten comprobar por separado la postulación en coalición; no acreditan etiquetas criminales o retóricas.'
+    ]
+  }
+};
+
+export function indexedThreadsEvidence(rawUrl) {
+  try {
+    const match = new URL(rawUrl).pathname.match(/^\/@[^/]+\/(?:post|video)\/([^/]+)/i);
+    return match ? INDEXED_THREADS_EXAMPLES[match[1]] || null : null;
+  } catch {
+    return null;
+  }
+}
+
 export function indexedTikTokPhotoEvidence(rawUrl) {
   try {
     const match = new URL(rawUrl).pathname.match(/^\/@[^/]+\/photo\/(\d+)\/?$/i);
@@ -114,7 +143,8 @@ export async function extractThreadsEmbedMedia(rawUrl, {fetchImpl=fetch}={}) {
           video_url: videoUrl.toString(),
           url_embed: source.toString(),
           recuperacion: 'Vista pública embed de Threads',
-          advertencia: 'La URL del medio es temporal; la transcripción debe realizarse durante esta consulta.'
+          advertencia: 'La URL del medio es temporal; la transcripción debe realizarse durante esta consulta.',
+          evidencia_indexada: indexedThreadsEvidence(rawUrl)
         };
       } catch {}
     }
