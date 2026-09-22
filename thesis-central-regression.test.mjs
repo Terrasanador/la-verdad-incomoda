@@ -34,6 +34,39 @@ assert.equal(videoSinFotogramas.credibilidad, null);
 assert.equal(videoSinFotogramas.compartir_habilitado, false);
 assert.match(videoSinFotogramas.mensaje, /Análisis no completado/);
 
+// Un post de Threads con video nunca puede reducirse a su pie de foto. Si el
+// audio no fue transcrito, debe detenerse sin inventar una tesis ni veredicto.
+const threadsVideoSinAudio = normalizeProduction({
+  estado:'analizado', veredicto_final:'NO VERIFICABLE', veredicto:'INFORMACIÓN INSUFICIENTE',
+  credibilidad:null, confianza:null,
+  afirmacion_principal:'El PRI está tirando tremendos factos.',
+  resumen:'Solo se recuperó el texto acompañante.',
+  evaluacion_afirmaciones:[],
+  cobertura_archivos:[],
+  extraccion_enlace:{
+    plataforma:'Threads', tipo_enlace:'publicacion_con_video',
+    url_final:'https://www.threads.com/@jorgetejero/post/DdkTfdwElXL',
+    transcripcion_recuperada:false, limitaciones:['No se inspeccionó el audio.']
+  }
+}, 'https://www.threads.com/share/BAm9HWIIXE/');
+assert.equal(threadsVideoSinAudio.estado,'sin_acceso');
+assert.equal(threadsVideoSinAudio.estado_tecnico,'AUDIO_NO_TRANSCRITO');
+assert.equal(threadsVideoSinAudio.veredicto_final,null);
+assert.equal(threadsVideoSinAudio.credibilidad,null);
+assert.match(threadsVideoSinAudio.mensaje,/pie de foto no sustituye/i);
+
+const threadsVideoConAudio = normalizeProduction({
+  estado:'analizado', veredicto_final:'ENGAÑOSA', veredicto:'ENGAÑOSO',
+  credibilidad:35, confianza:78,
+  afirmacion_principal:'Afirmación pronunciada y contrastada.',
+  resumen:'Se transcribió la pista de audio y se verificó su tesis.',
+  evaluacion_afirmaciones:[],
+  cobertura_archivos:[{tipo:'video/mp4',limitaciones:['Se procesó la pista de audio; no se inspeccionaron las imágenes del video.']}],
+  extraccion_enlace:{plataforma:'Threads',tipo_enlace:'publicacion_con_video',transcripcion_recuperada:false}
+}, 'https://www.threads.com/@ejemplo/post/ABC');
+assert.notEqual(threadsVideoConAudio.estado_tecnico,'AUDIO_NO_TRANSCRITO');
+assert.equal(threadsVideoConAudio.veredicto_final,'ENGAÑOSA');
+
 const prisonPrediction = normalizeProduction({
   veredicto: 'INFORMACIÓN INSUFICIENTE', veredicto_final: 'NO VERIFICABLE', credibilidad: null,
   afirmacion_principal: 'Andrés Manuel López Obrador estará en la cárcel antes de que termine este sexenio.',
