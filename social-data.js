@@ -60,6 +60,70 @@ function platformFromUrl(rawUrl) {
   }
 }
 
+function decodeHtmlUrl(value='') {
+  return String(value)
+    .replace(/&amp;/g, '&')
+    .replace(/&#x26;/gi, '&')
+    .replace(/&#38;/g, '&');
+}
+
+/**
+ * Threads publica el video de cada post dentro de su vista /embed incluso
+ * cuando la página normal requiere JavaScript o el proveedor externo no tiene
+ * créditos. Esta ruta es pública y devuelve la URL temporal del MP4 alojado
+ * por Meta. Solo aceptamos hosts de medios de Meta y nunca URLs tomadas del
+ * texto del usuario.
+ */
+export async function extractThreadsEmbedMedia(rawUrl, {fetchImpl=fetch}={}) {
+  if (threadsLinkType(rawUrl) !== 'post') return null;
+  let source;
+  try {
+    source = new URL(rawUrl);
+  } catch {
+    return null;
+  }
+  const host = source.hostname.toLowerCase().replace(/^www\./, '');
+  if (!['threads.com','threads.net'].includes(host)) return null;
+  source.hostname = `www.${host}`;
+  source.pathname = `${source.pathname.replace(/\/+$/, '')}/embed`;
+  source.search = '';
+  source.hash = '';
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const response = await fetchImpl(source.toString(), {
+      headers: {
+        Accept: 'text/html,application/xhtml+xml',
+        'User-Agent': 'Mozilla/5.0 (compatible; LaVerdadIncomoda/1.0; +https://www.laverdadincomoda.mx/)'
+      },
+      redirect: 'follow',
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`Threads embed HTTP ${response.status}`);
+    const html = await response.text();
+    const matches = html.match(/https:\/\/[^"'<>\\\s]+?\.mp4(?:\?[^"'<>\\\s]*)?/gi) || [];
+    for (const encoded of matches) {
+      try {
+        const videoUrl = new URL(decodeHtmlUrl(encoded));
+        const mediaHost = videoUrl.hostname.toLowerCase();
+        const isMetaMedia = mediaHost.endsWith('.cdninstagram.com') || mediaHost.endsWith('.fbcdn.net');
+        if (!isMetaMedia || mediaHost.startsWith('static.')) continue;
+        return {
+          tipo: 'video',
+          video_url: videoUrl.toString(),
+          url_embed: source.toString(),
+          recuperacion: 'Vista pública embed de Threads',
+          advertencia: 'La URL del medio es temporal; la transcripción debe realizarse durante esta consulta.'
+        };
+      } catch {}
+    }
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function isProfileUrl(rawUrl, platform) {
   try {
     const url = new URL(rawUrl);
@@ -273,9 +337,25 @@ export async function extractSocialPublicData(rawUrl) {
       consultas_exitosas:0,consultas_intentadas:0,contenido_json:'',
       limitaciones:['No se consultó el proveedor: falta resolver el enlace de Threads a una publicación o perfil con dirección válida.']};
   }
-  if (!apiKey || !["threads", "tiktok", "facebook", "instagram", "twitter"].includes(platform)) return null;
+  if (!["threads", "tiktok", "facebook", "instagram", "twitter"].includes(platform)) return null;
 
   const profile = isProfileUrl(rawUrl, platform);
+  const threadsEmbed = platform === 'threads' && !profile
+    ? await extractThreadsEmbedMedia(rawUrl).catch(() => null)
+    : null;
+  if (!apiKey) {
+    if (!threadsEmbed) return null;
+    return {
+      proveedor: 'Threads público',
+      plataforma: platform,
+      tipo_enlace: 'publicacion_con_video',
+      consultas_exitosas: 1,
+      consultas_intentadas: 1,
+      contiene_video: true,
+      contenido_json: safeSerialize([{endpoint:'threads/embed',respuesta:threadsEmbed}]),
+      limitaciones: ['Se recuperó el MP4 desde la vista pública embed; los comentarios no estuvieron disponibles.']
+    };
+  }
 
   // Captapi expone endpoints de video, pero no uno equivalente para carruseles
   // /photo/. Enviar esas URL a video-details genera el falso diagnóstico de que
@@ -307,8 +387,11 @@ export async function extractSocialPublicData(rawUrl) {
     requests.map(([path, params]) => callCaptapi(apiKey, path, rawUrl, params))
   );
 
-  const recovered = [];
+  const recovered = threadsEmbed
+    ? [{endpoint:'threads/embed', respuesta:threadsEmbed}]
+    : [];
   const limitations = [];
+  if (threadsEmbed) limitations.push('El video se recuperó desde la vista pública embed de Threads; los comentarios dependen del proveedor social.');
   const retryAfter=Math.max(0,...settled.map(item=>item.status==='rejected'?Number(item.reason?.retryAfterSeconds)||0:0));
   if (platform === "facebook") limitations.push("Un resumen del proveedor es una síntesis automática, no una transcripción literal ni prueba de haber escuchado el audio. Contrastar con la publicación original y fuentes independientes.");
   if (platform === "twitter") limitations.push("Los datos del post incluyen texto y referencias multimedia; no equivalen a transcripción del audio de un video adjunto. La muestra del perfil no garantiza orden cronológico.");
@@ -372,7 +455,7 @@ export async function extractSocialPublicData(rawUrl) {
       plataforma: platform,
       tipo_enlace: profile ? "perfil" : "publicacion_o_pagina",
       consultas_exitosas: 0,
-      consultas_intentadas: requests.length,
+      consultas_intentadas: requests.length + (threadsEmbed ? 1 : 0),
       contenido_json: "",
       retry_after_seconds: retryAfter,
       limitaciones: limitations
@@ -382,9 +465,10 @@ export async function extractSocialPublicData(rawUrl) {
   return {
     proveedor: "Captapi",
     plataforma: platform,
-    tipo_enlace: profile ? "perfil" : "publicacion_o_pagina",
+    tipo_enlace: profile ? "perfil" : threadsEmbed ? "publicacion_con_video" : "publicacion_o_pagina",
     consultas_exitosas: recovered.length,
-    consultas_intentadas: requests.length,
+    consultas_intentadas: requests.length + (threadsEmbed ? 1 : 0),
+    contiene_video: Boolean(threadsEmbed),
     contenido_json: safeSerialize(recovered),
     limitaciones: limitations
   };
