@@ -1,3 +1,9 @@
+# Versión 1.25.0 - Verificación del falso robo de petróleo mediante ductos (2026-09-22)
+
+- Refuta la afirmación viral de una red de ductos clandestinos hacia Texas y una demanda mexicana por 15,000 millones de dólares.
+- Contrasta el registro de la Corte Internacional de Justicia, la conferencia presidencial reutilizada y dos operativos reales de combustibles.
+- Añade siete fuentes, una verificación original de 1,500 palabras y actualiza portada, biblioteca, sitemap y datos estructurados.
+
 # Versión 1.24.0 - Verificación de la autosuficiencia financiera de Pemex (2026-09-21)
 
 - Contrasta la promesa de que Pemex no necesitaría apoyo de Hacienda en 2027 con el paquete económico presentado para ese año.
