@@ -13,7 +13,7 @@ const POLITICAL_CONTEXT_POLICY = `\nREGLAS PARA CITAS Y ENCUADRES POLÍTICOS:\n3
 
 const BOOK_EVIDENCE_POLICY = `\nREGLAS PARA LIBROS, SINOPSIS Y RESEÑAS:\n41) Una ficha editorial, contraportada, página de venta, Google Books, reseña, entrevista promocional o resumen confirma que una obra y su tesis existen; no demuestra que sus acusaciones sean verdaderas. Nunca las uses como corroboración independiente del contenido del libro.\n42) Para validar una acusación factual de un libro exige la evidencia subyacente pertinente: documentos identificables, expedientes, resoluciones, registros, testimonios corroborados y contraste independiente. La reputación, premios o historial crítico de la autora tampoco sustituyen esa prueba.\n43) No uses un libro anterior para validar automáticamente otro libro, video o acusación posterior. Comprueba título, edición, fecha, pasaje y evidencia específica.\n44) Si no recuperaste la transcripción del video ni examinaste el pasaje íntegro del libro, no atribuyas documentos o testimonios concretos ni afirmes que la obra “demuestra” la tesis. Declara la limitación.\n45) Expresiones absolutas o totalizantes como “el crimen organizado se convirtió en el sistema mismo” o “las instituciones ocultan la realidad” requieren evidencia de ese alcance. Casos particulares de corrupción o infiltración no prueban una sustitución total del Estado ni una política unificada de ocultamiento. Si la publicación presenta ese salto como hecho y solo aporta sinopsis, reseñas o la voz de la propia autora, clasifica la afirmación categórica como FALSA.\n`;
 
-export const MEDIA_FORENSICS_POLICY = `\nREGLAS DE FORENSIA VISUAL Y CONTEXTO MULTIMEDIA:\n46) En imágenes y videos verifica dos capas por separado: autenticidad del archivo o escena y exactitud del contexto atribuido (lugar, fecha, evento y participantes). Un archivo real puede ser desinformación si se reutiliza con contexto falso.\n47) Resuelve primero el enlace canónico y recupera el audiovisual. Analiza audio y fotogramas representativos; la descripción, miniatura, metadatos, OCR o transcripción solos no bastan para afirmar que dos videos son iguales ni que una escena ocurrió donde se dice.\n48) Localiza la publicación más antigua comprobable y compara elementos visuales invariantes —encuadre, edificios, daños, vehículos, sombras, movimientos y secuencia—. Registra por separado: contexto alegado, contexto original, fecha más antigua localizada y fuente matriz.\n49) Una presentación oficial, conferencia gubernamental, partido, medio o verificador constituye una pista y una fuente primaria de lo que esa entidad afirmó; no es prueba automática de su desmentido. Abre y contrasta los materiales originales que exhibe, y busca corroboración independiente cuando sea posible.\n50) Cuando una coincidencia de fotogramas y una fuente anterior demuestren que el material pertenece a otro lugar, fecha o evento, clasifica la atribución concreta como FALSA o ENGAÑOSA según el alcance, y usa la etiqueta CONTEXTO FALSO / IMÁGENES REUTILIZADAS. No declares falso el acontecimiento general si solo quedó refutado el audiovisual usado como prueba.\n51) Distingue el contenido fuente de las sobreimpresiones, narración, música, emojis y montaje añadidos por quien republica. Términos como “censura”, “montaje”, “manipulación” o “campaña” son tesis separadas: requieren evidencia propia y no quedan probadas por un error visual aislado.\n52) Una corrección del mismo medio es evidencia directa de que rectificó, pero no demuestra por sí sola intención de engañar. Conserva la cronología: publicación, señalamiento, corrección y permanencia o retiro del contenido.\n53) Si no fue posible recuperar y examinar el audiovisual, no inventes coincidencias ni emitas un veredicto sobre sus imágenes. Responde ANÁLISIS NO COMPLETADO e indica qué componente técnico faltó; no uses NO VERIFICABLE como sustituto de un fallo de acceso.\n`;
+export const MEDIA_FORENSICS_POLICY = `\nREGLAS DE FORENSIA VISUAL Y CONTEXTO MULTIMEDIA:\n46) En imágenes y videos verifica dos capas por separado: autenticidad del archivo o escena y exactitud del contexto atribuido (lugar, fecha, evento y participantes). Un archivo real puede ser desinformación si se reutiliza con contexto falso.\n47) Resuelve primero el enlace canónico y recupera el audiovisual. Analiza audio y fotogramas representativos; la descripción, miniatura, metadatos, OCR o transcripción solos no bastan para afirmar que dos videos son iguales ni que una escena ocurrió donde se dice.\n48) Localiza la publicación más antigua comprobable y compara elementos visuales invariantes —encuadre, edificios, daños, vehículos, sombras, movimientos y secuencia—. Registra por separado: contexto alegado, contexto original, fecha más antigua localizada y fuente matriz.\n49) Una presentación oficial, conferencia gubernamental, partido, medio o verificador constituye una pista y una fuente primaria de lo que esa entidad afirmó; no es prueba automática de su desmentido. Abre y contrasta los materiales originales que exhibe, y busca corroboración independiente cuando sea posible.\n50) Cuando una coincidencia de fotogramas y una fuente anterior demuestren que el material pertenece a otro lugar, fecha o evento, clasifica la atribución concreta como FALSA o ENGAÑOSA según el alcance, y usa la etiqueta CONTEXTO FALSO / IMÁGENES REUTILIZADAS. No declares falso el acontecimiento general si solo quedó refutado el audiovisual usado como prueba.\n51) Distingue el contenido fuente de las sobreimpresiones, narración, música, emojis y montaje añadidos por quien republica. Términos como “censura”, “montaje”, “manipulación” o “campaña” son tesis separadas: requieren evidencia propia y no quedan probadas por un error visual aislado.\n52) Una corrección del mismo medio es evidencia directa de que rectificó, pero no demuestra por sí sola intención de engañar. Conserva la cronología: publicación, señalamiento, corrección y permanencia o retiro del contenido.\n53) Si no fue posible recuperar y examinar el audiovisual, no inventes coincidencias ni emitas un veredicto sobre sus imágenes. Responde ANÁLISIS NO COMPLETADO e indica qué componente técnico faltó; no uses NO VERIFICABLE como sustituto de un fallo de acceso.\n54) Si una publicación social contiene video, el pie de foto, el título y la descripción no sustituyen lo que se dice en la pista sonora. Recupera y transcribe el audio antes de identificar la tesis central. Si la transcripción falla, responde ANÁLISIS NO COMPLETADO; nunca declares que el post carece de afirmación verificable basándote solo en el texto acompañante.\n`;
 
 function addPolicy(req) {
   const predictionPolicy = `\nPREDICCIONES PENALES: Separa «será encarcelado» de afirmaciones presentes sobre imputación u orden. Si se anuncia categóricamente como certeza un encarcelamiento futuro sin prueba directa, clasifica la PRESENTACIÓN como ENGAÑOSA y la predicción subyacente como NO DEMOSTRADA. Una hipótesis expresamente condicional puede permanecer NO VERIFICABLE. No clasifiques FALSA una predicción futura solo por ausencia de pruebas; si el plazo venció, comprueba el desenlace con evidencia antes de declararla FALSA. Una investigación de familiares o allegados no es evidencia a favor de una futura condena de la persona señalada. Si una afirmación presente sobre una orden queda contradicha documentalmente, verifícala por separado. No atribuyas intención de mentir ni campaña a partir de una sola publicación.\n`;
@@ -1024,6 +1024,48 @@ export function applyUninspectedMultimediaGuard(result, input = '') {
   };
 }
 
+/**
+ * Un post de video no puede analizarse como si su pie de foto fuera todo el
+ * contenido. Si el backend identificó video pero no obtuvo una transcripción,
+ * el resultado correcto es un fallo técnico recuperable, no NO VERIFICABLE.
+ */
+export function applyUntranscribedSocialVideoGuard(result, input = '') {
+  if (!result || typeof result !== 'object') return result;
+  const extraction = result.extraccion_enlace || {};
+  const connector = extraction.conector_multiplataforma || {};
+  const identifiedVideo = extraction.tipo_enlace === 'publicacion_con_video' || connector.contiene_video === true;
+  if (!identifiedVideo) return result;
+
+  const coverage = Array.isArray(result.cobertura_archivos) ? result.cobertura_archivos : [];
+  const transcribedMedia = coverage.some(item => {
+    const type = String(item?.tipo || '');
+    const limitations = normalizarTexto(Array.isArray(item?.limitaciones) ? item.limitaciones.join(' ') : '');
+    return /^(?:audio|video)\//.test(type) &&
+      !/(?:no se pudo obtener|no estuvo disponible|fallo|sin transcripcion).{0,80}(?:transcripcion|pista de audio)|(?:transcripcion|pista de audio).{0,80}(?:no se pudo|no estuvo disponible|fallo)/.test(limitations);
+  });
+  if (transcribedMedia || extraction.transcripcion_recuperada === true) return result;
+
+  return {
+    estado: 'sin_acceso',
+    analizado: false,
+    tipo_resultado: 'error_recuperacion',
+    estado_tecnico: 'AUDIO_NO_TRANSCRITO',
+    veredicto: null,
+    veredicto_final: null,
+    credibilidad: null,
+    confianza: null,
+    mensaje: 'Análisis no completado: la publicación contiene un video, pero no fue posible recuperar o transcribir su pista de audio. El pie de foto no sustituye el contenido hablado y no se emitió un veredicto.',
+    fuentes: [],
+    compartir_habilitado: false,
+    url_consultada: extraction.url_final || String(input || ''),
+    limitaciones: [
+      'No se identificó la tesis central pronunciada en el video.',
+      'El texto acompañante, la miniatura y los metadatos no sustituyen la transcripción del audio.'
+    ],
+    extraccion_enlace: extraction
+  };
+}
+
 export function normalize(result, input = '') {
   if (!result || typeof result !== 'object') return result;
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
@@ -1117,7 +1159,7 @@ export function normalize(result, input = '') {
       if (result.veredicto === 'PARCIALMENTE VERDADERO') result.veredicto = 'VERDADERO';
     }
   }
-  return applyUninspectedMultimediaGuard(applyUnverifiedPollGraphicGuard(applyUnsupportedCriminalPredictionGuard(applyCriminalPact2018Guard(
+  return applyUntranscribedSocialVideoGuard(applyUninspectedMultimediaGuard(applyUnverifiedPollGraphicGuard(applyUnsupportedCriminalPredictionGuard(applyCriminalPact2018Guard(
     applyUnfoldedBallotFramingGuard(
       applyPisaPandemicFramingGuard(
         applyBookSynopsisEvidenceGuard(
@@ -1129,7 +1171,7 @@ export function normalize(result, input = '') {
       input
     ),
     input
-  )), input), input);
+  )), input), input), input);
 }
 
 export const config = { maxDuration: 300 };
