@@ -1,3 +1,8 @@
+# Versión 1.26.0 - Verificación de cobertura de salud y afiliación (2026-09-26)
+
+- Publica una verificación original sobre la diferencia entre afiliación y reconocimiento de acceso a servicios de salud.
+- Actualiza biblioteca, sitemap y fechas de publicación.
+
 # Versión 1.25.0 - Verificación del falso robo de petróleo mediante ductos (2026-09-22)
 
 - Refuta la afirmación viral de una red de ductos clandestinos hacia Texas y una demanda mexicana por 15,000 millones de dólares.
