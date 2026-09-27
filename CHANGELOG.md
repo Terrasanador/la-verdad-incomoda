@@ -1,3 +1,9 @@
+# Versión 1.27.0 - Verificación de hogares con programas gubernamentales (2026-09-27)
+
+- Publica una verificación original sobre el 41.4% de hogares que recibió ingresos de programas federales o estatales.
+- Distingue hogares, personas beneficiarias, cobertura y evaluación de impacto.
+- Actualiza biblioteca, sitemap, fechas y versión.
+
 # Versión 1.26.0 - Verificación de cobertura de salud y afiliación (2026-09-26)
 
 - Publica una verificación original sobre la diferencia entre afiliación y reconocimiento de acceso a servicios de salud.
