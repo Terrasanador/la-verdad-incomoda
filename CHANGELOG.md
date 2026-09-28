@@ -432,3 +432,8 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - Muestra «PREDICCIÓN SIN SUSTENTO» por encima del veredicto técnico NO VERIFICABLE cuando no se aporta prueba procesal directa; evita sugerir que la predicción está respaldada.
 - Retira del apartado favorable las publicaciones que solo repiten la predicción y las investigaciones de familiares o allegados.
 - No atribuye intención de mentir a un emisor por el tono de una sola publicación. Añade una prueba de regresión.
+
+# Versión 1.28.0 - Cobertura de trabajadores de plataformas (2026-09-28)
+
+- Publicada una verificación que distingue registros mensuales acumulados, personas y tipos de cobertura del IMSS.
+- Biblioteca, portada, sitemap, fechas y versión actualizados; siete fuentes enlazadas.
