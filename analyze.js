@@ -1,5 +1,5 @@
 import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
-import { extractSocialPublicData, indexedTikTokPhotoEvidence } from "./social-data.js";
+import { extractSocialPublicData, extractThreadsEmbedMedia, indexedTikTokPhotoEvidence } from "./social-data.js";
 import { prepareFile, validateFile } from "./media-input.js";
 import { isThreadsUrl, threadsLinkType } from './threads-access.js';
 
@@ -125,6 +125,44 @@ const texto = tieneTexto
           contenido_json: "",
           limitaciones: [`Conector social: ${error?.message || "consulta no disponible"}`]
         }));
+
+        // Fallback específico para Threads: la vista pública /embed puede exponer
+        // el MP4 temporal de Meta aunque la página normal y Captapi no entreguen
+        // la pista de audio. Solo se acepta el media URL recuperado por el embed
+        // y se procesa como archivo real; nunca se extrae una URL del texto del post.
+        if (
+          threadsLinkType(enlaceCanonico) === "post" &&
+          !extraccionEnlace.archivo_recuperado &&
+          !extraccionEnlace.transcripcion
+        ) {
+          try {
+            const threadsMedia = await extractThreadsEmbedMedia(enlaceCanonico);
+            if (threadsMedia?.video_url) {
+              const recoveredMedia = await extractPublicLink(threadsMedia.video_url);
+              if (recoveredMedia?.archivo_recuperado) {
+                extraccionEnlace.archivo_recuperado = recoveredMedia.archivo_recuperado;
+                extraccionEnlace.acceso_directo = true;
+                extraccionEnlace.acceso_parcial = true;
+                extraccionEnlace.tipo_enlace = "publicacion_con_video";
+                extraccionEnlace.media_recuperado_via = "Threads /embed público";
+                extraccionEnlace.limitaciones = [
+                  ...(extraccionEnlace.limitaciones || []),
+                  "Se recuperó el video desde la vista pública /embed de Threads y se intentará transcribir su pista de audio."
+                ];
+              } else {
+                extraccionEnlace.limitaciones = [
+                  ...(extraccionEnlace.limitaciones || []),
+                  "Threads expuso el video en /embed, pero no se pudo descargar el archivo multimedia para transcribir su audio."
+                ];
+              }
+            }
+          } catch (error) {
+            extraccionEnlace.limitaciones = [
+              ...(extraccionEnlace.limitaciones || []),
+              `La recuperación del video mediante Threads /embed no estuvo disponible: ${error?.message || "error desconocido"}`
+            ];
+          }
+        }
         if (extraccionSocial) {
           if(extraccionSocial.retry_after_seconds) extraccionEnlace.retry_after_seconds=extraccionSocial.retry_after_seconds;
           extraccionEnlace.datos_multiplataforma = extraccionSocial;
