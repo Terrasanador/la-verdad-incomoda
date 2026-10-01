@@ -78,6 +78,53 @@ test('Public Threads embed recovers the MP4 without social-provider credits',asy
   assert.equal(media.tipo,'video');
   assert.equal(media.video_url,mp4);
 });
+test('Handler recovers Threads /embed video and transcribes its audio',()=>withMocks(async()=>{
+  const mp4='https://scontent.example.cdninstagram.com/o1/v/t2/video.mp4?x=1&y=2';
+  let transcriptionCalled=false;
+  let modelRequest='';
+  global.fetch=async(url,options={})=>{
+    const target=new URL(url);
+    if(target.hostname==='www.threads.com'){
+      if(target.pathname.endsWith('/embed')){
+        return new Response(`<video src="${mp4.replaceAll('&','&amp;')}"></video>`,{headers:{'content-type':'text/html'}});
+      }
+      return new Response('<title>Publicación de Threads</title><body>Texto visible</body>',{headers:{'content-type':'text/html'}});
+    }
+    if(target.hostname==='api.captapi.com'){
+      return Response.json({text:'Texto público del post'});
+    }
+    if(target.hostname==='scontent.example.cdninstagram.com'){
+      return new Response(Buffer.from('fake-mp4-bytes'),{headers:{'content-type':'video/mp4'}});
+    }
+    if(target.hostname==='api.openai.com'){
+      if(target.pathname==='/v1/audio/transcriptions'){
+        transcriptionCalled=true;
+        return Response.json({text:'La frase pronunciada en el video es una afirmación factual comprobable.'});
+      }
+      if(target.pathname==='/v1/responses'){
+        modelRequest=String(options.body||'');
+        const request=JSON.parse(options.body);
+        const result=emptySchema(request.text.format.schema);
+        result.estado='analizado';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';
+        result.afirmacion_principal='La frase pronunciada en el video es una afirmación factual comprobable.';
+        result.respuesta_directa='Se recuperó y transcribió la pista de audio.';
+        result.resumen='El video fue recuperado desde Threads /embed y su audio fue transcrito.';
+        result.conclusion='La transcripción quedó disponible para el contraste factual.';
+        return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}]});
+      }
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  };
+  const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+  await handler({method:'POST',body:{text:'Verifica este video '+post}},res);
+  assert.equal(res.code,200);
+  assert.equal(transcriptionCalled,true);
+  assert.match(modelRequest,/TRANSCRIPCIÓN AUTOMÁTICA/);
+  assert.match(modelRequest,/afirmación factual comprobable/);
+  assert.equal(res.value.extraccion_enlace.media_recuperado_via,'Threads /embed público');
+  assert.equal(res.value.extraccion_enlace.transcripcion_recuperada,true);
+}));
+
 test('Indexed Threads context separates speaker identity from truth of accusations',()=>{
   const evidence=indexedThreadsEvidence('https://www.threads.com/@jorgetejero/post/DdkTfdwElXL');
   assert.equal(evidence.hablante_atribuida_por_copias_publicas,'Carolina Viggiano');
