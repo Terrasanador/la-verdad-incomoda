@@ -1,5 +1,8 @@
 import dns from "node:dns/promises";
 import net from "node:net";
+import { spawn } from "node:child_process";
+import { once } from "node:events";
+import ffmpegPath from "ffmpeg-static";
 import { mediaType } from "./media-input.js";
 import { isThreadsUrl, threadsLinkType, threadsCanonicalFromHtml, rememberThreadsRateLimit, threadsRetryRemaining } from "./threads-access.js";
 
@@ -10,6 +13,9 @@ const MAX_TRANSCRIPT_CHARS = 80000;
 const MAX_COMMENTS = 50;
 const MAX_COMMENT_CHARS = 1200;
 const MAX_REDIRECTS = 5;
+const MAX_REMOTE_VIDEO_BYTES = 80_000_000;
+const MAX_TRANSCODED_AUDIO_BYTES = 4_000_000;
+const TRANSCODE_TIMEOUT_MS = 45_000;
 
 function decodeHtml(value = "") {
   const decodeCodePoint = (entity, code, radix) => {
@@ -355,6 +361,135 @@ async function readMediaBytes(response, max=20_000_000) {
     if(!size) throw new Error('Archivo enlazado vacío.');
     return Buffer.concat(chunks);
   } finally { clearTimeout(timer); if(!complete) await reader.cancel(); }
+}
+
+function isTrustedMetaMediaUrl(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    const host = url.hostname.toLowerCase();
+    return url.protocol === 'https:' &&
+      !url.username && !url.password && !url.port &&
+      !host.startsWith('static.') &&
+      (host.endsWith('.cdninstagram.com') || host.endsWith('.fbcdn.net'));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Los embeds de Threads pueden exponer un MP4 mayor que el límite admitido por
+ * el transcriptor aunque su pista de voz sea pequeña. Descargamos únicamente
+ * medios de los CDN de Meta ya validados y enviamos el flujo a ffmpeg, sin
+ * guardar el video completo ni aceptar direcciones proporcionadas por el usuario.
+ */
+export async function extractPublicMediaAudio(rawUrl, {
+  spawnImpl = spawn,
+  executable = ffmpegPath,
+  maxInputBytes = MAX_REMOTE_VIDEO_BYTES,
+  maxOutputBytes = MAX_TRANSCODED_AUDIO_BYTES
+} = {}) {
+  if (!isTrustedMetaMediaUrl(rawUrl)) {
+    throw new Error('La dirección multimedia no pertenece a un CDN autorizado de Meta.');
+  }
+  if (!executable) throw new Error('El conversor de audio no está disponible en esta plataforma.');
+
+  const response = await safeFetch(rawUrl, {
+    headers: {
+      Accept: 'video/mp4,video/*;q=0.9,*/*;q=0.5',
+      Referer: 'https://www.threads.com/'
+    }
+  });
+  if (!response.ok) throw new Error(`El archivo multimedia respondió HTTP ${response.status}.`);
+  const declaredLength = Number(response.headers.get('content-length') || 0);
+  if (declaredLength > maxInputBytes) {
+    await response.body?.cancel();
+    throw new Error('El video remoto excede el límite seguro para extraer su pista de audio.');
+  }
+  const contentType = String(response.headers.get('content-type') || '').split(';')[0].trim();
+  if (contentType && !/^(?:audio|video)\//i.test(contentType)) {
+    await response.body?.cancel();
+    throw new Error('La dirección recuperada no entregó un archivo de audio o video.');
+  }
+  if (!response.body) throw new Error('El archivo multimedia no entregó un flujo de datos.');
+
+  const child = spawnImpl(executable, [
+    '-hide_banner', '-loglevel', 'error', '-i', 'pipe:0', '-vn',
+    '-ac', '1', '-ar', '16000', '-b:a', '48k', '-f', 'mp3', 'pipe:1'
+  ], { stdio: ['pipe', 'pipe', 'pipe'] });
+  const output = [];
+  let inputBytes = 0;
+  let outputBytes = 0;
+  let stderr = '';
+  let timedOut = false;
+  let streamError = null;
+
+  child.stdout.on('data', chunk => {
+    outputBytes += chunk.length;
+    if (outputBytes > maxOutputBytes) {
+      streamError ||= new Error('La pista de audio convertida excede el límite permitido.');
+      child.kill('SIGKILL');
+      return;
+    }
+    output.push(Buffer.from(chunk));
+  });
+  child.stderr.on('data', chunk => {
+    stderr = `${stderr}${chunk.toString()}`.slice(-4000);
+  });
+
+  const timer = setTimeout(() => {
+    timedOut = true;
+    child.kill('SIGKILL');
+  }, TRANSCODE_TIMEOUT_MS);
+
+  const pump = (async () => {
+    const reader = response.body.getReader();
+    try {
+      while (true) {
+        const item = await reader.read();
+        if (item.done) break;
+        inputBytes += item.value.length;
+        if (inputBytes > maxInputBytes) {
+          streamError ||= new Error('El video remoto excede el límite seguro para extraer su pista de audio.');
+          child.kill('SIGKILL');
+          break;
+        }
+        if (!child.stdin.write(Buffer.from(item.value))) await once(child.stdin, 'drain');
+      }
+      child.stdin.end();
+    } catch (error) {
+      streamError ||= error;
+      child.kill('SIGKILL');
+      child.stdin.destroy();
+      throw error;
+    } finally {
+      try { await reader.cancel(); } catch {}
+    }
+  })();
+
+  const completed = new Promise((resolve, reject) => {
+    child.once('error', reject);
+    child.once('close', code => {
+      if (timedOut) return reject(new Error('La conversión de audio agotó el tiempo disponible.'));
+      if (streamError) return reject(streamError);
+      if (code !== 0) return reject(new Error(`No se pudo extraer la pista de audio${stderr ? `: ${stderr.trim()}` : '.'}`));
+      resolve();
+    });
+  });
+
+  try {
+    await Promise.all([pump, completed]);
+  } finally {
+    clearTimeout(timer);
+  }
+  if (!inputBytes || !outputBytes) throw new Error('No se recuperó una pista de audio utilizable.');
+  const audio = Buffer.concat(output);
+  return {
+    name: 'threads-audio.mp3',
+    type: 'audio/mpeg',
+    data: audio.toString('base64'),
+    bytes_origen: inputBytes,
+    bytes_audio: audio.length
+  };
 }
 
 function youtubeVideoId(rawUrl) {

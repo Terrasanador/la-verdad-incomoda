@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import dns from 'node:dns/promises';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import { execFileSync } from 'node:child_process';
+import ffmpegPath from 'ffmpeg-static';
 import {threadsLinkType,threadsCanonicalFromHtml,retryAfterSeconds,threadsRetryRemaining,resetThreadsCooldownsForTest,threadsReferenceOnly,incompleteThreadsResult} from './threads-access.js';
 import {extractPublicLink} from './extract-content.js';
 import {extractSocialPublicData,extractThreadsEmbedMedia,indexedThreadsEvidence} from './social-data.js';
@@ -123,6 +125,58 @@ test('Handler recovers Threads /embed video and transcribes its audio',()=>withM
   assert.match(modelRequest,/afirmación factual comprobable/);
   assert.equal(res.value.extraccion_enlace.media_recuperado_via,'Threads /embed público');
   assert.equal(res.value.extraccion_enlace.transcripcion_recuperada,true);
+}));
+
+test('Handler extracts lightweight audio when a Threads video exceeds 20 MB',()=>withMocks(async()=>{
+  const mp4='https://scontent.example.cdninstagram.com/o1/v/t2/large-video.mp4?x=1&y=2';
+  const fixture=execFileSync(ffmpegPath,[
+    '-hide_banner','-loglevel','error',
+    '-f','lavfi','-i','color=c=black:s=16x16:d=0.35',
+    '-f','lavfi','-i','sine=frequency=440:duration=0.35',
+    '-shortest','-c:v','libx264','-c:a','aac',
+    '-movflags','frag_keyframe+empty_moov','-f','mp4','pipe:1'
+  ]);
+  let mediaCalls=0;
+  let transcriptionCalled=false;
+  global.fetch=async(url,options={})=>{
+    const target=new URL(url);
+    if(target.hostname==='www.threads.com'){
+      if(target.pathname.endsWith('/embed')){
+        return new Response(`<video><source src="${mp4.replaceAll('&','&amp;')}"></video>`,{headers:{'content-type':'text/html'}});
+      }
+      return new Response('<title>Publicación de Threads</title><body>Texto visible</body>',{headers:{'content-type':'text/html'}});
+    }
+    if(target.hostname==='api.captapi.com') return Response.json({text:'Texto público del post'});
+    if(target.hostname==='scontent.example.cdninstagram.com'){
+      mediaCalls++;
+      return new Response(fixture,{headers:{'content-type':'video/mp4','content-length':'30000000'}});
+    }
+    if(target.hostname==='api.openai.com'){
+      if(target.pathname==='/v1/audio/transcriptions'){
+        transcriptionCalled=true;
+        return Response.json({text:'El audio completo del video largo quedó transcrito.'});
+      }
+      if(target.pathname==='/v1/responses'){
+        const request=JSON.parse(options.body);
+        const result=emptySchema(request.text.format.schema);
+        result.estado='analizado';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';
+        result.afirmacion_principal='El audio completo del video largo quedó transcrito.';
+        result.respuesta_directa='La pista de audio se recuperó completa.';
+        result.resumen='El video grande fue convertido a audio antes de transcribirse.';
+        result.conclusion='La transcripción quedó disponible para el contraste factual.';
+        return Response.json({output:[{type:'message',content:[{type:'output_text',text:JSON.stringify(result)}]}]});
+      }
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  };
+  const res={setHeader(){},status(n){this.code=n;return this;},json(value){this.value=value;return this;}};
+  await handler({method:'POST',body:{text:'Verifica este video '+post}},res);
+  assert.equal(res.code,200);
+  assert.equal(mediaCalls,2);
+  assert.equal(transcriptionCalled,true);
+  assert.equal(res.value.extraccion_enlace.media_recuperado_via,'Threads /embed público (audio optimizado)');
+  assert.equal(res.value.extraccion_enlace.transcripcion_recuperada,true);
+  assert.match(res.value.extraccion_enlace.limitaciones.join(' '),/copia ligera de su pista de audio/i);
 }));
 
 test('Indexed Threads context separates speaker identity from truth of accusations',()=>{

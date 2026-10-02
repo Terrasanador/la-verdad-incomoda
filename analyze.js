@@ -1,4 +1,4 @@
-import { extractPublicLink, findFirstPublicUrl } from "./extract-content.js";
+import { extractPublicLink, extractPublicMediaAudio, findFirstPublicUrl } from "./extract-content.js";
 import { extractSocialPublicData, extractThreadsEmbedMedia, indexedTikTokPhotoEvidence } from "./social-data.js";
 import { prepareFile, validateFile } from "./media-input.js";
 import { isThreadsUrl, threadsLinkType } from './threads-access.js';
@@ -139,15 +139,32 @@ const texto = tieneTexto
             const threadsMedia = await extractThreadsEmbedMedia(enlaceCanonico);
             if (threadsMedia?.video_url) {
               const recoveredMedia = await extractPublicLink(threadsMedia.video_url);
-              if (recoveredMedia?.archivo_recuperado) {
-                extraccionEnlace.archivo_recuperado = recoveredMedia.archivo_recuperado;
+              let recoveredFile = recoveredMedia?.archivo_recuperado || null;
+              let optimizedAudio = false;
+              if (!recoveredFile) {
+                try {
+                  recoveredFile = await extractPublicMediaAudio(threadsMedia.video_url);
+                  optimizedAudio = true;
+                } catch (error) {
+                  extraccionEnlace.limitaciones = [
+                    ...(extraccionEnlace.limitaciones || []),
+                    `Threads expuso el video, pero no se pudo preparar su pista de audio: ${error?.message || 'error desconocido'}`
+                  ];
+                }
+              }
+              if (recoveredFile) {
+                extraccionEnlace.archivo_recuperado = recoveredFile;
                 extraccionEnlace.acceso_directo = true;
                 extraccionEnlace.acceso_parcial = true;
                 extraccionEnlace.tipo_enlace = "publicacion_con_video";
-                extraccionEnlace.media_recuperado_via = "Threads /embed público";
+                extraccionEnlace.media_recuperado_via = optimizedAudio
+                  ? "Threads /embed público (audio optimizado)"
+                  : "Threads /embed público";
                 extraccionEnlace.limitaciones = [
                   ...(extraccionEnlace.limitaciones || []),
-                  "Se recuperó el video desde la vista pública /embed de Threads y se intentará transcribir su pista de audio."
+                  optimizedAudio
+                    ? "El video de Threads excedía el límite del transcriptor; se extrajo una copia ligera de su pista de audio para transcribirla completa."
+                    : "Se recuperó el video desde la vista pública /embed de Threads y se intentará transcribir su pista de audio."
                 ];
               } else {
                 extraccionEnlace.limitaciones = [
@@ -573,7 +590,8 @@ const texto = tieneTexto
       }
     }
     // Follow explicit media playback/download fields only, never arbitrary URLs from captions.
-    if (extraccionEnlace?.datos_multiplataforma?.contenido_json && !extraccionEnlace.transcripcion) {
+    if (extraccionEnlace?.datos_multiplataforma?.contenido_json &&
+        !extraccionEnlace.transcripcion && !extraccionEnlace.archivo_recuperado) {
       const candidates=[];
       const visit=(value,key='',depth=0)=>{
         if(depth>12 || candidates.length>=2) return;
@@ -2174,7 +2192,9 @@ ${texto}${bloqueExtraccion}`
         fecha_publicacion: String(extraccionEnlace.fecha_publicacion || "").trim(),
         fecha_modificacion: String(extraccionEnlace.fecha_modificacion || "").trim(),
         duracion_segundos: Number(extraccionEnlace.duracion_segundos || 0) || null,
-        transcripcion_recuperada: Boolean(extraccionEnlace.transcripcion),
+        transcripcion_recuperada: Boolean(extraccionEnlace.transcripcion) ||
+          coberturaArchivos.some(item => item?.transcripcion_recuperada === true),
+        media_recuperado_via: String(extraccionEnlace.media_recuperado_via || "").trim(),
         segmentos_transcripcion: Array.isArray(extraccionEnlace.segmentos_transcripcion)
           ? extraccionEnlace.segmentos_transcripcion.length
           : 0,
