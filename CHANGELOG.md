@@ -1,3 +1,11 @@
+# Versión 1.29.0 - Contenido editorial original y separación publicitaria (2026-10-03)
+
+- Limita la carga de AdSense a las verificaciones editoriales publicadas; el analizador automático, la biblioteca y las páginas institucionales conservan la señal de propiedad, pero no solicitan anuncios.
+- Publica una investigación original sobre la infografía electoral atribuida a VotoMx y explica por qué repetir una gráfica no autentica su encuesta.
+- Identifica a Manuel Méndez Feregrino como fundador y editor responsable y publica una declaración separada de propiedad, financiamiento, publicidad e inteligencia artificial.
+- Mejora cada verificación con responsable de revisión, tiempo estimado de lectura, fuentes legibles y datos estructurados de artículo y revisión de afirmaciones.
+- Actualiza portada, biblioteca, sitemap, navegación y pruebas de calidad.
+
 # Versión 1.27.0 - Verificación de hogares con programas gubernamentales (2026-09-27)
 
 - Publica una verificación original sobre el 41.4% de hogares que recibió ingresos de programas federales o estatales.

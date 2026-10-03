@@ -12,7 +12,7 @@ const published = [...base, ...editorial].filter(article => article.status === "
 const words = value => (String(value || "").match(/[\p{L}\p{N}]+/gu) || []).length;
 
 test("every published article has substantive, sourced editorial content", () => {
-  assert.equal(published.length, 35);
+  assert.equal(published.length, 36);
   for (const article of published) {
     const full = [article.content, expansions[article.slug], deepening[article.slug]].filter(Boolean).join("\n\n");
     assert.ok(words(full) >= 500, `${article.slug} has fewer than 500 words`);
@@ -45,16 +45,32 @@ test("sitemap promotes investigated claims while guides remain clearly separate"
   assert.match(renderer, /noindex,follow/);
 });
 
-test("monetizable pages include canonical, crawler and AdSense signals", () => {
+test("AdSense is limited to reviewed fact-check articles", () => {
   const articleRenderer = fs.readFileSync(new URL("./article-render.js", import.meta.url), "utf8");
   const listing = fs.readFileSync(new URL("./articles.html", import.meta.url), "utf8");
   const standards = fs.readFileSync(new URL("./estandares-editoriales.html", import.meta.url), "utf8");
-  for (const [name, html] of [["renderer", articleRenderer], ["listing", listing], ["standards", standards]]) {
-    assert.match(html, /ca-pub-3013146050600948/, `${name} has no AdSense publisher id`);
+  const analyzer = fs.readFileSync(new URL("./index.html", import.meta.url), "utf8");
+  assert.match(articleRenderer, /pagead2\.googlesyndication\.com/);
+  assert.match(articleRenderer, /ca-pub-3013146050600948/);
+  assert.match(articleRenderer, /ClaimReview/);
+  assert.match(articleRenderer, /reviewedBy/);
+  for (const [name, html] of [["listing", listing], ["standards", standards], ["analyzer", analyzer]]) {
+    assert.match(html, /google-adsense-account/, `${name} has no publisher ownership signal`);
+    assert.doesNotMatch(html, /pagead2\.googlesyndication\.com/, `${name} should not load ads`);
     assert.match(html, /canonical/, `${name} has no canonical declaration`);
   }
   assert.match(listing, /index,follow/);
   assert.match(standards, /index,follow/);
+});
+
+test("publisher identity and financing are explicit", () => {
+  const authors = fs.readFileSync(new URL("./autores.html", import.meta.url), "utf8");
+  const transparency = fs.readFileSync(new URL("./transparencia.html", import.meta.url), "utf8");
+  assert.match(authors, /Manuel Méndez Feregrino/);
+  assert.match(transparency, /editor responsable/i);
+  assert.match(transparency, /no cobra actualmente suscripciones/i);
+  assert.match(transparency, /AdSense/);
+  assert.match(fs.readFileSync(new URL("./sitemap.xml", import.meta.url), "utf8"), /transparencia\.html/);
 });
 
 test("legacy duplicate pages do not compete in search", () => {
