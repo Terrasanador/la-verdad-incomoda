@@ -10,10 +10,6 @@
       "use": "@vercel/node"
     },
     {
-      "src": "subscribe.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "health.js",
       "use": "@vercel/node"
     },
@@ -61,10 +57,6 @@
     {
       "src": "/api/analyze",
       "dest": "/analyze-v3.js"
-    },
-    {
-      "src": "/api/subscribe",
-      "dest": "/subscribe.js"
     },
     {
       "src": "/api/health",
