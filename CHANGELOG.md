@@ -452,3 +452,8 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - Cada informe permite compartir su resumen directamente por WhatsApp.
 - Los artículos publicados incorporan botones para compartir la verificación y verificar otra afirmación.
 - Se miden inicios, resultados y acciones de difusión mediante Google Analytics y Vercel Web Analytics, sin alterar los veredictos.
+
+# Versión 1.31.0 - Crecimiento trimestral de México en el G20 (2026-10-04)
+
+- Publicada una verificación sobre el segundo lugar trimestral de México en el G20 y sus límites frente a la comparación anual.
+- Biblioteca, portada, sitemap, fechas y versión actualizados; siete fuentes enlazadas.
