@@ -445,3 +445,10 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 
 - Publicada una verificación que distingue registros mensuales acumulados, personas y tipos de cobertura del IMSS.
 - Biblioteca, portada, sitemap, fechas y versión actualizados; siete fuentes enlazadas.
+# Versión 1.30.0 - Uso y distribución medibles (2026-10-04)
+
+- La portada incorpora accesos directos para verificar contenido recibido y compartir la herramienta por WhatsApp.
+- El analizador explica cómo pegar mensajes, enlaces, imágenes, audios o videos recibidos en conversaciones.
+- Cada informe permite compartir su resumen directamente por WhatsApp.
+- Los artículos publicados incorporan botones para compartir la verificación y verificar otra afirmación.
+- Se miden inicios, resultados y acciones de difusión mediante Google Analytics y Vercel Web Analytics, sin alterar los veredictos.

@@ -86,6 +86,14 @@
     .actions .social-copy{border-color:#7b3431;background:rgba(255,59,48,.12)}
     .actions .share-action{border-color:#55d995;background:#137a44}
     .disclaimer{max-width:820px;margin:24px auto 0;color:#7f7f89;text-align:center;line-height:1.6;font-size:13px}footer{text-align:center;color:#74747d;padding:28px 18px 40px}.editorial-home,.standards-home{margin:22px 0;padding:clamp(20px,4vw,32px);border:1px solid var(--border);border-radius:22px;background:#111114}.editorial-home h2,.standards-home h2{font-size:clamp(25px,5vw,38px);margin-bottom:8px}.editorial-home>p,.standards-home>p{color:#d0d0d8;line-height:1.65}.editorial-grid,.standards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.editorial-card,.standard-card{display:block;padding:16px;border:1px solid #3d3d46;border-radius:15px;background:#19191e;color:#fff;text-decoration:none}.editorial-card strong,.standard-card h3{display:block;margin-bottom:6px}.editorial-card small,.standard-card p{color:var(--muted);line-height:1.55}.standard-card p{font-size:14px}.editorial-actions{display:flex;gap:10px;flex-wrap:wrap}.editorial-actions a{padding:10px 14px;border:1px solid #633a38;border-radius:999px;color:#fff;text-decoration:none;font-weight:800;background:rgba(255,59,48,.08)}
+    .growth-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px auto 16px}
+    .growth-actions button{min-height:50px;padding:13px 18px;border-radius:999px;color:#fff;font-weight:1000;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+    .growth-actions .verify-now{background:var(--red);border-color:#ff817b}
+    .growth-actions .whatsapp-share{background:#137a44;border-color:#55d995}
+    .whatsapp-help{margin:0 0 14px;padding:14px 16px;border:1px solid #2d7655;border-radius:16px;background:rgba(19,122,68,.12);color:#e8fff4;line-height:1.5}
+    .whatsapp-help strong{display:block;margin-bottom:3px}
+    .whatsapp-report{border-color:#55d995!important;background:#137a44!important}
+
     /* Evita desbordamientos en pantallas pequeñas */
     html,body{width:100%;max-width:100%;overflow-x:hidden}
     main,.workspace,.result,.grid,.card,.source,.sources,.final-verdict-box{min-width:0;max-width:100%}
@@ -144,6 +152,9 @@
       .actions button{width:100%;padding:11px}
       .disclaimer{font-size:12px;padding:0 8px}
       footer{font-size:13px;padding:22px 12px 32px}
+      .growth-actions{display:grid;grid-template-columns:1fr;margin:9px 0 12px}
+      .growth-actions button{width:100%;min-height:48px;padding:11px 14px}
+      .whatsapp-help{font-size:13px;padding:12px 13px}
     }
 
     @media(max-width:380px){
@@ -296,13 +307,18 @@
     <p class="subtitle">Pregunta, pega un enlace o sube un archivo. La IA investiga y contrasta evidencia pública.</p>
   </section>
   <div class="quick-how"><span>💬 Pregunta</span><span>🌐 Pega un enlace</span><span>📷 Imagen</span><span>🎧 Audio</span><span>📄 Documento</span></div>
+  <div class="growth-actions" aria-label="Acciones principales">
+    <button class="verify-now" id="heroVerifyButton" type="button">🔎 VERIFICAR LO QUE RECIBÍ</button>
+    <button class="whatsapp-share" id="heroWhatsAppButton" type="button">🟢 COMPARTIR POR WHATSAPP</button>
+  </div>
   <button class="how-trigger" id="openHowModal" type="button"><strong>¿Cómo funciona?</strong><small>Ver explicación y ejemplo →</small></button>
   <section class="editorial-home"><h2>Investigaciones originales</h2><p>Lee primero cómo se comprobaron estas afirmaciones recientes. Cada artículo presenta la pregunta central, los documentos consultados, el contexto y lo que todavía no puede concluirse.</p><div class="editorial-grid"><a class="editorial-card" href="/articulos/no-verificable-infografia-votomx-gubernaturas-2027"><strong>NO VERIFICABLE: la repetición de una gráfica no autentica la encuesta</strong><small>No localizamos el informe original, cuestionario ni documentación suficiente para auditar la medición atribuida a VotoMx.</small></a><a class="editorial-card" href="/articulos/enganoso-millon-trabajadores-plataformas-seguridad-social-integral-2026"><strong>ENGAÑOSO: un millón de registros no son un millón de personas con cobertura integral</strong><small>La suma semestral repite registros mensuales; en agosto, 199,454 trabajadores accedieron a todos los seguros del IMSS.</small></a><a class="editorial-card" href="/articulos/cierto-41-4-por-ciento-hogares-programas-gobierno-2025"><strong>CIERTO: 41.4% de los hogares recibió ingresos de programas</strong><small>Incluye programas federales o estatales y cuenta hogares, no personas beneficiarias.</small></a><a class="editorial-card" href="/articulos/enganoso-cobertura-salud-86-6-afiliacion-2025"><strong>ENGAÑOSO: 86.6% no prueba un aumento comparable en cobertura</strong><small>El indicador amplio de acceso de 2025 no se puede comparar con la afiliación de 2020; esa afiliación bajó a 72.5%.</small></a><a class="editorial-card" href="/articulos/falso-estados-unidos-robo-petroleo-ductos-demanda-mexico-cij"><strong>FALSO: no hubo robo de petróleo por ductos ni demanda por 15,000 millones</strong><small>La Corte no registra el caso; la conferencia y los decomisos citados no respaldan la historia viral.</small></a><a class="editorial-card" href="/articulos/falso-pemex-no-necesitaria-apoyo-hacienda-2027"><strong>FALSO: Pemex aún requiere apoyo de Hacienda en 2027</strong><small>El paquete económico propone una transferencia federal de 81,100 millones de pesos; el apoyo disminuye, pero no desaparece.</small></a><a class="editorial-card" href="/articulos/falso-alerta-celular-nacional-debuto-simulacro-2026"><strong>FALSO: la alerta nacional por celular no debutó en 2026</strong><small>La SSPC anunció el primer alertamiento para el simulacro de 2025; el ejercicio de 2026 fue el primero celebrado en sábado.</small></a><a class="editorial-card" href="/articulos/parcial-59-millones-litros-presunto-huachicol-guanajuato"><strong>PARCIAL: 59 millones de litros asegurados en Guanajuato</strong><small>El volumen es aproximado y todavía faltan peritajes sobre la procedencia y legalidad del producto.</small></a><a class="editorial-card" href="/articulos/falso-morena-duplico-deuda-siete-anos-proyeccion-2027"><strong>FALSA: la deuda no se duplicó en siete años</strong><small>La cifra de 21.66 billones es una proyección para 2027; el saldo observado en julio de 2026 era de 19.22 billones.</small></a><a class="editorial-card" href="/articulos/parcial-conanp-16-2-pesos-por-hectarea-presupuesto-2027"><strong>PARCIAL: 16.2 pesos por hectárea para la Conanp</strong><small>El cociente es correcto, pero no representa una asignación uniforme a cada hectárea protegida.</small></a></div><div class="editorial-actions"><a href="#analizador">Usar el analizador</a><a href="/articles.html">Ver 18 verificaciones y 18 guías</a><a href="/metodologia.html">Conocer la metodología</a><a href="/preguntas-frecuentes.html">Preguntas frecuentes</a></div></section>
 
   <section class="workspace" id="analizador">
     <h2>¿Qué quieres verificar?</h2>
     <p class="workspace-intro">Escribe, pega un enlace o añade un archivo.</p>
-    <textarea id="newsInput" placeholder="Ejemplo: ¿Qué tan confiable es esta afirmación según la evidencia pública disponible?"></textarea>
+    <div class="whatsapp-help"><strong>¿Te llegó por WhatsApp?</strong>Copia y pega el mensaje o enlace. Si recibiste una imagen, audio o video, adjúntalo abajo.</div>
+    <textarea id="newsInput" placeholder="Pega aquí el enlace, mensaje o afirmación que quieres comprobar."></textarea>
     <div class="voice-tools" aria-label="Herramientas de accesibilidad por voz">
       <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false">
         <span aria-hidden="true">🎙️</span>
@@ -1109,6 +1125,7 @@ async function sampleVideoFrames(file) {
       <div class="actions">
         <button onclick="copyReport()">Copiar informe</button>
         <button class="social-copy" onclick="copySocialSummary(this)">Copiar resumen para redes</button>
+        <button class="whatsapp-report" onclick="shareReportOnWhatsApp()">Compartir por WhatsApp</button>
         <button class="share-action" onclick="shareReport()">Compartir</button>
         <button onclick="window.print()">Guardar como PDF</button>
       </div>
@@ -2143,9 +2160,11 @@ async function sampleVideoFrames(file) {
     try {
       if (navigator.share) {
         await navigator.share(data);
+        trackUsage("pagina_compartida", { canal: "menu_nativo" });
         feedback("✓ PÁGINA COMPARTIDA");
       } else {
         await copyLink();
+        trackUsage("pagina_compartida", { canal: "enlace_copiado" });
         feedback("✓ ENLACE COPIADO");
       }
     } catch (error) {
@@ -2169,12 +2188,14 @@ async function sampleVideoFrames(file) {
             result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim()),
           url: location.href
         });
+        trackUsage("informe_compartido", { canal: "menu_nativo" });
       } else {
         await copyPlainText(
           `Fuente de consulta: La Verdad Incómoda — https://www.laverdadincomoda.mx/\n\n${result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim()}\n${location.href}`
         );
 
         alert("Informe y enlace copiados.");
+        trackUsage("informe_compartido", { canal: "texto_copiado" });
       }
     } catch (error) {
       if (error.name !== "AbortError") {
@@ -2182,6 +2203,38 @@ async function sampleVideoFrames(file) {
       }
     }
   };
+
+  function scrollToAnalyzer(source) {
+    trackUsage("cta_verificar", { origen: source });
+    document.getElementById("analizador").scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => newsInput.focus(), 450);
+  }
+
+  function whatsappUrl(text) {
+    return `https://wa.me/?text=${encodeURIComponent(copyReadyText(text))}`;
+  }
+
+  window.shareToolOnWhatsApp = () => {
+    const message = "¿Te enviaron una noticia, video o imagen sospechosa? Compruébala con evidencia pública en La Verdad Incómoda. Pega el enlace o sube la captura: https://www.laverdadincomoda.mx/\n\nNo creas. Comprueba.";
+    trackUsage("pagina_compartida", { canal: "whatsapp" });
+    window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
+  };
+
+  window.shareReportOnWhatsApp = () => {
+    if (!lastAnalysisData || lastAnalysisData.estado === "sin_acceso" || lastAnalysisData.analizado === false) return;
+    const message = `${socialSummary()}\n\nVerificación realizada en ${location.origin}${location.pathname}`;
+    trackUsage("informe_compartido", { canal: "whatsapp" });
+    window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
+  };
+
+  document.getElementById("heroVerifyButton").addEventListener("click", () => scrollToAnalyzer("portada"));
+  document.getElementById("heroWhatsAppButton").addEventListener("click", shareToolOnWhatsApp);
+
+  const campaignQuery = new URLSearchParams(location.search).get("q");
+  if (campaignQuery && !newsInput.value) {
+    newsInput.value = campaignQuery.slice(0, 6000);
+    trackUsage("consulta_precargada", { origen: "enlace_compartido" });
+  }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
