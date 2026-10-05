@@ -32,4 +32,10 @@
   <url><loc>https://www.laverdadincomoda.mx/privacidad.html</loc><lastmod>2026-09-01</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/terminos.html</loc><lastmod>2026-09-01</lastmod><changefreq>yearly</changefreq><priority>0.6</priority></url>
   <url><loc>https://www.laverdadincomoda.mx/contacto.html</loc><lastmod>2026-09-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url>
+    <loc>https://www.laverdadincomoda.mx/articulos/medios-independientes-mexico</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.70</priority>
+  </url>
 </urlset>
