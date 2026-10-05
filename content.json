@@ -16,8 +16,9 @@
       "reviewedBy": "Manuel Méndez Feregrino",
       "status": "published",
       "createdAt": "2026-10-05T00:40:00.000Z",
-      "updatedAt": "2026-10-05T00:40:00.000Z",
-      "publishedAt": "2026-10-05T00:40:00.000Z"
+      "updatedAt": "2026-10-05T00:45:00.000Z",
+      "publishedAt": "2026-10-05T00:40:00.000Z",
+      "indexable": true
     },
     {
       "id": "factcheck_20261004_01",
