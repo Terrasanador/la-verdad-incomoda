@@ -109,7 +109,9 @@ function articleHtml(article) {
   }).join("");
   const sources = (article.sources || []).map((url, index) => `<li><strong>${index + 1}. ${esc(sourceName(url))}</strong><small>${esc(sourceKind(url))}</small><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Abrir documento o página consultada</a><code>${esc(url)}</code></li>`).join("");
   const related = (content.articles || []).filter((item) => item.slug !== article.slug && item.status === "published" && (item.category === article.category || item.sources?.some((source) => article.sources?.includes(source)))).slice(0, 3);
-  const shareText = `${article.title}\n\n${article.summary || "Consulta la evidencia y las fuentes."}\n\n${canonical}`;
+  const shareText = article.whatsappSummary
+    ? `${article.whatsappSummary}\n${canonical}`
+    : `${article.title}\n\n${article.summary || "Consulta la evidencia y las fuentes."}\n\n${canonical}`;
   const shareTextJson = JSON.stringify(shareText).replace(/</g, "\\u003c");
   const shareTitleJson = JSON.stringify(article.title).replace(/</g, "\\u003c");
 

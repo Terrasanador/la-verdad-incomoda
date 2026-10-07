@@ -457,3 +457,10 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 
 - Publicada una verificación sobre el segundo lugar trimestral de México en el G20 y sus límites frente a la comparación anual.
 - Biblioteca, portada, sitemap, fechas y versión actualizados; siete fuentes enlazadas.
+
+# Versión 1.32.0 - Total de puestos frente a empleos creados (2026-10-07)
+
+- Publicada una verificación que distingue los 22.8 millones de puestos registrados ante el IMSS de la creación mensual, anual y acumulada.
+- Incorporada una sección de patrón de amplificación que documenta el cambio de «registrados» a «nuevos» o «creados» sin atribuir coordinación no demostrada.
+- El botón de WhatsApp de los artículos utiliza un resumen breve específico cuando está disponible.
+- Biblioteca, portada, sitemap, fechas y versión actualizados; siete fuentes enlazadas.

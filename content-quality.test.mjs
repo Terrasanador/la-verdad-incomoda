@@ -12,7 +12,7 @@ const published = [...base, ...editorial].filter(article => article.status === "
 const words = value => (String(value || "").match(/[\p{L}\p{N}]+/gu) || []).length;
 
 test("every published article has substantive, sourced editorial content", () => {
-  assert.equal(published.length, 37);
+  assert.equal(published.length, 40);
   for (const article of published) {
     const full = [article.content, expansions[article.slug], deepening[article.slug]].filter(Boolean).join("\n\n");
     assert.ok(words(full) >= 500, `${article.slug} has fewer than 500 words`);
@@ -24,7 +24,7 @@ test("every published article has substantive, sourced editorial content", () =>
 
 test("thin legacy guides were deepened with unique practical material", () => {
   const guides = published.filter(article => !article.verdict);
-  assert.equal(guides.length, 18);
+  assert.equal(guides.length, 20);
   for (const article of guides) {
     assert.ok(deepening[article.slug], `${article.slug} has no deepening section`);
     assert.ok(words(deepening[article.slug]) >= 150, `${article.slug} deepening is too short`);
