@@ -464,3 +464,11 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - Incorporada una sección de patrón de amplificación que documenta el cambio de «registrados» a «nuevos» o «creados» sin atribuir coordinación no demostrada.
 - El botón de WhatsApp de los artículos utiliza un resumen breve específico cuando está disponible.
 - Biblioteca, portada, sitemap, fechas y versión actualizados; siete fuentes enlazadas.
+
+# Versión 1.33.0 - Dos reformas distintas bajo la etiqueta “Ley Antimemes” (2026-10-08)
+
+- Publica una verificación original sobre la afirmación de que México aprobó cárcel por publicar memes o sátira política contra el Gobierno.
+- Separa la reforma penal sobre suplantación comercial y delictiva de identidad gubernamental de la reforma sobre responsabilidad de plataformas por derechos de autor.
+- Documenta el patrón de amplificación que mezcla prisión, multas y retiro de contenidos bajo un mismo apodo, sin atribuir coordinación no demostrada.
+- Incorpora siete fuentes, resumen para redes, texto para WhatsApp, metodología, límites y riesgos legítimos para la libertad de expresión.
+- Actualiza biblioteca, portada, sitemap, versión y pruebas de calidad editorial.
