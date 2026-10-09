@@ -472,3 +472,11 @@ El endpoint conserva los campos anteriores y añade campos auxiliares. La interf
 - Documenta el patrón de amplificación que mezcla prisión, multas y retiro de contenidos bajo un mismo apodo, sin atribuir coordinación no demostrada.
 - Incorpora siete fuentes, resumen para redes, texto para WhatsApp, metodología, límites y riesgos legítimos para la libertad de expresión.
 - Actualiza biblioteca, portada, sitemap, versión y pruebas de calidad editorial.
+
+# Versión 1.34.0 - Alcance real de la reforma de nacionalidad única (2026-10-09)
+
+- Publica una verificación original sobre la afirmación de que la reforma quita nacionalidad y voto a millones de personas binacionales.
+- Distingue ciudadanía y sufragio de la nueva condición de elegibilidad para Presidencia, gubernaturas y Jefatura de Gobierno de la Ciudad de México.
+- Documenta la aplicación desde 2028, la posibilidad de renuncia previa y las reglas secundarias todavía pendientes.
+- Analiza la amplificación del universo afectado y separa el debate legítimo de la atribución no demostrada de una dedicatoria personal.
+- Incorpora ocho fuentes, resumen para redes, texto para WhatsApp y actualiza biblioteca, portada, sitemap, versión y pruebas.
