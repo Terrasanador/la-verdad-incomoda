@@ -1611,11 +1611,13 @@ async function sampleVideoFrames(file) {
   }
 
   function renderProvenance(data) {
-    const media = (Array.isArray(data.cobertura_archivos) ? data.cobertura_archivos : [])
-      .map(item => item.procedencia_ia).filter(Boolean);
-    if (!media.length) return "";
+    const coverage = Array.isArray(data.cobertura_archivos) ? data.cobertura_archivos : [];
+    const media = coverage.map(item => item.procedencia_ia).filter(Boolean);
+    const alerts = coverage.flatMap(item => Array.isArray(item.alertas_visuales) ? item.alertas_visuales : []);
+    if (!media.length && !alerts.length) return "";
     const labels = media.map(item => `${item.label}: ${item.detail}`);
-    return `<div class="grid">${textCard("Procedencia de imagen o video", labels.join(" "), true)}</div>`;
+    const observations = alerts.map(item => `${item.descripcion} Cuadro ${item.cuadro}${item.cuadro_final ? ` al ${item.cuadro_final}` : ""}.`);
+    return `<div class="grid">${media.length ? textCard("Procedencia de imagen o video", labels.join(" "), true) : ""}${alerts.length ? textCard("⚠️ Destellos y barridos para revisión visual", `${observations.join(" ")} Son indicios para examinar; no demuestran por sí solos generación con IA.`, true) : ""}</div>`;
   }
 
   function renderNoCheckableClaim(data) {

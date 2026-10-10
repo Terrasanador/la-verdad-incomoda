@@ -22,6 +22,12 @@ export function auditVideoFrames(bytes, { executable = ffmpegPath } = {}) {
   const decoded = raw.status === 0 ? Math.floor(raw.stdout.length / pixels) : 0;
   if (!decoded) return { decoded: 0, frames: [], limitation: 'No se pudieron decodificar los fotogramas.' };
   const changes = [];
+  const brightness = [];
+  for (let frame = 0; frame < decoded; frame++) {
+    let total = 0;
+    for (let pixel = 0; pixel < pixels; pixel++) total += raw.stdout[frame * pixels + pixel];
+    brightness.push(total / pixels);
+  }
   for (let frame = 1; frame < decoded; frame++) {
     let total = 0;
     const previous = (frame - 1) * pixels;
@@ -31,7 +37,24 @@ export function auditVideoFrames(bytes, { executable = ffmpegPath } = {}) {
     }
     changes.push({ cuadro: frame, diferencia_media: Math.round(total / pixels * 10) / 10 });
   }
-  const mayoresCambios = changes.sort((a, b) => b.diferencia_media - a.diferencia_media).slice(0, 3);
+  const mayoresCambios = [...changes].sort((a, b) => b.diferencia_media - a.diferencia_media).slice(0, 3);
+  const changeByFrame = new Map(changes.map(change => [change.cuadro, change.diferencia_media]));
+  const alertasVisuales = [];
+  for (let frame = 1; frame < decoded - 2; frame++) {
+    if (brightness[frame] - brightness[frame - 1] >= 18 &&
+        Math.min(...brightness.slice(frame + 1, Math.min(decoded, frame + 10))) <= brightness[frame] - 15) {
+      alertasVisuales.push({ tipo: 'destello_breve', cuadro: frame, descripcion: 'Destello intenso y breve; revisar fuente de luz y reflejos.' });
+    }
+  }
+  let sweepStart = -1;
+  for (let frame = 1; frame <= decoded; frame++) {
+    const rapid = frame < decoded && changeByFrame.get(frame) >= 22;
+    if (rapid && sweepStart < 0) sweepStart = frame;
+    if (!rapid && sweepStart >= 0) {
+      if (frame - sweepStart >= 4) alertasVisuales.push({ tipo: 'barrido_rapido', cuadro: sweepStart, cuadro_final: frame - 1, descripcion: 'Barrido rápido o cambio visual sostenido; revisar continuidad de objetos y personas.' });
+      sweepStart = -1;
+    }
+  }
   const frames = [];
   const interval = Math.max(1, Math.floor((decoded - 1) / 18));
   const stills = spawnSync(executable, [
@@ -51,7 +74,7 @@ export function auditVideoFrames(bytes, { executable = ffmpegPath } = {}) {
       }
     }
   }
-  return { decoded, frames, mayoresCambios, limitation: decoded >= 1800
+  return { decoded, frames, mayoresCambios, alertasVisuales, limitation: decoded >= 1800
     ? 'El barrido temporal se limitó a los primeros 1 800 cuadros.'
     : '' };
   } finally {
