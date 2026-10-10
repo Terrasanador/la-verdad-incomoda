@@ -337,7 +337,7 @@
       <p>Fotos, audio, video MP4/WebM, PDF, Word, Excel, PowerPoint y texto. Adjuntos: máximo 3 MB. Enlaces directos a archivos: hasta 20 MB. Video: audio y muestra de fotogramas; no cada escena.</p>
       <label class="file-button" for="fileInput">Seleccionar archivo</label>
       <input id="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.flac,.ogg,.mp4,.webm,.pdf,.txt,.md,.csv,.tsv,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
-      <div class="selected-file" id="selectedFile"><strong id="fileName"></strong><small id="fileDetails"></small><button id="removeFile" type="button">Quitar archivo</button></div>
+      <div class="selected-file" id="selectedFile"><strong id="fileName"></strong><small id="fileDetails"></small><small id="fileProvenance" role="status"></small><button id="removeFile" type="button">Quitar archivo</button></div>
     </div>
     <div class="mode-row">
       <button class="mode active" type="button" data-mode="rapido"><strong>⚡ Análisis rápido</strong><small>Evaluación breve con fuentes.</small></button>
@@ -823,6 +823,22 @@
       `${file.type || "Tipo desconocido"} · ${bytes(file.size)}`;
 
     selectedFileBox.classList.add("visible");
+    const signal = document.getElementById("fileProvenance");
+    signal.textContent = /^(image|video)\//.test(file.type) ? "Revisando declaración de procedencia…" : "";
+    if (/^(image|video)\//.test(file.type)) {
+      Promise.all([file.slice(0, 2000000).arrayBuffer(), file.slice(Math.max(2000000, file.size - 2000000)).arrayBuffer()])
+        .then(parts => {
+          if (selectedFile !== file) return;
+          const decoder = new TextDecoder("latin1");
+          const metadata = parts.map(part => decoder.decode(part)).join("");
+          signal.textContent = /compositeWithTrainedAlgorithmicMedia/i.test(metadata)
+            ? "⚠️ Metadatos declaran edición con IA. Declaración sin autenticar."
+            : /trainedAlgorithmicMedia/i.test(metadata)
+              ? "⚠️ Metadatos declaran generación con IA. Declaración sin autenticar."
+              : "Origen no confirmado: no se detectó declaración de IA; su ausencia no prueba autenticidad.";
+        })
+        .catch(() => { if (selectedFile === file) signal.textContent = "No se pudieron leer los metadatos de procedencia."; });
+    }
   }
 
 async function sampleVideoFrames(file) {
@@ -1594,6 +1610,14 @@ async function sampleVideoFrames(file) {
     maybeRequestContent(data);
   }
 
+  function renderProvenance(data) {
+    const media = (Array.isArray(data.cobertura_archivos) ? data.cobertura_archivos : [])
+      .map(item => item.procedencia_ia).filter(Boolean);
+    if (!media.length) return "";
+    const labels = media.map(item => `${item.label}: ${item.detail}`);
+    return `<div class="grid">${textCard("Procedencia de imagen o video", labels.join(" "), true)}</div>`;
+  }
+
   function renderNoCheckableClaim(data) {
     lastAnalysisData = data;
     const sources = Array.isArray(data.fuentes) ? data.fuentes : [];
@@ -1601,6 +1625,7 @@ async function sampleVideoFrames(file) {
     const limitations = unique(data.limitaciones || []);
     result.innerHTML = `
       ${reportSource()}
+      ${renderProvenance(data)}
       ${renderFinalVerdict(data, "NO VERIFICABLE")}
       <h2 class="verdict">Clasificación técnica: SIN AFIRMACIÓN VERIFICABLE</h2>
       <div class="metrics">
@@ -1717,6 +1742,7 @@ async function sampleVideoFrames(file) {
 
     result.innerHTML = `
       ${reportSource()}
+      ${renderProvenance(data)}
       ${isProfileAudit ? "" : renderFinalVerdict(data, verdict)}
       <h2 class="verdict">
         ${isProfileAudit ? "AUDITORÍA DE PUBLICACIONES" : `Clasificación técnica: ${esc(verdict)}`}
