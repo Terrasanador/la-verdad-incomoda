@@ -1,3 +1,8 @@
+# Versión 1.35.0 - Verificación del programa Jóvenes Construyendo el Futuro (2026-10-10)
+
+- Contrasta la pausa de vinculaciones de octubre con la continuidad del programa y los presupuestos 2026 y 2027.
+- Añade ocho fuentes, contexto de amplificación, biblioteca, portada y sitemap.
+
 # Versión 1.29.0 - Contenido editorial original y separación publicitaria (2026-10-03)
 
 - Limita la carga de AdSense a las verificaciones editoriales publicadas; el analizador automático, la biblioteca y las páginas institucionales conservan la señal de propiedad, pero no solicitan anuncios.
