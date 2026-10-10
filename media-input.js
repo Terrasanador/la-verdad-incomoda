@@ -78,13 +78,15 @@ export async function prepareFile(file,{maxBytes=MAX_UPLOAD_BYTES,fetchImpl=fetc
       decodedFrames=audit.decoded;
       const frames=audit.frames.length ? audit.frames : Array.isArray(file.frames) ? file.frames.slice(0,5) : [];
       inspectedFrames=frames.length;
-      if (audit.decoded) note(`BARRIDO TEMPORAL: se decodificaron ${audit.decoded} cuadros. El análisis visual detallado usa ${frames.length} fotogramas seleccionados; este barrido no detecta por sí solo generación con IA.`);
+      if (audit.decoded) note(`BARRIDO TEMPORAL: se compararon ${audit.decoded} cuadros a baja resolución. Los mayores cambios de imagen se observaron cerca de los cuadros ${(audit.mayoresCambios || []).map(change => change.cuadro).join(', ')}; pueden deberse al movimiento de cámara o a un corte y no prueban uso de IA. El análisis visual detallado usa ${frames.length} fotogramas distribuidos a lo largo del video.`);
       if (audit.limitation) limitations.push(audit.limitation);
       for (const frame of frames) {
         const image=validateFile({name:'frame.jpg',type:'image/jpeg',data:frame.data},100000);
         if (image.bytes[0]!==255 || image.bytes[1]!==216) fail('Fotograma no válido.');
         const seconds=Number(frame.seconds);
-        note(`Fotograma muestreado a ${Number.isFinite(seconds)?seconds.toFixed(2):'tiempo desconocido'} segundos.`);
+        note(Number.isInteger(frame.frame_index)
+          ? `Fotograma muestreado del cuadro ${frame.frame_index} de ${audit.decoded}. Busca deformaciones persistentes de rostros, manos, texto u objetos entre muestras; no confundas desenfoque, compresión o destellos con prueba de IA.`
+          : `Fotograma muestreado a ${Number.isFinite(seconds)?seconds.toFixed(2):'tiempo desconocido'} segundos.`);
         content.push({type:'input_image',image_url:`data:image/jpeg;base64,${frame.data}`,detail:'high'});
       }
       limitations.push(frames.length
