@@ -20,6 +20,10 @@ for (const [name, html] of [['index.html', index], ['index-final.html', indexFin
     const originals = html.lastIndexOf('renderOriginalPublications()');
     assert(explanation > -1 && sources > explanation && originals > sources);
   });
+
+  test(`${name} moves original investigations below the analyzer and results`, () => {
+    assert.match(html, /result\.insertAdjacentElement\("afterend", editorialHome\)/);
+  });
 }
 
 test('backend validates and compares every attached image', () => {

@@ -444,6 +444,8 @@
   const progressLabel = document.getElementById("progressLabel");
   const progressBar = document.getElementById("progressBar");
   const result = document.getElementById("result");
+  const editorialHome = document.querySelector(".editorial-home");
+  if (editorialHome) result.insertAdjacentElement("afterend", editorialHome);
   const contentModal = document.getElementById("contentModal");
   const contentModalInput = document.getElementById("contentModalInput");
   const contentModalMessage = document.getElementById("contentModalMessage");
