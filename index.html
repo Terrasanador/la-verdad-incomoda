@@ -312,9 +312,9 @@
 
   <section class="workspace" id="analizador">
     <h2>¿Qué quieres verificar?</h2>
-    <p class="workspace-intro">Escribe, pega un enlace o añade un archivo.</p>
+    <p class="workspace-intro">Primero escribe qué necesitas investigar. Después puedes añadir hasta 10 imágenes como evidencia para compararlas.</p>
     <div class="whatsapp-help"><strong>¿Te llegó por WhatsApp?</strong>Copia y pega el mensaje o enlace. Si recibiste una imagen, audio o video, adjúntalo abajo.</div>
-    <textarea id="newsInput" placeholder="Pega aquí el enlace, mensaje o afirmación que quieres comprobar."></textarea>
+    <textarea id="newsInput" placeholder="Escribe qué necesitas investigar. Ejemplo: ¿Es verdad que el IMSS está tan mal o se trata de un golpe político de cuentas de derecha?"></textarea>
     <div class="voice-tools" aria-label="Herramientas de accesibilidad por voz">
       <button class="voice-button" id="voiceInputButton" type="button" aria-pressed="false">
         <span aria-hidden="true">🎙️</span>
@@ -444,6 +444,9 @@
   const progressLabel = document.getElementById("progressLabel");
   const progressBar = document.getElementById("progressBar");
   const result = document.getElementById("result");
+  const modeRow = document.querySelector(".mode-row");
+  if (modeRow) dropZone.parentNode.insertBefore(modeRow, dropZone);
+  if (analyzeButton) dropZone.parentNode.insertBefore(analyzeButton, dropZone);
   const editorialHome = document.querySelector(".editorial-home");
   if (editorialHome) result.insertAdjacentElement("afterend", editorialHome);
   const contentModal = document.getElementById("contentModal");

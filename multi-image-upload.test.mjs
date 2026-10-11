@@ -26,6 +26,12 @@ for (const [name, html] of [['index.html', index], ['index-final.html', indexFin
   test(`${name} moves original investigations below the analyzer and results`, () => {
     assert.match(html, /result\.insertAdjacentElement\("afterend", editorialHome\)/);
   });
+
+  test(`${name} keeps the research question and analyze button above attachments`, () => {
+    assert.match(html, /Primero escribe qué necesitas investigar/);
+    assert.match(html, /IMSS está tan mal/);
+    assert.match(html, /insertBefore\(analyzeButton, dropZone\)/);
+  });
 }
 
 test('backend validates and compares every attached image', () => {
