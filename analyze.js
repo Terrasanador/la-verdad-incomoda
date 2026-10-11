@@ -83,9 +83,15 @@ export default async function handler(req, res) {
 const tieneTexto =
   typeof consulta === "string" && consulta.trim().length > 0;
 
-const archivo = body.file || null;
-const tieneArchivo = !!archivo;
-if (archivo) validateFile(archivo);
+const archivos = Array.isArray(body.files)
+  ? body.files.filter(Boolean)
+  : (body.file ? [body.file] : []);
+if (archivos.length > 10) return res.status(413).json({error:'Puedes adjuntar como máximo 10 imágenes.'});
+if (archivos.length > 1 && archivos.some(file => !String(file?.type || '').startsWith('image/'))) {
+  return res.status(415).json({error:'La carga múltiple admite hasta 10 imágenes. Para audio, video o documentos, adjunta un solo archivo.'});
+}
+archivos.forEach(validateFile);
+const tieneArchivo = archivos.length > 0;
 if (tieneTexto && consulta.length > 20000) return res.status(413).json({error:'La consulta excede 20 000 caracteres.'});
 
 if (!tieneTexto && !tieneArchivo) {
@@ -613,7 +619,13 @@ const texto = tieneTexto
         else extraccionEnlace.limitaciones.push('No se pudo descargar el medio enlazado por el proveedor; no se inspeccionó su audio directamente.');
       }
     }
-    for (const [file, maxBytes, remote] of [[archivo, 3_000_000, false], [extraccionEnlace?.archivo_recuperado, 20_000_000, true]]) {
+    for (const [indice, file] of archivos.entries()) {
+      contenidoUsuario.push({type:'input_text',text:`IMAGEN ADJUNTA ${indice + 1} DE ${archivos.length}. Compárala con todas las demás imágenes adjuntas; identifica coincidencias y diferencias sin asumir que varias copias son fuentes independientes.`});
+      const prepared = await prepareFile(file, {maxBytes:3_000_000});
+      contenidoUsuario.push(...prepared.content);
+      coberturaArchivos.push({...prepared.coverage, archivo_indice: indice + 1, archivo_nombre: file.name});
+    }
+    for (const [file, maxBytes, remote] of [[extraccionEnlace?.archivo_recuperado, 20_000_000, true]]) {
       if (!file) continue;
       try {
         const prepared = await prepareFile(file, {maxBytes});

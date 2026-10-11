@@ -65,7 +65,7 @@
     textarea{width:100%;min-height:135px;resize:vertical;background:#070708;color:white;border:1px solid #464650;border-radius:22px;padding:18px;outline:none;font-size:16px;line-height:1.5}textarea:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(255,59,48,.12)}
     .platforms{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0 16px}.platforms span{font-size:11px;color:#94949d;border:1px solid var(--border);border-radius:999px;padding:6px 9px}
     .drop-zone{padding:22px 16px;border:1px dashed #5c5c68;border-radius:22px;background:#0c0c0f;text-align:center;transition:.2s}.drop-zone.dragging{border-color:var(--red);background:rgba(255,59,48,.08)}
-    .drop-zone h3{margin-bottom:5px}.drop-zone p{color:var(--muted);font-size:13px;line-height:1.45}.file-button{display:inline-block;margin-top:12px;padding:11px 16px;border:1px solid #555560;border-radius:999px;background:#1b1b20;font-weight:800}#fileInput{display:none}
+    .drop-zone h3{margin-bottom:5px}.drop-zone p{color:var(--muted);font-size:13px;line-height:1.45}.file-button{display:inline-block;margin-top:12px;padding:11px 16px;border:1px solid #555560;border-radius:999px;background:#1b1b20;font-weight:800}#fileInput{display:none}.file-list{display:grid;gap:8px;margin-top:10px}.file-item{display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;padding:10px;border:1px solid var(--border);border-radius:12px;background:#17171c;text-align:left}.file-item small{grid-column:1;color:var(--muted)}.file-item button{grid-column:2;grid-row:1/3;border:1px solid #4a4a54;background:#24242a;color:#fff;border-radius:10px;padding:8px}.original-publications{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}.original-publication{margin:0;padding:8px;border:1px solid var(--border);border-radius:14px;background:#17171c}.original-publication img{display:block;width:100%;max-height:280px;object-fit:contain;border-radius:9px;background:#09090b}.original-publication figcaption{padding-top:7px;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
     .selected-file{display:none;margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:15px;background:#17171c;text-align:left}.selected-file.visible{display:block}.selected-file small{display:block;color:var(--muted);margin-top:4px}.selected-file button{margin-top:9px;border:1px solid #4a4a54;background:#24242a;color:#fff;border-radius:11px;padding:8px 11px}
     .mode-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.mode{padding:14px;border:1px solid var(--border);border-radius:16px;background:#17171b;color:#fff;text-align:left}.mode.active{border-color:var(--red);background:rgba(255,59,48,.09)}.mode strong{display:block;margin-bottom:4px}.mode small{color:var(--muted)}
     .analyze{width:100%;min-height:68px;border:0;border-radius:22px;background:var(--red);color:white;font-size:clamp(19px,4vw,25px);font-weight:900}.analyze:disabled{opacity:.55;cursor:not-allowed}
@@ -333,11 +333,11 @@
     </div>
     <div class="platforms"><span>Facebook</span><span>TikTok</span><span>YouTube</span><span>Instagram</span><span>X</span><span>Threads</span><span>Páginas web</span></div>
     <div class="drop-zone" id="dropZone">
-      <h3>Arrastra un archivo aquí</h3>
-      <p>Fotos, audio, video MP4/WebM, PDF, Word, Excel, PowerPoint y texto. Adjuntos: máximo 3 MB. Enlaces directos a archivos: hasta 20 MB. Video: audio y muestra de fotogramas; no cada escena.</p>
-      <label class="file-button" for="fileInput">Seleccionar archivo</label>
-      <input id="fileInput" type="file" accept=".jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.flac,.ogg,.mp4,.webm,.pdf,.txt,.md,.csv,.tsv,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
-      <div class="selected-file" id="selectedFile"><strong id="fileName"></strong><small id="fileDetails"></small><small id="fileProvenance" role="status"></small><button id="removeFile" type="button">Quitar archivo</button></div>
+      <h3>Arrastra hasta 10 imágenes aquí</h3>
+      <p>Puedes comparar hasta 10 imágenes en un mismo análisis. Se optimizan automáticamente antes de enviarse. Audio, video, PDF, Word, Excel, PowerPoint y texto: un archivo por análisis, máximo 3 MB.</p>
+      <label class="file-button" for="fileInput">Seleccionar imágenes o archivo</label>
+      <input id="fileInput" type="file" multiple accept=".jpg,.jpeg,.png,.webp,.gif,.mp3,.m4a,.wav,.flac,.ogg,.mp4,.webm,.pdf,.txt,.md,.csv,.tsv,.doc,.docx,.xls,.xlsx,.ppt,.pptx" />
+      <div class="selected-file" id="selectedFile"><div class="file-list" id="fileList"></div><button id="removeFile" type="button">Quitar todo</button></div>
     </div>
     <div class="mode-row">
       <button class="mode active" type="button" data-mode="rapido"><strong>⚡ Análisis rápido</strong><small>Evaluación breve con fuentes.</small></button>
@@ -435,8 +435,7 @@
   const fileInput = document.getElementById("fileInput");
   const dropZone = document.getElementById("dropZone");
   const selectedFileBox = document.getElementById("selectedFile");
-  const fileName = document.getElementById("fileName");
-  const fileDetails = document.getElementById("fileDetails");
+  const fileList = document.getElementById("fileList");
   const removeFile = document.getElementById("removeFile");
   const analyzeButton = document.getElementById("analyzeButton");
   const progress = document.getElementById("progress");
@@ -473,7 +472,8 @@
   let welcomeHasPlayed = false;
 
 
-  let selectedFile = null;
+  let selectedFiles = [];
+  let activePreviewUrls = [];
   let threadsCooldownUntil = 0;
   try { threadsCooldownUntil = Number(sessionStorage.getItem("lvi_threads_retry_at")) || 0; } catch {}
   let selectedMode = "rapido";
@@ -802,43 +802,63 @@
     return Math.max(0, Math.min(100, Math.round(number)));
   }
 
-  function setFile(file) {
-    selectedFile = file || null;
-
-    if (!file) {
+  function renderSelectedFiles() {
+    if (!selectedFiles.length) {
       fileInput.value = "";
       selectedFileBox.classList.remove("visible");
+      fileList.innerHTML = "";
       return;
     }
+    fileList.innerHTML = selectedFiles.map((file, index) => `
+      <div class="file-item">
+        <strong>${index + 1}. ${esc(file.name)}</strong>
+        <small>${esc(file.type || "Tipo desconocido")} · ${bytes(file.size)}</small>
+        <button type="button" data-remove-file="${index}" aria-label="Quitar ${esc(file.name)}">Quitar</button>
+      </div>`).join("");
+    selectedFileBox.classList.add("visible");
+  }
 
-    if (file.size > 3000000) {
+  function setFiles(fileCollection) {
+    const incoming = Array.from(fileCollection || []).filter(Boolean);
+    if (!incoming.length) { selectedFiles = []; renderSelectedFiles(); return; }
+    const combined = [...selectedFiles, ...incoming];
+    if (combined.length > 10) {
+      alert("Puedes adjuntar como máximo 10 imágenes.");
+      fileInput.value = "";
+      return;
+    }
+    if (combined.length > 1 && combined.some(file => !file.type.startsWith("image/"))) {
+      alert("La carga múltiple admite únicamente imágenes. Para audio, video o documentos, selecciona un solo archivo.");
+      fileInput.value = "";
+      return;
+    }
+    if (combined.length === 1 && !combined[0].type.startsWith("image/") && combined[0].size > 3000000) {
       alert("El adjunto excede 3 MB. Un enlace directo público permite archivos de hasta 20 MB.");
       fileInput.value = "";
-      selectedFile = null;
       return;
     }
+    selectedFiles = combined;
+    fileInput.value = "";
+    renderSelectedFiles();
+  }
 
-    fileName.textContent = file.name;
-    fileDetails.textContent =
-      `${file.type || "Tipo desconocido"} · ${bytes(file.size)}`;
-
-    selectedFileBox.classList.add("visible");
-    const signal = document.getElementById("fileProvenance");
-    signal.textContent = /^(image|video)\//.test(file.type) ? "Revisando declaración de procedencia…" : "";
-    if (/^(image|video)\//.test(file.type)) {
-      Promise.all([file.slice(0, 2000000).arrayBuffer(), file.slice(Math.max(2000000, file.size - 2000000)).arrayBuffer()])
-        .then(parts => {
-          if (selectedFile !== file) return;
-          const decoder = new TextDecoder("latin1");
-          const metadata = parts.map(part => decoder.decode(part)).join("");
-          signal.textContent = /compositeWithTrainedAlgorithmicMedia/i.test(metadata)
-            ? "⚠️ Metadatos declaran edición con IA. Declaración sin autenticar."
-            : /trainedAlgorithmicMedia/i.test(metadata)
-              ? "⚠️ Metadatos declaran generación con IA. Declaración sin autenticar."
-              : "Origen no confirmado: no se detectó declaración de IA; su ausencia no prueba autenticidad.";
-        })
-        .catch(() => { if (selectedFile === file) signal.textContent = "No se pudieron leer los metadatos de procedencia."; });
-    }
+  async function optimizeImage(file) {
+    if (!file.type.startsWith("image/") || file.size <= 300000) return file;
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, 1800 / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    canvas.getContext("2d", {alpha:false}).drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close?.();
+    let quality = 0.86;
+    let blob;
+    do {
+      blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", quality));
+      quality -= 0.1;
+    } while (blob && blob.size > 300000 && quality >= 0.36);
+    if (!blob) throw new Error(`No se pudo optimizar ${file.name}.`);
+    return new File([blob], file.name.replace(/\.[^.]+$/, "") + ".jpg", {type:"image/jpeg", lastModified:file.lastModified});
   }
 
 async function sampleVideoFrames(file) {
@@ -1621,6 +1641,21 @@ async function sampleVideoFrames(file) {
     return `<div class="grid">${media.length ? textCard("Procedencia de imagen o video", labels.join(" "), true) : ""}${alerts.length ? textCard("⚠️ Destellos y barridos para revisión visual", `${observations.join(" ")} Son indicios para examinar; no demuestran por sí solos generación con IA.`, true) : ""}</div>`;
   }
 
+  function renderOriginalPublications() {
+    activePreviewUrls.forEach(url => URL.revokeObjectURL(url));
+    activePreviewUrls = [];
+    if (!selectedFiles.length) return "";
+    const items = selectedFiles.map((file, index) => {
+      if (!file.type.startsWith("image/")) {
+        return `<figure class="original-publication"><figcaption>${index + 1}. ${esc(file.name)}</figcaption></figure>`;
+      }
+      const url = URL.createObjectURL(file);
+      activePreviewUrls.push(url);
+      return `<figure class="original-publication"><img src="${esc(url)}" alt="Publicación original ${index + 1}" loading="lazy"><figcaption>${index + 1}. ${esc(file.name)}</figcaption></figure>`;
+    }).join("");
+    return `<article class="card full"><h3>Publicaciones originales analizadas</h3><p>Material aportado por el usuario; se muestra al final para que la explicación y el contraste aparezcan primero.</p><div class="original-publications">${items}</div></article>`;
+  }
+
   function renderNoCheckableClaim(data) {
     lastAnalysisData = data;
     const sources = Array.isArray(data.fuentes) ? data.fuentes : [];
@@ -1628,7 +1663,6 @@ async function sampleVideoFrames(file) {
     const limitations = unique(data.limitaciones || []);
     result.innerHTML = `
       ${reportSource()}
-      ${renderProvenance(data)}
       ${renderFinalVerdict(data, "NO VERIFICABLE")}
       <h2 class="verdict">Clasificación técnica: SIN AFIRMACIÓN VERIFICABLE</h2>
       <div class="metrics">
@@ -1644,6 +1678,8 @@ async function sampleVideoFrames(file) {
         ${listCard("Qué falta para verificar", limitations, true)}
         ${renderLinkContext(data)}
         ${renderSources(sources)}
+        ${renderProvenance(data)}
+        ${renderOriginalPublications()}
       </div>
       ${actions()}
     `;
@@ -1745,7 +1781,6 @@ async function sampleVideoFrames(file) {
 
     result.innerHTML = `
       ${reportSource()}
-      ${renderProvenance(data)}
       ${isProfileAudit ? "" : renderFinalVerdict(data, verdict)}
       <h2 class="verdict">
         ${isProfileAudit ? "AUDITORÍA DE PUBLICACIONES" : `Clasificación técnica: ${esc(verdict)}`}
@@ -1886,6 +1921,8 @@ async function sampleVideoFrames(file) {
 
         ${renderLinkContext(data)}
         ${renderSources(sources)}
+        ${renderProvenance(data)}
+        ${renderOriginalPublications()}
       </div>
 
       ${actions()}
@@ -1939,9 +1976,9 @@ async function sampleVideoFrames(file) {
       lastResultWasSupplemented = false;
     }
 
-    if (!text && !selectedFile) {
+    if (!text && !selectedFiles.length) {
       alert(
-        "Escribe una pregunta, pega una afirmación, un enlace o selecciona un archivo."
+        "Escribe una pregunta, pega una afirmación, un enlace o selecciona imágenes o un archivo."
       );
       return;
     }
@@ -1951,7 +1988,7 @@ async function sampleVideoFrames(file) {
     startProgress();
     trackUsage("verificacion_iniciada", {
       modo: selectedMode,
-      entrada: selectedFile ? "archivo" : "texto_o_enlace",
+      entrada: selectedFiles.length ? (selectedFiles.length > 1 ? "imagenes_multiples" : "archivo") : "texto_o_enlace",
       complemento_manual: Boolean(isSupplement)
     });
 
@@ -1963,18 +2000,22 @@ async function sampleVideoFrames(file) {
         task: "completo"
       };
 
-      if (selectedFile) {
-        payload.file = {
-          name: selectedFile.name,
-          type:
-            selectedFile.type ||
-            "application/octet-stream",
-          size: selectedFile.size,
-          data: await file64(selectedFile)
-        };
-        if (/video\//.test(selectedFile.type) || /\.(mp4|webm)$/i.test(selectedFile.name)) {
-          payload.file.frames = await sampleVideoFrames(selectedFile);
-        }
+      if (selectedFiles.length) {
+        const preparedFiles = await Promise.all(selectedFiles.map(optimizeImage));
+        const encodedFiles = await Promise.all(preparedFiles.map(async file => {
+          const encoded = {
+            name: file.name,
+            type: file.type || "application/octet-stream",
+            size: file.size,
+            data: await file64(file)
+          };
+          if (/video\//.test(file.type) || /\.(mp4|webm)$/i.test(file.name)) {
+            encoded.frames = await sampleVideoFrames(file);
+          }
+          return encoded;
+        }));
+        if (encodedFiles.length === 1) payload.file = encodedFiles[0];
+        else payload.files = encodedFiles;
       }
 
       const response = await fetch("/api/analyze", {
@@ -2069,12 +2110,19 @@ async function sampleVideoFrames(file) {
   howModal.addEventListener("click", event => { if (event.target === howModal) hideHowModal(); });
 
   fileInput.addEventListener("change", () =>
-    setFile(fileInput.files?.[0])
+    setFiles(fileInput.files)
   );
 
   removeFile.addEventListener("click", () =>
-    setFile(null)
+    setFiles([])
   );
+
+  fileList.addEventListener("click", event => {
+    const button = event.target.closest("[data-remove-file]");
+    if (!button) return;
+    selectedFiles.splice(Number(button.dataset.removeFile), 1);
+    renderSelectedFiles();
+  });
 
   ["dragenter", "dragover"].forEach(eventName => {
     dropZone.addEventListener(eventName, event => {
@@ -2091,7 +2139,7 @@ async function sampleVideoFrames(file) {
   });
 
   dropZone.addEventListener("drop", event => {
-    setFile(event.dataTransfer?.files?.[0]);
+    setFiles(event.dataTransfer?.files);
   });
 
   document.querySelectorAll(".mode").forEach(button => {
