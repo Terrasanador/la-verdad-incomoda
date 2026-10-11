@@ -39,4 +39,6 @@ test('backend validates and compares every attached image', () => {
   assert.match(analyze, /archivos\.length > 10/);
   assert.match(analyze, /for \(const \[indice, file\] of archivos\.entries\(\)\)/);
   assert.match(analyze, /Compárala con todas las demás imágenes adjuntas/);
+  assert.doesNotMatch(analyze, /\barchivo\s*&&/);
+  assert.match(analyze, /archivos\.every\(file/);
 });

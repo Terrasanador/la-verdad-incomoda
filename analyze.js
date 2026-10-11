@@ -1697,9 +1697,8 @@ ${texto}${bloqueExtraccion}`
     ].join(" ");
 
     const esImagen =
-      archivo &&
-      typeof archivo.type === "string" &&
-      archivo.type.startsWith("image/");
+      archivos.length > 0 &&
+      archivos.every(file => typeof file.type === "string" && file.type.startsWith("image/"));
 
     const consultaEsEnlace =
       Boolean(enlaceDetectado);
