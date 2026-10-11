@@ -988,6 +988,7 @@ async function sampleVideoFrames(file) {
     }).join("");
 
     return `
+      ${integrity.etiqueta_especial && integrity.etiqueta_especial !== "NINGUNA" ? textCard("Clasificación del patrón de difusión", integrity.etiqueta_especial, true) : ""}
       ${accounts.length ? `<article class="card full"><h3>Cuentas comparadas</h3><div class="account-audit">${accountRows}</div></article>` : ""}
       ${matches.length ? `<article class="card full"><h3>Publicaciones coincidentes</h3>${matchRows}</article>` : ""}
       ${textCard("Patrón de publicación grupal", integrity.patron_publicacion_grupal, true)}

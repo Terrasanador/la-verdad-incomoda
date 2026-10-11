@@ -391,6 +391,12 @@ const texto = tieneTexto
       "Para publicaciones en grupo, construye una cronología: primera aparición localizable, cuentas posteriores, diferencia de minutos u horas, fragmento coincidente y fuente matriz probable. Distingue copiar un comunicado distribuido públicamente de operar una red coordinada encubierta.",
       "Si el usuario aporta varias capturas o enlaces, compáralos entre sí además de buscar coincidencias públicas. Si solo hay una captura sin identificadores, declara que no es posible atribuir cuentas ni medir coordinación con certeza.",
       "NADO SINCRONIZADO DE DESINFORMACIÓN:",
+      "Antes de buscar bots o una operación formal, detecta AMPLIFICACIÓN SINCRONIZADA DE NARRATIVA. Puede existir aunque el dato base sea verdadero, parcial, engañoso o todavía no verificable.",
+      "Usa AMPLIFICACIÓN SINCRONIZADA DE NARRATIVA cuando existan al menos dos emisores aparentemente distintos y concurran varias señales observables: misma imagen o recorte, misma cifra destacada, proximidad temporal, orden argumental semejante, comparación política equivalente, errores compartidos o una fuente matriz común. Una cuenta puede cambiar el adversario o el ejemplo comparativo y conservar la misma narrativa.",
+      "En capturas aportadas por el usuario, lee y compara nombres de cuenta, hora relativa, texto, cifra, documento, resaltados y composición visual. Registra coincidencias observadas aun cuando no haya URL directa; en ese caso deja la URL vacía y explica la limitación, sin descartar la comparación.",
+      "Separa tres conclusiones: (a) veracidad y contexto del dato; (b) amplificación sincronizada observable; y (c) coordinación organizada, pago o automatización. Las señales de (b) no prueban por sí solas (c).",
+      "Si varias publicaciones usan el mismo tabulador, gráfico, fotografía, video o comunicado, cuentan como una sola fuente matriz. Verifica además si comparan conceptos no equivalentes —por ejemplo sueldo base frente a ingreso total, beca temporal frente a salario, cifra nominal frente a neta— y clasifica el encuadre por su efecto.",
+      "Describe el objetivo político observable y la orientación solo con evidencia acumulada. Aplica el mismo método a redes de derecha, izquierda, oficialistas, opositoras o comerciales; la orientación no decide el veredicto.",
       "Cuando varias cuentas, dirigentes, medios o páginas difundan la misma afirmación falsa, compara literalmente titulares, frases, errores ortográficos, imágenes, hashtags, enlaces, orden de argumentos y marcas de tiempo. Identifica la publicación más antigua localizable y separa copias, paráfrasis y verificaciones independientes.",
       "La coincidencia ideológica no demuestra coordinación. Tampoco la demuestra que varias personas comenten el mismo hecho noticioso. Exige similitud textual o visual poco probable, proximidad temporal, fuente matriz común, instrucciones compartidas, red estable de republicación u otras señales observables.",
       "Usa NADO SINCRONIZADO DE DESINFORMACIÓN únicamente cuando la afirmación central ya haya sido calificada FALSA y existan al menos tres emisores aparentemente distintos con coincidencias textuales o visuales y temporales verificables. Enumera las publicaciones comparadas, sus fechas, fragmentos coincidentes y URLs; nunca inventes cuentas ni métricas.",
@@ -954,7 +960,7 @@ ${texto}${bloqueExtraccion}`
             confianza_deteccion_bots: { type: "integer", minimum: 0, maximum: 100 },
             etiqueta_especial: {
               type: "string",
-              enum: ["NINGUNA", "CADENA DE AMPLIFICACIÓN CON CONTENIDO REPLICADO", "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA", "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA", "NADO SINCRONIZADO DE DESINFORMACIÓN", "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS", "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN"]
+              enum: ["NINGUNA", "CADENA DE AMPLIFICACIÓN CON CONTENIDO REPLICADO", "AMPLIFICACIÓN SINCRONIZADA DE NARRATIVA", "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA", "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA", "NADO SINCRONIZADO DE DESINFORMACIÓN", "INFORMACIÓN AMARILLISTA DIFUNDIDA POR BOTS", "GRANJA DE BOTS DIFUNDIENDO DESINFORMACIÓN"]
             },
             limitaciones: { type: "array", items: { type: "string" } }
           }
@@ -1542,6 +1548,7 @@ ${texto}${bloqueExtraccion}`
       etiqueta_especial: [
         "NINGUNA",
         "CADENA DE AMPLIFICACIÓN CON CONTENIDO REPLICADO",
+        "AMPLIFICACIÓN SINCRONIZADA DE NARRATIVA",
         "REPETICIÓN PARTIDISTA DE UNA AFIRMACIÓN FALSA",
         "POSIBLE DIFUSIÓN COORDINADA O AUTOMATIZADA",
         "NADO SINCRONIZADO DE DESINFORMACIÓN",
