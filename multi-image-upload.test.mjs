@@ -12,6 +12,8 @@ for (const [name, html] of [['index.html', index], ['index-final.html', indexFin
     assert.match(html, /combined\.length > 10/);
     assert.match(html, /payload\.files = encodedFiles/);
     assert.match(html, /Promise\.all\(selectedFiles\.map\(optimizeImage\)\)/);
+    assert.match(html, /targetBytes = 220000/);
+    assert.match(html, /totalEncoded > 3200000/);
   });
 
   test(`${name} places original publications after explanation and sources`, () => {

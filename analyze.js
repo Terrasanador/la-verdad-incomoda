@@ -90,7 +90,13 @@ if (archivos.length > 10) return res.status(413).json({error:'Puedes adjuntar co
 if (archivos.length > 1 && archivos.some(file => !String(file?.type || '').startsWith('image/'))) {
   return res.status(415).json({error:'La carga múltiple admite hasta 10 imágenes. Para audio, video o documentos, adjunta un solo archivo.'});
 }
-archivos.forEach(validateFile);
+archivos.forEach((file, indice) => {
+  try { validateFile(file); }
+  catch (error) {
+    error.message = `Imagen o archivo ${indice + 1} (${String(file?.name || 'sin nombre')}): ${error.message}`;
+    throw error;
+  }
+});
 const tieneArchivo = archivos.length > 0;
 if (tieneTexto && consulta.length > 20000) return res.status(413).json({error:'La consulta excede 20 000 caracteres.'});
 

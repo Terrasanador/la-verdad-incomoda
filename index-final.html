@@ -845,21 +845,26 @@
   }
 
   async function optimizeImage(file) {
-    if (!file.type.startsWith("image/") || file.size <= 300000) return file;
+    const targetBytes = 220000;
+    if (!file.type.startsWith("image/") || file.size <= targetBytes) return file;
     const bitmap = await createImageBitmap(file);
-    const scale = Math.min(1, 1800 / Math.max(bitmap.width, bitmap.height));
-    const canvas = document.createElement("canvas");
-    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-    canvas.getContext("2d", {alpha:false}).drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    let maxSide = 1600;
+    let blob = null;
+    while (maxSide >= 500) {
+      const scale = Math.min(1, maxSide / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      canvas.getContext("2d", {alpha:false}).drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      for (const quality of [0.82, 0.68, 0.54, 0.42]) {
+        blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", quality));
+        if (blob && blob.size <= targetBytes) break;
+      }
+      if (blob && blob.size <= targetBytes) break;
+      maxSide = Math.floor(maxSide * 0.78);
+    }
     bitmap.close?.();
-    let quality = 0.86;
-    let blob;
-    do {
-      blob = await new Promise(resolve => canvas.toBlob(resolve, "image/jpeg", quality));
-      quality -= 0.1;
-    } while (blob && blob.size > 300000 && quality >= 0.36);
-    if (!blob) throw new Error(`No se pudo optimizar ${file.name}.`);
+    if (!blob || blob.size > targetBytes) throw new Error(`No se pudo reducir ${file.name} al tamaño seguro para el análisis múltiple.`);
     return new File([blob], file.name.replace(/\.[^.]+$/, "") + ".jpg", {type:"image/jpeg", lastModified:file.lastModified});
   }
 
@@ -2016,6 +2021,10 @@ async function sampleVideoFrames(file) {
           }
           return encoded;
         }));
+        const totalEncoded = encodedFiles.reduce((sum, file) => sum + file.data.length, 0);
+        if (encodedFiles.length > 1 && totalEncoded > 3200000) {
+          throw new Error("Las imágenes todavía exceden el límite conjunto después de optimizarlas. Quita una imagen e inténtalo nuevamente.");
+        }
         if (encodedFiles.length === 1) payload.file = encodedFiles[0];
         else payload.files = encodedFiles;
       }
