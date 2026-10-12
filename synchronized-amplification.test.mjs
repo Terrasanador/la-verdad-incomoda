@@ -24,6 +24,10 @@ test('does not turn localized public-service problems into a national crisis', (
   assert.match(analyze, /comunicados 542\/2026 y 545\/2026/);
   assert.match(analyze, /No mezcles IMSS con IMSS-Bienestar/);
   assert.match(analyze, /reconoceProblemasConcretos/);
+  assert.match(analyze, /la tesis medular es la afirmación operativa sobre la institución/);
+  assert.match(analyze, /La existencia de una protesta confirma que hubo una protesta/);
+  assert.match(analyze, /continuidadNacionalDocumentada/);
+  assert.match(analyze, /resultado\.veredicto = "FALSO"/);
 });
 
 test('deduplicates repeated provenance notices for multiple images', () => {

@@ -476,6 +476,9 @@ const texto = tieneTexto
       "Excluye programas sociales, pensiones y notas laterales que no prueben ni contradigan materialmente la afirmación central. Que una captura mencione una pensión no vuelve esa política evidencia del estado nacional del abasto médico.",
       "Que existan protestas, quejas, faltantes o salarios bajos confirma esos hechos concretos, pero no convierte automáticamente en verdadera una narrativa de colapso nacional. Si el dato base es real pero se extrapola para presentar como general una situación no demostrada, usa ENGAÑOSO y veredicto_final ENGAÑOSA, no VERDADERO ni CIERTA.",
       "En preguntas con alternativas —por ejemplo, '¿hay una crisis general o es un golpe político?'— no combines ambas como una sola tesis conjuntiva. Responde por separado: alcance real del problema; encuadre o exageración; amplificación sincronizada observable; y, en otro nivel, coordinación organizada, pago o bots.",
+      "En esa clase de pregunta, la tesis medular es la afirmación operativa sobre la institución —por ejemplo, que el IMSS está colapsado o carece generalizadamente de medicinas—. Evalúala primero y no permitas que la dificultad para probar quién amplificó la narrativa vuelva CIERTA, PARCIALMENTE CIERTA o NO VERIFICABLE la afirmación operativa.",
+      "La existencia de una protesta confirma que hubo una protesta; no confirma automáticamente la representatividad de sus participantes, la exactitud de todas sus consignas ni un colapso institucional. Compara el número documentado de participantes con la plantilla o universo pertinente cuando ambos datos sean compatibles; si no lo son, evita inventar porcentajes y describe el alcance observado.",
+      "Si la tesis central afirma un colapso nacional, ausencia general de medicinas o paralización del IMSS y la evidencia nacional competente muestra continuidad mayoritaria de servicios, cientos de miles de trabajadores operando y niveles altos de surtimiento, clasifica la tesis central como FALSO y el veredicto final como FALSA. Los faltantes locales se explican como excepciones o problemas concretos, no como una parte verdadera de la generalización absoluta.",
       "Respeta exactamente la categoría visible en tablas y capturas. No sustituyas cirujano maxilofacial por médico residente, sueldo base por beca, ni una categoría contractual por otra aunque sus cifras sean cercanas.",
       "",
       "CLASIFICACIONES PERMITIDAS:",
@@ -1378,11 +1381,12 @@ ${texto}${bloqueExtraccion}`
     const alegaCrisisGeneral = /(?:crisis|colapso|desabasto).{0,45}(?:general|nacional|todo el pa[ií]s)|(?:generalizad[ao]|en todo el pa[ií]s).{0,45}(?:crisis|colapso|desabasto)/i.test(textoAlcance);
     const reconoceAlcanceLimitado = /(?:no (?:es|est[aá]) (?:generalizad[ao]|homog[eé]ne[ao])|no (?:demuestra|prueba).{0,35}(?:crisis|colapso|desabasto).{0,25}(?:general|nacional)|no (?:hay|existe) evidencia.{0,55}(?:crisis|colapso|desabasto).{0,30}(?:general|nacional|uniforme)|faltantes? (?:localizados?|puntuales?)|casos? (?:localizados?|puntuales?))/i.test(textoAlcance);
     const reconoceProblemasConcretos = /(?:existen?|hay|documenta(?:n|do)?|registr(?:a|aron|ados?)).{0,45}(?:problemas?|faltantes?|desabasto|protestas?|denuncias?|movilizaciones?)/i.test(textoAlcance);
-    if (alegaCrisisGeneral && reconoceAlcanceLimitado && reconoceProblemasConcretos && !["FALSO", "ENGAÑOSO", "FUERA DE CONTEXTO", "CONTENIDO MANIPULADO"].includes(resultado.veredicto)) {
-      resultado.veredicto = "ENGAÑOSO";
-      resultado.veredicto_final = "ENGAÑOSA";
-      resultado.credibilidad = Math.min(Number(resultado.credibilidad) || 50, 49);
-      resultado.explicacion_veredicto_final = "Las publicaciones parten de problemas concretos, pero los extrapolan a una crisis nacional que la evidencia disponible no demuestra; el alcance generalizado queda contradicho o sin sustento suficiente.";
+    const continuidadNacionalDocumentada = /(?:servicios?|unidades?|hospitales?).{0,45}(?:operan|operando|operaci[oó]n|garantizados?)|(?:abasto|surtimiento).{0,25}(?:9[0-9](?:[.,][0-9]+)?\s*%|elevad[oa]|alto)|(?:cientos de miles|m[aá]s de 400 mil).{0,35}(?:trabajador|laboraron|asistencia)/i.test(textoAlcance);
+    if (alegaCrisisGeneral && reconoceAlcanceLimitado && reconoceProblemasConcretos && continuidadNacionalDocumentada) {
+      resultado.veredicto = "FALSO";
+      resultado.veredicto_final = "FALSA";
+      resultado.credibilidad = Math.min(Number(resultado.credibilidad) || 20, 20);
+      resultado.explicacion_veredicto_final = "Los casos y protestas documentados no demuestran que el IMSS esté en un colapso nacional. La generalización queda contradicha por los indicadores nacionales de continuidad operativa y abasto; los problemas localizados deben evaluarse por separado.";
     }
 
     if (/^parcial\b/i.test(resultado.respuesta_directa) && ["VERDADERO", "MAYORMENTE VERDADERO"].includes(resultado.veredicto)) {
