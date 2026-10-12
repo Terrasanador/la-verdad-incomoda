@@ -1122,7 +1122,7 @@ ${texto}${bloqueExtraccion}`
       clearTimeout(openAITimer);
     }
 
-    const data = await openAIResponse.json();
+    let data = await openAIResponse.json();
 
     if (!openAIResponse.ok) {
       console.error("Error de OpenAI:", data);
@@ -1161,18 +1161,52 @@ ${texto}${bloqueExtraccion}`
     if (data.status === "incomplete") {
       const razon = data?.incomplete_details?.reason || "desconocida";
 
-      console.error("Respuesta incompleta de OpenAI:", {
-        status: data.status,
-        reason: razon
-      });
+      if (razon === "max_output_tokens" && (Date.now() - startedAt) < 210000) {
+        const compactController = new AbortController();
+        const compactTimer = setTimeout(() => compactController.abort(), 65000);
+        try {
+          const compactBody = JSON.parse(openAIRequestBody);
+          compactBody.reasoning = { effort: "low" };
+          compactBody.max_output_tokens = 16000;
+          compactBody.instructions = [
+            "REINTENTO ULTRACOMPACTO: conserva el rigor y el esquema JSON, pero usa una sola oración breve por campo narrativo y un máximo de tres elementos por lista. No repitas hechos entre secciones. Prioriza la tesis central, el veredicto, tres pruebas decisivas, tres fuentes y las limitaciones indispensables.",
+            instrucciones
+          ].join("\n\n");
+          const compactResponse = await fetch("https://api.openai.com/v1/responses", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+            },
+            body: JSON.stringify(compactBody),
+            signal: compactController.signal
+          });
+          const compactData = await compactResponse.json();
+          if (compactResponse.ok && compactData.status !== "incomplete") data = compactData;
+        } catch (compactError) {
+          console.error("Falló el reintento compacto:", compactError?.message || compactError);
+        } finally {
+          clearTimeout(compactTimer);
+        }
+      }
 
-      return res.status(502).json({
-        error:
-          razon === "max_output_tokens"
-            ? "El informe fue demasiado extenso para completarse. Vuelve a intentarlo: el sistema ya está configurado para producir una respuesta más compacta."
-            : "OpenAI devolvió una respuesta incompleta.",
-        detalle: razon === "max_output_tokens" ? "Límite interno de extensión alcanzado." : razon
-      });
+      if (data.status !== "incomplete") {
+        console.info("El análisis se completó mediante el reintento compacto.");
+      } else {
+
+        console.error("Respuesta incompleta de OpenAI:", {
+          status: data.status,
+          reason: razon
+        });
+
+        return res.status(502).json({
+          error:
+            razon === "max_output_tokens"
+              ? "El informe fue demasiado extenso incluso después de reducirlo automáticamente. Intenta el modo rápido."
+              : "OpenAI devolvió una respuesta incompleta.",
+          detalle: razon === "max_output_tokens" ? "Límite interno de extensión alcanzado." : razon
+        });
+      }
     }
 
     let outputText =

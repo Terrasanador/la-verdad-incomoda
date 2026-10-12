@@ -4,6 +4,20 @@ import test from "node:test";
 
 const read = name => fs.readFileSync(new URL(`./${name}`, import.meta.url), "utf8");
 
+test("homepage keeps donation amounts inside a collapsed donations tab", () => {
+  const html = read("index.html");
+  assert.match(html, /<details class="donations-panel" id="donativos">/);
+  assert.match(html, /<summary>DONATIVOS<\/summary>/);
+  assert.match(html, /Frente a la mentira y la desinformación/);
+  assert.doesNotMatch(html, /class="support-donations"/);
+});
+
+test("oversized investigations retry automatically in compact mode", () => {
+  const analyze = read("analyze.js");
+  assert.match(analyze, /REINTENTO ULTRACOMPACTO/);
+  assert.match(analyze, /compactData\.status !== "incomplete"/);
+});
+
 test("homepage turns visitors into verifications and WhatsApp referrals", () => {
   for (const name of ["index.html", "index-final.html"]) {
     const html = read(name);
