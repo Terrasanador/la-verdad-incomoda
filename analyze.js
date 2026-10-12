@@ -408,6 +408,8 @@ const texto = tieneTexto
       "En capturas aportadas por el usuario, lee y compara nombres de cuenta, hora relativa, texto, cifra, documento, resaltados y composición visual. Registra coincidencias observadas aun cuando no haya URL directa; en ese caso deja la URL vacía y explica la limitación, sin descartar la comparación.",
       "Separa tres conclusiones: (a) veracidad y contexto del dato; (b) amplificación sincronizada observable; y (c) coordinación organizada, pago o automatización. Las señales de (b) no prueban por sí solas (c).",
       "Si varias publicaciones usan el mismo tabulador, gráfico, fotografía, video o comunicado, cuentan como una sola fuente matriz. Verifica además si comparan conceptos no equivalentes —por ejemplo sueldo base frente a ingreso total, beca temporal frente a salario, cifra nominal frente a neta— y clasifica el encuadre por su efecto.",
+      "Cuando varias capturas reutilicen el mismo documento, cifra y contraste político desde cuentas distintas, registra AMPLIFICACIÓN SINCRONIZADA DE NARRATIVA aunque no existan pruebas de pago, bots o dirección central. La falta de esas pruebas limita la atribución de coordinación organizada, pero no borra el patrón observable.",
+      "Analiza las diez capturas como un conjunto: identifica la fuente matriz compartida, las variaciones del mensaje y el objetivo político común. No reduzcas el examen a decidir si una sola cifra aislada es auténtica.",
       "Describe el objetivo político observable y la orientación solo con evidencia acumulada. Aplica el mismo método a redes de derecha, izquierda, oficialistas, opositoras o comerciales; la orientación no decide el veredicto.",
       "Cuando varias cuentas, dirigentes, medios o páginas difundan la misma afirmación falsa, compara literalmente titulares, frases, errores ortográficos, imágenes, hashtags, enlaces, orden de argumentos y marcas de tiempo. Identifica la publicación más antigua localizable y separa copias, paráfrasis y verificaciones independientes.",
       "La coincidencia ideológica no demuestra coordinación. Tampoco la demuestra que varias personas comenten el mismo hecho noticioso. Exige similitud textual o visual poco probable, proximidad temporal, fuente matriz común, instrucciones compartidas, red estable de republicación u otras señales observables.",
@@ -465,6 +467,13 @@ const texto = tieneTexto
       "La ausencia de sentencia no vuelve falsa una afirmación, pero tampoco permite presentarla como hecho probado. Distingue evidencia factual, acusación, investigación abierta y responsabilidad judicial.",
       "En afirmaciones sobre aprobación, popularidad o respaldo político, revisa varias encuestas recientes, sus fechas, preguntas, muestras, patrocinadores y metodologías. No extrapoles una encuesta aislada ni mezcles aprobación presidencial con aceptación de un movimiento político distinto.",
       "Explica si el resultado podría estar condicionado por una selección desequilibrada de fuentes. Si no se logró pluralidad suficiente, no presentes una conclusión tajante de alta confianza.",
+      "GENERALIZACIONES SOBRE SERVICIOS PÚBLICOS:",
+      "Distingue estrictamente entre: (a) un caso o faltante localizado; (b) varios incidentes en entidades distintas; (c) una tendencia cuantificada; y (d) una crisis, colapso o desabasto generalizado nacional. Los niveles (a) o (b) no demuestran por sí solos (c) o (d).",
+      "Si la publicación o la pregunta sugiere que una institución 'está muy mal', está colapsada o padece desabasto general, exige indicadores nacionales comparables: cobertura, recetas surtidas y no surtidas, continuidad de servicios, unidades afectadas, periodo, universo y metodología.",
+      "Consulta obligatoriamente la respuesta oficial competente y sus datos recientes. Trátala como fuente primaria sobre la postura y operación reportada, no como verdad automática: contrástala con estadísticas, documentos y evidencia independiente de alcance equivalente.",
+      "Que existan protestas, quejas, faltantes o salarios bajos confirma esos hechos concretos, pero no convierte automáticamente en verdadera una narrativa de colapso nacional. Si el dato base es real pero se extrapola para presentar como general una situación no demostrada, usa ENGAÑOSO y veredicto_final ENGAÑOSA, no VERDADERO ni CIERTA.",
+      "En preguntas con alternativas —por ejemplo, '¿hay una crisis general o es un golpe político?'— no combines ambas como una sola tesis conjuntiva. Responde por separado: alcance real del problema; encuadre o exageración; amplificación sincronizada observable; y, en otro nivel, coordinación organizada, pago o bots.",
+      "Respeta exactamente la categoría visible en tablas y capturas. No sustituyas cirujano maxilofacial por médico residente, sueldo base por beca, ni una categoría contractual por otra aunque sus cifras sean cercanas.",
       "",
       "CLASIFICACIONES PERMITIDAS:",
       "VERDADERO",
@@ -1354,6 +1363,28 @@ ${texto}${bloqueExtraccion}`
     const afirmacionesNoDemostradas = resultado.evaluacion_afirmaciones.filter(item =>
       item.estado === "NO DEMOSTRADA"
     );
+
+    // Coherencia: una respuesta que reconoce una extrapolación nacional no puede
+    // cerrar como verdadera solo porque existan casos concretos documentados.
+    const textoAlcance = [
+      resultado.afirmacion_principal,
+      resultado.respuesta_directa,
+      resultado.explicacion_veredicto_final,
+      resultado.conclusion
+    ].join(" ");
+    const alegaCrisisGeneral = /(?:crisis|colapso|desabasto).{0,45}(?:general|nacional|todo el pa[ií]s)|(?:generalizad[ao]|en todo el pa[ií]s).{0,45}(?:crisis|colapso|desabasto)/i.test(textoAlcance);
+    const reconoceAlcanceLimitado = /(?:no (?:es|est[aá]) (?:generalizad[ao]|homog[eé]ne[ao])|no (?:demuestra|prueba).{0,35}(?:crisis|colapso|desabasto).{0,25}(?:general|nacional)|faltantes? (?:localizados?|puntuales?)|casos? (?:localizados?|puntuales?))/i.test(textoAlcance);
+    if (alegaCrisisGeneral && reconoceAlcanceLimitado && ["VERDADERO", "MAYORMENTE VERDADERO"].includes(resultado.veredicto)) {
+      resultado.veredicto = "ENGAÑOSO";
+      resultado.veredicto_final = "ENGAÑOSA";
+      resultado.credibilidad = Math.min(Number(resultado.credibilidad) || 50, 49);
+      resultado.explicacion_veredicto_final = "Las publicaciones parten de problemas concretos, pero los extrapolan a una crisis nacional que la evidencia disponible no demuestra; el alcance generalizado queda contradicho o sin sustento suficiente.";
+    }
+
+    if (/^parcial\b/i.test(resultado.respuesta_directa) && ["VERDADERO", "MAYORMENTE VERDADERO"].includes(resultado.veredicto)) {
+      resultado.veredicto = "PARCIALMENTE VERDADERO";
+      resultado.veredicto_final = "PARCIALMENTE CIERTA";
+    }
 
     if (resultado.veredicto === "PARCIALMENTE VERDADERO" &&
         !(afirmacionesConfirmadas.length > 0 &&
