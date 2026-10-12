@@ -21,6 +21,9 @@ test('does not turn localized public-service problems into a national crisis', (
   assert.match(analyze, /usa ENGAÑOSO y veredicto_final ENGAÑOSA/);
   assert.match(analyze, /No sustituyas cirujano maxilofacial por médico residente/);
   assert.match(analyze, /alegaCrisisGeneral && reconoceAlcanceLimitado/);
+  assert.match(analyze, /comunicados 542\/2026 y 545\/2026/);
+  assert.match(analyze, /No mezcles IMSS con IMSS-Bienestar/);
+  assert.match(analyze, /reconoceProblemasConcretos/);
 });
 
 test('deduplicates repeated provenance notices for multiple images', () => {

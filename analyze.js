@@ -471,6 +471,9 @@ const texto = tieneTexto
       "Distingue estrictamente entre: (a) un caso o faltante localizado; (b) varios incidentes en entidades distintas; (c) una tendencia cuantificada; y (d) una crisis, colapso o desabasto generalizado nacional. Los niveles (a) o (b) no demuestran por sí solos (c) o (d).",
       "Si la publicación o la pregunta sugiere que una institución 'está muy mal', está colapsada o padece desabasto general, exige indicadores nacionales comparables: cobertura, recetas surtidas y no surtidas, continuidad de servicios, unidades afectadas, periodo, universo y metodología.",
       "Consulta obligatoriamente la respuesta oficial competente y sus datos recientes. Trátala como fuente primaria sobre la postura y operación reportada, no como verdad automática: contrástala con estadísticas, documentos y evidencia independiente de alcance equivalente.",
+      "En casos recientes del IMSS busca el comunicado oficial específico por fecha, número, título y palabras clave en la Sala de Prensa; no cites únicamente la portada genérica. Para las protestas de octubre de 2026 contrasta expresamente los comunicados 542/2026 y 545/2026 y sus cifras operativas, además de evidencia independiente.",
+      "No mezcles IMSS con IMSS-Bienestar ni uses un porcentaje conjunto del sector salud como si fuera el indicador exclusivo del IMSS. Identifica con precisión la institución, universo, periodo y metodología de cada cifra.",
+      "Excluye programas sociales, pensiones y notas laterales que no prueben ni contradigan materialmente la afirmación central. Que una captura mencione una pensión no vuelve esa política evidencia del estado nacional del abasto médico.",
       "Que existan protestas, quejas, faltantes o salarios bajos confirma esos hechos concretos, pero no convierte automáticamente en verdadera una narrativa de colapso nacional. Si el dato base es real pero se extrapola para presentar como general una situación no demostrada, usa ENGAÑOSO y veredicto_final ENGAÑOSA, no VERDADERO ni CIERTA.",
       "En preguntas con alternativas —por ejemplo, '¿hay una crisis general o es un golpe político?'— no combines ambas como una sola tesis conjuntiva. Responde por separado: alcance real del problema; encuadre o exageración; amplificación sincronizada observable; y, en otro nivel, coordinación organizada, pago o bots.",
       "Respeta exactamente la categoría visible en tablas y capturas. No sustituyas cirujano maxilofacial por médico residente, sueldo base por beca, ni una categoría contractual por otra aunque sus cifras sean cercanas.",
@@ -1373,8 +1376,9 @@ ${texto}${bloqueExtraccion}`
       resultado.conclusion
     ].join(" ");
     const alegaCrisisGeneral = /(?:crisis|colapso|desabasto).{0,45}(?:general|nacional|todo el pa[ií]s)|(?:generalizad[ao]|en todo el pa[ií]s).{0,45}(?:crisis|colapso|desabasto)/i.test(textoAlcance);
-    const reconoceAlcanceLimitado = /(?:no (?:es|est[aá]) (?:generalizad[ao]|homog[eé]ne[ao])|no (?:demuestra|prueba).{0,35}(?:crisis|colapso|desabasto).{0,25}(?:general|nacional)|faltantes? (?:localizados?|puntuales?)|casos? (?:localizados?|puntuales?))/i.test(textoAlcance);
-    if (alegaCrisisGeneral && reconoceAlcanceLimitado && ["VERDADERO", "MAYORMENTE VERDADERO"].includes(resultado.veredicto)) {
+    const reconoceAlcanceLimitado = /(?:no (?:es|est[aá]) (?:generalizad[ao]|homog[eé]ne[ao])|no (?:demuestra|prueba).{0,35}(?:crisis|colapso|desabasto).{0,25}(?:general|nacional)|no (?:hay|existe) evidencia.{0,55}(?:crisis|colapso|desabasto).{0,30}(?:general|nacional|uniforme)|faltantes? (?:localizados?|puntuales?)|casos? (?:localizados?|puntuales?))/i.test(textoAlcance);
+    const reconoceProblemasConcretos = /(?:existen?|hay|documenta(?:n|do)?|registr(?:a|aron|ados?)).{0,45}(?:problemas?|faltantes?|desabasto|protestas?|denuncias?|movilizaciones?)/i.test(textoAlcance);
+    if (alegaCrisisGeneral && reconoceAlcanceLimitado && reconoceProblemasConcretos && !["FALSO", "ENGAÑOSO", "FUERA DE CONTEXTO", "CONTENIDO MANIPULADO"].includes(resultado.veredicto)) {
       resultado.veredicto = "ENGAÑOSO";
       resultado.veredicto_final = "ENGAÑOSA";
       resultado.credibilidad = Math.min(Number(resultado.credibilidad) || 50, 49);
