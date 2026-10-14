@@ -23,6 +23,14 @@ Combatir la desinformación, el amarillismo, el contenido patrocinado no identif
 - **FALSA:** la evidencia disponible contradice materialmente la afirmación o demuestra que su presentación es engañosa.
 - **NO VERIFICABLE:** no se conoce la afirmación concreta, el contenido es inaccesible o la evidencia disponible no permite confirmarla ni desmentirla responsablemente.
 
+## Correspondencia exacta entre publicación y evidencia
+
+La verificación conserva el sujeto, el verbo, el objeto, el alcance, la fecha y el universo de la afirmación original. Una declaración general sobre “funcionarios” o “políticos” no demuestra que la autoridad haya señalado a un partido ni a las personas que un montaje añada mediante nombres, fotografías, subtítulos o sobreimpresiones.
+
+El contenido original y las capas editoriales añadidas se examinan por separado. Si una publicación atribuye a personas o grupos específicos una investigación, amenaza o acusación que la fuente original no contiene, el veredicto de esa atribución es **FALSA**, aunque la declaración general auténtica sí exista. Un caso comprobado tampoco valida automáticamente una lista completa ni una generalización.
+
+Esta regla se aplica por igual al análisis rápido, la investigación profunda y las investigaciones editoriales.
+
 ## Regla sobre medios y periodistas
 
 Ningún medio, periodista, gobierno, empresa u organización recibe confianza o desconfianza automática. Cada contenido se evalúa por separado. La reputación documentada puede aportar contexto, pero no sustituye la verificación de la afirmación concreta.
