@@ -149,7 +149,7 @@ export function applyPoliticalScopeMismatchGuard(result, input = '') {
     /\b(?:morena|pan|pri|prd|movimiento ciudadano|partido verde|pt)\b/.test(principal) ||
     /\b(?:lista|nombres?|dirigentes?|gobernadores?)\b.{0,90}\b(?:persegu|investig|acus|imput|cartel|narco)/.test(principal);
   const fuenteEsGeneral =
-    /(?:funcionarios?|politicos?|autoridades?|colaboradores?).{0,120}(?:(?:que )?(?:ayuden|colaboren)|vinculad[oa]s?|persegu).{0,90}(?:carteles?|crimen organizado)|persegu.{0,90}(?:funcionarios?|politicos?|autoridades?|colaboradores?).{0,90}(?:carteles?|crimen organizado)/.test(diagnostico);
+    /(?:funcionarios?|politicos?|autoridades?|colaboradores?).{0,120}(?:(?:que )?(?:ayuden|colaboren)|complices?|vinculad[oa]s?|persegu|iran tras).{0,90}(?:carteles?|crimen organizado)|(?:persegu|iran tras).{0,90}(?:funcionarios?|politicos?|autoridades?|colaboradores?).{0,90}(?:carteles?|crimen organizado)/.test(diagnostico);
   const montajeHaceLaVinculacion =
     /(?:video|clip|publicacion|montaje|sobreimpresion|subtitulos?).{0,180}(?:afirma|atribuye|nombra|enlista|muestra|superpone|presenta|vincula).{0,160}(?:morena|politicos?|funcionarios?|gobernadores?|nombres?|amlo)|(?:subtitulos?|imagenes?|nombres?).{0,120}(?:anadid|agregad|superpuest).{0,120}(?:morena|politicos?|funcionarios?|gobernadores?|amlo)/.test(diagnostico);
   const faltanVinculosDirectos =
