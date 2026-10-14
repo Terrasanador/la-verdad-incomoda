@@ -1067,8 +1067,59 @@ export function applyUntranscribedSocialVideoGuard(result, input = '') {
   };
 }
 
+
+/**
+ * Un bloqueo técnico explícito de Threads nunca es un veredicto editorial.
+ * Esta guarda también cubre respuestas heredadas del modelo que describen
+ * HTTP 429 pero llegan erróneamente marcadas como "analizado".
+ */
+export function applyThreadsAccessFailureGuard(result, input = '') {
+  if (!result || typeof result !== 'object') return result;
+  const diagnostic = normalizarTexto([
+    result.estado_tecnico,
+    result.mensaje,
+    result.explicacion_veredicto_final,
+    result.resumen,
+    result.respuesta_directa,
+    result.conclusion,
+    ...(Array.isArray(result.limitaciones) ? result.limitaciones : []),
+    ...(Array.isArray(result?.extraccion_enlace?.limitaciones) ? result.extraccion_enlace.limitaciones : [])
+  ].join(' '));
+  const explicitThreadsBlock = /threads/.test(diagnostic) &&
+    /(?:http\s*429|codigo\s*429|devolvio\s*429|too many requests|limito temporalmente las solicitudes)/.test(diagnostic) &&
+    /(?:no fue posible acceder|no se pudo acceder|no se recupero|acceso restringido|contenido completo)/.test(diagnostic);
+  if (!explicitThreadsBlock) return result;
+
+  const extraction = result.extraccion_enlace || null;
+  const retrySeconds = Number(extraction?.retry_after_seconds || result.retry_after_seconds) || 0;
+  return {
+    estado: 'sin_acceso',
+    analizado: false,
+    tipo_resultado: 'error_recuperacion',
+    estado_tecnico: 'HTTP_429',
+    veredicto: null,
+    veredicto_final: null,
+    credibilidad: null,
+    confianza: null,
+    mensaje: 'ANÁLISIS NO COMPLETADO: Threads limitó temporalmente el acceso (HTTP 429) y no se recuperó la publicación completa. No se emitió un veredicto.',
+    fuentes: [],
+    compartir_habilitado: false,
+    url_consultada: extraction?.url_final || String(input || ''),
+    retry_after_seconds: retrySeconds,
+    limitaciones: [
+      'El texto parcial, los metadatos o una búsqueda sin copia íntegra no sustituyen el contenido original.',
+      'El fallo de acceso no demuestra que la publicación sea verdadera, falsa o no verificable.'
+    ],
+    acciones_disponibles: ['REINTENTAR_MAS_TARDE', 'SUBIR_CAPTURA', 'PEGAR_TEXTO'],
+    reintentar: true,
+    extraccion_enlace: extraction
+  };
+}
+
 export function normalize(result, input = '') {
   if (!result || typeof result !== 'object') return result;
+  const accessFailure = applyThreadsAccessFailureGuard(result, input);
+  if (accessFailure !== result) return accessFailure;
   const evaluaciones = Array.isArray(result.evaluacion_afirmaciones) ? result.evaluacion_afirmaciones : [];
 
   // El encabezado y la clasificación técnica expresan el mismo veredicto.
