@@ -640,6 +640,22 @@ const alcancePolitico = applyPoliticalScopeMismatchGuard({
   evaluacion_afirmaciones: []
 });
 assert.equal(alcancePolitico.veredicto, 'FALSO');
+
+// La expresión “funcionarios cómplices” también describe una advertencia general:
+// no autoriza a trasladarla a Morena ni a una lista agregada por el montaje.
+const alcancePoliticoComplices = applyPoliticalScopeMismatchGuard({
+  veredicto_final: 'CIERTA',
+  veredicto: 'VERDADERO',
+  credibilidad: 80,
+  confianza: 63,
+  afirmacion_principal: 'El video afirma que Estados Unidos irá tras varios políticos de Morena y enumera gobernadores y dirigentes.',
+  resumen_contexto_video: 'La directora advirtió que irán tras funcionarios cómplices de cárteles. El montaje agrega nombres de políticos de Morena.',
+  explicacion_veredicto_final: 'La advertencia general está confirmada, pero no todos los señalados tienen cargos formales.',
+  respuesta_directa: 'La fuente habla en general y el video añade una lista de personas.',
+  evaluacion_afirmaciones: []
+});
+assert.equal(alcancePoliticoComplices.veredicto, 'FALSO');
+assert.equal(alcancePoliticoComplices.veredicto_final, 'FALSA');
 assert.equal(alcancePolitico.veredicto_final, 'FALSA');
 assert.match(alcancePolitico.respuesta_directa, /La fuente habla en términos generales/);
 assert.match(alcancePolitico.explicacion_veredicto_final, /no identifica a Morena/);
