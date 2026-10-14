@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { MEDIA_FORENSICS_POLICY, applyPisaPandemicFramingGuard, normalize as normalizeProduction } from './analyze-v3.js';
+import { MEDIA_FORENSICS_POLICY, applyPisaPandemicFramingGuard, applyPoliticalScopeMismatchGuard, normalize as normalizeProduction } from './analyze-v3.js';
 
 // La verificación multimedia debe distinguir autenticidad del archivo, contexto
 // atribuido y encuadre editorial añadido por quien republica.
@@ -626,3 +626,20 @@ assert.equal(libroAnabel.evaluacion_afirmaciones[0].relacion_con_afirmacion,'CIR
 assert.equal(libroAnabel.evaluacion_afirmaciones[1].estado,'CONTRADICHA');
 assert.deepEqual(libroAnabel.evidencia_a_favor,[]);
 assert.match(libroAnabel.explicacion_veredicto_final,/sinopsis y reseñas citadas solo confirman qué sostiene el libro/i);
+
+
+// Una advertencia general no confirma el partido ni los nombres añadidos por un montaje.
+const alcancePolitico = applyPoliticalScopeMismatchGuard({
+  veredicto_final: 'CIERTA',
+  veredicto: 'VERDADERO',
+  credibilidad: 75,
+  confianza: 78,
+  afirmacion_principal: 'Trump perseguirá a políticos de Morena vinculados con cárteles y la lista del video identifica a los objetivos.',
+  resumen_contexto_video: 'El clip reproduce una advertencia general contra funcionarios que colaboren con cárteles y superpone nombres de políticos de Morena.',
+  resumen: 'Muchos de los nombres mostrados no han recibido una acusación penal formal equivalente.',
+  evaluacion_afirmaciones: []
+});
+assert.equal(alcancePolitico.veredicto, 'FALSO');
+assert.equal(alcancePolitico.veredicto_final, 'FALSA');
+assert.match(alcancePolitico.respuesta_directa, /La fuente habla en términos generales/);
+assert.match(alcancePolitico.explicacion_veredicto_final, /no identifica a Morena/);
