@@ -4,6 +4,28 @@ import dns from 'node:dns/promises';
 import {isSocialProfileUrl,extractPublicLink} from './extract-content.js';
 import {isTikTokPhotoPost,extractSocialPublicData,indexedTikTokPhotoEvidence} from './social-data.js';
 import handler from './analyze.js';
+import {normalize} from './analyze-v3.js';
+
+
+test('Threads HTTP 429 is an incomplete analysis, never a factual verdict',()=>{
+  const result=normalize({
+    estado:'analizado', veredicto:'NO VERIFICABLE', veredicto_final:'NO VERIFICABLE',
+    credibilidad:null, confianza:50,
+    explicacion_veredicto_final:'No fue posible acceder al contenido completo (Threads devolvió HTTP 429) ni localizar una copia íntegra.',
+    resumen:'El enlace de Threads devolvió acceso restringido HTTP 429.',
+    respuesta_directa:'No verificable porque no se pudo acceder.',
+    conclusion:'No se emitió evidencia concluyente.',
+    fuentes:[], limitaciones:[]
+  },'https://www.threads.com/share/BAT3Q-1CCf/');
+  assert.equal(result.estado,'sin_acceso');
+  assert.equal(result.analizado,false);
+  assert.equal(result.estado_tecnico,'HTTP_429');
+  assert.equal(result.veredicto_final,null);
+  assert.equal(result.veredicto,null);
+  assert.equal(result.confianza,null);
+  assert.equal(result.compartir_habilitado,false);
+  assert.match(result.mensaje,/ANÁLISIS NO COMPLETADO/);
+});
 
 test('TikTok short codes are not usernames',()=>{
   for(const host of ['vt.tiktok.com','vm.tiktok.com']) assert.equal(isSocialProfileUrl(new URL(`https://${host}/ZSVvAup4u/`),'TikTok'),false);
