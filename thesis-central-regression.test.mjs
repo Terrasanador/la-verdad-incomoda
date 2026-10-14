@@ -643,3 +643,20 @@ assert.equal(alcancePolitico.veredicto, 'FALSO');
 assert.equal(alcancePolitico.veredicto_final, 'FALSA');
 assert.match(alcancePolitico.respuesta_directa, /La fuente habla en términos generales/);
 assert.match(alcancePolitico.explicacion_veredicto_final, /no identifica a Morena/);
+
+
+// La falta de una orden o lista específica no degrada a NO VERIFICABLE cuando
+// el montaje atribuye inequívocamente a la fuente nombres que esta no mencionó.
+const listaInventada = applyPoliticalScopeMismatchGuard({
+  veredicto_final: 'NO VERIFICABLE',
+  veredicto: 'PARCIALMENTE VERDADERO',
+  credibilidad: 75,
+  confianza: 63,
+  afirmacion_principal: 'La directora de la ONDCP ordenó ir tras múltiples funcionarios de Morena y atribuyó a AMLO complicidad.',
+  resumen_contexto_video: 'El video reutiliza entrevistas y subtítulos para afirmar que la directora ordenó ir tras funcionarios de Morena.',
+  resumen: 'Sarah Carter ha hablado de perseguir a colaboradores de cárteles. No se encontró registro público de que nombrara la lista completa ni de que hiciera la afirmación sobre AMLO.',
+  evaluacion_afirmaciones: []
+});
+assert.equal(listaInventada.veredicto, 'FALSO');
+assert.equal(listaInventada.veredicto_final, 'FALSA');
+assert.equal(listaInventada.etiqueta_evidencia, 'EL MONTAJE AÑADE SUJETOS QUE LA FUENTE NO IDENTIFICA');
