@@ -149,11 +149,11 @@ export function applyPoliticalScopeMismatchGuard(result, input = '') {
     /\b(?:morena|pan|pri|prd|movimiento ciudadano|partido verde|pt)\b/.test(principal) ||
     /\b(?:lista|nombres?|dirigentes?|gobernadores?)\b.{0,90}\b(?:persegu|investig|acus|imput|cartel|narco)/.test(principal);
   const fuenteEsGeneral =
-    /(?:funcionarios?|politicos?|autoridades?).{0,90}(?:que (?:ayuden|colaboren)|vinculad[oa]s?).{0,70}(?:carteles?|crimen organizado)/.test(diagnostico);
+    /(?:funcionarios?|politicos?|autoridades?|colaboradores?).{0,120}(?:(?:que )?(?:ayuden|colaboren)|vinculad[oa]s?|persegu).{0,90}(?:carteles?|crimen organizado)|persegu.{0,90}(?:funcionarios?|politicos?|autoridades?|colaboradores?).{0,90}(?:carteles?|crimen organizado)/.test(diagnostico);
   const montajeHaceLaVinculacion =
-    /(?:video|clip|publicacion|montaje|sobreimpresion).{0,140}(?:nombra|enlista|muestra|superpone|presenta).{0,120}(?:morena|politicos?|funcionarios?|gobernadores?|nombres?)/.test(diagnostico);
+    /(?:video|clip|publicacion|montaje|sobreimpresion|subtitulos?).{0,180}(?:afirma|atribuye|nombra|enlista|muestra|superpone|presenta|vincula).{0,160}(?:morena|politicos?|funcionarios?|gobernadores?|nombres?|amlo)|(?:subtitulos?|imagenes?|nombres?).{0,120}(?:anadid|agregad|superpuest).{0,120}(?:morena|politicos?|funcionarios?|gobernadores?|amlo)/.test(diagnostico);
   const faltanVinculosDirectos =
-    /(?:muchos|varios|otros|la mayoria).{0,130}(?:no (?:han )?(?:recibido|sido)|sin).{0,90}(?:acusacion penal|imputacion formal|cargos?|investigacion formal)|no (?:identifica|menciona|nombra|senala).{0,100}(?:morena|partido|personas?|nombres?)/.test(diagnostico);
+    /(?:muchos|varios|otros|la mayoria).{0,160}(?:no (?:han )?(?:recibido|sido)|sin).{0,110}(?:acusacion penal|imputacion formal|cargos?|investigacion formal)|no (?:identifica|menciona|nombra|senala).{0,120}(?:morena|partido|personas?|nombres?|lista)|no (?:se )?(?:encontro|hallo|localizo).{0,100}(?:registro|evidencia|prueba).{0,120}(?:nombra|identifica|senala|lista completa|morena|amlo)|(?:no hay|sin).{0,100}(?:registro|evidencia|prueba).{0,120}(?:lista completa|nombres?|morena|amlo)/.test(diagnostico);
   const afirmativo =
     ['CIERTA', 'PARCIALMENTE CIERTA'].includes(String(result.veredicto_final || '').toUpperCase()) ||
     ['VERDADERO', 'MAYORMENTE VERDADERO', 'PARCIALMENTE VERDADERO'].includes(String(result.veredicto || '').toUpperCase());
