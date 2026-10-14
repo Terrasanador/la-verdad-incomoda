@@ -1526,7 +1526,7 @@ async function sampleVideoFrames(file) {
         <span class="final-verdict-label">VEREDICTO FINAL</span>
         ${data.etiqueta_evidencia ? `<p class="final-explanation"><strong>${esc(data.etiqueta_evidencia)}</strong></p>` : ""}
         <div class="final-verdict ${finalVerdictClass(finalVerdict)}">
-          ${esc(finalVerdict)}
+          ${esc(finalVerdict === "FALSA" ? "PUBLICACIÓN FALSA" : finalVerdict)}
         </div>
         ${
           explanation
@@ -2225,9 +2225,42 @@ async function sampleVideoFrames(file) {
 
   window.copyReport = async () => {
     try {
+      const reportBody = result.innerText
+        .replace(/^Fuente de consulta:[^\n]*\n?/i, "")
+        .replace(/\bVEREDICTO FINAL\s*\n\s*FALSA\b/i, "VEREDICTO FINAL\nPUBLICACIÓN FALSA")
+        .trim();
       const reportText =
         "Fuente de consulta: La Verdad Incómoda — https://www.laverdadincomoda.mx/\n\n" +
-        result.innerText.replace(/^Fuente de consulta:[^\n]*\n?/i, "").trim();
+        reportBody;
+
+      if (navigator.clipboard?.write && window.ClipboardItem) {
+        const copy = result.cloneNode(true);
+        copy.querySelectorAll(".actions").forEach(node => node.remove());
+        copy.querySelectorAll(".report-source").forEach(node => node.remove());
+        copy.querySelectorAll(".final-verdict.falsa").forEach(node => {
+          node.textContent = "PUBLICACIÓN FALSA";
+          node.style.color = "#ff3b30";
+          node.style.fontWeight = "900";
+          node.style.textTransform = "uppercase";
+        });
+        const richHtml =
+          '<div style="font-family:Arial,sans-serif;color:#111">' +
+          '<p>Fuente de consulta: <strong>La Verdad Incómoda</strong> — ' +
+          '<a href="https://www.laverdadincomoda.mx/">https://www.laverdadincomoda.mx/</a></p>' +
+          copy.innerHTML +
+          "</div>";
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              "text/plain": new Blob([copyReadyText(reportText)], { type: "text/plain" }),
+              "text/html": new Blob([richHtml], { type: "text/html" })
+            })
+          ]);
+          alert("Informe copiado.");
+          return;
+        } catch {}
+      }
+
       await copyPlainText(reportText);
       alert("Informe copiado.");
     } catch {
