@@ -263,7 +263,7 @@ test('Both frontends persist cooldown, suppress repeat fetch and do not count fa
   const source=html.slice(html.indexOf('  async function analyze('),html.indexOf('  const howModal ='));
   let calls=0,blocked=0;const events=[],saved={};
   const context=vm.createContext({
-    newsInput:{value:share},threadsCooldownUntil:0,selectedFile:null,selectedMode:'rapido',
+    newsInput:{value:share},threadsCooldownUntil:0,selectedFiles:[],selectedMode:'rapido',
     analyzeButton:{disabled:false},result:{classList:{remove(){}}},
     startProgress(){},endProgress(){},render(){},renderError(message){throw new Error(message);},
     renderBlocked(data){blocked++;assert(data.retry_after_seconds>0);},trackUsage(name){events.push(name);},
