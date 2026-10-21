@@ -1065,7 +1065,7 @@ ${texto}${bloqueExtraccion}`
     const openAITimer = setTimeout(() => openAIController.abort(), Math.min(240000, remainingMs));
     const openAIRequestBody = JSON.stringify({
       model: "gpt-5-mini",
-      reasoning: { effort: modo === "profundo" ? "high" : "medium" },
+      reasoning: { effort: modo === "profundo" ? "high" : "low" },
       text: {
         verbosity: "low",
         format: {
@@ -1080,12 +1080,12 @@ ${texto}${bloqueExtraccion}`
       input: [{ role: "user", content: contenidoUsuario }],
       tools: [{
         type: "web_search",
-        search_context_size: "high",
+        search_context_size: modo === "profundo" ? "high" : "medium",
         user_location: { type: "approximate", country: "MX", timezone: "America/Mexico_City" }
       }],
       tool_choice: "required",
       include: ["web_search_call.action.sources"],
-      max_output_tokens: modo === "profundo" ? 20000 : 14000
+      max_output_tokens: modo === "profundo" ? 12000 : 7000
     });
     const requestOpenAI = () => fetch("https://api.openai.com/v1/responses", {
       method: "POST",

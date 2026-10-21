@@ -270,8 +270,9 @@ test('Bare and prefixed link failures return no verdict or sources',async()=>{
   global.fetch=async(url,options)=>{
     assert.equal(url,'https://api.openai.com/v1/responses');
     const body=JSON.parse(options.body);const result=empty(body.text.format.schema);
-    assert.equal(body.reasoning.effort,'medium');
-    assert.equal(body.tools[0].search_context_size,'high');
+    assert.equal(body.reasoning.effort,'low');
+    assert.equal(body.tools[0].search_context_size,'medium');
+    assert.equal(body.max_output_tokens,7000);
     result.estado='sin_acceso';result.veredicto='NO VERIFICABLE';result.veredicto_final='NO VERIFICABLE';result.respuesta_directa='No fue posible acceder al video.';
     result.fuentes=[{titulo:'Irrelevant directory',url:'https://example.com',tipo:'Otra',aporte:'Metadata'}];
     return Response.json({output:[{type:'message',content:[{
