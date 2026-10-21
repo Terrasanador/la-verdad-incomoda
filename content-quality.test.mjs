@@ -63,21 +63,22 @@ test("AdSense is limited to reviewed fact-check articles", () => {
   assert.match(standards, /index,follow/);
 });
 
-test("publisher identity and financing are explicit", () => {
+test("publisher identity and financing are explicit without exposing a personal name", () => {
   const authors = fs.readFileSync(new URL("./autores.html", import.meta.url), "utf8");
   const transparency = fs.readFileSync(new URL("./transparencia.html", import.meta.url), "utf8");
-  assert.match(authors, /Manuel Méndez Feregrino/);
-  assert.match(transparency, /editor responsable/i);
+  assert.match(authors, /Equipo editorial de La Verdad Incómoda/);
+  assert.doesNotMatch(authors, /Manuel Méndez Feregrino/);
+  assert.doesNotMatch(transparency, /Manuel Méndez Feregrino/);
   assert.match(transparency, /no cobra actualmente suscripciones/i);
   assert.match(transparency, /AdSense/);
   assert.match(fs.readFileSync(new URL("./sitemap.xml", import.meta.url), "utf8"), /transparencia\.html/);
 });
 
-test("fact-check metadata identifies human responsibility and valid chronology", () => {
+test("fact-check metadata identifies editorial responsibility and valid chronology", () => {
   const renderer = fs.readFileSync(new URL("./article-render.js", import.meta.url), "utf8");
-  assert.match(renderer, /Editor responsable:/);
+  assert.match(renderer, /Investigación y revisión:/);
   assert.match(renderer, /Revisión humana/);
-  assert.match(renderer, /"@type": "Person", name: editor/);
+  assert.match(renderer, /"@type": "Organization", name: editorialTeam/);
   assert.match(renderer, /wordCount:/);
   assert.match(renderer, /newestDate\(article\.updatedAt, article\.publishedAt/);
   for (const article of published) assert.ok(!Number.isNaN(new Date(article.publishedAt).valueOf()), `${article.slug} has no valid publication date`);

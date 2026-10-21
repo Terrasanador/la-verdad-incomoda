@@ -94,7 +94,7 @@ function normalizeArticle(input, existing = {}) {
     title,
     slug: requestedSlug,
     category: clean(input.category || "Verificaciones", 80),
-    author: clean(input.author || "Manuel Méndez Feregrino", 120),
+    author: clean(input.author || "Equipo editorial de La Verdad Incómoda", 120),
     status,
     summary: clean(input.summary, 500),
     content: clean(input.content, 60000),

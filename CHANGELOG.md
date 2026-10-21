@@ -7,7 +7,7 @@
 
 - Limita la carga de AdSense a las verificaciones editoriales publicadas; el analizador automático, la biblioteca y las páginas institucionales conservan la señal de propiedad, pero no solicitan anuncios.
 - Publica una investigación original sobre la infografía electoral atribuida a VotoMx y explica por qué repetir una gráfica no autentica su encuesta.
-- Identifica a Manuel Méndez Feregrino como fundador y editor responsable y publica una declaración separada de propiedad, financiamiento, publicidad e inteligencia artificial.
+- Identifica al equipo editorial de La Verdad Incómoda como responsable institucional y publica una declaración separada de propiedad, financiamiento, publicidad e inteligencia artificial.
 - Mejora cada verificación con responsable de revisión, tiempo estimado de lectura, fuentes legibles y datos estructurados de artículo y revisión de afirmaciones.
 - Actualiza portada, biblioteca, sitemap, navegación y pruebas de calidad.
 
