@@ -73,6 +73,28 @@ test("publisher identity and financing are explicit", () => {
   assert.match(fs.readFileSync(new URL("./sitemap.xml", import.meta.url), "utf8"), /transparencia\.html/);
 });
 
+test("fact-check metadata identifies human responsibility and valid chronology", () => {
+  const renderer = fs.readFileSync(new URL("./article-render.js", import.meta.url), "utf8");
+  assert.match(renderer, /Editor responsable:/);
+  assert.match(renderer, /Revisión humana/);
+  assert.match(renderer, /"@type": "Person", name: editor/);
+  assert.match(renderer, /wordCount:/);
+  assert.match(renderer, /newestDate\(article\.updatedAt, article\.publishedAt/);
+  for (const article of published) assert.ok(!Number.isNaN(new Date(article.publishedAt).valueOf()), `${article.slug} has no valid publication date`);
+});
+
+test("thin utility pages stay accessible without diluting the editorial index", () => {
+  const sitemap = fs.readFileSync(new URL("./sitemap.xml", import.meta.url), "utf8");
+  for (const name of ["privacidad.html", "terminos.html", "contacto.html"]) {
+    const html = fs.readFileSync(new URL(`./${name}`, import.meta.url), "utf8");
+    assert.match(html, /noindex,follow/);
+    assert.doesNotMatch(sitemap, new RegExp(name.replace(".", "\\.")));
+  }
+  const about = fs.readFileSync(new URL("./quienes-somos.html", import.meta.url), "utf8");
+  assert.match(about, /Por qué este proyecto aporta valor propio/);
+  assert.match(about, /Dos productos claramente separados/);
+});
+
 test("legacy duplicate pages do not compete in search", () => {
   const vercel = JSON.parse(fs.readFileSync(new URL("./vercel.json", import.meta.url), "utf8"));
   const oldHow = fs.readFileSync(new URL("./como-funciona.html", import.meta.url), "utf8");
