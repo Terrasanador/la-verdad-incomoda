@@ -8,7 +8,8 @@ test("homepage keeps donation amounts inside a collapsed donations tab", () => {
   const html = read("index.html");
   assert.match(html, /<details class="donations-panel" id="donativos">/);
   assert.match(html, /<summary>DONATIVOS<\/summary>/);
-  assert.match(html, /LA VERDAD ES NUESTRO BIEN MÁS VALIOSO/);\n  assert.match(html, /sin información confiable no hay decisiones libres/);
+  assert.match(html, /LA VERDAD ES NUESTRO BIEN MÁS VALIOSO/);
+  assert.match(html, /sin información confiable no hay decisiones libres/);
   assert.doesNotMatch(html, /class="support-donations"/);
 });
 

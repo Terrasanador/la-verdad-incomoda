@@ -494,6 +494,45 @@
   let lastOriginalQuery = "";
   let lastBlockedData = null;
   let lastResultWasSupplemented = false;
+  let activeAnalysisRequest = false;
+  const ANALYSIS_STATE_KEY = "lvi_analysis_state_v1";
+
+  function saveAnalysisState(state) {
+    try {
+      localStorage.setItem(ANALYSIS_STATE_KEY, JSON.stringify({
+        ...state,
+        updatedAt: Date.now()
+      }));
+    } catch (_) {
+      // La falta de almacenamiento local no debe impedir una verificación.
+    }
+  }
+
+  function readAnalysisState() {
+    try {
+      const state = JSON.parse(localStorage.getItem(ANALYSIS_STATE_KEY) || "null");
+      if (!state || !state.payload || !state.status) return null;
+      // No reanudar solicitudes antiguas o abandonadas después de 30 minutos.
+      if (Date.now() - Number(state.updatedAt || 0) > 30 * 60 * 1000) {
+        localStorage.removeItem(ANALYSIS_STATE_KEY);
+        return null;
+      }
+      return state;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  function clearAnalysisState() {
+    try { localStorage.removeItem(ANALYSIS_STATE_KEY); } catch (_) {}
+  }
+
+  function showBackgroundProgress(message = "La investigación continúa. Puedes cambiar de aplicación y volver después.") {
+    analyzeButton.disabled = true;
+    progress.classList.add("visible");
+    progressLabel.textContent = message;
+    progressBar.style.width = "72%";
+  }
 
   const esc = value =>
     String(value ?? "")
@@ -2049,6 +2088,16 @@ async function sampleVideoFrames(file) {
         else payload.files = encodedFiles;
       }
 
+      if (typeof saveAnalysisState === "function") {
+        saveAnalysisState({
+          status: "running",
+          payload,
+          originalQuery: lastOriginalQuery || text,
+          supplemented: Boolean(isSupplement)
+        });
+      }
+      activeAnalysisRequest = true;
+
       const response = await fetch("/api/analyze", {
         method: "POST",
         headers: {
@@ -2099,18 +2148,85 @@ async function sampleVideoFrames(file) {
         estado: String(data?.estado || "analizado"),
         veredicto: String(data?.veredicto_final || data?.veredicto || "sin_veredicto")
       });
+      if (typeof clearAnalysisState === "function") clearAnalysisState();
       render(data);
     } catch (error) {
       endProgress(false);
       trackUsage("verificacion_error", { mensaje: String(error?.message || "error") });
       const technicalMessage = String(error?.message || "");
-      const friendlyMessage = /failed to fetch|networkerror|load failed|network request failed/i.test(technicalMessage)
-        ? "Se interrumpió la conexión con el servidor durante la investigación. Vuelve a pulsar ANALIZAR CREDIBILIDAD; tu enlace permanece en el cuadro de consulta."
-        : technicalMessage || "No se pudo completar la investigación.";
-      renderError(friendlyMessage);
+      const networkInterrupted = /failed to fetch|networkerror|load failed|network request failed|fetch.*abort/i.test(technicalMessage);
+      if (networkInterrupted) {
+        const pending = typeof readAnalysisState === "function" ? readAnalysisState() : null;
+        if (pending && typeof saveAnalysisState === "function") saveAnalysisState({ ...pending, status: "retry_pending" });
+        if (typeof showBackgroundProgress === "function") {
+          showBackgroundProgress("La conexión fue suspendida por el teléfono. La investigación se reanudará automáticamente al volver.");
+        } else {
+          renderError("Se interrumpió la conexión durante la investigación.");
+        }
+      } else {
+        if (typeof clearAnalysisState === "function") clearAnalysisState();
+        renderError(technicalMessage || "No se pudo completar la investigación.");
+      }
     } finally {
-      analyzeButton.disabled = false;
+      activeAnalysisRequest = false;
+      const pending = typeof readAnalysisState === "function" ? readAnalysisState() : null;
+      analyzeButton.disabled = Boolean(pending && ["running", "retry_pending"].includes(pending.status));
     }
+  }
+
+  async function resumePendingAnalysis() {
+    if (activeAnalysisRequest || document.visibilityState === "hidden") return;
+    const pending = readAnalysisState();
+    if (!pending || !["running", "retry_pending"].includes(pending.status)) return;
+
+    activeAnalysisRequest = true;
+    lastOriginalQuery = pending.originalQuery || pending.payload?.text || "";
+    showBackgroundProgress("Recuperando la investigación pendiente…");
+    trackUsage("verificacion_reanudada", { estado_anterior: pending.status });
+
+    try {
+      saveAnalysisState({ ...pending, status: "running" });
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(pending.payload)
+      });
+      const raw = await response.text();
+      let data;
+      try { data = raw ? JSON.parse(raw) : {}; }
+      catch { throw new Error("El servidor no devolvió una respuesta válida."); }
+      if (!response.ok && data?.estado !== "sin_acceso") {
+        throw new Error(data?.error || data?.detalle || data?.message || `HTTP ${response.status}`);
+      }
+      clearAnalysisState();
+      endProgress(response.ok);
+      render(data);
+    } catch (error) {
+      const message = String(error?.message || "");
+      if (/failed to fetch|networkerror|load failed|network request failed|fetch.*abort/i.test(message)) {
+        saveAnalysisState({ ...pending, status: "retry_pending" });
+        showBackgroundProgress("La investigación sigue pendiente y se reanudará cuando vuelva la conexión.");
+      } else {
+        clearAnalysisState();
+        endProgress(false);
+        renderError(message || "No se pudo recuperar la investigación.");
+      }
+    } finally {
+      activeAnalysisRequest = false;
+      const stillPending = readAnalysisState();
+      analyzeButton.disabled = Boolean(stillPending);
+    }
+  }
+
+  if (typeof document !== "undefined") {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") resumePendingAnalysis();
+    });
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("pageshow", resumePendingAnalysis);
+    window.addEventListener("online", resumePendingAnalysis);
+    setTimeout(resumePendingAnalysis, 250);
   }
 
 

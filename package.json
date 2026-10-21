@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test media-input.test.mjs media-provenance.test.mjs access-regression.test.mjs threads-access.test.mjs adsense-readiness.test.mjs thesis-central-regression.test.mjs content-quality.test.mjs growth-loop.test.mjs synchronized-amplification.test.mjs multi-image-upload.test.mjs",
+    "test": "node --test media-input.test.mjs media-provenance.test.mjs access-regression.test.mjs threads-access.test.mjs adsense-readiness.test.mjs thesis-central-regression.test.mjs content-quality.test.mjs growth-loop.test.mjs synchronized-amplification.test.mjs multi-image-upload.test.mjs background-resume.test.mjs",
     "check": "node --check analyze.js && node --check extract-content.js && node --check social-data.js && node --check content-api.js && node --check article-render.js && node --check health.js && node --check translate-ui.js"
   },
   "engines": {
