@@ -497,6 +497,45 @@
   let activeAnalysisRequest = false;
   const ANALYSIS_STATE_KEY = "lvi_analysis_state_v1";
 
+
+  let analysisRetryTimer = null;
+
+  async function requestAnalysis(payload) {
+    const controller = new AbortController();
+    let timeout;
+    const deadline = new Promise((_, reject) => {
+      timeout = setTimeout(() => {
+        controller.abort();
+        reject(new Error("Network request failed: tiempo de espera agotado"));
+      }, 110000);
+    });
+    try {
+      return await Promise.race([(async () => {
+        const response = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: controller.signal
+        });
+        return { response, raw: await response.text() };
+      })(), deadline]);
+    } finally { clearTimeout(timeout); }
+  }
+
+  function scheduleAnalysisRetry() {
+    clearTimeout(analysisRetryTimer);
+    const pending = readAnalysisState();
+    if (!pending || pending.status !== "retry_pending") return;
+    if (Number(pending.retryCount || 0) >= 3) {
+      clearAnalysisState();
+      endProgress(false);
+      analyzeButton.disabled = false;
+      renderError("No fue posible recuperar la conexión después de tres intentos. Tu consulta permanece en el formulario; pulsa Analizar credibilidad para intentarlo de nuevo.");
+      return;
+    }
+    analysisRetryTimer = setTimeout(resumePendingAnalysis, 5000);
+  }
+
   function saveAnalysisState(state) {
     try {
       localStorage.setItem(ANALYSIS_STATE_KEY, JSON.stringify({
@@ -2098,14 +2137,7 @@ async function sampleVideoFrames(file) {
       }
       activeAnalysisRequest = true;
 
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-      const raw = await response.text();
+      const { response, raw } = await requestAnalysis(payload);
       const contentType = response.headers.get("content-type") || "";
       const pareceHtml = /text\/html/i.test(contentType) || /^\s*</.test(raw);
       let data;
@@ -2120,6 +2152,7 @@ async function sampleVideoFrames(file) {
       }
 
       if (data?.estado === "sin_acceso" || data?.analizado === false) {
+        clearAnalysisState();
         if (Number(data.retry_after_seconds)>0 && /https?:\/\/(?:www\.)?threads\.(?:com|net)(?:\/|$)/i.test(text)) {
           threadsCooldownUntil=Math.max(threadsCooldownUntil,Date.now()+Number(data.retry_after_seconds)*1000);
           try { sessionStorage.setItem("lvi_threads_retry_at",String(threadsCooldownUntil)); } catch {}
@@ -2171,6 +2204,7 @@ async function sampleVideoFrames(file) {
       activeAnalysisRequest = false;
       const pending = typeof readAnalysisState === "function" ? readAnalysisState() : null;
       analyzeButton.disabled = Boolean(pending && ["running", "retry_pending"].includes(pending.status));
+      scheduleAnalysisRetry();
     }
   }
 
@@ -2179,6 +2213,12 @@ async function sampleVideoFrames(file) {
     const pending = readAnalysisState();
     if (!pending || !["running", "retry_pending"].includes(pending.status)) return;
 
+    if (navigator.onLine === false) {
+      saveAnalysisState({ ...pending, status: "retry_pending" });
+      scheduleAnalysisRetry();
+      return;
+    }
+    pending.retryCount = Number(pending.retryCount || 0) + 1;
     activeAnalysisRequest = true;
     lastOriginalQuery = pending.originalQuery || pending.payload?.text || "";
     showBackgroundProgress("Recuperando la investigación pendiente…");
@@ -2186,12 +2226,7 @@ async function sampleVideoFrames(file) {
 
     try {
       saveAnalysisState({ ...pending, status: "running" });
-      const response = await fetch("/api/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(pending.payload)
-      });
-      const raw = await response.text();
+      const { response, raw } = await requestAnalysis(pending.payload);
       let data;
       try { data = raw ? JSON.parse(raw) : {}; }
       catch { throw new Error("El servidor no devolvió una respuesta válida."); }
@@ -2215,6 +2250,7 @@ async function sampleVideoFrames(file) {
       activeAnalysisRequest = false;
       const stillPending = readAnalysisState();
       analyzeButton.disabled = Boolean(stillPending);
+      scheduleAnalysisRetry();
     }
   }
 
