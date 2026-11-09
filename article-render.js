@@ -126,7 +126,10 @@ function articleHtml(article) {
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(article.title)} | La Verdad Incómoda</title>
-<meta name="description" content="${esc(article.summary || article.title)}">\n<meta name="author" content="Equipo editorial de La Verdad Incómoda">\n<meta property="article:published_time" content="${esc(article.publishedAt || "")}">\n<meta property="article:modified_time" content="${esc(article.updatedAt || article.publishedAt || "")}">
+<meta name="description" content="${esc(article.summary || article.title)}">
+<meta name="author" content="Equipo editorial de La Verdad Incómoda">
+<meta property="article:published_time" content="${esc(article.publishedAt || "")}">
+<meta property="article:modified_time" content="${esc(article.updatedAt || article.publishedAt || "")}">
 <meta name="robots" content="${shouldIndex ? "index,follow,max-image-preview:large" : "noindex,follow"}">
 <meta name="google-adsense-account" content="ca-pub-3013146050600948">
 <link rel="canonical" href="${canonical}">
