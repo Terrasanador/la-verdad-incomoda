@@ -84,12 +84,13 @@ test("fact-check metadata identifies editorial responsibility and valid chronolo
   for (const article of published) assert.ok(!Number.isNaN(new Date(article.publishedAt).valueOf()), `${article.slug} has no valid publication date`);
 });
 
-test("thin utility pages stay accessible without diluting the editorial index", () => {
+test("institutional trust pages are indexable and present in sitemap", () => {
   const sitemap = fs.readFileSync(new URL("./sitemap.xml", import.meta.url), "utf8");
   for (const name of ["privacidad.html", "terminos.html", "contacto.html"]) {
     const html = fs.readFileSync(new URL(`./${name}`, import.meta.url), "utf8");
-    assert.match(html, /noindex,follow/);
-    assert.doesNotMatch(sitemap, new RegExp(name.replace(".", "\\.")));
+    assert.match(html, /<meta name="robots" content="index,follow"/);
+    assert.ok(sitemap.includes(`https://www.laverdadincomoda.mx/${name}</loc>`), `${name} missing from sitemap`);
+    assert.match(html, new RegExp(`rel="canonical" href="https://www\\.laverdadincomoda\\.mx/${name.replace(".", "\\.")}"`));
   }
   const about = fs.readFileSync(new URL("./quienes-somos.html", import.meta.url), "utf8");
   assert.match(about, /Por qué este proyecto aporta valor propio/);
