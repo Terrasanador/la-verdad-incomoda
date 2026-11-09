@@ -104,3 +104,8 @@ test("legacy duplicate pages do not compete in search", () => {
   assert.match(oldHow, /noindex,follow/);
   assert.match(oldHow, /\/metodologia\.html/);
 });
+
+test("article metadata tags are separated by actual line breaks, not literal escape text", () => {
+  const renderer = fs.readFileSync(new URL("./article-render.js", import.meta.url), "utf8");
+  assert.ok(!renderer.includes('">\\\\n<meta'), "literal backslash-n between metadata tags");
+});
