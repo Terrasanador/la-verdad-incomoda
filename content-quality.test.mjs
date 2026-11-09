@@ -115,8 +115,8 @@ test("AdSense publisher identity, crawl directives and sitemap remain consistent
   const ads = fs.readFileSync(new URL("./ads.txt", import.meta.url), "utf8").trim();
   assert.equal(ads, "google.com, pub-3013146050600948, DIRECT, f08c47fec0942fa0");
   const robots = fs.readFileSync(new URL("./robots.txt", import.meta.url), "utf8");
-  assert.match(robots, /^User-agent: \\*$/m);
-  assert.match(robots, /Sitemap: https:\/\/www\\.laverdadincomoda\\.mx\/sitemap\\.xml/);
+  assert.ok(robots.split("\n").includes("User-agent: *"));
+  assert.ok(robots.includes("Sitemap: https://www.laverdadincomoda.mx/sitemap.xml"));
   const sitemap = fs.readFileSync(new URL("./sitemap.xml", import.meta.url), "utf8");
   const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
   assert.equal(urls.length, new Set(urls).size, "duplicate sitemap URLs");
