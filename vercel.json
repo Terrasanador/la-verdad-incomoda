@@ -55,6 +55,18 @@
       }
     },
     {
+      "src": "/ads\\.txt",
+      "dest": "/ads.txt"
+    },
+    {
+      "src": "/robots\\.txt",
+      "dest": "/robots.txt"
+    },
+    {
+      "src": "/sitemap\\.xml",
+      "dest": "/sitemap.xml"
+    },
+    {
       "src": "/api/analyze",
       "dest": "/analyze-v3.js"
     },
